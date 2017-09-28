@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.IntegrationChannelDao">
+    
+	<sql id="integrationChannelColumns">
+		a.id AS "id",
+		a.channel_key AS "channelKey",
+		a.channel_name AS "channelName",
+		a.provider_code AS "providerCode",
+		a.pay_type AS "payType",
+		a.scene_key AS "sceneKey",
+		a.bank_id AS "bankId",
+		a.bank_provider AS "bankProvider",
+		a.bank_card_type AS "bankCardType",
+		a.cost_is_by_bill AS "costIsByBill",
+		a.cost_rate AS "costRate",
+		a.min_cost_fee AS "minCostFee",
+		a.max_cost_fee AS "maxCostFee",
+		a.is_by_bill AS "isByBill",
+		a.one_bill_fee AS "oneBillFee",
+		a.min_bill_fee AS "minBillFee",
+		a.max_bill_fee AS "maxBillFee",
+		a.fee_rate AS "feeRate",
+		a.min_rate AS "minRate",
+		a.max_rate AS "maxRate",
+		a.note AS "note",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="integrationChannelJoins">
+	</sql>
+    
+	<select id="get" resultType="IntegrationChannel">
+		SELECT 
+			<include refid="integrationChannelColumns"/>
+		FROM route_integration_channel a
+		<include refid="integrationChannelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IntegrationChannel">
+		SELECT 
+			<include refid="integrationChannelColumns"/>
+		FROM route_integration_channel a
+		<include refid="integrationChannelJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntegrationChannel">
+		SELECT 
+			<include refid="integrationChannelColumns"/>
+		FROM route_integration_channel a
+		<include refid="integrationChannelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 查找产品已添加的.net聚合通道 -->
+	<select id="selectIntegraChannel" resultType="IntegrationChannel">
+		select
+		t1.`id` AS "id",
+		t1.`channel_key` AS "channelKey",
+		t1.`channel_name` AS "channelName",
+		t1.`provider_code` AS "providerCode",
+		t1.`pay_type` AS "payType",
+		t1.`scene_key` AS "sceneKey",
+		t1.`bank_id` AS "bankId",
+		t1.`bank_provider` AS "bankProvider",
+		t1.`bank_card_type` AS "bankCardType",
+		t1.`cost_is_by_bill` AS "costIsByBill",
+		t1.`cost_rate` AS "costRate",
+		t1.`min_cost_fee` AS "minCostFee",
+		t1.`max_cost_fee` AS "maxCostFee",
+		t1.`is_by_bill` AS "isByBill",
+		t1.`one_bill_fee` AS "oneBillFee",
+		t1.`min_bill_fee` AS "minBillFee",
+		t1.`max_bill_fee` AS "maxBillFee",
+		t1.`fee_rate` AS "feeRate",
+		t1.`min_rate` AS "minRate",
+		t1.`max_rate` AS "maxRate",
+		t1.`note` AS "note",
+		t1.`status` AS "status",
+		t2.`id` as "mappingId"
+		from route_integration_channel t1
+		left join route_channel_bankid t2 on t1.`channel_key` = t2.`channel_key`
+		AND t2.`channel_code` = #{channelCode}
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="channelKey != null and channelKey !=''">
+				AND t1.`channel_key` = #{channelKey}
+			</if>
+			<if test="providerCode != null and providerCode !=''">
+				AND t1.`provider_code` = #{providerCode}
+			</if>
+			<if test="payType != null and payType !=''">
+				AND t1.`pay_type`  = #{payType}
+			</if>
+			<if test="sceneKey != null and sceneKey !=''">
+				AND  t1.`scene_key`  = #{sceneKey}
+			</if>
+		</trim>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO route_integration_channel(
+			id,
+			channel_key,
+			channel_name,
+			provider_code,
+			pay_type,
+			scene_key,
+			bank_id,
+			bank_provider,
+			bank_card_type,
+			cost_is_by_bill,
+			cost_rate,
+			min_cost_fee,
+			max_cost_fee,
+			is_by_bill,
+			one_bill_fee,
+			min_bill_fee,
+			max_bill_fee,
+			fee_rate,
+			min_rate,
+			max_rate,
+			note,
+			status
+		) VALUES (
+			#{id},
+			#{channelKey},
+			#{channelName},
+			#{providerCode},
+			#{payType},
+			#{sceneKey},
+			#{bankId},
+			#{bankProvider},
+			#{bankCardType},
+			#{costIsByBill},
+			#{costRate},
+			#{minCostFee},
+			#{maxCostFee},
+			#{isByBill},
+			#{oneBillFee},
+			#{minBillFee},
+			#{maxBillFee},
+			#{feeRate},
+			#{minRate},
+			#{maxRate},
+			#{note},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE route_integration_channel SET 	
+			channel_key = #{channelKey},
+			channel_name = #{channelName},
+			provider_code = #{providerCode},
+			pay_type = #{payType},
+			scene_key = #{sceneKey},
+			bank_id = #{bankId},
+			bank_provider = #{bankProvider},
+			bank_card_type = #{bankCardType},
+			cost_is_by_bill = #{costIsByBill},
+			cost_rate = #{costRate},
+			min_cost_fee = #{minCostFee},
+			max_cost_fee = #{maxCostFee},
+			is_by_bill = #{isByBill},
+			one_bill_fee = #{oneBillFee},
+			min_bill_fee = #{minBillFee},
+			max_bill_fee = #{maxBillFee},
+			fee_rate = #{feeRate},
+			min_rate = #{minRate},
+			max_rate = #{maxRate},
+			note = #{note},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insertOnDuplicateKey">
+		INSERT INTO route_integration_channel(
+		id,
+		channel_key,
+		channel_name,
+		provider_code,
+		pay_type,
+		scene_key,
+		bank_id,
+		bank_provider,
+		bank_card_type,
+		cost_is_by_bill,
+		cost_rate,
+		min_cost_fee,
+		max_cost_fee,
+		is_by_bill,
+		one_bill_fee,
+		min_bill_fee,
+		max_bill_fee,
+		fee_rate,
+		min_rate,
+		max_rate,
+		note,
+		status
+		) VALUES (
+		#{id},
+		#{channelKey},
+		#{channelName},
+		#{providerCode},
+		#{payType},
+		#{sceneKey},
+		#{bankId},
+		#{bankProvider},
+		#{bankCardType},
+		#{costIsByBill},
+		#{costRate},
+		#{minCostFee},
+		#{maxCostFee},
+		#{isByBill},
+		#{oneBillFee},
+		#{minBillFee},
+		#{maxBillFee},
+		#{feeRate},
+		#{minRate},
+		#{maxRate},
+		#{note},
+		#{status}
+		)
+		on duplicate key update
+		channel_key = #{channelKey},
+		channel_name = #{channelName},
+		provider_code = #{providerCode},
+		pay_type = #{payType},
+		scene_key = #{sceneKey},
+		bank_id = #{bankId},
+		bank_provider = #{bankProvider},
+		bank_card_type = #{bankCardType},
+		cost_is_by_bill = #{costIsByBill},
+		cost_rate = #{costRate},
+		min_cost_fee = #{minCostFee},
+		max_cost_fee = #{maxCostFee},
+		is_by_bill = #{isByBill},
+		one_bill_fee = #{oneBillFee},
+		min_bill_fee = #{minBillFee},
+		max_bill_fee = #{maxBillFee},
+		fee_rate = #{feeRate},
+		min_rate = #{minRate},
+		max_rate = #{maxRate},
+		note = #{note},
+		status = #{status}
+	</insert>
+
+	
+	<update id="delete">
+		DELETE FROM route_integration_channel
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

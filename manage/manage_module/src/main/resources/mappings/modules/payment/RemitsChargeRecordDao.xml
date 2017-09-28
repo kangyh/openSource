@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.RemitsChargeRecordDao">
+    
+	<sql id="remitsChargeRecordColumns">
+		a.remits_id AS "remitsId",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.product_code AS "productCode",
+		a.pay_type AS "payType",
+		a.trans_type AS "transType",
+		a.status AS "status",
+		a.description AS "description",
+		a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.pay_time AS "payTime",
+		a.success_amount AS "successAmount",
+		a.success_time AS "successTime",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.bankcard_type AS "bankcardType",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner AS "bankcardOwner",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.currency AS "currency",
+		a.fee_type AS "feeType",
+		a.fee_amount AS "feeAmount",
+		a.operator AS "operator",
+		a.settle_cyc AS "settleCyc",
+		a.create_time AS "createTime",
+		a.pay_openbank_name AS "payOpenbankName",
+		a.pay_bankcard_no AS "payBankcardNo",
+		a.pay_merchant_name AS "payMerchantName",
+		a.bank_serialnumber AS "bankSerialnumber"
+	</sql>
+	
+	<sql id="remitsChargeRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="RemitsChargeRecord">
+		SELECT 
+			<include refid="remitsChargeRecordColumns"/>
+		FROM remits_charge_record a
+		<include refid="remitsChargeRecordJoins"/>
+		WHERE a.trans_no = #{transNo}
+	</select>
+	
+	<select id="findList" resultType="RemitsChargeRecord">
+		SELECT 
+			<include refid="remitsChargeRecordColumns"/>
+		FROM remits_charge_record a
+		<include refid="remitsChargeRecordJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RemitsChargeRecord">
+		SELECT 
+			<include refid="remitsChargeRecordColumns"/>
+		FROM remits_charge_record a
+		<include refid="remitsChargeRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO remits_charge_record(
+			remits_id,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			product_code,
+			pay_type,
+			trans_type,
+			status,
+			description,
+			update_time,
+			pay_amount,
+			pay_time,
+			success_amount,
+			success_time,
+			merchant_order_no,
+			bank_id,
+			bank_name,
+			bankcard_type,
+			bankcard_no,
+			bankcard_owner,
+			channel_code,
+			channel_name,
+			currency,
+			fee_type,
+			fee_amount,
+			operator,
+			settle_cyc,
+			create_time,
+			pay_openbank_name,
+			pay_bankcard_no,
+			pay_merchant_name,
+			bank_serialnumber
+		) VALUES (
+			#{remitsId},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{productCode},
+			#{payType},
+			#{transType},
+			#{status},
+			#{description},
+			#{updateTime},
+			#{payAmount},
+			#{payTime},
+			#{successAmount},
+			#{successTime},
+			#{merchantOrderNo},
+			#{bankId},
+			#{bankName},
+			#{bankcardType},
+			#{bankcardNo},
+			#{bankcardOwner},
+			#{channelCode},
+			#{channelName},
+			#{currency},
+			#{feeType},
+			#{feeAmount},
+			#{operator},
+			#{settleCyc},
+			#{createTime},
+			#{payOpenbankName},
+			#{payBankcardNo},
+			#{payMerchantName},
+			#{bankSerialnumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE remits_charge_record SET 	
+			remits_id = #{remitsId},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			product_code = #{productCode},
+			pay_type = #{payType},
+			trans_type = #{transType},
+			status = #{status},
+			description = #{description},
+			update_time = #{updateTime},
+			pay_amount = #{payAmount},
+			pay_time = #{payTime},
+			success_amount = #{successAmount},
+			success_time = #{successTime},
+			merchant_order_no = #{merchantOrderNo},
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			bankcard_type = #{bankcardType},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner = #{bankcardOwner},
+			channel_code = #{channelCode},
+			channel_name = #{channelName},
+			currency = #{currency},
+			fee_type = #{feeType},
+			fee_amount = #{feeAmount},
+			operator = #{operator},
+			settle_cyc = #{settleCyc},
+			create_time = #{createTime},
+			pay_openbank_name = #{payOpenbankName},
+			pay_bankcard_no = #{payBankcardNo},
+			pay_merchant_name = #{payMerchantName},
+			bank_serialnumber = #{bankSerialnumber}
+		WHERE remits_id = #{remitsId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM remits_charge_record
+		WHERE remits_id = #{remitsId}
+	</update>
+	
+</mapper>

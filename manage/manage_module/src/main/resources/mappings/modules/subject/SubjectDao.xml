@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.subject.dao.SubjectDao">
+    
+	<sql id="subjectColumns">
+		a.subject_id AS "subjectId",
+		a.subject_code AS "subjectCode",
+		a.subject_name AS "subjectName",
+		a.parent_subject_id AS "parentSubjectId",
+		a.subject_level AS "subjectLevel",
+		a.is_last AS "isLast",
+		a.type AS "type",
+		a.balance_direction AS "balanceDirection",
+		a.status AS "status",
+		a.creator AS "creator",
+		a.modifier AS "modifier",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="subjectJoins">
+	</sql>
+    
+	<select id="get" resultType="Subject">
+		SELECT 
+			<include refid="subjectColumns"/>
+		FROM subject a
+		<include refid="subjectJoins"/>
+		WHERE a.subject_id = #{subjectId}
+	</select>
+	
+	<select id="findList" resultType="Subject">
+		SELECT 
+			<include refid="subjectColumns"/>
+		FROM subject a
+		<include refid="subjectJoins"/>
+		<where>
+			
+			<if test="subjectCode != null and subjectCode != ''">
+				AND a.subject_code = #{subjectCode}
+			</if>
+			<if test="subjectLevel != null and subjectLevel != ''">
+				AND a.subject_level = #{subjectLevel}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="isLast != null and isLast != ''">
+				AND a.is_last = #{isLast}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Subject">
+		SELECT 
+			<include refid="subjectColumns"/>
+		FROM subject a
+		<include refid="subjectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO subject(
+			subject_id,
+			subject_code,
+			subject_name,
+			parent_subject_id,
+			subject_level,
+			is_last,
+			type,
+			balance_direction,
+			status,
+			creator,
+			modifier,
+			create_time,
+			update_time,
+			remark
+		) VALUES (
+			#{subjectId},
+			#{subjectCode},
+			#{subjectName},
+			#{parentSubjectId},
+			#{subjectLevel},
+			#{isLast},
+			#{type},
+			#{balanceDirection},
+			#{status},
+			#{creator},
+			#{modifier},
+			#{createTime},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE subject SET 	
+			subject_id = #{subjectId},
+			subject_code = #{subjectCode},
+			subject_name = #{subjectName},
+			parent_subject_id = #{parentSubjectId},
+			subject_level = #{subjectLevel},
+			is_last = #{isLast},
+			type = #{type},
+			balance_direction = #{balanceDirection},
+			status = #{status},
+			creator = #{creator},
+			modifier = #{modifier},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE subject_id = #{subjectId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM subject
+		WHERE subject_id = #{subjectId}
+	</update>
+	
+	<update id="deleteChildSubjects">
+		DELETE FROM subject WHERE parent_subject_id = #{parentSubjectId}
+	</update>
+	
+	<update id="updateChildSubjects">
+		UPDATE subject SET 	
+			subject_id = #{subjectId},
+			subject_code = #{subjectCode},
+			subject_name = #{subjectName},
+			parent_subject_id = #{parentSubjectId},
+			subject_level = #{subjectLevel},
+			is_last = #{isLast},
+			type = #{type},
+			balance_direction = #{balanceDirection},
+			status = #{status},
+			creator = #{creator},
+			modifier = #{modifier},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE parent_subject_id = #{parentSubjectId}
+	</update>
+	
+	<update id="updateSubjects">
+		UPDATE subject SET 	
+			subject_id = #{subjectId},
+			subject_code = #{subjectCode},
+			subject_name = #{subjectName},
+			parent_subject_id = #{parentSubjectId},
+			subject_level = #{subjectLevel},
+			is_last = #{isLast},
+			type = #{type},
+			balance_direction = #{balanceDirection},
+			status = #{status},
+			creator = #{creator},
+			modifier = #{modifier},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE subject_id = #{subjectId}
+	</update>
+	
+	
+	<select id="getParentSubjects" resultType="java.util.HashMap"  parameterType="java.util.Map">
+		SELECT  subject_id as subjectId, subject_name as subjectName
+		FROM subject
+		WHERE status='NORMAL'
+		AND is_last='N'
+		AND subject_level=#{subjectLevel}
+	</select>
+	
+	<select id="getChildSubjects" resultType="Subject"  parameterType="java.util.Map">
+		SELECT  <include refid="subjectColumns"/>
+		FROM subject a
+		WHERE a.parent_subject_id=#{parentSubjectId}
+	</select>
+	
+	<select id="getByAccountCode" resultType="Subject"  parameterType="java.util.Map">
+		SELECT  <include refid="subjectColumns"/>
+		FROM subject a
+		WHERE a.subject_code=#{subjectCode}
+	</select>
+</mapper>

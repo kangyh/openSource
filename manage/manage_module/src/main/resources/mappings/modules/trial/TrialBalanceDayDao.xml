@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.trial.dao.TrialBalanceDayDao">
+    
+	<sql id="trialBalanceDayColumns">
+		a.id AS "id",
+		a.debit_current_amount AS "debitCurrentAmount",
+		a.credit_current_amount AS "creditCurrentAmount",
+		a.debit_begining_balances AS "debitBeginingBalances",
+		a.credit_begining_balances AS "creditBeginingBalances",
+		a.debit_ending_balances AS "debitEndingBalances",
+		a.credit_ending_balances AS "creditEndingBalances",
+		a.account_date AS "accountDate",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="trialBalanceDayJoins">
+	</sql>
+    
+	<select id="get" resultType="TrialBalanceDay">
+		SELECT 
+			<include refid="trialBalanceDayColumns"/>
+		FROM trial_balance_day a
+		<include refid="trialBalanceDayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TrialBalanceDay">
+		SELECT 
+			<include refid="trialBalanceDayColumns"/>
+		FROM trial_balance_day a
+		<include refid="trialBalanceDayJoins"/>
+		<where>
+			<if test="beginAccountDate != null and beginAccountDate != ''">
+				AND a.account_date &gt;= #{beginAccountDate}
+			</if>
+			<if test="endAccountDate != null and endAccountDate != ''">
+				AND a.account_date &lt;= #{endAccountDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			     ORDER BY id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TrialBalanceDay">
+		SELECT 
+			<include refid="trialBalanceDayColumns"/>
+		FROM trial_balance_day a
+		<include refid="trialBalanceDayJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO trial_balance_day(
+			id,
+			debit_current_amount,
+			credit_current_amount,
+			debit_begining_balances,
+			credit_begining_balances,
+			debit_ending_balances,
+			credit_ending_balances,
+			account_date,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{debitCurrentAmount},
+			#{creditCurrentAmount},
+			#{debitBeginingBalances},
+			#{creditBeginingBalances},
+			#{debitEndingBalances},
+			#{creditEndingBalances},
+			#{accountDate},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trial_balance_day SET 	
+			id = #{id},
+			debit_current_amount = #{debitCurrentAmount},
+			credit_current_amount = #{creditCurrentAmount},
+			debit_begining_balances = #{debitBeginingBalances},
+			credit_begining_balances = #{creditBeginingBalances},
+			debit_ending_balances = #{debitEndingBalances},
+			credit_ending_balances = #{creditEndingBalances},
+			account_date = #{accountDate},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM trial_balance_day
+		<if test="accountDate != null">
+			WHERE account_date = #{accountDate}
+		</if>
+	</update>
+	
+</mapper>

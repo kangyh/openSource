@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.account.dao.MerchantAccountRelaDao">
+    
+	<sql id="merchantAccountRelaColumns">
+		a.rela_id AS "relaId",
+		a.trans_type AS "transType",
+		a.trans_sub_type AS "transSubType",
+		a.account_type AS "accountType",
+		a.balance_direction AS "balanceDirection",
+		a.balance_change_type AS "balanceChangeType",
+		a.sequence AS "sequence",
+		a.is_enable AS "isEnable"
+	</sql>
+	
+	<sql id="merchantAccountRelaJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantAccountRela">
+		SELECT 
+			<include refid="merchantAccountRelaColumns"/>
+		FROM merchant_account_rela a
+		<include refid="merchantAccountRelaJoins"/>
+		WHERE a.rela_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantAccountRela">
+		SELECT 
+			<include refid="merchantAccountRelaColumns"/>
+		FROM merchant_account_rela a
+		<include refid="merchantAccountRelaJoins"/>
+		<where>
+			
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="transSubType != null and transSubType != ''">
+				AND a.trans_sub_type = #{transSubType}
+			</if>
+			<if test="accountType != null and accountType != ''">
+				AND a.account_type = #{accountType}
+			</if>
+			<if test="balanceDirection != null and balanceDirection != ''">
+				AND a.balance_direction = #{balanceDirection}
+			</if>
+			<if test="balanceChangeType != null and balanceChangeType != ''">
+				AND a.balance_change_type = #{balanceChangeType}
+			</if>
+			<if test="sequence != null and sequence != ''">
+				AND a.sequence = #{sequence}
+			</if>
+			<if test="isEnable != null and isEnable != ''">
+				AND a.is_enable = #{isEnable}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantAccountRela">
+		SELECT 
+			<include refid="merchantAccountRelaColumns"/>
+		FROM merchant_account_rela a
+		<include refid="merchantAccountRelaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_account_rela(
+			rela_id,
+			trans_type,
+			trans_sub_type,
+			account_type,
+			balance_direction,
+			balance_change_type,
+			sequence,
+			is_enable
+		) VALUES (
+			#{relaId},
+			#{transType},
+			#{transSubType},
+			#{accountType},
+			#{balanceDirection},
+			#{balanceChangeType},
+			#{sequence},
+			#{isEnable}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_account_rela SET 	
+			rela_id = #{relaId},
+			trans_type = #{transType},
+			trans_sub_type = #{transSubType},
+			account_type = #{accountType},
+			balance_direction = #{balanceDirection},
+			balance_change_type = #{balanceChangeType},
+			sequence = #{sequence},
+			is_enable =#{isEnable}
+		WHERE rela_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_account_rela
+		WHERE rela_id = #{id}
+	</update>
+	
+</mapper>

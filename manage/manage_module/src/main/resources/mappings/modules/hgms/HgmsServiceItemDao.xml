@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsServiceItemDao">
+    
+	<sql id="hgmsServiceItemColumns">
+		a.service_id AS "serviceId",
+		a.service_name AS "serviceName",
+		a.merchant_id AS "merchantId",
+		a.business_id AS "businessId",
+		a.business_name AS "businessName",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.rule_id AS "ruleId",
+		a.rule_build_type AS "ruleBuildType",
+		a.inputuser_id AS "inputuserId",
+		a.inputuser_name AS "inputuserName",
+		a.created_time AS "createdTime",
+		a.status AS "status",
+		a.business_status AS "businessStatus",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+	
+	<sql id="hgmsServiceItemJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsServiceItem">
+		SELECT 
+			<include refid="hgmsServiceItemColumns"/>
+		FROM hgms_service_item a
+		<include refid="hgmsServiceItemJoins"/>
+		WHERE a.service_id = #{serviceId}
+	</select>
+	
+	<select id="findList" resultType="HgmsServiceItem">
+		SELECT 
+			<include refid="hgmsServiceItemColumns"/>
+		FROM hgms_service_item a
+		<include refid="hgmsServiceItemJoins"/>
+		<where>
+			<if test="businessId != null and businessId != ''">
+				AND a.business_id = #{businessId}
+			</if>
+			<if test="serviceName != null and serviceName != ''">
+				AND a.service_name = #{serviceName}
+			</if>
+			<if test="createdTime != null and createdTime != ''">
+				AND a.created_time = #{createdTime}
+			</if>
+            <choose>
+                <when test="beginCreateTime != null and endCreateTime != null ">
+                    AND a.created_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+                </when>
+                <when test="beginCreateTime != null and endCreateTime == null">
+                    AND a.created_time &gt; #{beginCreateTime}
+                </when>
+                <when test="beginCreateTime == null and endCreateTime != null">
+                    AND a.created_time &lt; #{endCreateTime}
+                </when>
+            </choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsServiceItem">
+		SELECT 
+			<include refid="hgmsServiceItemColumns"/>
+		FROM hgms_service_item a
+		<include refid="hgmsServiceItemJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_service_item(
+			service_id,
+			service_name,
+			merchant_id,
+			business_id,
+			business_name,
+			product_code,
+			product_name,
+			rule_id,
+			rule_build_type,
+			inputuser_id,
+			inputuser_name,
+			created_time,
+			status,
+			business_status,
+			extend3,
+			extend4,
+			extend5
+		) VALUES (
+			#{serviceId},
+			#{serviceName},
+			#{merchantId},
+			#{businessId},
+			#{businessName},
+			#{productCode},
+			#{productName},
+			#{ruleId},
+			#{ruleBuildType},
+			#{inputuserId},
+			#{inputuserName},
+			#{createdTime},
+			#{status},
+			#{businessStatus},
+			#{extend3},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+
+    <update id="update">
+        UPDATE hgms_service_item
+        <set>
+            <if test="serviceName != null">
+                service_name = #{serviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessId != null">
+                business_id = #{businessId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessName != null">
+                business_name = #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                product_code = #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleId != null">
+                rule_id = #{ruleId,jdbcType=BIGINT},
+            </if>
+            <if test="ruleBuildType != null">
+                rule_build_type = #{ruleBuildType,jdbcType=CHAR},
+            </if>
+            <if test="inputuserId != null">
+                inputuser_id = #{inputuserId,jdbcType=SMALLINT},
+            </if>
+            <if test="inputuserName != null">
+                inputuser_name = #{inputuserName,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="businessStatus != null">
+                business_status = #{businessStatus,jdbcType=CHAR},
+            </if>
+            <if test="extend3 != null">
+                extend3 = #{extend3,jdbcType=VARCHAR},
+            </if>
+            <if test="extend4 != null">
+                extend4 = #{extend4,jdbcType=VARCHAR},
+            </if>
+            <if test="extend5 != null">
+                extend5 = #{extend5,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE service_id = #{serviceId}
+    </update>
+
+    <update id="updateBusiName" parameterType="com.heepay.manage.modules.hgms.entity.HgmsBusiness">
+        UPDATE hgms_service_item
+        <set>
+            <if test="businessName != null">
+                business_name = #{businessName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE business_id = #{businessId}
+    </update>
+
+    <update id="businessChangeStatus" parameterType="java.lang.String">
+        UPDATE hgms_service_item
+        <set>
+            <if test="businessStatus != null">
+                business_status = #{businessStatus,jdbcType=CHAR},
+            </if>
+        </set>
+        WHERE business_id = #{businessId}
+    </update>
+
+	<select id="selectByName" resultType="HgmsServiceItem">
+		SELECT
+		<include refid="hgmsServiceItemColumns"/>
+		FROM hgms_service_item a
+		<include refid="hgmsServiceItemJoins"/>
+		<where>
+			<if test="serviceId != null and serviceId != ''">
+				AND a.service_id != #{serviceId}
+			</if>
+			<if test="serviceName != null and serviceName != ''">
+				AND a.service_name = #{serviceName}
+			</if>
+		</where>
+	</select>
+</mapper>

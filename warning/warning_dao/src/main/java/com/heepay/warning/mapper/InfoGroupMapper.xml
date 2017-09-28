@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.warning.dao.InfoGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.warning.entity.InfoGroup" >
+    <id column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    group_id, group_code, group_name, create_user, create_time, update_user, update_time, 
+    remark, status
+  </sql>
+ 
+  <select id="selectAll" resultType="com.heepay.warning.entity.InfoGroup" >
+    select 
+     group_id, group_code, group_name, create_user, create_time, update_user, update_time, 
+    remark, status
+    from info_group where status='ENABLE'
+  </select>
+  <select id="getByGroupCode" resultType="com.heepay.warning.entity.InfoGroup" parameterType="java.lang.String" >
+    select 
+     group_id, group_code, group_name, create_user, create_time, update_user, update_time, 
+    remark, status
+    from info_group where group_code= #{groupCode,jdbcType=VARCHAR} and  status='ENABLE'
+  </select>
+</mapper>

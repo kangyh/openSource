@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleWarnRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleWarnRecord" >
+    <id column="warn_id" property="warnId" jdbcType="BIGINT" />
+    <result column="warn_block" property="warnBlock" jdbcType="VARCHAR" />
+    <result column="contact_person" property="contactPerson" jdbcType="VARCHAR" />
+    <result column="warn_context" property="warnContext" jdbcType="VARCHAR" />
+    <result column="warn_level" property="warnLevel" jdbcType="VARCHAR" />
+    <result column="handle_type" property="handleType" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    warn_id, warn_block, contact_person, warn_context, warn_level, handle_type, oper_time, 
+    status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleWarnRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_warn_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_warn_record
+    where warn_id = #{warnId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_warn_record
+    where warn_id = #{warnId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleWarnRecordExample" >
+    delete from settle_warn_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleWarnRecord" >
+    insert into settle_warn_record (warn_id, warn_block, contact_person, 
+      warn_context, warn_level, handle_type, 
+      oper_time, status)
+    values (#{warnId,jdbcType=BIGINT}, #{warnBlock,jdbcType=VARCHAR}, #{contactPerson,jdbcType=VARCHAR}, 
+      #{warnContext,jdbcType=VARCHAR}, #{warnLevel,jdbcType=VARCHAR}, #{handleType,jdbcType=VARCHAR}, 
+      #{operTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleWarnRecord" >
+    insert into settle_warn_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="warnId != null" >
+        warn_id,
+      </if>
+      <if test="warnBlock != null" >
+        warn_block,
+      </if>
+      <if test="contactPerson != null" >
+        contact_person,
+      </if>
+      <if test="warnContext != null" >
+        warn_context,
+      </if>
+      <if test="warnLevel != null" >
+        warn_level,
+      </if>
+      <if test="handleType != null" >
+        handle_type,
+      </if>
+      <if test="operTime != null" >
+        oper_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="warnId != null" >
+        #{warnId,jdbcType=BIGINT},
+      </if>
+      <if test="warnBlock != null" >
+        #{warnBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPerson != null" >
+        #{contactPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContext != null" >
+        #{warnContext,jdbcType=VARCHAR},
+      </if>
+      <if test="warnLevel != null" >
+        #{warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="handleType != null" >
+        #{handleType,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        #{operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleWarnRecordExample" resultType="java.lang.Integer" >
+    select count(*) from settle_warn_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_warn_record
+    <set >
+      <if test="record.warnId != null" >
+        warn_id = #{record.warnId,jdbcType=BIGINT},
+      </if>
+      <if test="record.warnBlock != null" >
+        warn_block = #{record.warnBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactPerson != null" >
+        contact_person = #{record.contactPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warnContext != null" >
+        warn_context = #{record.warnContext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warnLevel != null" >
+        warn_level = #{record.warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handleType != null" >
+        handle_type = #{record.handleType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operTime != null" >
+        oper_time = #{record.operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_warn_record
+    set warn_id = #{record.warnId,jdbcType=BIGINT},
+      warn_block = #{record.warnBlock,jdbcType=VARCHAR},
+      contact_person = #{record.contactPerson,jdbcType=VARCHAR},
+      warn_context = #{record.warnContext,jdbcType=VARCHAR},
+      warn_level = #{record.warnLevel,jdbcType=VARCHAR},
+      handle_type = #{record.handleType,jdbcType=VARCHAR},
+      oper_time = #{record.operTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleWarnRecord" >
+    update settle_warn_record
+    <set >
+      <if test="warnBlock != null" >
+        warn_block = #{warnBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPerson != null" >
+        contact_person = #{contactPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContext != null" >
+        warn_context = #{warnContext,jdbcType=VARCHAR},
+      </if>
+      <if test="warnLevel != null" >
+        warn_level = #{warnLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="handleType != null" >
+        handle_type = #{handleType,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where warn_id = #{warnId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleWarnRecord" >
+    update settle_warn_record
+    set warn_block = #{warnBlock,jdbcType=VARCHAR},
+      contact_person = #{contactPerson,jdbcType=VARCHAR},
+      warn_context = #{warnContext,jdbcType=VARCHAR},
+      warn_level = #{warnLevel,jdbcType=VARCHAR},
+      handle_type = #{handleType,jdbcType=VARCHAR},
+      oper_time = #{operTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR}
+    where warn_id = #{warnId,jdbcType=BIGINT}
+  </update>
+  <!-- 更新状态 -->
+  <update id="updateSettleWarnRecord" parameterType="map" >
+    update settle_warn_record
+    <set >
+      <if test="warnBlock != null" >
+        warn_block = #{warnBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPerson != null" >
+        contact_person = #{contactPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="warnContext != null" >
+        warn_context = #{warnContext,jdbcType=VARCHAR},
+      </if>
+      <if test="warnLevel != null" >
+        warn_level = #{warnLevel,jdbcType=CHAR},
+      </if>
+      <if test="handleType != null" >
+        handle_type = #{handleType,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+  </update>
+  <!-- 更新告警记录处理成功的状态 -->
+  <update id="updateSettleWarnRecordByWarnContext" parameterType="map" >
+    update settle_warn_record
+    set oper_time = #{oper_time,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR}
+    where warn_context = #{warn_context,jdbcType=VARCHAR}
+  </update>
+</mapper>

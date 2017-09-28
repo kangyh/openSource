@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.rate.AgentRateDao">
+    
+	<sql id="agentRateColumns">
+		a.id AS "id",
+		a.agent_id AS "agentId",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.profit_percent AS "profitPercent",
+		a.trans_amount_begin AS "transAmountBegin",
+		a.trans_amount_end AS "transAmountEnd",
+		a.default_fee_type AS "defaultFeeType",
+		a.default_fee_percent AS "defaultFeePercent",
+		a.default_fee_min AS "defaultFeeMin",
+		a.default_fee_max AS "defaultFeeMax",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="agentRateJoins">
+	</sql>
+    
+	<select id="get" resultType="AgentRate">
+		SELECT 
+			<include refid="agentRateColumns"/>
+		FROM agent_rate a
+		<include refid="agentRateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AgentRate">
+		SELECT 
+			<include refid="agentRateColumns"/>
+		FROM agent_rate a
+		<include refid="agentRateJoins"/>
+		<where>
+			
+			<if test="agentId != null and agentId != ''">
+				AND a.agent_id = #{agentId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AgentRate">
+		SELECT 
+			<include refid="agentRateColumns"/>
+		FROM agent_rate a
+		<include refid="agentRateJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO agent_rate(
+			agent_id,
+			product_code,
+			product_name,
+			profit_percent,
+			trans_amount_begin,
+			trans_amount_end,
+			default_fee_type,
+			default_fee_percent,
+			default_fee_min,
+			default_fee_max
+		) VALUES (
+			#{agentId},
+			#{productCode},
+			#{productName},
+			#{profitPercent},
+			#{transAmountBegin},
+			#{transAmountEnd},
+			#{defaultFeeType},
+			#{defaultFeePercent},
+			#{defaultFeeMin},
+			#{defaultFeeMax}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE agent_rate SET 	
+			agent_id = #{agentId},
+			product_code = #{productCode},
+			product_name = #{productName},
+			profit_percent = #{profitPercent},
+			trans_amount_begin = #{transAmountBegin},
+			trans_amount_end = #{transAmountEnd},
+			default_fee_type = #{defaultFeeType},
+			default_fee_percent = #{defaultFeePercent},
+			default_fee_min = #{defaultFeeMin},
+			default_fee_max = #{defaultFeeMax}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM agent_rate
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

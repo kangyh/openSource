@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.contract.dao.ContractInfoDao">
+    
+	<sql id="contractInfoColumns">
+		a.id AS "id",
+		a.contract_id AS "contractId",
+		a.company_name AS "companyName",
+		a.address AS "address",
+		a.link_man AS "linkMan",
+		a.phone AS "phone",
+		a.link_man_b AS "linkManB",
+		a.phone_b AS "phoneB",
+		a.path AS "path",
+		a.create_time AS "createDate"
+	</sql>
+	
+	<sql id="contractInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="ContractInfo">
+		SELECT 
+			<include refid="contractInfoColumns"/>
+		FROM contract_info a
+		<include refid="contractInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ContractInfo">
+		SELECT 
+			<include refid="contractInfoColumns"/>
+		FROM contract_info a
+		<include refid="contractInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ContractInfo">
+		SELECT 
+			<include refid="contractInfoColumns"/>
+		FROM contract_info a
+		<include refid="contractInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO contract_info(
+			id,
+			contract_id,
+			company_name,
+			address,
+			link_man,
+			phone,
+			link_man_b,
+			phone_b,
+			path,
+			create_time
+		) VALUES (
+			#{id},
+			#{contractId},
+			#{companyName},
+			#{address},
+			#{linkMan},
+			#{phone},
+			#{linkManB},
+			#{phoneB},
+			#{path},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE contract_info SET 	
+			contract_id = #{contractId},
+			company_name = #{companyName},
+			address = #{address},
+			link_man = #{linkMan},
+			phone = #{phone},
+			link_man_b = #{linkManB},
+			phone_b = #{phoneB},
+			path = #{path},
+			create_time = #{createDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM contract_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

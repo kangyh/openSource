@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.ElectronicsSealRecordDao">
+    
+	<sql id="electronicsSealRecordColumns">
+		a.id AS "id",
+		a.electronics_seal_id AS "electronicsSealId",
+		a.merchant_id AS "merchantId",
+		a.merchant_company AS "merchantCompany",
+		a.fee_amount AS "feeAmount",
+		a.sys_resource AS "sysResource",
+		a.seal_product AS "sealProduct",
+		a.channel_code AS "channelCode",
+		a.seal_type AS "sealType",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="electronicsSealRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="ElectronicsSealRecord">
+		SELECT 
+			<include refid="electronicsSealRecordColumns"/>
+		FROM electronics_seal_record a
+		<include refid="electronicsSealRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ElectronicsSealRecord">
+		SELECT 
+			<include refid="electronicsSealRecordColumns"/>
+		FROM electronics_seal_record a
+		<include refid="electronicsSealRecordJoins"/>
+		<where>
+			
+			<if test="electronicsSealId != null and electronicsSealId != ''">
+				AND a.electronics_seal_id = #{electronicsSealId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+		</where>
+		ORDER BY create_time DESC
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ElectronicsSealRecord">
+		SELECT 
+			<include refid="electronicsSealRecordColumns"/>
+		FROM electronics_seal_record a
+		<include refid="electronicsSealRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO electronics_seal_record(
+			id,
+			electronics_seal_id,
+			merchant_id,
+			merchant_company,
+			fee_amount,
+			sys_resource,
+			seal_product,
+			channel_code,
+			seal_type,
+			status,
+			create_time,
+			update_time,
+			remark
+		) VALUES (
+			#{id},
+			#{electronicsSealId},
+			#{merchantId},
+			#{merchantCompany},
+			#{feeAmount},
+			#{sysResource},
+			#{sealProduct},
+			#{channelCode},
+			#{sealType},
+			#{status},
+			#{createTime},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE electronics_seal_record SET 	
+			electronics_seal_id = #{electronicsSealId},
+			merchant_id = #{merchantId},
+			merchant_company = #{merchantCompany},
+			fee_amount = #{feeAmount},
+			sys_resource = #{sysResource},
+			seal_product = #{sealProduct},
+			channel_code = #{channelCode},
+			seal_type = #{sealType},
+			status = #{status},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM electronics_seal_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

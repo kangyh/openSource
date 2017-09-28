@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.trial.dao.MerchantAccountDailyDao">
+    
+	<sql id="merchantAccountDailyColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.merchant_id AS "merchantId",
+		a.debit_beginning_balances AS "debitBeginningBalances",
+		a.debit_ending_balances AS "debitEndingBalances",
+		a.debit_current_amount AS "debitCurrentAmount",
+		a.credit_beginning_balances AS "creditBeginningBalances",
+		a.credit_ending_balances AS "creditEndingBalances",
+		a.credit_current_amount AS "creditCurrentAmount",
+		a.account_title AS "accountTitle",
+		a.account_date AS "accountDate",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="merchantAccountDailyJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantAccountDaily">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		<include refid="merchantAccountDailyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantAccountDaily">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		<include refid="merchantAccountDailyJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="accountDate != null and accountDate != ''">
+				AND a.account_date = #{accountDate}
+			</if>
+			<if test="beginAccountDate != null and beginAccountDate != ''">
+				AND a.account_date &gt;= #{beginAccountDate}
+			</if>
+			<if test="endAccountDate != null and endAccountDate != ''">
+				AND a.account_date &lt;= #{endAccountDate}
+			</if>
+			<if test="subjectType != null and subjectType != ''">
+				AND substring(a.account_id,5,3) = #{subjectType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			   ORDER BY id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantAccountDaily">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		<include refid="merchantAccountDailyJoins"/>
+		<where>
+			<if test="subjectType != null and subjectType != ''">
+				AND substring(a.account_id,5,3) = #{subjectType}
+			</if>			
+		</where>		
+	    ORDER BY id desc
+
+	</select>
+	
+	<select id="findListBySubject" resultType="MerchantAccountDaily">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		<include refid="merchantAccountDailyJoins"/>
+		<where>
+			<if test="subjectType != null and subjectType != ''">
+				AND substring(a.account_id,5,3) = #{subjectType}
+			</if>			
+		</where>		
+		<choose>
+			<otherwise>
+			    ORDER BY id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO merchant_account_daily(
+			id,
+			account_id,
+			merchant_id,
+			debit_beginning_balances,
+			debit_ending_balances,
+			debit_current_amount,
+			credit_beginning_balances,
+			credit_ending_balances,
+			credit_current_amount,
+			account_title,
+			account_date,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{merchantId},
+			#{debitBeginningBalances},
+			#{debitEndingBalances},
+			#{debitCurrentAmount},
+			#{creditBeginningBalances},
+			#{creditEndingBalances},
+			#{creditCurrentAmount},
+			#{accountTitle},
+			#{accountDate},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_account_daily SET 	
+			id = #{id},
+			account_id = #{accountId},
+			merchant_id = #{merchantId},
+			debit_beginning_balances = #{debitBeginningBalances},
+			debit_ending_balances = #{debitEndingBalances},
+			debit_current_amount = #{debitCurrentAmount},
+			credit_beginning_balances = #{creditBeginningBalances},
+			credit_ending_balances = #{creditEndingBalances},
+			credit_current_amount = #{creditCurrentAmount},
+			account_title = #{accountTitle},
+			account_date = #{accountDate},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_account_daily
+		<if test="accountDate != null">
+			WHERE account_date = #{accountDate}
+		</if>
+	</update>
+	<select id="findByMerchantIds" parameterType="java.util.Map" resultType="MerchantAccountDaily">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		<include refid="merchantAccountDailyJoins"/>
+		<where>
+			<if test="subjectType != null and subjectType != ''">
+				AND substring(a.account_id,5,3) = #{subjectType}
+			</if>
+			<if test="accountDate != null and accountDate != ''">
+				AND a.account_date = #{accountDate}
+			</if>
+			<if test="beginAccountDate != null and beginAccountDate != ''">
+				AND a.account_date &gt;= #{beginAccountDate}
+			</if>
+			<if test="endAccountDate != null and endAccountDate != ''">
+				AND a.account_date &lt;= #{endAccountDate}
+			</if>						
+			<if test="list != null">
+				AND a.merchant_id in
+				<foreach collection="list" open="(" close=")" separator="," item="merchantAccountDaily" index="state">
+					#{merchantAccountDaily.merchantId}
+				</foreach>
+			</if>
+		</where>	
+		order by create_time DESC limit 1000
+	</select>
+	
+	<select id="findSubjectFinanicalState" resultType="MerchantAccountDaily" parameterType="java.util.Map">
+		SELECT 
+			<include refid="merchantAccountDailyColumns"/>
+		FROM merchant_account_daily a
+		WHERE a.account_date=#{accountDate} 
+	</select>
+	<select id="findSumListBySubject" resultType="MerchantAccountDaily">
+		SELECT 
+			account_date,
+			SUM(debit_current_amount) as debit_current_amount,
+			SUM(debit_beginning_balances) as debit_beginning_balances,
+			SUM(debit_ending_balances) as debit_ending_balances,
+			SUM(credit_current_amount) as credit_current_amount,
+			SUM(credit_beginning_balances) as credit_beginning_balances,
+			SUM(credit_ending_balances) as  credit_ending_balances
+		FROM merchant_account_daily
+		<where>
+			substring(account_id,5,3) = '200' 
+			<if test="beginAccountDate != null and beginAccountDate != ''">
+				AND account_date &gt;= #{beginAccountDate}
+			</if>
+			<if test="endAccountDate != null and endAccountDate != ''">
+				AND account_date &lt;= #{endAccountDate}
+			</if>			
+		</where>
+		GROUP BY account_date 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			   ORDER BY account_date DESC
+			</otherwise>
+		</choose>
+	
+	</select>	
+</mapper>

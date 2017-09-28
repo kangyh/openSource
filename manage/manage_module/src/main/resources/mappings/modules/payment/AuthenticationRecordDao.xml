@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.AuthenticationRecordDao">
+    
+	<sql id="authenticationRecordColumns">
+		a.auth_record_id AS "authRecordId",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.product_code AS "productCode",
+		a.trans_type AS "transType",
+		a.status AS "status",
+		a.description AS "description",
+		a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.pay_time AS "payTime",
+		a.success_amount AS "successAmount",
+		a.success_time AS "successTime",
+		a.notify_url AS "notifyUrl",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.bank_return_url AS "bankReturnUrl",
+		a.bankcard_type AS "bankcardType",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner AS "bankcardOwner",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.bank_serial_no AS "bankSerialNo",
+		a.authorization_code AS "authorizationCode",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_ref_no AS "channelRefNo",
+		a.currency AS "currency",
+		a.fee_type AS "feeType",
+		a.fee_amount AS "feeAmount",
+		a.operator AS "operator",
+		a.coupon_amount AS "couponAmount",
+		a.user_id AS "user.id",
+		a.settle_cyc AS "settleCyc"
+	</sql>
+	
+	<sql id="authenticationRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="AuthenticationRecord">
+		SELECT 
+			<include refid="authenticationRecordColumns"/>
+		FROM authentication_record a
+		<include refid="authenticationRecordJoins"/>
+		WHERE a.auth_record_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AuthenticationRecord">
+		SELECT 
+			<include refid="authenticationRecordColumns"/>
+		FROM authentication_record a
+		<include refid="authenticationRecordJoins"/>
+		<where>
+			
+			<if test="authRecordId != null and authRecordId != ''">
+				AND a.auth_record_id = #{authRecordId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="beginPayTime != null and endPayTime != null and beginPayTime != '' and endPayTime != ''">
+				AND a.pay_time BETWEEN #{beginPayTime} AND #{endPayTime}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+			<if test="bankcardNo != null and bankcardNo != ''">
+				AND a.bankcard_no = #{bankcardNo}
+			</if>
+			<if test="bankcardOwner != null and bankcardOwner != ''">
+				AND a.bankcard_owner = #{bankcardOwner}
+			</if>
+			<if test="bankcardOwnerIdcard != null and bankcardOwnerIdcard != ''">
+				AND a.bankcard_owner_idcard = #{bankcardOwnerIdcard}
+			</if>
+			<if test="bankcardOwnerMobile != null and bankcardOwnerMobile != ''">
+				AND a.bankcard_owner_mobile = #{bankcardOwnerMobile}
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				and a.channel_code like CONCAT('%',#{channelCode},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AuthenticationRecord">
+		SELECT 
+			<include refid="authenticationRecordColumns"/>
+		FROM authentication_record a
+		<include refid="authenticationRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO authentication_record(
+			auth_record_id,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			product_code,
+			trans_type,
+			status,
+			description,
+			update_time,
+			pay_amount,
+			pay_time,
+			success_amount,
+			success_time,
+			notify_url,
+			merchant_order_no,
+			bank_id,
+			bank_name,
+			bank_return_url,
+			bankcard_type,
+			bankcard_no,
+			bankcard_owner,
+			bankcard_owner_idcard,
+			bankcard_owner_mobile,
+			bankcard_owner_type,
+			bank_serial_no,
+			authorization_code,
+			channel_code,
+			channel_name,
+			channel_ref_no,
+			currency,
+			fee_type,
+			fee_amount,
+			operator,
+			coupon_amount,
+			user_id,
+			settle_cyc
+		) VALUES (
+			#{authRecordId},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{productCode},
+			#{transType},
+			#{status},
+			#{description},
+			#{updateTime},
+			#{payAmount},
+			#{payTime},
+			#{successAmount},
+			#{successTime},
+			#{notifyUrl},
+			#{merchantOrderNo},
+			#{bankId},
+			#{bankName},
+			#{bankReturnUrl},
+			#{bankcardType},
+			#{bankcardNo},
+			#{bankcardOwner},
+			#{bankcardOwnerIdcard},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerType},
+			#{bankSerialNo},
+			#{authorizationCode},
+			#{channelCode},
+			#{channelName},
+			#{channelRefNo},
+			#{currency},
+			#{feeType},
+			#{feeAmount},
+			#{operator},
+			#{couponAmount},
+			#{user.id},
+			#{settleCyc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE authentication_record SET 	
+			auth_record_id = #{authRecordId},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			product_code = #{productCode},
+			trans_type = #{transType},
+			status = #{status},
+			description = #{description},
+			update_time = #{updateTime},
+			pay_amount = #{payAmount},
+			pay_time = #{payTime},
+			success_amount = #{successAmount},
+			success_time = #{successTime},
+			notify_url = #{notifyUrl},
+			merchant_order_no = #{merchantOrderNo},
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			bank_return_url = #{bankReturnUrl},
+			bankcard_type = #{bankcardType},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner = #{bankcardOwner},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_type = #{bankcardOwnerType},
+			bank_serial_no = #{bankSerialNo},
+			authorization_code = #{authorizationCode},
+			channel_code = #{channelCode},
+			channel_name = #{channelName},
+			channel_ref_no = #{channelRefNo},
+			currency = #{currency},
+			fee_type = #{feeType},
+			fee_amount = #{feeAmount},
+			operator = #{operator},
+			coupon_amount = #{couponAmount},
+			user_id = #{user.id},
+			settle_cyc = #{settleCyc}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM authentication_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

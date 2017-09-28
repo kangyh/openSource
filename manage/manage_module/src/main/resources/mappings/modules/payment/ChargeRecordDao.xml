@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.ChargeRecordDao">
+    
+	<sql id="chargeRecordColumns">
+		a.charge_id AS "id",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.create_time AS "createDate",
+		a.update_time AS "updateDate",
+		a.charge_amount AS "chargeAmount",
+		a.fee_amount AS "feeAmount",
+		a.fee_type As "feeType",
+		a.status AS "status",
+-- 		a.bankcard_id AS "bankcardId",
+		a.request_ip AS "requestIp",
+		a.pay_request_ip AS "payRequestIp",
+		a.success_time AS "successTime",
+		a.remark AS "remark",
+		a.payment_id AS "paymentId",
+		a.gateway_id AS "gatewayId",
+		a.pay_type as "payType"
+	</sql>
+	
+	<sql id="chargeRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="ChargeRecord">
+		SELECT 
+			<include refid="chargeRecordColumns"/>
+		FROM charge_record a
+		<include refid="chargeRecordJoins"/>
+		WHERE a.charge_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ChargeRecord">
+		SELECT  
+			<include refid="chargeRecordColumns"/>
+		FROM charge_record a
+		<include refid="chargeRecordJoins"/>
+		<where>
+			
+			<if test="chargeId != null and chargeId != ''">
+				AND a.charge_id = #{chargeId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="accountName != null and accountName != ''">
+				AND a.account_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{accountName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{accountName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{accountName},'%')</if>
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+			<if test="sortOrder == 'ASC'">
+	            ORDER BY createDate ASC
+	        </if>
+	        <if test="sortOrder == 'DESC'">
+	            ORDER BY createDate DESC
+	        </if>
+		
+		
+	</select>
+	
+	<select id="findAllList" resultType="ChargeRecord">
+		SELECT 
+			<include refid="chargeRecordColumns"/>
+		FROM charge_record a
+		<include refid="chargeRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO charge_record(
+			charge_id,
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			create_time,
+			update_time,
+			charge_amount,
+			status,
+-- 			bankcard_id,
+			request_ip,
+			pay_request_ip,
+			success_time,
+			remark,
+			payment_id
+		) VALUES (
+			#{chargeId},
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{createTime},
+			#{updateTime},
+			#{chargeAmount},
+			#{status},
+-- 			#{bankcardId},
+			#{requestIp},
+			#{payRequestIp},
+			#{successTime},
+			#{remark},
+			#{paymentId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE charge_record SET 	
+			charge_id = #{chargeId},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			charge_amount = #{chargeAmount},
+			status = #{status},
+-- 			bankcard_id = #{bankcardId},
+			request_ip = #{requestIp},
+			pay_request_ip = #{payRequestIp},
+			success_time = #{successTime},
+			remark = #{remark},
+			payment_id = #{paymentId}
+		WHERE charge_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM charge_record
+		WHERE charge_id = #{id}
+	</update>
+	
+	<update id="updatechargeRecordCAGING">
+		update  charge_record set 
+		status='CAGING', update_time = now()
+		WHERE charge_id = #{id}
+	</update>
+	
+	<select id="getChargeId" resultType="ChargeRecord">
+		SELECT 
+			max(a.charge_id) as chargeId
+		FROM charge_record a
+	</select>
+</mapper>

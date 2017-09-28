@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantDao">
+
+    <sql id="merchantColumns">
+		a.user_id AS "userId",
+		a.email AS "email",
+		a.company_name AS "companyName",
+		a.merchant_pos_code AS "merchantPosCode",
+		a.legal_representative AS "legalRepresentative",
+		a.company_phone AS "companyPhone",
+		a.legal_mobile AS "legalMobile",
+		a.website AS "website",
+		a.business_address AS "businessAddress",
+		a.contry_code AS "contryCode",
+		a.contry_name AS "contryName",
+		a.province_code AS "provinceCode",
+		a.province_name AS "provinceName",
+		a.city_code AS "cityCode",
+		a.city_name AS "cityName",
+		a.county_code AS "countyCode",
+		a.county_name AS "countyName",
+		a.contact_address AS "contactAddress",
+		a.contactor AS "contactor",
+		a.type AS "type",
+		a.level AS "level",
+		a.charge_type AS "chargeType",
+		a.request_ways AS "requestWays",
+		a.request_version AS "requestVersion",
+		a.allowed_ips AS "allowedIps",
+		a.signed_type AS "signedType",
+		a.status AS "status",
+		a.op_audit_time AS "opAuditTime",
+		a.op_auditor AS "opAuditor",
+		a.rc_audit_status AS "rcAuditStatus",
+		a.rc_audit_time AS "rcAuditTime",
+		a.rc_auditor AS "rcAuditor",
+		a.legal_audit_status AS "legalAuditStatus",
+		a.legal_audit_time AS "legalAuditTime",
+		a.legal_auditor AS "legalAuditor",
+		a.sales_id AS "salesId",
+		a.incharger_id AS "inchargerId",
+		a.remark AS "remark",
+		a.create_time AS "createTime",
+		a.welcome_message AS "welcomeMessage",
+		a.certificate_type AS "certificateType",
+		a.business_license_end_time AS "businessLicenseEndTime",
+		a.organization_code AS "organizationCode",
+		a.tax_registration_certificate_no AS "taxRegistrationCertificateNo",
+		a.business_scope AS "businessScope",
+		a.legal_idcard AS "legalIdcard",
+		a.legal_certificate_end_time AS "legalCertificateEndTime",
+		a.contactor_idcard_no AS "contactorIdcardNo",
+		a.contactor_certificate_end_time AS "contactorCertificateEndTime",
+		a.contactor_phone AS "contactorPhone",
+		a.ipc_no AS "ipcNo",
+		a.permits_accounts AS "permitsAccounts",
+		a.legal_certificate_front AS "legalCertificateFront",
+		a.legal_certificate_back AS "legalCertificateBack",
+		a.contactor_certificate_front AS "contactorCertificateFront",
+		a.contactor_certificate_back AS "contactorCertificateBack",
+		a.tax_registration_certificate AS "taxRegistrationCertificate",
+		a.organization_code_certificate AS "organizationCodeCertificate",
+		a.business_license_file AS "businessLicenseFile",
+		a.business_license_no AS "businessLicenseNo",
+		a.objection AS "objection",
+		a.retained_amount AS "retainedAmount",
+		a.union_pay_province_code AS "unionPayProvinceCode",
+		a.union_pay_province_name AS "unionPayProvinceName",
+		a.union_pay_city_code AS "unionPayCityCode",
+		a.union_pay_city_name AS "unionPayCityName",
+		a.mcc_type AS "mccType",
+		a.mcc_server AS "mccServer",
+		a.mcc_detail AS "mccDetail",
+		a.industry_category AS "industryCategory",
+		a.protocol_number AS "protocolNumber",
+		a.merchant_flag AS "merchantFlag",
+		a.short_enterprise_name AS "shortName",
+		a.superior_id AS "superiorId",
+		a.authorization_letter AS "authorizationLetter",
+		a.authentication_status AS "authenticationStatus",
+		a.authentication_reason AS "authenticationReason",
+		a.phone_auth_status AS "phoneAuthStatus",
+		a.phone_auth_reason AS "phoneAuthReason"
+	</sql>
+
+	<sql id="merchantJoins">
+        LEFT JOIN user b ON a.user_id=b.id
+	</sql>
+    <sql id="merchantRateNewColumnsExcel">
+        b.business_type AS "businessType",
+        b.product_name AS "productName",
+        b.rule_begin_time AS "ruleBeginTime",
+        b.rule_end_time AS "ruleEndTime",
+        b.settle_type AS "settleType",
+        c.charge_type AS "chargeType",
+        c.charge_ratio AS "chargeRatio",
+        c.charge_fee AS "chargeFee",
+        c.max_fee AS "maxFee",
+        c.min_fee AS "minFee"
+    </sql>
+
+    <select id="getMerchantVo" resultType="com.heepay.vo.MerchantVO">
+		SELECT 
+			a.user_id AS "merchantId",
+			a.company_name AS "merchantCompany",
+            IFNULL(a.retained_amount,0) AS "retainedAmount",
+            a.mcc_detail AS "mcc",
+            a.short_enterprise_name AS "shortName",
+            a.merchant_flag AS "merchantFlag",
+			b.status AS "merchantStatus",
+			b.login_name AS "merchantLoginName"
+		FROM merchant a
+        <include refid="merchantJoins"/>
+		WHERE a.user_id = #{userId}
+	</select>
+
+	<select id="get" resultType="Merchant">
+		SELECT
+            b.source AS "source",
+			<include refid="merchantColumns"/>
+		FROM merchant a
+		<include refid="merchantJoins"/>
+		WHERE a.user_id = #{userId}
+	</select>
+
+	<select id="findList" resultType="Merchant">
+		SELECT
+            b.source AS "source",
+            b.status AS "userStatus",
+            b.login_name AS "loginName",
+			<include refid="merchantColumns"/>
+		FROM merchant a
+		<include refid="merchantJoins"/>
+		<where>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+            <if test="source != null and source != ''">
+                AND b.source ${source}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND a.company_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+            </if>
+            <if test="rcAuditStatus != null and rcAuditStatus != ''">
+                AND a.rc_audit_status = #{rcAuditStatus}
+            </if>
+            <choose>
+                <when test="legalAuditStatus != null and legalAuditStatus != '' and legalAuditStatus != 'NotNull'">
+                    AND a.legal_audit_status = #{legalAuditStatus}
+                </when>
+                <when test="legalAuditStatus == 'NotNull'">
+                    AND a.legal_audit_status != ''
+                </when>
+            </choose>
+            <choose>
+                <when test="beginCreateTime != null and endCreateTime != null ">
+                    AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+                </when>
+                <when test="beginCreateTime != null and endCreateTime == null">
+                    AND a.create_time &gt; #{beginCreateTime}
+                </when>
+                <when test="beginCreateTime == null and endCreateTime != null">
+                    AND a.create_time &lt; #{endCreateTime}
+                </when>
+            </choose>
+            <if test="status != null and status != '' ">
+                AND a.status = #{status}
+            </if>
+            <if test="merchantFlag != null and merchantFlag != '' ">
+                AND a.merchant_flag = #{merchantFlag}
+            </if>
+            <if test="userStatus != null and userStatus != '' ">
+                AND b.status = #{userStatus}
+            </if>
+            <if test="inchargerId != null and inchargerId != '' ">
+                AND a.incharger_id ${inchargerId}
+            </if>
+            <if test="loginName != null and loginName != '' ">
+                AND b.login_name = #{loginName}
+            </if>
+            <if test="merchantIds != null and merchantIds.size > 0">
+                AND a.user_id in
+                <foreach item="userId" index="index" collection="merchantIds" open="(" separator="," close=")">
+                    #{merchantIds[${index}]}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectMerchant" resultType="Merchant">
+        SELECT
+        b.source AS "source",
+        b.status AS "userStatus",
+        <include refid="merchantColumns"/>
+        FROM merchant a
+        <include refid="merchantJoins"/>
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+         </where>
+    </select>
+
+    <select id="findExcel" resultType="hashmap">
+        SELECT
+        <include refid="merchantColumns"/>,
+        d.status AS "merchantStatus",
+        <include refid="merchantRateNewColumnsExcel"/>
+        FROM merchant a
+        LEFT JOIN user d ON a.user_id=d.id
+        left join merchant_product_rate b
+        on a.user_id = b.merchant_id
+        left join merchant_rate_bank c
+        on c.rate_id = b.id
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND a.company_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+            </if>
+            <if test="rcAuditStatus != null and rcAuditStatus != ''">
+                AND a.rc_audit_status = #{rcAuditStatus}
+            </if>
+            <choose>
+                <when test="legalAuditStatus != null and legalAuditStatus != '' and legalAuditStatus != 'NotNull'">
+                    AND a.legal_audit_status = #{legalAuditStatus}
+                </when>
+                <when test="legalAuditStatus == 'NotNull'">
+                    AND a.legal_audit_status != ''
+                </when>
+            </choose>
+            <choose>
+                <when test="beginCreateTime != null and endCreateTime != null ">
+                    AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+                </when>
+                <when test="beginCreateTime != null and endCreateTime == null">
+                    AND a.create_time &gt; #{beginCreateTime}
+                </when>
+                <when test="beginCreateTime == null and endCreateTime != null">
+                    AND a.create_time &lt; #{endCreateTime}
+                </when>
+            </choose>
+            <if test="status != null and status != '' ">
+                AND a.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Merchant">
+        SELECT
+        <include refid="merchantColumns"/>
+        FROM merchant a
+        <include refid="merchantJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert" parameterType="Merchant">
+        insert into merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="companyName != null">
+                company_name,
+            </if>
+            <if test="merchantPosCode != null">
+                merchant_pos_code,
+            </if>
+            <if test="legalRepresentative != null">
+                legal_representative,
+            </if>
+            <if test="companyPhone != null">
+                company_phone,
+            </if>
+            <if test="legalMobile != null">
+                legal_mobile,
+            </if>
+            <if test="website != null">
+                website,
+            </if>
+            <if test="businessAddress != null">
+                business_address,
+            </if>
+            <if test="contryCode != null">
+                contry_code,
+            </if>
+            <if test="contryName != null">
+                contry_name,
+            </if>
+            <if test="provinceCode != null">
+                province_code,
+            </if>
+            <if test="provinceName != null">
+                province_name,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="cityName != null">
+                city_name,
+            </if>
+            <if test="countyCode != null">
+                county_code,
+            </if>
+            <if test="countyName != null">
+                county_name,
+            </if>
+            <if test="contactAddress != null">
+                contact_address,
+            </if>
+            <if test="contactor != null">
+                contactor,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="chargeType != null">
+                charge_type,
+            </if>
+            <if test="requestWays != null">
+                request_ways,
+            </if>
+            <if test="requestVersion != null">
+                request_version,
+            </if>
+            <if test="allowedIps != null">
+                allowed_ips,
+            </if>
+            <if test="signedType != null">
+                signed_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="opAuditTime != null">
+                op_audit_time,
+            </if>
+            <if test="opAuditor != null">
+                op_auditor,
+            </if>
+            <if test="rcAuditStatus != null">
+                rc_audit_status,
+            </if>
+            <if test="rcAuditTime != null">
+                rc_audit_time,
+            </if>
+            <if test="rcAuditor != null">
+                rc_auditor,
+            </if>
+            <if test="legalAuditStatus != null">
+                legal_audit_status,
+            </if>
+            <if test="legalAuditTime != null">
+                legal_audit_time,
+            </if>
+            <if test="legalAuditor != null">
+                legal_auditor,
+            </if>
+            <if test="salesId != null">
+                sales_id,
+            </if>
+            <if test="inchargerId != null">
+                incharger_id,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="welcomeMessage != null">
+                welcome_message,
+            </if>
+            <if test="certificateType != null">
+                certificate_type,
+            </if>
+            <if test="businessLicenseEndTime != null">
+                business_license_end_time,
+            </if>
+            <if test="organizationCode != null">
+                organization_code,
+            </if>
+            <if test="taxRegistrationCertificateNo != null">
+                tax_registration_certificate_no,
+            </if>
+            <if test="businessScope != null">
+                business_scope,
+            </if>
+            <if test="legalIdcard != null">
+                legal_idcard,
+            </if>
+            <if test="legalCertificateEndTime != null">
+                legal_certificate_end_time,
+            </if>
+            <if test="contactorIdcardNo != null">
+                contactor_idcard_no,
+            </if>
+            <if test="contactorCertificateEndTime != null">
+                contactor_certificate_end_time,
+            </if>
+            <if test="contactorPhone != null">
+                contactor_phone,
+            </if>
+            <if test="ipcNo != null">
+                ipc_no,
+            </if>
+            <if test="permitsAccounts != null">
+                permits_accounts,
+            </if>
+            <if test="legalCertificateFront != null">
+                legal_certificate_front,
+            </if>
+            <if test="legalCertificateBack != null">
+                legal_certificate_back,
+            </if>
+            <if test="contactorCertificateFront != null">
+                legal_certificate_front,
+            </if>
+            <if test="contactorCertificateBack != null">
+                legal_certificate_back,
+            </if>
+            <if test="taxRegistrationCertificate != null">
+                tax_registration_certificate,
+            </if>
+            <if test="organizationCodeCertificate != null">
+                organization_code_certificate,
+            </if>
+            <if test="businessLicenseFile != null">
+                business_license_file,
+            </if>
+            <if test="businessLicenseNo != null">
+                business_license_no,
+            </if>
+            <if test="objection != null">
+                objection,
+            </if>
+            <if test="retainedAmount != null">
+                retained_amount,
+            </if>
+            <if test="unionPayProvinceCode != null">
+                union_pay_province_code,
+            </if>
+            <if test="unionPayProvinceName != null">
+                union_pay_province_name,
+            </if>
+            <if test="unionPayCityCode != null">
+                union_pay_city_code,
+            </if>
+            <if test="unionPayCityName != null">
+                union_pay_city_name,
+            </if>
+            <if test="mccType != null">
+                mcc_type,
+            </if>
+            <if test="mccServer != null">
+                mcc_server,
+            </if>
+            <if test="mccDetail != null">
+                mcc_detail,
+            </if>
+            <if test="industryCategory != null">
+                industry_category,
+            </if>
+            <if test="protocolNumber != null">
+                protocol_number,
+            </if>
+            <if test="merchantFlag != null">
+                merchant_flag,
+            </if>
+            <if test="shortName != null">
+                short_enterprise_name,
+            </if>
+            <if test="authorizationLetter != null">
+                authorization_letter,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPosCode != null">
+                #{merchantPosCode,jdbcType=CHAR},
+            </if>
+            <if test="legalRepresentative != null">
+                #{legalRepresentative,jdbcType=VARCHAR},
+            </if>
+            <if test="companyPhone != null">
+                #{companyPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="legalMobile != null">
+                #{legalMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="website != null">
+                #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAddress != null">
+                #{businessAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contryCode != null">
+                #{contryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="contryName != null">
+                #{contryName,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode,jdbcType=CHAR},
+            </if>
+            <if test="provinceName != null">
+                #{provinceName,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=CHAR},
+            </if>
+            <if test="cityName != null">
+                #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="countyCode != null">
+                #{countyCode,jdbcType=CHAR},
+            </if>
+            <if test="countyName != null">
+                #{countyName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactAddress != null">
+                #{contactAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contactor != null">
+                #{contactor,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=CHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=TINYINT},
+            </if>
+            <if test="chargeType != null">
+                #{chargeType,jdbcType=TINYINT},
+            </if>
+            <if test="requestWays != null">
+                #{requestWays,jdbcType=CHAR},
+            </if>
+            <if test="requestVersion != null">
+                #{requestVersion,jdbcType=TINYINT},
+            </if>
+            <if test="allowedIps != null">
+                #{allowedIps,jdbcType=VARCHAR},
+            </if>
+            <if test="signedType != null">
+                #{signedType,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="opAuditTime != null">
+                #{opAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="opAuditor != null">
+                #{opAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="rcAuditStatus != null">
+                #{rcAuditStatus,jdbcType=CHAR},
+            </if>
+            <if test="rcAuditTime != null">
+                #{rcAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rcAuditor != null">
+                #{rcAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="legalAuditStatus != null">
+                #{legalAuditStatus,jdbcType=CHAR},
+            </if>
+            <if test="legalAuditTime != null">
+                #{legalAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="legalAuditor != null">
+                #{legalAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="salesId != null">
+                #{salesId,jdbcType=SMALLINT},
+            </if>
+            <if test="inchargerId != null">
+                #{inchargerId,jdbcType=SMALLINT},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="welcomeMessage != null">
+                #{welcomeMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateType != null">
+                #{certificateType,jdbcType=CHAR},
+            </if>
+            <if test="businessLicenseEndTime != null">
+                #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="organizationCode != null">
+                #{organizationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRegistrationCertificateNo != null">
+                #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+            </if>
+            <if test="businessScope != null">
+                #{businessScope,jdbcType=VARCHAR},
+            </if>
+            <if test="legalIdcard != null">
+                #{legalIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateEndTime != null">
+                #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contactorIdcardNo != null">
+                #{contactorIdcardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateEndTime != null">
+                #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contactorPhone != null">
+                #{contactorPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="ipcNo != null">
+                #{ipcNo,jdbcType=VARCHAR},
+            </if>
+            <if test="permitsAccounts != null">
+                #{permitsAccounts,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateFront != null">
+                #{legalCertificateFront,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateBack != null">
+                #{legalCertificateBack,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateFront != null">
+                #{contactorCertificateFront,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateBack != null">
+                #{contactorCertificateBack,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRegistrationCertificate != null">
+                #{taxRegistrationCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="organizationCodeCertificate != null">
+                #{organizationCodeCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicenseFile != null">
+                #{businessLicenseFile,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicenseNo != null">
+                #{businessLicenseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="objection != null">
+                #{objection,jdbcType=VARCHAR},
+            </if>
+            <if test="retainedAmount != null">
+                #{retainedAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="unionPayProvinceCode != null">
+                #{unionPayProvinceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayProvinceName != null">
+                #{unionPayProvinceName,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayCityCode != null">
+                #{unionPayCityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayCityName != null">
+                #{unionPayCityName,jdbcType=VARCHAR},
+            </if>
+            <if test="mccType != null">
+                #{mccType,jdbcType=VARCHAR},
+            </if>
+            <if test="mccServer != null">
+                #{mccServer,jdbcType=VARCHAR},
+            </if>
+            <if test="mccDetail != null">
+                #{mccDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="industryCategory != null">
+                #{industryCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="protocolNumber != null">
+                #{protocolNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantFlag != null">
+                #{merchantFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="shortName != null">
+                #{shortName,jdbcType=VARCHAR},
+            </if>
+            <if test="authorizationLetter != null">
+                #{authorizationLetter,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Merchant">
+        update merchant
+        <set>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                company_name = #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPosCode != null">
+                merchant_pos_code = #{merchantPosCode,jdbcType=CHAR},
+            </if>
+            <if test="legalRepresentative != null">
+                legal_representative = #{legalRepresentative,jdbcType=VARCHAR},
+            </if>
+            <if test="companyPhone != null">
+                company_phone = #{companyPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="legalMobile != null">
+                legal_mobile = #{legalMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="website != null">
+                website = #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="businessAddress != null">
+                business_address = #{businessAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contryCode != null">
+                contry_code = #{contryCode,jdbcType=VARCHAR},
+            </if>
+            <if test="contryName != null">
+                contry_name = #{contryName,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode,jdbcType=CHAR},
+            </if>
+            <if test="provinceName != null">
+                province_name = #{provinceName,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=CHAR},
+            </if>
+            <if test="cityName != null">
+                city_name = #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="countyCode != null">
+                county_code = #{countyCode,jdbcType=CHAR},
+            </if>
+            <if test="countyName != null">
+                county_name = #{countyName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactAddress != null">
+                contact_address = #{contactAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contactor != null">
+                contactor = #{contactor,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=TINYINT},
+            </if>
+            <if test="chargeType != null">
+                charge_type = #{chargeType,jdbcType=TINYINT},
+            </if>
+            <if test="requestWays != null">
+                request_ways = #{requestWays,jdbcType=CHAR},
+            </if>
+            <if test="requestVersion != null">
+                request_version = #{requestVersion,jdbcType=TINYINT},
+            </if>
+            <if test="allowedIps != null">
+                allowed_ips = #{allowedIps,jdbcType=VARCHAR},
+            </if>
+            <if test="signedType != null">
+                signed_type = #{signedType,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="opAuditTime != null">
+                op_audit_time = #{opAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="opAuditor != null">
+                op_auditor = #{opAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="rcAuditStatus != null">
+                rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+            </if>
+            <if test="rcAuditTime != null">
+                rc_audit_time = #{rcAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="rcAuditor != null">
+                rc_auditor = #{rcAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="legalAuditStatus != null">
+                legal_audit_status = #{legalAuditStatus,jdbcType=CHAR},
+            </if>
+            <if test="legalAuditTime != null">
+                legal_audit_time = #{legalAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="legalAuditor != null">
+                legal_auditor = #{legalAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="salesId != null">
+                sales_id = #{salesId,jdbcType=SMALLINT},
+            </if>
+            <if test="inchargerId != null">
+                incharger_id = #{inchargerId,jdbcType=SMALLINT},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="welcomeMessage != null">
+                welcome_message = #{welcomeMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateType != null">
+                certificate_type = #{certificateType,jdbcType=CHAR},
+            </if>
+            <if test="businessLicenseEndTime != null">
+                business_license_end_time = #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="organizationCode != null">
+                organization_code = #{organizationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRegistrationCertificateNo != null">
+                tax_registration_certificate_no = #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+            </if>
+            <if test="businessScope != null">
+                business_scope = #{businessScope,jdbcType=VARCHAR},
+            </if>
+            <if test="legalIdcard != null">
+                legal_idcard = #{legalIdcard,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateEndTime != null">
+                legal_certificate_end_time = #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contactorIdcardNo != null">
+                contactor_idcard_no = #{contactorIdcardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateEndTime != null">
+                contactor_certificate_end_time = #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contactorPhone != null">
+                contactor_phone = #{contactorPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="ipcNo != null">
+                ipc_no = #{ipcNo,jdbcType=VARCHAR},
+            </if>
+            <if test="permitsAccounts != null">
+                permits_accounts = #{permitsAccounts,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateFront != null">
+                legal_certificate_front = #{legalCertificateFront,jdbcType=VARCHAR},
+            </if>
+            <if test="legalCertificateBack != null">
+                legal_certificate_back = #{legalCertificateBack,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateFront != null">
+                contactor_certificate_front = #{contactorCertificateFront,jdbcType=VARCHAR},
+            </if>
+            <if test="contactorCertificateBack != null">
+                contactor_certificate_back = #{contactorCertificateBack,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRegistrationCertificate != null">
+                tax_registration_certificate = #{taxRegistrationCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="organizationCodeCertificate != null">
+                organization_code_certificate = #{organizationCodeCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicenseFile != null">
+                business_license_file = #{businessLicenseFile,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicenseNo != null">
+                business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="objection != null">
+                objection = #{objection,jdbcType=VARCHAR},
+            </if>
+            <if test="retainedAmount != null">
+                retained_amount = #{retainedAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="unionPayProvinceCode != null">
+                union_pay_province_code = #{unionPayProvinceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayProvinceName != null">
+                union_pay_province_name = #{unionPayProvinceName,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayCityCode != null">
+                union_pay_city_code = #{unionPayCityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unionPayCityName != null">
+                union_pay_city_name = #{unionPayCityName,jdbcType=VARCHAR},
+            </if>
+            <if test="mccType != null">
+                mcc_type = #{mccType,jdbcType=VARCHAR},
+            </if>
+            <if test="mccServer != null">
+                mcc_server = #{mccServer,jdbcType=VARCHAR},
+            </if>
+            <if test="mccDetail != null">
+                mcc_detail = #{mccDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="industryCategory != null">
+                industry_category = #{industryCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="protocolNumber != null">
+                protocol_number = #{protocolNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantFlag != null">
+                merchant_flag = #{merchantFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="shortName != null">
+                short_enterprise_name = #{shortName,jdbcType=VARCHAR},
+            </if>
+            <if test="authorizationLetter != null">
+                authorization_letter = #{authorizationLetter,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete">
+		DELETE FROM merchant
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="status" >
+		UPDATE merchant SET
+		status = #{status}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="legalAuditStatus" >
+		UPDATE merchant
+		<set>
+	        objection = #{objection,jdbcType=VARCHAR},
+	        legal_audit_time = #{updateDate},
+            legal_auditor = #{updateBy.id},
+	      <if test="legalAuditStatus != null">
+	        legal_audit_status = #{legalAuditStatus,jdbcType=VARCHAR},
+	      </if>
+	      <if test="rcAuditStatus != null">
+	        rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+	      </if>
+	      <if test="status != null">
+	        status = #{status,jdbcType=VARCHAR},
+	      </if>
+		</set>
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="rcAuditStatus" >
+		UPDATE merchant 
+		<set>
+		  rc_audit_time = #{updateDate},
+          rc_auditor = #{updateBy.id},
+		  <if test="objection != null">
+	        objection = #{objection,jdbcType=VARCHAR},
+	      </if>
+	      <if test="rcAuditStatus != null">
+	        rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+	      </if>
+	      <if test="status != null">
+	        status = #{status,jdbcType=VARCHAR},
+	      </if>
+	      <if test="level != null">
+	        level = #{level,jdbcType=TINYINT},
+	      </if>
+		</set>
+		WHERE user_id = #{userId}
+	</update>
+	
+	<select id="selectList" resultType="Merchant">
+		SELECT 
+			<include refid="merchantColumns"/>
+		FROM merchant
+	</select>
+	
+	<select id="count" resultType="Integer">
+		SELECT count(1)
+		FROM merchant
+		WHERE merchant_pos_code LIKE concat('%',#{merchantPosCode},'%')
+	</select>
+
+    <update id="updateAuth">
+        UPDATE merchant
+        <set>
+            <if test="authenticationStatus != null and authenticationStatus != ''">
+                authentication_status = #{authenticationStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="authenticationReason != null and authenticationReason != ''">
+                authentication_reason = #{authenticationReason,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updatePhoneAuth">
+        UPDATE merchant
+        <set>
+            <if test="phoneAuthStatus != null and phoneAuthStatus != ''">
+                phone_auth_status = #{phoneAuthStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneAuthReason != null and phoneAuthReason != ''">
+                phone_auth_reason = #{phoneAuthReason,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="getMerchantByMerchantIdsAndSource" resultType="Merchant" parameterType="java.util.Map">
+        select <include refid="merchantColumns"/>
+        from merchant a
+        where a.user_id in
+        <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >
+            #{merchantId}
+        </foreach>
+        and a.merchant_flag = #{merchantFlag}
+    </select>
+
+    <select id="queryInternalMerchantsList" resultType="Merchant" parameterType="java.util.List">
+        select <include refid="merchantColumns"/>
+        from merchant a
+        WHERE a.user_id in
+        <foreach collection="list" item="merchantId" open="(" close=")" separator="," >
+            #{merchantId}
+        </foreach>
+    </select>
+
+    <select id="queryInternalMerchantsByFlag" resultType="Merchant">
+        SELECT <include refid="merchantColumns"/>
+        from merchant a
+        WHERE a.merchant_flag = 'inside'
+    </select>
+
+    <select id="getUserId" resultType="java.lang.Integer">
+      SELECT user_id FROM merchant WHERE STATUS = 'SUCCES' AND merchant_flag = #{merchantFlag}
+    </select>
+</mapper>

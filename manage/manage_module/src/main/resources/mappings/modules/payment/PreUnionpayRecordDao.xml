@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.PreUnionpayRecordDao">
+    
+	<sql id="preUnionpayRecordColumns">
+		a.prepay_id AS "prepayId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.merchant_mcc AS "merchantMcc",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.product_code AS "productCode",
+		a.trans_type AS "transType",
+		a.qr_code AS "qrCode",
+		a.limit_count AS "limitCount",
+		a.qr_valid_time AS "qrValidTime",
+		a.qr_expire_time AS "qrExpireTime",
+		a.request_amount AS "requestAmount",
+		a.success_times AS "successTimes",
+		a.success_amount AS "successAmount",
+		a.payee_info AS "payeeInfo",
+		a.payee_comments AS "payeeComments",
+		a.request_date AS "requestDate",
+		a.request_ip AS "requestIp",
+		a.notify_url AS "notifyUrl",
+		a.callback_url AS "callbackUrl",
+		a.request_type AS "requestType",
+		a.version AS "version",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.ext_1 AS "ext1",
+		a.ext_2 AS "ext2",
+		a.ext_3 AS "ext3"
+	</sql>
+	
+	<sql id="preUnionpayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="PreUnionpayRecord">
+		SELECT 
+			<include refid="preUnionpayRecordColumns"/>
+		FROM pre_unionpay_record a
+		<include refid="preUnionpayRecordJoins"/>
+		WHERE a.prepay_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PreUnionpayRecord">
+		SELECT 
+			<include refid="preUnionpayRecordColumns"/>
+		FROM pre_unionpay_record a
+		<include refid="preUnionpayRecordJoins"/>
+		<where>
+			
+			<if test="prepayId != null and prepayId != ''">
+				AND a.prepay_id = #{prepayId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PreUnionpayRecord">
+		SELECT 
+			<include refid="preUnionpayRecordColumns"/>
+		FROM pre_unionpay_record a
+		<include refid="preUnionpayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pre_unionpay_record(
+			prepay_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			merchant_mcc,
+			merchant_order_no,
+			product_code,
+			trans_type,
+			qr_code,
+			limit_count,
+			qr_valid_time,
+			qr_expire_time,
+			request_amount,
+			success_times,
+			success_amount,
+			payee_info,
+			payee_comments,
+			request_date,
+			request_ip,
+			notify_url,
+			callback_url,
+			request_type,
+			version,
+			create_time,
+			update_time,
+			ext_1,
+			ext_2,
+			ext_3
+		) VALUES (
+			#{prepayId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{merchantMcc},
+			#{merchantOrderNo},
+			#{productCode},
+			#{transType},
+			#{qrCode},
+			#{limitCount},
+			#{qrValidTime},
+			#{qrExpireTime},
+			#{requestAmount},
+			#{successTimes},
+			#{successAmount},
+			#{payeeInfo},
+			#{payeeComments},
+			#{requestDate},
+			#{requestIp},
+			#{notifyUrl},
+			#{callbackUrl},
+			#{requestType},
+			#{version},
+			#{createTime},
+			#{updateTime},
+			#{ext1},
+			#{ext2},
+			#{ext3}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pre_unionpay_record SET 	
+			prepay_id = #{prepayId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			merchant_mcc = #{merchantMcc},
+			merchant_order_no = #{merchantOrderNo},
+			product_code = #{productCode},
+			trans_type = #{transType},
+			qr_code = #{qrCode},
+			limit_count = #{limitCount},
+			qr_valid_time = #{qrValidTime},
+			qr_expire_time = #{qrExpireTime},
+			request_amount = #{requestAmount},
+			success_times = #{successTimes},
+			success_amount = #{successAmount},
+			payee_info = #{payeeInfo},
+			payee_comments = #{payeeComments},
+			request_date = #{requestDate},
+			request_ip = #{requestIp},
+			notify_url = #{notifyUrl},
+			callback_url = #{callbackUrl},
+			request_type = #{requestType},
+			version = #{version},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			ext_1 = #{ext1},
+			ext_2 = #{ext2},
+			ext_3 = #{ext3}
+		WHERE prepay_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pre_unionpay_record
+		WHERE prepay_id = #{id}
+	</update>
+	
+</mapper>

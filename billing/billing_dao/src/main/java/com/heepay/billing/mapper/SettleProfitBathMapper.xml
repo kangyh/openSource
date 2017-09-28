@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleProfitBathMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleProfitBath" >
+    <id column="settle_profit_id" property="settleProfitId" jdbcType="BIGINT" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="profit_bath" property="profitBath" jdbcType="VARCHAR" />
+    <result column="profit_date" property="profitDate" jdbcType="TIMESTAMP" />
+    <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="profit_amount" property="profitAmount" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="profit_status" property="profitStatus" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="merchant_order_no" property="merchantOrderNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    settle_profit_id, merchant_id, trans_type, currency, profit_bath, profit_date, deal_time, 
+    trans_no, profit_amount, fee, profit_status, settle_bath, merchant_order_no
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleProfitBathExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_profit_bath
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_profit_bath
+    where settle_profit_id = #{settleProfitId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_profit_bath
+    where settle_profit_id = #{settleProfitId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleProfitBathExample" >
+    delete from settle_profit_bath
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleProfitBath" >
+    insert into settle_profit_bath (settle_profit_id, merchant_id, trans_type, 
+      currency, profit_bath, profit_date, 
+      deal_time, trans_no, profit_amount, 
+      fee, profit_status, settle_bath, 
+      merchant_order_no)
+    values (#{settleProfitId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER}, #{transType,jdbcType=VARCHAR}, 
+      #{currency,jdbcType=VARCHAR}, #{profitBath,jdbcType=VARCHAR}, #{profitDate,jdbcType=TIMESTAMP}, 
+      #{dealTime,jdbcType=TIMESTAMP}, #{transNo,jdbcType=VARCHAR}, #{profitAmount,jdbcType=DECIMAL}, 
+      #{fee,jdbcType=DECIMAL}, #{profitStatus,jdbcType=VARCHAR}, #{settleBath,jdbcType=VARCHAR}, 
+      #{merchantOrderNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleProfitBath" >
+    insert into settle_profit_bath
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="settleProfitId != null" >
+        settle_profit_id,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="profitBath != null" >
+        profit_bath,
+      </if>
+      <if test="profitDate != null" >
+        profit_date,
+      </if>
+      <if test="dealTime != null" >
+        deal_time,
+      </if>
+      <if test="transNo != null" >
+        trans_no,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="profitStatus != null" >
+        profit_status,
+      </if>
+      <if test="settleBath != null" >
+        settle_bath,
+      </if>
+      <if test="merchantOrderNo != null" >
+        merchant_order_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="settleProfitId != null" >
+        #{settleProfitId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="profitBath != null" >
+        #{profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="profitDate != null" >
+        #{profitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealTime != null" >
+        #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transNo != null" >
+        #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="profitStatus != null" >
+        #{profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantOrderNo != null" >
+        #{merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleProfitBathExample" resultType="java.lang.Integer" >
+    select count(*) from settle_profit_bath
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_profit_bath
+    <set >
+      <if test="record.settleProfitId != null" >
+        settle_profit_id = #{record.settleProfitId,jdbcType=BIGINT},
+      </if>
+      <if test="record.merchantId != null" >
+        merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="record.transType != null" >
+        trans_type = #{record.transType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currency != null" >
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitBath != null" >
+        profit_bath = #{record.profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitDate != null" >
+        profit_date = #{record.profitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dealTime != null" >
+        deal_time = #{record.dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.transNo != null" >
+        trans_no = #{record.transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitAmount != null" >
+        profit_amount = #{record.profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fee != null" >
+        fee = #{record.fee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.profitStatus != null" >
+        profit_status = #{record.profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleBath != null" >
+        settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantOrderNo != null" >
+        merchant_order_no = #{record.merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_profit_bath
+    set settle_profit_id = #{record.settleProfitId,jdbcType=BIGINT},
+      merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      trans_type = #{record.transType,jdbcType=VARCHAR},
+      currency = #{record.currency,jdbcType=VARCHAR},
+      profit_bath = #{record.profitBath,jdbcType=VARCHAR},
+      profit_date = #{record.profitDate,jdbcType=TIMESTAMP},
+      deal_time = #{record.dealTime,jdbcType=TIMESTAMP},
+      trans_no = #{record.transNo,jdbcType=VARCHAR},
+      profit_amount = #{record.profitAmount,jdbcType=DECIMAL},
+      fee = #{record.fee,jdbcType=DECIMAL},
+      profit_status = #{record.profitStatus,jdbcType=VARCHAR},
+      settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      merchant_order_no = #{record.merchantOrderNo,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleProfitBath" >
+    update settle_profit_bath
+    <set >
+      <if test="merchantId != null" >
+        merchant_id = #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="profitBath != null" >
+        profit_bath = #{profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="profitDate != null" >
+        profit_date = #{profitDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealTime != null" >
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transNo != null" >
+        trans_no = #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="profitStatus != null" >
+        profit_status = #{profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        settle_bath = #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantOrderNo != null" >
+        merchant_order_no = #{merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where settle_profit_id = #{settleProfitId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleProfitBath" >
+    update settle_profit_bath
+    set merchant_id = #{merchantId,jdbcType=INTEGER},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      profit_bath = #{profitBath,jdbcType=VARCHAR},
+      profit_date = #{profitDate,jdbcType=TIMESTAMP},
+      deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      profit_amount = #{profitAmount,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      profit_status = #{profitStatus,jdbcType=VARCHAR},
+      settle_bath = #{settleBath,jdbcType=VARCHAR},
+      merchant_order_no = #{merchantOrderNo,jdbcType=VARCHAR}
+    where settle_profit_id = #{settleProfitId,jdbcType=BIGINT}
+  </update>
+    
+   <update id="updateSettleProfitBatchBySettleNo" parameterType="map">
+       update settle_profit_bath 
+         set deal_time = #{dealTime,jdbcType=TIMESTAMP},
+             profit_status = #{profitStatus,jdbcType=CHAR}
+           where profit_bath = #{profitBath,jdbcType=VARCHAR}             
+   
+   </update>  
+
+  
+</mapper>

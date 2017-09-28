@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcTransSerialCardPaymentAccountQueryDao" >
+  
+  <sql id="includeEntity">
+	  trans_serial_card_payment_accoun_id, data_type, 
+      data, bank_id, transaction_date, 
+      application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcTransSerialCardPaymentAccountQuery">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_detail_query a
+		<where>
+			
+			<!-- trans_time -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND trans_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!--bankId -->
+			<if test="bankId != null and bankId != ''">
+				AND bank_id = #{bankId} 
+			</if> 
+			<!-- applicationCode-->
+			<if test="applicationCode != null and applicationCode != ''">
+				AND application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY trans_serial_card_payment_accoun_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY trans_serial_card_payment_accoun_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <insert id="savae" parameterType="PbcTransSerialCardPaymentAccountQuery" >
+    insert into pbc_trans_serial_card_payment_account_query (trans_serial_card_payment_accoun_id, data_type, 
+      data, bank_id, transaction_date, 
+      application_code)
+    values (#{transSerialCardPaymentAccounId,jdbcType=BIGINT}, #{dataType,jdbcType=VARCHAR}, 
+      #{data,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, #{transactionDate,jdbcType=TIMESTAMP}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="saveEntity" parameterType="PbcTransSerialCardPaymentAccountQuery" useGeneratedKeys="true" keyProperty="transSerialCardPaymentAccounId">
+    insert into pbc_trans_serial_card_payment_account_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="transSerialCardPaymentAccounId != null" >
+        trans_serial_card_payment_accoun_id,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="transactionDate != null" >
+        transaction_date,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="transSerialCardPaymentAccounId != null" >
+        #{transSerialCardPaymentAccounId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDate != null" >
+        #{transactionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+ 
+
+  <update id="updateEntity" parameterType="PbcTransSerialCardPaymentAccountQuery" >
+    update pbc_trans_serial_card_payment_account_query
+    <set >
+      <if test="dataType != null" >
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        data = #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDate != null" >
+        transaction_date = #{transactionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trans_serial_card_payment_accoun_id = #{transSerialCardPaymentAccounId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateBy" parameterType="PbcTransSerialCardPaymentAccountQuery" >
+    update pbc_trans_serial_card_payment_account_query
+    set data_type = #{dataType,jdbcType=VARCHAR},
+      data = #{data,jdbcType=VARCHAR},
+      bank_id = #{bankId,jdbcType=VARCHAR},
+      transaction_date = #{transactionDate,jdbcType=TIMESTAMP},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where trans_serial_card_payment_accoun_id = #{transSerialCardPaymentAccounId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getEntityById" resultType="PbcTransSerialCardPaymentAccountQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_serial_card_payment_account_query a
+	WHERE trans_serial_card_payment_accoun_id = #{transSerialCardPaymentAccounId}
+  </select>
+  
+  <select id="getQueryInfoId" resultType="PbcTransSerialCardPaymentAccountQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_serial_card_payment_account_query a
+	WHERE application_code = #{applicationCode}
+  </select>
+</mapper>

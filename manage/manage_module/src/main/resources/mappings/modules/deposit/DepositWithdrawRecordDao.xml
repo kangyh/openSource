@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.deposit.dao.DepositWithdrawRecordDao">
+    
+	<sql id="depositWithdrawRecordColumns">
+		a.deposit_withdraw_id AS "depositWithdrawId",
+		a.business_seq_no AS "businessSeqNo",
+		a.payment_id AS "paymentId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.amount AS "amount",
+		a.rec_acc_no AS "recAccNo",
+		a.rec_acc_name AS "recAccName",
+		a.rec_open_acc_dept AS "recOpenAccDept",
+		a.rec_bank_no AS "recBankNo",
+		a.bank_id AS "bankId",
+		a.account_type AS "accountType",
+		a.card_type_code AS "cardTypeCode",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="depositWithdrawRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="DepositWithdrawRecord">
+		SELECT 
+			<include refid="depositWithdrawRecordColumns"/>
+		FROM deposit_withdraw_record a
+		<include refid="depositWithdrawRecordJoins"/>
+		WHERE a.deposit_withdraw_id = #{deposit_withdraw_id}
+	</select>
+	
+	<select id="findList" resultType="DepositWithdrawRecord">
+		SELECT 
+			<include refid="depositWithdrawRecordColumns"/>
+		FROM deposit_withdraw_record a
+		<include refid="depositWithdrawRecordJoins"/>
+		<where>
+			<if test="depositWithdrawId != null and depositWithdrawId != ''">
+				AND a.deposit_withdraw_id = #{depositWithdrawId}
+			</if>
+			<if test="businessSeqNo != null and businessSeqNo != ''">
+				AND a.business_seq_no = #{businessSeqNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+            ORDER BY createTime ASC
+        </if>
+        <if test="sortOrder == 'DESC'">
+            ORDER BY createTime DESC
+        </if>
+	</select>
+	
+	<select id="findAllList" resultType="DepositWithdrawRecord">
+		SELECT 
+			<include refid="depositWithdrawRecordColumns"/>
+		FROM deposit_withdraw_record a
+		<include refid="depositWithdrawRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO deposit_withdraw_record(
+			deposit_withdraw_id,
+			business_seq_no,
+			payment_id,
+			merchant_id,
+			merchant_login_name,
+			account_id,
+			account_name,
+			amount,
+			rec_acc_no,
+			rec_acc_name,
+			rec_open_acc_dept,
+			rec_bank_no,
+			bank_id,
+			account_type,
+			card_type_code,
+			status,
+			create_time,
+			update_time
+		) VALUES (
+			#{depositWithdrawId},
+			#{businessSeqNo},
+			#{paymentId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{accountId},
+			#{accountName},
+			#{amount},
+			#{recAccNo},
+			#{recAccName},
+			#{recOpenAccDept},
+			#{recBankNo},
+			#{bankId},
+			#{accountType},
+			#{cardTypeCode},
+			#{status},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE deposit_withdraw_record SET 	
+			deposit_withdraw_id = #{depositWithdrawId},
+			business_seq_no = #{businessSeqNo},
+			payment_id = #{paymentId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			amount = #{amount},
+			rec_acc_no = #{recAccNo},
+			rec_acc_name = #{recAccName},
+			rec_open_acc_dept = #{recOpenAccDept},
+			rec_bank_no = #{recBankNo},
+			bank_id = #{bankId},
+			account_type = #{accountType},
+			card_type_code = #{cardTypeCode},
+			status = #{status},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE deposit_withdraw_id = #{depositWithdrawId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM deposit_withdraw_record
+		WHERE deposit_withdraw_id = #{depositWithdrawId}
+	</update>
+	
+</mapper>

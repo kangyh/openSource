@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantUnionpayAreaBaseDao">
+    
+	<sql id="merchantUnionpayAreaBaseColumns">
+		a.id AS "id",
+		a.province_id AS "provinceId",
+		a.province_name AS "provinceName",
+		a.city_id AS "cityId",
+		a.city_name AS "cityName",
+		a.unionpay_area_code AS "unionpayAreaCode"
+	</sql>
+	
+	<sql id="merchantUnionpayAreaBaseJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantUnionpayAreaBase">
+		SELECT 
+			<include refid="merchantUnionpayAreaBaseColumns"/>
+		FROM merchant_unionpay_area_base a
+		<include refid="merchantUnionpayAreaBaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantUnionpayAreaBase">
+		SELECT 
+			<include refid="merchantUnionpayAreaBaseColumns"/>
+		FROM merchant_unionpay_area_base a
+		<include refid="merchantUnionpayAreaBaseJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantUnionpayAreaBase">
+		SELECT 
+			<include refid="merchantUnionpayAreaBaseColumns"/>
+		FROM merchant_unionpay_area_base a
+		<include refid="merchantUnionpayAreaBaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="UnionpayP" resultType="MerchantUnionpayAreaBase">
+		SELECT 
+			distinct(a.province_id) AS "provinceId",
+			a.province_name AS "provinceName"
+		FROM merchant_unionpay_area_base a
+		ORDER BY a.province_id
+	</select>
+	
+	<select id="UnionpayCity" resultType="MerchantUnionpayAreaBase">
+		SELECT 
+			distinct(a.city_id) AS "cityId",
+			a.city_name AS "cityName"
+		FROM merchant_unionpay_area_base a
+		<include refid="merchantUnionpayAreaBaseJoins"/>
+		WHERE a.province_id = #{provinceId}
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO merchant_unionpay_area_base(
+			id,
+			province_id,
+			province_name,
+			city_id,
+			city_name,
+			unionpay_area_code
+		) VALUES (
+			#{id},
+			#{provinceId},
+			#{provinceName},
+			#{cityId},
+			#{cityName},
+			#{unionpayAreaCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_unionpay_area_base SET 	
+			province_id = #{provinceId},
+			province_name = #{provinceName},
+			city_id = #{cityId},
+			city_name = #{cityName},
+			unionpay_area_code = #{unionpayAreaCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_unionpay_area_base
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

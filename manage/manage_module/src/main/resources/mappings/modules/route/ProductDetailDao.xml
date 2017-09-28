@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.ProductDetailDao">
+    
+	<sql id="productDetailColumns">
+		a.id AS "id",
+		a.product_name AS "productName",
+		a.product_code AS "productCode",
+		a.channel_name AS "channelName",
+		a.channel_code AS "channelCode",
+		a.bank_name AS "bankName",
+		a.bank_no AS "bankNo",
+		a.channel_partner_name AS "channelPartnerName",
+		a.channel_partner_code AS "channelPartnerCode",
+		a.channel_type_name AS "channelTypeName",
+		a.channel_type_code AS "channelTypeCode",
+		a.card_type_name AS "cardTypeName",
+		a.card_type_code AS "cardTypeCode",
+		a.status AS "status",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id"
+	</sql>
+	
+	<sql id="productDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="ProductDetail">
+		SELECT 
+			<include refid="productDetailColumns"/>
+		FROM route_product_detail a
+		<include refid="productDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ProductDetail">
+		SELECT 
+			<include refid="productDetailColumns"/>
+		FROM route_product_detail a
+		<include refid="productDetailJoins"/>
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		    <if test="productCode != null and productCode !=''">
+				AND product_code = #{productCode,jdbcType=CHAR}
+			</if>
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND channel_partner_code = #{channelPartnerCode,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+		</trim>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProductDetail">
+		SELECT 
+			<include refid="productDetailColumns"/>
+		FROM route_product_detail a
+		<include refid="productDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>	
+	<!-- 通过产品代码查找产品明细表中的数据 --> 
+	<select id="selectByProductCode" resultType="ProductDetail">
+		SELECT
+		<include refid="productDetailColumns" />
+		FROM route_product_detail a
+		<include refid="productDetailJoins" />
+		WHERE product_code = #{productCode,jdbcType=CHAR}
+	</select>
+
+	<!-- 通过产品代码查找产品明细表中有效的通道 -->
+	<select id="selectValidByProductCode" resultType="ProductDetail">
+		SELECT
+		<include refid="productDetailColumns" />
+		FROM route_product_detail a
+		left join route_pay_channel b on a.`channel_code` = b.`channel_code`
+		WHERE a.`product_code` = #{productCode,jdbcType=CHAR}
+		AND b.status = 'ENABLE'
+		AND now() BETWEEN b.effect_start_time AND b.effect_end_time
+	</select>
+
+	<insert id="insert"  parameterType="ProductDetail" >
+		INSERT INTO route_product_detail
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="productName != null" >
+				product_name,
+			</if>
+			<if test="productCode != null" >
+				product_code,
+			</if>
+			<if test="channelName != null" >
+				channel_name,
+			</if>
+			<if test="channelCode != null" >
+				channel_code,
+			</if>
+			<if test="bankName != null" >
+				bank_name,
+			</if>
+			<if test="bankNo != null" >
+				bank_no,
+			</if>
+			<if test="channelPartnerName != null" >
+				channel_partner_name,
+			</if>
+			<if test="channelPartnerCode != null" >
+				channel_partner_code,
+			</if>
+			<if test="channelTypeName != null" >
+				channel_type_name,
+			</if>
+			<if test="channelTypeCode != null" >
+				channel_type_code,
+			</if>
+			<if test="cardTypeName != null" >
+				card_type_name,
+			</if>
+			<if test="cardTypeCode != null" >
+				card_type_code,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="productName != null" >
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null" >
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null" >
+				#{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelCode != null" >
+				#{channelCode,jdbcType=CHAR},
+			</if>
+			<if test="bankName != null" >
+				#{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null" >
+				#{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="channelPartnerName != null" >
+				#{channelPartnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelPartnerCode != null" >
+				#{channelPartnerCode,jdbcType=CHAR},
+			</if>
+			<if test="channelTypeName != null" >
+				#{channelTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelTypeCode != null" >
+				#{channelTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeName != null" >
+				#{cardTypeName,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeCode != null" >
+				#{cardTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update"   parameterType="ProductDetail">
+		UPDATE route_product_detail
+		<set >
+			<if test="productName != null" >
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="productCode != null" >
+				product_code = #{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null" >
+				channel_name = #{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelCode != null" >
+				channel_code = #{channelCode,jdbcType=CHAR},
+			</if>
+			<if test="bankName != null" >
+				bank_name = #{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null" >
+				bank_no = #{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="channelPartnerName != null" >
+				channel_partner_name = #{channelPartnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelPartnerCode != null" >
+				channel_partner_code = #{channelPartnerCode,jdbcType=CHAR},
+			</if>
+			<if test="channelTypeName != null" >
+				channel_type_name = #{channelTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelTypeCode != null" >
+				channel_type_code = #{channelTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeName != null" >
+				card_type_name = #{cardTypeName,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeCode != null" >
+				card_type_code = #{cardTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			update_time =now()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM route_product_detail
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getProductDetailBank" resultType="ProductDetail">
+       SELECT 
+           a.bank_name AS "bankName",
+           a.bank_no AS "bankNo",
+           a.card_type_code AS "cardTypeCode"
+       FROM route_product_detail a
+       <where>
+            AND a.product_code = #{productCode} 
+            <if test="cardTypeCode != null and cardTypeCode != '' ">
+                AND a.card_type_code = #{cardTypeCode} 
+            </if>
+            <if test="bankNo != null and bankNo != '' ">
+                AND a.bank_no = #{bankNo} 
+            </if>
+       </where>
+       
+       GROUP BY  a.bank_name , a.bank_no , a.card_type_code
+    </select>
+    
+    <select id="getProductDetailBankNo" resultType="ProductDetail">
+       SELECT 
+           a.bank_name AS "bankName",
+           a.bank_no AS "bankNo"
+       FROM route_product_detail a
+       WHERE a.product_code = #{productCode} 
+       GROUP BY  a.bank_name , a.bank_no
+    </select>
+    
+    <select id="getProductDetailBankCardType" resultType="java.lang.String">
+       SELECT 
+           a.card_type_code
+       FROM route_product_detail a
+       WHERE a.product_code = #{productCode} 
+       GROUP BY a.card_type_code
+    </select>
+
+	<!-- 通过产品代码查找产品支持的银行及卡类型 -->
+	<select id="selectBankInfoByProductCode" resultType="ProductDetail">
+		select t1.`product_code`,t1.`bank_no`,
+		GROUP_CONCAT(DISTINCT t1.`card_type_code`) as card_type_code
+		from route_product_detail t1
+		left join route_pay_channel t2 on t1.`channel_code` = t2.`channel_code`
+		<where>
+			<if test="productCode != null and productCode !=''">
+				AND t1.`product_code` = #{productCode}
+			</if>
+			AND t2.`status` = 'ENABLE'
+			AND now() BETWEEN t2.effect_start_time AND t2.effect_end_time
+		</where>
+		GROUP BY t1.`product_code`,t1.`bank_no`
+	</select>
+
+	<!-- 根据产品code,成本类型获取产品通道支持的成本最大值 -->
+	<select id="getMaxCost" resultType="java.math.BigDecimal">
+		SELECT
+		  CASE
+			cost_type
+			WHEN 'COUNTD'
+			THEN coun
+			WHEN 'RATIOD'
+			THEN rate
+		  END AS bbbb
+		FROM
+		  (SELECT
+			IFNULL(MAX(a.cost_rate), 0) rate,
+			MAX(a.cost_count) coun,
+			cost_type
+		  FROM
+			route_pay_channel a
+			LEFT JOIN route_product_detail b
+			  ON a.channel_code = b.channel_code
+		  WHERE b.product_code = #{productCode}
+			AND a.cost_type = #{chargeType}
+			AND a.card_type_code = #{cardTypeCode}
+		  GROUP BY cost_type) bb
+	</select>
+</mapper>

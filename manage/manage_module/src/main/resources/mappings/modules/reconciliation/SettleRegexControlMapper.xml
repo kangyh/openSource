@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleRegexControlDao" >
+  
+	
+ 	<sql id="includEntity">
+	  regex_control_id, 
+	  rule_id, 
+	  rule_key, 
+      regex_name, 
+      regex_show, 
+      create_time, 
+      create_author, 
+      update_time, 
+      update_author,
+      rule_type
+	</sql>
+
+
+    <select id="findList" resultType="SettleRegexControl">
+        select
+        <include refid="includEntity"/>
+        from settle_regex_control
+        <where>
+            <!-- 通道对账日期 -->
+            <if test="beginCreateTime != null and endCreateTime != null">
+                AND create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY regex_control_id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <delete id="deleteEntity">
+    delete from settle_regex_control
+    where regex_control_id=#{regexControlId}
+    </delete>
+
+    <!-- 根据规则主键级联删除 -->
+    <delete id="deleteEntityByRuleId">
+    delete from settle_regex_control
+    where rule_id=#{ruleId}
+    </delete>
+
+    <!--批量插入时先删除后再插入-->
+    <delete id="deleteByRule">
+        delete from settle_regex_control
+        where rule_id=#{ruleId} AND rule_type = #{ruleType}
+    </delete>
+
+    <!-- 根据规则主键级联删除 -->
+    <delete id="deleteEntityByRuleIdAndRuleType" parameterType="SettleRegexControl">
+    delete from settle_regex_control
+    where rule_id=#{ruleId} and rule_type=#{ruleType}
+    </delete>
+
+    <insert id="save" parameterType="SettleRegexControl" >
+    insert into settle_regex_control (regex_control_id, rule_id, rule_key,
+      regex_name, regex_show, create_time,
+      create_author, update_time, update_author
+      )
+    values (#{regexControlId,jdbcType=BIGINT}, #{ruleId,jdbcType=BIGINT}, #{ruleKey,jdbcType=TINYINT},
+      #{regexName,jdbcType=VARCHAR}, #{regexShow,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{createAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}
+      )
+    </insert>
+
+
+    <insert id="saveEntity" parameterType="SettleRegexControl" >
+    insert into settle_regex_control
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="regexControlId != null" >
+        regex_control_id,
+      </if>
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="ruleKey != null" >
+        rule_key,
+      </if>
+      <if test="regexName != null" >
+        regex_name,
+      </if>
+      <if test="regexShow != null" >
+        regex_show,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="regexControlId != null" >
+        #{regexControlId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleKey != null" >
+        #{ruleKey,jdbcType=TINYINT},
+      </if>
+      <if test="regexName != null" >
+        #{regexName,jdbcType=VARCHAR},
+      </if>
+      <if test="regexShow != null" >
+        #{regexShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    </insert>
+
+
+    <select id="selectEntity" parameterType="SettleRegexControl">
+    select
+        <include refid="includEntity"/>
+    from settle_regex_control
+    where regex_control_id=#{regexControlId}
+    </select>
+
+    <update id="updateEntity" parameterType="SettleRegexControl" >
+    update settle_regex_control
+    <set >
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleKey != null" >
+        rule_key = #{ruleKey,jdbcType=TINYINT},
+      </if>
+      <if test="regexName != null" >
+        regex_name = #{regexName,jdbcType=VARCHAR},
+      </if>
+      <if test="regexShow != null" >
+        regex_show = #{regexShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+    </update>
+
+    <update id="update" parameterType="SettleRegexControl" >
+    update settle_regex_control
+    set rule_id = #{ruleId,jdbcType=BIGINT},
+      rule_key = #{ruleKey,jdbcType=TINYINT},
+      regex_name = #{regexName,jdbcType=VARCHAR},
+      regex_show = #{regexShow,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR}
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateList" parameterType="java.util.List" >
+      <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+       update settle_regex_control
+       <set >
+          <if test="item.ruleId != null" >
+            rule_id = #{item.ruleId},
+          </if>
+          <if test="item.ruleKey != null" >
+            rule_key = #{item.ruleKey},
+          </if>
+          <if test="item.regexName != null" >
+            regex_name = #{item.regexName},
+          </if>
+          <if test="item.regexShow != null" >
+            regex_show = #{item.regexShow},
+          </if>
+          <if test="item.updateTime != null" >
+            update_time = #{item.updateTime},
+          </if>
+          <if test="item.updateAuthor != null" >
+            update_author = #{item.updateAuthor},
+          </if>
+        </set>
+        where regex_control_id = #{item.regexControlId}
+       </foreach>
+    </update>
+
+
+    <select id="getEntityByList" resultType="SettleRegexControl">
+    select
+        <include refid="includEntity"/>
+    from settle_regex_control
+    <where>
+        <!-- 规则主键-->
+        <if test="ruleId != null">
+            AND rule_id = #{ruleId}
+        </if>
+        <!-- 规则key -->
+        <if test="ruleKey != null">
+            AND rule_key = #{ruleKey}
+        </if>
+    </where>
+    </select>
+    <select id="getEntityByList2" resultType="SettleRegexControl">
+    select
+        <include refid="includEntity"/>
+    from settle_regex_control
+    <where>
+        <!-- 规则主键-->
+        <if test="ruleId != null">
+            AND rule_id = #{ruleId}
+        </if>
+        <!-- 规则key -->
+        <if test="ruleKey != null">
+            AND rule_key = #{ruleKey}
+        </if>
+        <!-- 规则类型 -->
+        <if test="ruleType != null">
+            AND rule_type = #{ruleType}
+        </if>
+    </where>
+    </select>
+    <insert id="insetList" parameterType="java.util.List">
+        insert into settle_regex_control(rule_id,rule_key,regex_name, regex_show, create_time,create_author,rule_type)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+          (#{item.ruleId},#{item.ruleKey},#{item.regexName},#{item.regexShow},#{item.createTime},#{item.createAuthor},#{item.ruleType})
+        </foreach>
+    </insert>
+</mapper>

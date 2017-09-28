@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.monitor.java.dao.MonitorGroupDao" >
+
+  
+  <sql id="includeEntity" >
+      group_id AS "groupId", 
+      group_name AS "groupName", 
+      mark AS "mark", 
+      create_author AS "createAuthor", 
+      create_time AS "createTime", 
+      update_time AS "updateTime", 
+      update_author AS "updateAuthor"
+  </sql>
+  
+  <select id="findList" resultType="MonitorGroup">
+			SELECT 
+				<include refid="includeEntity"/>
+			FROM monitor_group
+			<where>
+				<!-- 创建时间 -->
+				<if test="beginOperEndTime != null and endOperEndTime != null">
+					AND create_time BETWEEN #{beginOperEndTime} AND #{endOperEndTime}
+				</if>
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY group_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY group_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  <delete id="deleteEntity">
+    delete from monitor_group
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
+  
+  
+
+  <insert id="save" parameterType="MonitorGroup" >
+     insert into monitor_group (group_id, group_name, mark, 
+      create_author, create_time, update_time, 
+      update_author)
+    values (#{groupId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{mark,jdbcType=VARCHAR}, 
+      #{createAuthor,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateAuthor,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="saveEntity" parameterType="MonitorGroup" >
+    insert into monitor_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="mark != null" >
+        mark,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="mark != null" >
+        #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  <update id="updateEntity" parameterType="MonitorGroup" >
+     update monitor_group
+    <set >
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="mark != null" >
+        mark = #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="update" parameterType="MonitorGroup" >
+    update monitor_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      mark = #{mark,jdbcType=VARCHAR},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getEntityById" resultType="MonitorGroup"> 
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM monitor_group
+	 where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getList" resultType="MonitorGroup">
+  	SELECT 
+		<include refid="includeEntity"/>
+	FROM monitor_group
+  </select>
+</mapper>

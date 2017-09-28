@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcAccountDynamicMapper" >
+<insert id="insert" parameterType="com.heepay.risk.entity.PbcAccountDynamic" useGeneratedKeys="true" keyProperty="accountDynamicId">
+    insert into pbc_account_dynamic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        account_dynamic_id,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="accountInfo != null" >
+        account_info,
+      </if>
+      <if test="accountOpenTime != null" >
+        account_open_time,
+      </if>
+      <if test="accountOpenIp != null" >
+        account_open_ip,
+      </if>
+      <if test="accountOpenDeviceNumber != null" >
+        account_open_device_number,
+      </if>
+      <if test="lastTransTime != null" >
+        last_trans_time,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="borrowingSigns != null" >
+        borrowing_signs,
+      </if>
+      <if test="transTime != null" >
+        trans_time,
+      </if>
+      <if test="transCurrency != null" >
+        trans_currency,
+      </if>
+      <if test="transAmount != null" >
+        trans_amount,
+      </if>
+      <if test="transSerial != null" >
+        trans_serial,
+      </if>
+      <if test="transBalance != null" >
+        trans_balance,
+      </if>
+      <if test="transBankId != null" >
+        trans_bank_id,
+      </if>
+      <if test="transBankName != null" >
+        trans_bank_name,
+      </if>
+      <if test="transCardNumber != null" >
+        trans_card_number,
+      </if>
+      <if test="transAccountNumber != null" >
+        trans_account_number,
+      </if>
+      <if test="posId != null" >
+        pos_id,
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number,
+      </if>
+      <if test="transOutBankId != null" >
+        trans_out_bank_id,
+      </if>
+      <if test="transOutBankName != null" >
+        trans_out_bank_name,
+      </if>
+      <if test="transOutCardNumber != null" >
+        trans_out_card_number,
+      </if>
+      <if test="transOutAccountNumber != null" >
+        trans_out_account_number,
+      </if>
+      <if test="transDeviceType != null" >
+        trans_device_type,
+      </if>
+      <if test="transIp != null" >
+        trans_ip,
+      </if>
+      <if test="transMac != null" >
+        trans_mac,
+      </if>
+      <if test="transDeviceCode != null" >
+        trans_device_code,
+      </if>
+      <if test="bankTransSerial != null" >
+        bank_trans_serial,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="feedBackId != null" >
+        feed_back_id,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        #{accountDynamicId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInfo != null" >
+        #{accountInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenTime != null" >
+        #{accountOpenTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountOpenIp != null" >
+        #{accountOpenIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenDeviceNumber != null" >
+        #{accountOpenDeviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTransTime != null" >
+        #{lastTransTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowingSigns != null" >
+        #{borrowingSigns,jdbcType=VARCHAR},
+      </if>
+      <if test="transTime != null" >
+        #{transTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transCurrency != null" >
+        #{transCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="transAmount != null" >
+        #{transAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transSerial != null" >
+        #{transSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="transBalance != null" >
+        #{transBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="transBankId != null" >
+        #{transBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transBankName != null" >
+        #{transBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transCardNumber != null" >
+        #{transCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transAccountNumber != null" >
+        #{transAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posId != null" >
+        #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankId != null" >
+        #{transOutBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankName != null" >
+        #{transOutBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutCardNumber != null" >
+        #{transOutCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutAccountNumber != null" >
+        #{transOutAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transDeviceType != null" >
+        #{transDeviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="transIp != null" >
+        #{transIp,jdbcType=VARCHAR},
+      </if>
+      <if test="transMac != null" >
+        #{transMac,jdbcType=VARCHAR},
+      </if>
+      <if test="transDeviceCode != null" >
+        #{transDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankTransSerial != null" >
+        #{bankTransSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackId != null" >
+        #{feedBackId,jdbcType=BIGINT},
+      </if>
+       <if test="applicationCode != null" >
+         #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsFileLogMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsFileLog" >
+    <id column="log_id" property="logId" jdbcType="INTEGER" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="check_file_from" property="checkFileFrom" jdbcType="VARCHAR" />
+    <result column="check_file_where" property="checkFileWhere" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_dir" property="fileDir" jdbcType="VARCHAR" />
+    <result column="oper_person" property="operPerson" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    log_id, merchant_no, check_file_from, check_file_where, file_name, file_dir, oper_person, 
+    oper_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsFileLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_file_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_file_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tpds_file_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsFileLogExample" >
+    delete from tpds_file_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsFileLog" >
+    insert into tpds_file_log (log_id, merchant_no, check_file_from, 
+      check_file_where, file_name, file_dir, 
+      oper_person, oper_time)
+    values (#{logId,jdbcType=INTEGER}, #{merchantNo,jdbcType=VARCHAR}, #{checkFileFrom,jdbcType=VARCHAR}, 
+      #{checkFileWhere,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileDir,jdbcType=VARCHAR}, 
+      #{operPerson,jdbcType=VARCHAR}, #{operTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsFileLog" >
+    insert into tpds_file_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="checkFileFrom != null" >
+        check_file_from,
+      </if>
+      <if test="checkFileWhere != null" >
+        check_file_where,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileDir != null" >
+        file_dir,
+      </if>
+      <if test="operPerson != null" >
+        oper_person,
+      </if>
+      <if test="operTime != null" >
+        oper_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileFrom != null" >
+        #{checkFileFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileWhere != null" >
+        #{checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileDir != null" >
+        #{fileDir,jdbcType=VARCHAR},
+      </if>
+      <if test="operPerson != null" >
+        #{operPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        #{operTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsFileLogExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_file_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_file_log
+    <set >
+      <if test="record.logId != null" >
+        log_id = #{record.logId,jdbcType=INTEGER},
+      </if>
+      <if test="record.merchantNo != null" >
+        merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFileFrom != null" >
+        check_file_from = #{record.checkFileFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFileWhere != null" >
+        check_file_where = #{record.checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null" >
+        file_name = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileDir != null" >
+        file_dir = #{record.fileDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operPerson != null" >
+        oper_person = #{record.operPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operTime != null" >
+        oper_time = #{record.operTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_file_log
+    set log_id = #{record.logId,jdbcType=INTEGER},
+      merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      check_file_from = #{record.checkFileFrom,jdbcType=VARCHAR},
+      check_file_where = #{record.checkFileWhere,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
+      file_dir = #{record.fileDir,jdbcType=VARCHAR},
+      oper_person = #{record.operPerson,jdbcType=VARCHAR},
+      oper_time = #{record.operTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsFileLog" >
+    update tpds_file_log
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileFrom != null" >
+        check_file_from = #{checkFileFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileWhere != null" >
+        check_file_where = #{checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileDir != null" >
+        file_dir = #{fileDir,jdbcType=VARCHAR},
+      </if>
+      <if test="operPerson != null" >
+        oper_person = #{operPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsFileLog" >
+    update tpds_file_log
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      check_file_from = #{checkFileFrom,jdbcType=VARCHAR},
+      check_file_where = #{checkFileWhere,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_dir = #{fileDir,jdbcType=VARCHAR},
+      oper_person = #{operPerson,jdbcType=VARCHAR},
+      oper_time = #{operTime,jdbcType=TIMESTAMP}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <select id="selectMaxId" resultType="java.lang.Integer">
+  	select MAX(log_id) from tpds_file_log;
+  </select>
+</mapper>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.settle.dao.ClearingChannelRecordHisDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.settle.entity.ClearingChannelRecordHis" >
+    <id column="his_id" property="hisId" jdbcType="BIGINT" />
+    <result column="clearing_id" property="clearingId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="payment_id_old" property="paymentIdOld" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="trans_no_old" property="transNoOld" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="DECIMAL" />
+    <result column="channel_time" property="channelTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_no" property="settleNo" jdbcType="VARCHAR" />
+    <result column="settle_time_plan" property="settleTimePlan" jdbcType="TIMESTAMP" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="cost_time" property="costTime" jdbcType="TIMESTAMP" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="cost_way" property="costWay" jdbcType="VARCHAR" />
+    <result column="cost_settle_cyc" property="costSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_bath" property="checkBath" jdbcType="VARCHAR" />
+    <result column="check_num" property="checkNum" jdbcType="INTEGER" />
+    <result column="check_status" property="checkStatus" jdbcType="CHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="CHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="date_zip" property="dateZip" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from clearing_channel_record_his
+    where his_id = #{hisId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.settle.entity.ClearingChannelRecordHis" >
+    insert into clearing_channel_record_his (his_id, clearing_id, channel_code, 
+      channel_name, channel_type, pay_time, 
+      currency, payment_id, payment_id_old, 
+      trans_no, trans_no_old, success_amount, 
+      channel_time, settle_time, settle_no, 
+      settle_time_plan, settle_cyc, settle_bath, 
+      cost_time, cost_amount, cost_way, 
+      cost_settle_cyc, check_bath, check_num, 
+      check_status, check_flg, settle_status, 
+      finish_time, trans_type, date_zip
+      )
+    values (#{hisId,jdbcType=BIGINT}, #{clearingId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, 
+      #{channelName,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{currency,jdbcType=VARCHAR}, #{paymentId,jdbcType=VARCHAR}, #{paymentIdOld,jdbcType=VARCHAR}, 
+      #{transNo,jdbcType=VARCHAR}, #{transNoOld,jdbcType=VARCHAR}, #{successAmount,jdbcType=DECIMAL}, 
+      #{channelTime,jdbcType=TIMESTAMP}, #{settleTime,jdbcType=TIMESTAMP}, #{settleNo,jdbcType=VARCHAR}, 
+      #{settleTimePlan,jdbcType=TIMESTAMP}, #{settleCyc,jdbcType=VARCHAR}, #{settleBath,jdbcType=VARCHAR}, 
+      #{costTime,jdbcType=TIMESTAMP}, #{costAmount,jdbcType=DECIMAL}, #{costWay,jdbcType=VARCHAR}, 
+      #{costSettleCyc,jdbcType=VARCHAR}, #{checkBath,jdbcType=VARCHAR}, #{checkNum,jdbcType=INTEGER}, 
+      #{checkStatus,jdbcType=CHAR}, #{checkFlg,jdbcType=VARCHAR}, #{settleStatus,jdbcType=CHAR}, 
+      #{finishTime,jdbcType=TIMESTAMP}, #{transType,jdbcType=VARCHAR}, #{dateZip,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.settle.entity.ClearingChannelRecordHis" >
+    update clearing_channel_record_his
+    set clearing_id = #{clearingId,jdbcType=BIGINT},
+      channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      currency = #{currency,jdbcType=VARCHAR},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      payment_id_old = #{paymentIdOld,jdbcType=VARCHAR},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      trans_no_old = #{transNoOld,jdbcType=VARCHAR},
+      success_amount = #{successAmount,jdbcType=DECIMAL},
+      channel_time = #{channelTime,jdbcType=TIMESTAMP},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      settle_no = #{settleNo,jdbcType=VARCHAR},
+      settle_time_plan = #{settleTimePlan,jdbcType=TIMESTAMP},
+      settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{settleBath,jdbcType=VARCHAR},
+      cost_time = #{costTime,jdbcType=TIMESTAMP},
+      cost_amount = #{costAmount,jdbcType=DECIMAL},
+      cost_way = #{costWay,jdbcType=VARCHAR},
+      cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+      check_bath = #{checkBath,jdbcType=VARCHAR},
+      check_num = #{checkNum,jdbcType=INTEGER},
+      check_status = #{checkStatus,jdbcType=CHAR},
+      check_flg = #{checkFlg,jdbcType=VARCHAR},
+      settle_status = #{settleStatus,jdbcType=CHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      date_zip = #{dateZip,jdbcType=TIMESTAMP}
+    where his_id = #{hisId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select his_id, clearing_id, channel_code, channel_name, channel_type, pay_time, currency, 
+    payment_id, payment_id_old, trans_no, trans_no_old, success_amount, channel_time, 
+    settle_time, settle_no, settle_time_plan, settle_cyc, settle_bath, cost_time, cost_amount, 
+    cost_way, cost_settle_cyc, check_bath, check_num, check_status, check_flg, settle_status, 
+    finish_time, trans_type, date_zip
+    from clearing_channel_record_his
+    where his_id = #{hisId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select his_id, clearing_id, channel_code, channel_name, channel_type, pay_time, currency, 
+    payment_id, payment_id_old, trans_no, trans_no_old, success_amount, channel_time, 
+    settle_time, settle_no, settle_time_plan, settle_cyc, settle_bath, cost_time, cost_amount, 
+    cost_way, cost_settle_cyc, check_bath, check_num, check_status, check_flg, settle_status, 
+    finish_time, trans_type, date_zip
+    from clearing_channel_record_his
+  </select>
+  
+   <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="clearingChannelRecordHisColumns">
+		a.his_id AS "hisId",
+		a.clearing_id AS "clearingId",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_type AS "channelType",
+		a.pay_time AS "payTime",
+		a.currency AS "currency",
+		a.payment_id AS "paymentId",
+		a.payment_id_old AS "paymentIdOld",
+		a.trans_no AS "transNo",
+		a.trans_no_old AS "transNoOld",
+		a.success_amount AS "successAmount",
+		a.channel_time AS "channelTime",
+		a.settle_time AS "settleTime",
+		a.settle_no AS "settleNo",
+		a.settle_time_plan AS "settleTimePlan",
+		a.settle_cyc AS "settleCyc",
+		a.settle_bath AS "settleBath",
+		a.cost_time AS "costTime",
+		a.cost_amount AS "costAmount",
+		a.cost_way AS "costWay",
+		a.cost_settle_cyc AS "costSettleCyc",
+		a.check_status AS "checkStatus",
+		a.check_flg AS "checkFlg",
+		a.settle_status AS "settleStatus",
+		a.finish_time AS "finishTime",
+		a.check_bath AS "checkBath",
+		a.check_num AS "checkNum",
+		a.trans_type AS "transType",
+		a.date_zip AS "dateZip",
+		a.remark AS "remark",
+		a.is_zip AS "isZip",
+		a.channel_provider AS "channelProvider",
+		a.bank_code AS "bankCode",
+		a.bank_name AS "bankName",
+		a.bank_seq AS "bankSeq"
+	</sql>
+	<!-- 分页 -->
+	<select id="findList" resultType="ClearingChannelRecordHis">
+		SELECT 
+			<include refid="clearingChannelRecordHisColumns"/>
+		FROM clearing_channel_record_his a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginChannelTime != null">
+				<![CDATA[   and DATE_FORMAT(a.channel_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginChannelTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endChannelTime != null">
+				<![CDATA[  and DATE_FORMAT(a.channel_time, '%Y-%m-%d') <= DATE_FORMAT(#{endChannelTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_channel_record_his where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 支付单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出通道侧清算记录文件专用SQL -->
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="clearingChannelRecordHisColumns"/>
+		FROM clearing_channel_record_his a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginChannelTime != null and beginChannelTime != ''">
+				<![CDATA[   and DATE_FORMAT(a.channel_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginChannelTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endChannelTime != null and endChannelTime != ''">
+				<![CDATA[  and DATE_FORMAT(a.channel_time, '%Y-%m-%d') <= DATE_FORMAT(#{endChannelTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 交易订单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_channel_record where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		ORDER BY his_id desc
+	</select>
+	
+</mapper>

@@ -1,0 +1,181 @@
+<<<<<<< HEAD
+/***
+ * 
+* 
+* 描    述：
+*
+* 创 建 者： xuangang
+* 创建时间：  2016年12月28日上午11:21:30
+* 创建描述：
+* 
+* 修 改 者：  
+* 修改时间： 
+* 修改描述： 
+* 
+* 审 核 者：
+* 审核时间：
+* 审核描述：
+*
+ */
+package com.heepay.rpc.billing.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+=======
+/**
+ * 
+ */
+package com.heepay.rpc.billing.service.impl;
+
+import java.util.List;
+
+>>>>>>> 6e1a7fb2efa93926291d3de592bc956540cccd11
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.heepay.billing.dao.SettleDifferRecordMapper;
+import com.heepay.billing.entity.SettleDifferRecord;
+import com.heepay.enums.billing.BillingDifferType;
+<<<<<<< HEAD
+import com.heepay.rpc.billing.model.DoneSettleDifferRecordModel;
+
+/***
+ * 
+ * 
+ * 描    述：
+ *
+ * 创 建 者： xuangang
+ * 创建时间：  2016年12月28日上午11:21:30
+ * 创建描述：
+ * 
+ * 修 改 者：  
+ * 修改时间： 
+ * 修改描述： 
+ * 
+ * 审 核 者：
+ * 审核时间：
+ * 审核描述：
+ *
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:spring.xml")
+public class DoneSettleDifferRecordServiceImplTest {
+
+	private static final Logger logger = LogManager.getLogger();
+	
+	public static void main(String args[]){
+		
+		StringBuffer sb = new StringBuffer();
+		
+		System.out.println("111"+sb.toString());
+		
+	}
+
+	@Autowired
+	SettleDifferRecordMapper settleDifferRecordDaoImpl;
+	
+	@Autowired
+	DoneSettleDifferRecordServiceImpl  doneSettleDifferRecordServiceImpl;
+	
+	@SuppressWarnings("unused")
+	@Test
+	public void testUpdateSettleDifferRecord(){
+		SettleDifferRecord settleDifferRecord = new SettleDifferRecord();
+		
+		settleDifferRecord.setPaymentId("1000000");
+		settleDifferRecord.setDifferId(37l);
+		
+		settleDifferRecord.setChannelCode("DIRCON-105"); //
+		settleDifferRecord.setChannelName("中国建设银行");
+		settleDifferRecord.setDifferType("QT");
+		
+		
+		int number = settleDifferRecordDaoImpl.updateSettleDifferRecord(settleDifferRecord);
+	}
+	
+	@Test
+	public void getSettleDifferRecord(){
+		
+		List<SettleDifferRecord> list = settleDifferRecordDaoImpl
+				.selectByDifferType(BillingDifferType.BDTYPEW.getValue());
+
+		List<DoneSettleDifferRecordModel> result = new ArrayList<DoneSettleDifferRecordModel>();
+		// 把SettleDifferRecord转为SettleDifferRecordModel返回
+		if (null != list && list.size() > 0) {
+			for (SettleDifferRecord settleDifferRecord : list) {
+				DoneSettleDifferRecordModel doneSettleDifferRecordModel = new DoneSettleDifferRecordModel();
+				doneSettleDifferRecordModel.setDifferId(settleDifferRecord.getDifferId());
+				doneSettleDifferRecordModel.setMerchantId(
+						settleDifferRecord.getMerchantId() == null ? 0 : settleDifferRecord.getMerchantId()); // 商品编码
+				doneSettleDifferRecordModel.setPaymentId(settleDifferRecord.getPaymentId()); // 支付单号
+				doneSettleDifferRecordModel.setTransNo(settleDifferRecord.getTransNo()); // 交易单号
+				doneSettleDifferRecordModel.setChannelCode(settleDifferRecord.getChannelCode()); // 通道编码
+				doneSettleDifferRecordModel.setChannelName(settleDifferRecord.getChannelName()); // 通道名称
+				doneSettleDifferRecordModel.setSuccessAmount(settleDifferRecord.getSuccessAmount() == null ? null
+						: settleDifferRecord.getSuccessAmount().toString());  //支付单金额
+				doneSettleDifferRecordModel.setRequestAmountAmount(settleDifferRecord.getRequestAmount() == null ? null
+						: settleDifferRecord.getRequestAmount().toString()); // 成功金额
+				doneSettleDifferRecordModel.setCheckBathno(settleDifferRecord.getCheckBathNo());  //对账批次
+				doneSettleDifferRecordModel.setSettleBath(settleDifferRecord.getSettleBath());  //结算批次
+				doneSettleDifferRecordModel.setChannelType(settleDifferRecord.getChannelType());  //通道类型
+				doneSettleDifferRecordModel.setProductCode(settleDifferRecord.getProductCode());  //商品编码
+				doneSettleDifferRecordModel.setProductName(settleDifferRecord.getProductName());  //商品名称
+				doneSettleDifferRecordModel.setChannleNo(settleDifferRecord.getChannleNo());   //通道流水
+				doneSettleDifferRecordModel.setDifferType(settleDifferRecord.getDifferType());   //差异类型
+				doneSettleDifferRecordModel.setHandleResult(settleDifferRecord.getHandleResult());  //处理结果
+				doneSettleDifferRecordModel.setHandleMessage(settleDifferRecord.getHandleMessage());  //处理意见
+				doneSettleDifferRecordModel.setErrorDate(settleDifferRecord.getErrorDate() == null ? null
+						: settleDifferRecord.getErrorDate().toString());  //差错日期
+				doneSettleDifferRecordModel.setOperationDate(settleDifferRecord.getOperationDate() == null ? null
+						: settleDifferRecord.getOperationDate().toString());  //操作日期
+				doneSettleDifferRecordModel.setFeeAmount(settleDifferRecord.getFeeAmount() == null ? null
+						: settleDifferRecord.getFeeAmount().toString());  //手续费
+				doneSettleDifferRecordModel.setCostAmount(settleDifferRecord.getCostAmount() == null ? null
+						: settleDifferRecord.getCostAmount().toString()); //成本
+				doneSettleDifferRecordModel.setSettleAmountPlan(settleDifferRecord.getSettleAmountPlan() == null ? null
+						: settleDifferRecord.getSettleAmountPlan().toString()); //应结算金额
+
+				result.add(doneSettleDifferRecordModel);
+			}
+
+		}
+		
+	}
+	
+	
+	
+=======
+import com.heepay.rpc.billing.service.impl.DoneSettleDifferRecordServiceImpl;
+/**
+ * @author Administrator
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:spring.xml")
+public class DoneSettleDifferRecordServiceImplTest {
+	@Autowired
+	DoneSettleDifferRecordServiceImpl  doneSettleDifferRecordServiceImpl;
+	@Autowired
+	SettleDifferRecordMapper settleDifferRecordDaoImpl;
+	@Test
+	public void testProcess(){
+		// 查询差异结果为未知的且状态为未处理差异记录 待完善（终态未知暂时无法处理）
+		System.out.println("test-----begin");
+		List<SettleDifferRecord> list = settleDifferRecordDaoImpl
+						.selectByDifferType(BillingDifferType.BDTYPEW.getValue());
+		try {
+			doneSettleDifferRecordServiceImpl.process(list);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("test------end");
+	}
+>>>>>>> 6e1a7fb2efa93926291d3de592bc956540cccd11
+}

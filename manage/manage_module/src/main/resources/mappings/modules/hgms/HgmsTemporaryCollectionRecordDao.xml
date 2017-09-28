@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsTemporaryCollectionRecordDao">
+    
+	<sql id="hgmsTemporaryCollectionRecordColumns">
+		a.batch_id AS "batchId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.total_amount AS "totalAmount",
+		a.total_num AS "totalNum",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.audit_time AS "auditTime",
+		a.auditor AS "auditor",
+		a.success_total_num AS "successTotalNum",
+		a.success_total_amount AS "successTotalAmount",
+		a.failed_total_num AS "failedTotalNum",
+		a.failed_total_amount AS "failedTotalAmount",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_total_amount AS "feeTotalAmount",
+		a.request_source AS "requestSource",
+		a.finish_time AS "finishTime",
+		a.batch_file_name AS "batchFileName",
+		a.batch_file_path AS "batchFilePath",
+		a.heepay_batch_no AS "heepayBatchNo",
+		a.trans_way AS "transWay",
+		a.record_source AS "recordSource",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+	
+	<sql id="hgmsTemporaryCollectionRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsTemporaryCollectionRecord">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordColumns"/>
+		FROM hgms_temporary_collection_record a
+		<include refid="hgmsTemporaryCollectionRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsTemporaryCollectionRecord">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordColumns"/>
+		FROM hgms_temporary_collection_record a
+		<include refid="hgmsTemporaryCollectionRecordJoins"/>
+		<where>
+			
+			<if test="batchId != null and batchId != ''">
+				AND a.batch_id = #{batchId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="totalAmount != null and totalAmount != ''">
+				AND a.total_amount = #{totalAmount}
+			</if>
+			<if test="totalNum != null and totalNum != ''">
+				AND a.total_num = #{totalNum}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="auditTime != null and auditTime != ''">
+				AND a.audit_time = #{auditTime}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="successTotalNum != null and successTotalNum != ''">
+				AND a.success_total_num = #{successTotalNum}
+			</if>
+			<if test="successTotalAmount != null and successTotalAmount != ''">
+				AND a.success_total_amount = #{successTotalAmount}
+			</if>
+			<if test="failedTotalNum != null and failedTotalNum != ''">
+				AND a.failed_total_num = #{failedTotalNum}
+			</if>
+			<if test="failedTotalAmount != null and failedTotalAmount != ''">
+				AND a.failed_total_amount = #{failedTotalAmount}
+			</if>
+			<if test="feeType != null and feeType != ''">
+				AND a.fee_type = #{feeType}
+			</if>
+			<if test="feeRatio != null and feeRatio != ''">
+				AND a.fee_ratio = #{feeRatio}
+			</if>
+			<if test="feeTotalAmount != null and feeTotalAmount != ''">
+				AND a.fee_total_amount = #{feeTotalAmount}
+			</if>
+			<if test="requestSource != null and requestSource != ''">
+				AND a.request_source = #{requestSource}
+			</if>
+			<if test="finishTime != null and finishTime != ''">
+				AND a.finish_time = #{finishTime}
+			</if>
+			<if test="batchFileName != null and batchFileName != ''">
+				AND a.batch_file_name = #{batchFileName}
+			</if>
+			<if test="batchFilePath != null and batchFilePath != ''">
+				AND a.batch_file_path = #{batchFilePath}
+			</if>
+			<if test="heepayBatchNo != null and heepayBatchNo != ''">
+				AND a.heepay_batch_no = #{heepayBatchNo}
+			</if>
+			<if test="transWay != null and transWay != ''">
+				AND a.trans_way = #{transWay}
+			</if>
+			<if test="recordSource != null and recordSource != ''">
+				AND a.record_source = #{recordSource}
+			</if>
+			<if test="extend3 != null and extend3 != ''">
+				AND a.extend3 = #{extend3}
+			</if>
+			<if test="extend4 != null and extend4 != ''">
+				AND a.extend4 = #{extend4}
+			</if>
+			<if test="extend5 != null and extend5 != ''">
+				AND a.extend5 = #{extend5}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsTemporaryCollectionRecord">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordColumns"/>
+		FROM hgms_temporary_collection_record a
+		<include refid="hgmsTemporaryCollectionRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_temporary_collection_record(
+			batch_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			total_amount,
+			total_num,
+			create_time,
+			update_time,
+			status,
+			audit_time,
+			auditor,
+			success_total_num,
+			success_total_amount,
+			failed_total_num,
+			failed_total_amount,
+			fee_type,
+			fee_ratio,
+			fee_total_amount,
+			request_source,
+			finish_time,
+			batch_file_name,
+			batch_file_path,
+			heepay_batch_no,
+			trans_way,
+			record_source,
+			extend3,
+			extend4,
+			extend5
+		) VALUES (
+			#{batchId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{totalAmount},
+			#{totalNum},
+			#{createTime},
+			#{updateTime},
+			#{status},
+			#{auditTime},
+			#{auditor},
+			#{successTotalNum},
+			#{successTotalAmount},
+			#{failedTotalNum},
+			#{failedTotalAmount},
+			#{feeType},
+			#{feeRatio},
+			#{feeTotalAmount},
+			#{requestSource},
+			#{finishTime},
+			#{batchFileName},
+			#{batchFilePath},
+			#{heepayBatchNo},
+			#{transWay},
+			#{recordSource},
+			#{extend3},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hgms_temporary_collection_record SET 	
+			batch_id = #{batchId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			total_amount = #{totalAmount},
+			total_num = #{totalNum},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status},
+			audit_time = #{auditTime},
+			auditor = #{auditor},
+			success_total_num = #{successTotalNum},
+			success_total_amount = #{successTotalAmount},
+			failed_total_num = #{failedTotalNum},
+			failed_total_amount = #{failedTotalAmount},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_total_amount = #{feeTotalAmount},
+			request_source = #{requestSource},
+			finish_time = #{finishTime},
+			batch_file_name = #{batchFileName},
+			batch_file_path = #{batchFilePath},
+			heepay_batch_no = #{heepayBatchNo},
+			trans_way = #{transWay},
+			record_source = #{recordSource},
+			extend3 = #{extend3},
+			extend4 = #{extend4},
+			extend5 = #{extend5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_temporary_collection_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

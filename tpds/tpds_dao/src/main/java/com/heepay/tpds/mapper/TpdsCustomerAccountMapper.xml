@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsCustomerAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsCustomerAccount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="customer_no" property="customerNo" jdbcType="VARCHAR" />
+    <result column="acc_no" property="accNo" jdbcType="VARCHAR" />
+    <result column="cert_no" property="certNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="bank_acc_no" property="bankAccNo" jdbcType="VARCHAR" />
+    <result column="sec_bank_acc_no" property="secBankAccNo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, merchant_no, customer_no, acc_no, cert_no, create_time, update_time, bank_acc_no, 
+    sec_bank_acc_no, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsCustomerAccountExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_customer_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_customer_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tpds_customer_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsCustomerAccountExample" >
+    delete from tpds_customer_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.heepay.tpds.entity.TpdsCustomerAccount" >
+    insert into tpds_customer_account (id, merchant_no, customer_no, 
+      acc_no, cert_no, create_time, 
+      update_time, bank_acc_no, sec_bank_acc_no, 
+      status)
+    values (#{id,jdbcType=INTEGER}, #{merchantNo,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
+      #{accNo,jdbcType=VARCHAR}, #{certNo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{bankAccNo,jdbcType=VARCHAR}, #{secBankAccNo,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsCustomerAccount" >
+    insert into tpds_customer_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="customerNo != null" >
+        customer_no,
+      </if>
+      <if test="accNo != null" >
+        acc_no,
+      </if>
+      <if test="certNo != null" >
+        cert_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="bankAccNo != null" >
+        bank_acc_no,
+      </if>
+      <if test="secBankAccNo != null" >
+        sec_bank_acc_no,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankAccNo != null" >
+        #{bankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="secBankAccNo != null" >
+        #{secBankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsCustomerAccountExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_customer_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_customer_account
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.merchantNo != null" >
+        merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerNo != null" >
+        customer_no = #{record.customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accNo != null" >
+        acc_no = #{record.accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certNo != null" >
+        cert_no = #{record.certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bankAccNo != null" >
+        bank_acc_no = #{record.bankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secBankAccNo != null" >
+        sec_bank_acc_no = #{record.secBankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_customer_account
+    set id = #{record.id,jdbcType=INTEGER},
+      merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      customer_no = #{record.customerNo,jdbcType=VARCHAR},
+      acc_no = #{record.accNo,jdbcType=VARCHAR},
+      cert_no = #{record.certNo,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      bank_acc_no = #{record.bankAccNo,jdbcType=VARCHAR},
+      sec_bank_acc_no = #{record.secBankAccNo,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsCustomerAccount" >
+    update tpds_customer_account
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        customer_no = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        acc_no = #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        cert_no = #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bankAccNo != null" >
+        bank_acc_no = #{bankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="secBankAccNo != null" >
+        sec_bank_acc_no = #{secBankAccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsCustomerAccount" >
+    update tpds_customer_account
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      customer_no = #{customerNo,jdbcType=VARCHAR},
+      acc_no = #{accNo,jdbcType=VARCHAR},
+      cert_no = #{certNo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      bank_acc_no = #{bankAccNo,jdbcType=VARCHAR},
+      sec_bank_acc_no = #{secBankAccNo,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 查询客户台账记录，启用 -->
+  <select id="selectAccountRecordByStatus" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+		tpds_customer_account  where status = #{status,jdbcType=VARCHAR};
+  </select>
+  <!-- 查询会员编码 -->
+  <select id="selectCustomerNoByMerchantNo" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+		tpds_customer_account  
+		where  status = #{status,jdbcType=VARCHAR}
+        <if test="merchantNo != null and merchantNo != ''" >
+		  AND   merchant_no = #{merchantNo,jdbcType=VARCHAR}
+        </if>
+        <if test="bankAccNo != null and bankAccNo != ''" >
+          AND   bank_acc_no = #{bankAccNo,jdbcType=VARCHAR}
+        </if>
+        AND sec_bank_acc_no IS NOT NULL
+  </select>
+  
+  <update id="updateEntityByAcc" parameterType="java.util.Map" >
+    update tpds_customer_account
+    <set >
+		<if test="secBankAccNo != null" >
+			 sec_bank_acc_no = #{secBankAccNo,jdbcType=VARCHAR},
+		</if>
+    </set>
+    <where>
+		<if test="bankAccNo != null" >
+			and bank_acc_no = #{bankAccNo,jdbcType=INTEGER}
+		</if>
+    </where> 
+  </update>
+  
+</mapper>

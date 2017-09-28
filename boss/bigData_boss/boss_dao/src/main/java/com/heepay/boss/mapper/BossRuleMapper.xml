@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.BossRuleMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.boss.entity.BossRule" >
+    <id column="rule_id" property="ruleId" jdbcType="BIGINT" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="creat_author" property="creatAuthor" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="job_start_time" property="jobStartTime" jdbcType="TIMESTAMP" />
+    <result column="job_end_time" property="jobEndTime" jdbcType="TIMESTAMP" />
+    <result column="take_time" property="takeTime" jdbcType="VARCHAR" />
+    <result column="job_status" property="jobStatus" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    rule_id, start_date, end_date, creat_author, create_time, update_author, update_time, 
+    job_start_time, job_end_time, take_time, job_status, remark
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultType="com.heepay.boss.entity.BossRule" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from boss_rule
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </select>
+  <select id="getlist" resultType="com.heepay.boss.entity.BossRule">
+   select 
+    <include refid="Base_Column_List" />
+    from boss_rule 
+  </select>
+  <insert id="insert" parameterType="com.heepay.boss.entity.BossRule" useGeneratedKeys="true" keyProperty="ruleId" >
+    insert into boss_rule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="creatAuthor != null" >
+        creat_author,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="jobStartTime != null" >
+        job_start_time,
+      </if>
+      <if test="jobEndTime != null" >
+        job_end_time,
+      </if>
+      <if test="takeTime != null" >
+        take_time,
+      </if>
+      <if test="jobStatus != null" >
+        job_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatAuthor != null" >
+        #{creatAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobStartTime != null" >
+        #{jobStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobEndTime != null" >
+        #{jobEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeTime != null" >
+        #{takeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="jobStatus != null" >
+        #{jobStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.heepay.boss.entity.BossRule" >
+    update boss_rule
+    <set >
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatAuthor != null" >
+        creat_author = #{creatAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobStartTime != null" >
+        job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobEndTime != null" >
+        job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="takeTime != null" >
+        take_time = #{takeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="jobStatus != null" >
+        job_status = #{jobStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

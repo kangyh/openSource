@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsOrderTaskRecordDao">
+
+    <sql id="hgmsOrderTaskRecordColumns">
+		a.id AS "id",
+		a.task_name AS "taskName",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.success_time AS "successTime",
+		a.check_begin_date AS "checkBeginDate",
+		a.check_end_date AS "checkEndDate",
+		a.task_type AS "taskType",
+		a.order_amount AS "orderAmount",
+		a.status AS "status",
+		a.operator AS "operator",
+		a.error_record AS "errorRecord",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+
+    <sql id="hgmsOrderTaskRecordJoins">
+    </sql>
+
+    <select id="get" resultType="HgmsOrderTaskRecord">
+        SELECT
+        <include refid="hgmsOrderTaskRecordColumns"/>
+        FROM hgms_order_task_record a
+        <include refid="hgmsOrderTaskRecordJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="HgmsOrderTaskRecord">
+        SELECT
+        <include refid="hgmsOrderTaskRecordColumns"/>
+        FROM hgms_order_task_record a
+        <include refid="hgmsOrderTaskRecordJoins"/>
+
+        <where>
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                AND a.task_type = #{taskType}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+            <if test="checkBeginDate != null">
+                AND a.check_begin_date &gt; #{checkBeginDate}
+            </if>
+            <if test="checkEndDate != null">
+                AND a.check_end_date &lt; #{checkEndDate}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="checkYesterDayExTaskStatus" resultType="HgmsOrderTaskRecord">
+        SELECT
+        <include refid="hgmsOrderTaskRecordColumns"/>
+        FROM hgms_order_task_record a
+        <include refid="hgmsOrderTaskRecordJoins"/>
+
+        <where>
+            <if test="taskType != null and taskType != ''">
+                AND a.task_type = #{taskType}
+            </if>
+            <if test="checkBeginDate != null">
+                AND a.check_begin_date = #{checkBeginDate}
+            </if>
+            <if test="checkEndDate != null">
+                AND a.check_end_date = #{checkEndDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="HgmsOrderTaskRecord">
+        SELECT
+        <include refid="hgmsOrderTaskRecordColumns"/>
+        FROM hgms_order_task_record a
+        <include refid="hgmsOrderTaskRecordJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO hgms_order_task_record(
+			id,
+			task_name,
+			create_time,
+			update_time,
+			success_time,
+			check_begin_date,
+			check_end_date,
+			task_type,
+			order_amount,
+			status,
+			operator,
+			error_record,
+			extend1,
+			extend2,
+			extend3,
+			extend4,
+			extend5
+		) VALUES (
+			#{id},
+			#{taskName},
+			#{createTime},
+			#{updateTime},
+			#{successTime},
+			#{checkBeginDate},
+			#{checkEndDate},
+			#{taskType},
+			#{orderAmount},
+			#{status},
+			#{operator},
+			#{errorRecord},
+			#{extend1},
+			#{extend2},
+			#{extend3},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE hgms_order_task_record SET 	
+			task_name = #{taskName},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			success_time = #{successTime},
+			check_begin_date = #{checkBeginDate},
+			check_end_date = #{checkEndDate},
+			task_type = #{taskType},
+			order_amount = #{orderAmount},
+			status = #{status},
+			operator = #{operator},
+			error_record = #{errorRecord},
+			extend1 = #{extend1},
+			extend2 = #{extend2},
+			extend3 = #{extend3},
+			extend4 = #{extend4},
+			extend5 = #{extend5}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM hgms_order_task_record
+		WHERE id = #{id}
+	</update>
+
+</mapper>

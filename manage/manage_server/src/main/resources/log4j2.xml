@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+<Appenders>
+    <!-- 控制台打印 -->
+    <Console name="CONSOLE" target="SYSTEM_OUT">
+        <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
+    </Console>
+
+    <!-- 按天每天备份一个日志 -->
+    <RollingFile name="ManageServerInfo" fileName="/hy/logs/manage_server/manage_server_info.log" filePattern="/hy/logs/manage_server/manage_server_info_%d{yyyy-MM-dd}_%i.log.gz">
+        <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+        <Policies>
+            <!-- 按天分割 -->
+            <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            <!-- 超过500M增加一个 -->
+            <SizeBasedTriggeringPolicy size="500M" />
+        </Policies>
+        <!-- 最多备份10个 -->
+        <DefaultRolloverStrategy max="10" />
+        <Filters>
+            <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Filters>
+    </RollingFile>
+
+    <RollingFile name="ManageServerError" fileName="/hy/logs/manage_server/manage_server_error.log" filePattern="/hy/logs/manage_server/manage_server_error_%d{yyyy-MM-dd}_%i.log.gz">
+        <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+        <Policies>
+            <!-- 按天分割 -->
+            <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            <!-- 超过500M增加一个 -->
+            <SizeBasedTriggeringPolicy size="500M" />
+        </Policies>
+        <!-- 最多备份10个 -->
+        <DefaultRolloverStrategy max="10" />
+        <Filters>
+        	<ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Filters>
+    </RollingFile>
+
+</Appenders>
+<Loggers>
+    <Root level="info">
+        <AppenderRef ref="CONSOLE"/>
+        <AppenderRef ref="ManageServerInfo"/>
+        <AppenderRef ref="ManageServerError"/>
+    </Root>
+</Loggers>
+</Configuration>

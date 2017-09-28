@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BatchCollectionRecordDao">
+    
+	<sql id="batchCollectionRecordColumns">
+		a.batch_id AS "batch_id",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.total_amount AS "totalAmount",
+		a.total_num AS "totalNum",
+		a.create_time AS "createDate",
+		a.update_time AS "updateDate",
+		a.status AS "status",
+		a.success_total_amount AS "successTotalAmount",
+		a.success_total_num AS "successTotalNum",
+		a.bank_order_id AS "bankOrderId",
+		a.fee_ratio AS "feeRatio"
+	</sql>
+	
+	<sql id="batchCollectionRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="BatchCollectionRecord">
+		SELECT 
+			<include refid="batchCollectionRecordColumns"/>
+		FROM batch_collection_record a
+		<include refid="batchCollectionRecordJoins"/>
+		WHERE a.batch_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BatchCollectionRecord">
+		SELECT 
+			<include refid="batchCollectionRecordColumns"/>
+		FROM batch_collection_record a
+		<include refid="batchCollectionRecordJoins"/>
+		<where>
+			
+			<if test="batchId != null and batchId != ''">
+				AND a.batch_id = #{batchId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="accountName != null and accountName != ''">
+				AND a.account_name = #{accountName}
+			</if>
+			<if test="totalAmount != null and totalAmount != ''">
+				AND a.total_amount = #{totalAmount}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+
+			<choose>
+				<when test="status == 'R1'">
+					AND a.status = 'AUDING' OR a.status = 'PROCES'
+				</when>
+				<when test="status != null and status != '' and status != 'R1'">
+					AND a.status = #{status}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BatchCollectionRecord">
+		SELECT 
+			<include refid="batchCollectionRecordColumns"/>
+		FROM batch_collection_record a
+		<include refid="batchCollectionRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO batch_collection_record(
+			batch_id,
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			total_amount,
+			total_num,
+			create_time,
+			update_time,
+			status,
+			success_total_amount,
+			success_total_num,
+			bank_order_id
+		) VALUES (
+			#{batchId},
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{totalAmount},
+			#{totalNum},
+			#{createTime},
+			#{updateTime},
+			#{status},
+			#{successTotalAmount},
+			#{successTotalNum},
+			#{bankOrderId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE batch_collection_record SET 	
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			total_amount = #{totalAmount},
+			total_num = #{totalNum},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status},
+			success_total_amount = #{successTotalAmount},
+			success_total_num = #{successTotalNum},
+			bank_order_id = #{bankOrderId}
+		WHERE batch_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM batch_collection_record
+		WHERE batch_id = #{id}
+	</update>
+	
+	<update id="audit">
+		UPDATE batch_collection_record set
+			status = #{status}
+		WHERE batch_id = #{batchId}
+	</update>
+	
+</mapper>

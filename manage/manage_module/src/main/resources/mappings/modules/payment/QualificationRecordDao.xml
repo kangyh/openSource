@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.QualificationRecordDao">
+    
+	<sql id="qualificationRecordColumns">
+		a.qualify_id AS "qualifyId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_name AS "merchantName",
+		a.create_time AS "createTime",
+        a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.bankcard_no AS "bankcardNo",
+		a.bank_name AS "bankName",
+		a.status AS "status",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.payment_id AS "paymentId",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.openbank_name AS "openbankName",
+		a.associate_line_number AS "associateLineNumber",
+		a.bankcard_type AS "bankcardType",
+		a.exception_status AS "exceptionStatus"
+	</sql>
+	
+	<sql id="qualificationRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="QualificationRecord">
+		SELECT 
+			<include refid="qualificationRecordColumns"/>
+		FROM qualification_record a
+		<include refid="qualificationRecordJoins"/>
+		WHERE a.qualify_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="QualificationRecord">
+		SELECT 
+			<include refid="qualificationRecordColumns"/>
+		FROM qualification_record a
+		<include refid="qualificationRecordJoins"/>
+		<where>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="qualifyId != null and qualifyId != ''">
+				AND a.qualify_id = #{qualifyId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getQualifyId" resultType="QualificationRecord">
+		SELECT 
+			max(a.qualify_id) as qualifyId
+		FROM qualification_record a
+	</select>
+	
+</mapper>

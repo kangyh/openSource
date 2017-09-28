@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.SettleIncomeInfoDao">
+    
+	<sql id="settleIncomeInfoColumns">
+		a.income_id AS "incomeId",
+		a.income_direction AS "incomeDirection",
+		a.business_type AS "businessType",
+		a.trans_type AS "transType",
+		a.product_code AS "productCode",
+		a.settle_status AS "settleStatus",
+		a.create_time AS "createTime",
+		a.creator AS "creator",
+		a.update_time AS "updateTime",
+		a.modifier AS "modifier",
+		a.remark AS "remark",
+		a.status AS "status"
+	</sql>
+
+	<sql id="settleIncomeInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="SettleIncomeInfo">
+		SELECT 
+			<include refid="settleIncomeInfoColumns"/>
+		FROM settle_income_info a
+		<include refid="settleIncomeInfoJoins"/>
+		WHERE a.income_id = #{incomeId}
+	</select>
+	
+	<select id="findList" resultType="SettleIncomeInfo">
+		SELECT 
+			<include refid="settleIncomeInfoColumns"/>
+		FROM settle_income_info a
+		<include refid="settleIncomeInfoJoins"/>
+		<where>
+			<if test="incomeDirection != null and incomeDirection != ''">
+				and a.income_direction = #{incomeDirection}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				and a.business_type = #{businessType}
+			</if>
+			<if test="transType != null and transType != ''">
+				and a.trans_type = #{transType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				and a.product_code = #{productCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SettleIncomeInfo">
+		SELECT 
+			<include refid="settleIncomeInfoColumns"/>
+		FROM settle_income_info a
+		<include refid="settleIncomeInfoJoins"/>
+		<where>
+			<if test="incomeDirection != null and incomeDirection != ''">
+				and a.income_direction = #{incomeDirection}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				and a.business_type = #{businessType}
+			</if>
+			<if test="transType != null and transType != ''">
+				and a.trans_type = #{transType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				and a.product_code = #{productCode}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO settle_income_info(
+			income_direction,
+			business_type,
+			trans_type,
+			product_code,
+			settle_status,
+			creator,
+			remark,
+			status
+		) VALUES (
+			#{incomeDirection},
+			#{businessType},
+			#{transType},
+			#{productCode},
+			#{settleStatus},
+			#{creator},
+			#{remark},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE settle_income_info SET 	
+			income_direction = #{incomeDirection},
+			business_type = #{businessType},
+			trans_type = #{transType},
+			product_code = #{productCode},
+			settle_status = #{settleStatus},
+			modifier = #{modifier},
+			remark = #{remark},
+			status = #{status}
+		WHERE income_id = #{incomeId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM settle_income_info
+		WHERE income_id = #{incomeId}
+	</update>
+
+	<select id="findExistInfo" resultType="int">
+		SELECT
+		count(1)
+		FROM settle_income_info
+		WHERE income_direction = #{incomeDirection}
+			and business_type = #{businessType}
+			and trans_type = #{transType}
+			and product_code = #{productCode}
+		<if test="incomeId != null and incomeId != ''">
+			AND income_id != #{incomeId}
+		</if>
+	</select>
+	
+</mapper>

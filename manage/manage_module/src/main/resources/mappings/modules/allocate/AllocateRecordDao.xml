@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.allocate.dao.AllocateRecordDao">
+    
+	<sql id="allocateRecordColumns">
+		a.allocate_id AS "allocateId",
+		a.trans_no AS "transNo",
+		a.reserve_out_account_id AS "reserveOutAccountId",
+		a.reserve_in_account_id AS "reserveInAccountId",
+		a.merchant_id AS "merchantId",
+		a.amount AS "amount",
+		a.reason AS "reason",
+		a.status AS "status",
+		a.creator AS "creator",
+		a.auditor AS "auditor",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="allocateRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="AllocateRecord">
+		SELECT 
+			<include refid="allocateRecordColumns"/>
+		FROM allocate_record a
+		<include refid="allocateRecordJoins"/>
+		WHERE a.allocate_id = #{allocateId}
+	</select>
+	
+	<select id="findList" resultType="AllocateRecord">
+		SELECT 
+			<include refid="allocateRecordColumns"/>
+		FROM allocate_record a
+		<include refid="allocateRecordJoins"/>
+		<where>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AllocateRecord">
+		SELECT 
+			<include refid="allocateRecordColumns"/>
+		FROM allocate_record a
+		<include refid="allocateRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO allocate_record(
+			allocate_id,
+			trans_no,
+			reserve_out_account_id,
+			reserve_in_account_id,
+			merchant_id,
+			amount,
+			reason,
+			status,
+			creator,
+			auditor,
+			create_time,
+			update_time,
+			remark
+		) VALUES (
+			#{allocateId},
+			#{transNo},
+			#{reserveOutAccountId},
+			#{reserveInAccountId},
+			#{merchantId},
+			#{amount},
+			#{reason},
+			#{status},
+			#{creator},
+			#{auditor},
+			#{createTime},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE allocate_record SET 	
+			allocate_id = #{allocateId},
+			trans_no = #{transNo},
+			reserve_out_account_id = #{reserveOutAccountId},
+			reserve_in_account_id = #{reserveInAccountId},
+			merchant_id = #{merchantId},
+			amount = #{amount},
+			reason = #{reason},
+			status = #{status},
+			creator = #{creator},
+			auditor = #{auditor},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE allocate_id = #{allocateId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM allocate_record
+		WHERE allocate_id = #{allocateId}
+	</update>
+	
+	<update id="updateAllocateRecord">
+		UPDATE allocate_record SET 	
+			allocate_id = #{allocateId},
+			trans_no = #{transNo},
+			reserve_out_account_id = #{reserveOutAccountId},
+			reserve_in_account_id = #{reserveInAccountId},
+			merchant_id = #{merchantId},
+			amount = #{amount},
+			reason = #{reason},
+			status = #{status},
+			creator = #{creator},
+			auditor = #{auditor},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE allocate_id = #{allocateId}
+	</update>
+	
+</mapper>

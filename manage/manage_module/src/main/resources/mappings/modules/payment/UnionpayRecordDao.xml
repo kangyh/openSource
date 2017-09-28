@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.UnionpayRecordDao">
+    
+	<sql id="unionpayRecordColumns">
+		a.unionpay_id AS "unionpayId",
+		a.prepay_id AS "prepayId",
+		a.payment_id AS "paymentId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.merchant_user_id AS "merchantUserId",
+		a.merchant_user_name AS "merchantUserName",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.term_id AS "termId",
+		a.qr_no AS "qrNo",
+		a.qr_code AS "qrCode",
+		a.voucher_num AS "voucherNum",
+		a.payer_info AS "payerInfo",
+		a.payer_comments AS "payerComments",
+		a.payee_info AS "payeeInfo",
+		a.payee_comments AS "payeeComments",
+		a.settle_key AS "settleKey",
+		a.settle_date AS "settleDate",
+		a.encrypt_certid AS "encryptCertid",
+		a.com_info AS "comInfo",
+		a.invoice_info AS "invoiceInfo",
+		a.version AS "version",
+		a.request_date AS "requestDate",
+		a.request_ip AS "requestIp",
+		a.request_user_ip AS "requestUserIp",
+		a.notify_url AS "notifyUrl",
+		a.callback_url AS "callbackUrl",
+		a.request_type AS "requestType",
+		a.create_time AS "createTime",
+		a.request_amount AS "requestAmount",
+		a.update_time AS "updateTime",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.product_code AS "productCode",
+		a.type AS "type",
+		a.status AS "status",
+		a.fail_reason AS "failReason",
+		a.refund_times AS "refundTimes",
+		a.can_refund_amount AS "canRefundAmount",
+		a.note AS "note",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.riskcontrol_type AS "riskcontrolType",
+		a.riskcontrol_reason AS "riskcontrolReason",
+		a.authorization_code AS "authorizationCode",
+		a.operator AS "operator",
+		a.process_desc AS "processDesc",
+		a.user_id AS "user.id"
+	</sql>
+	
+	<sql id="unionpayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="UnionpayRecord">
+		SELECT 
+			<include refid="unionpayRecordColumns"/>
+		FROM unionpay_record a
+		<include refid="unionpayRecordJoins"/>
+		WHERE a.unionpay_id = #{unionpayId}
+	</select>
+	
+	<select id="findList" resultType="UnionpayRecord">
+		SELECT 
+			<include refid="unionpayRecordColumns"/>
+		FROM unionpay_record a
+		<include refid="unionpayRecordJoins"/>
+		<where>
+			
+			<if test="unionpayId != null and unionpayId != ''">
+				AND a.unionpay_id = #{unionpayId}
+			</if>
+			<if test="prepayId != null and prepayId != ''">
+				AND a.prepay_id = #{prepayId}
+			</if>
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.success_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UnionpayRecord">
+		SELECT 
+			<include refid="unionpayRecordColumns"/>
+		FROM unionpay_record a
+		<include refid="unionpayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getCountByParams" resultType="java.lang.Integer">
+		SELECT 
+			count(*)
+		FROM unionpay_record a
+		<include refid="unionpayRecordJoins"/>
+		<where>
+			<if test="unionpayId != null and unionpayId != ''">
+				AND a.unionpay_id = #{unionpayId}
+			</if>
+			<if test="prepayId != null and prepayId != ''">
+				AND a.prepay_id = #{prepayId}
+			</if>
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.success_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO unionpay_record(
+			unionpay_id,
+			prepay_id,
+			payment_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			merchant_user_id,
+			merchant_user_name,
+			merchant_order_no,
+			term_id,
+			qr_no,
+			qr_code,
+			voucher_num,
+			payer_info,
+			payer_comments,
+			payee_info,
+			payee_comments,
+			settle_key,
+			settle_date,
+			encrypt_certid,
+			com_info,
+			invoice_info,
+			version,
+			request_date,
+			request_ip,
+			request_user_ip,
+			notify_url,
+			callback_url,
+			request_type,
+			create_time,
+			request_amount,
+			update_time,
+			success_time,
+			success_amount,
+			product_code,
+			type,
+			status,
+			fail_reason,
+			refund_times,
+			can_refund_amount,
+			note,
+			fee_type,
+			fee_ratio,
+			fee_amount,
+			riskcontrol_type,
+			riskcontrol_reason,
+			authorization_code,
+			operator,
+			process_desc,
+			user_id
+		) VALUES (
+			#{unionpayId},
+			#{prepayId},
+			#{paymentId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{merchantUserId},
+			#{merchantUserName},
+			#{merchantOrderNo},
+			#{termId},
+			#{qrNo},
+			#{qrCode},
+			#{voucherNum},
+			#{payerInfo},
+			#{payerComments},
+			#{payeeInfo},
+			#{payeeComments},
+			#{settleKey},
+			#{settleDate},
+			#{encryptCertid},
+			#{comInfo},
+			#{invoiceInfo},
+			#{version},
+			#{requestDate},
+			#{requestIp},
+			#{requestUserIp},
+			#{notifyUrl},
+			#{callbackUrl},
+			#{requestType},
+			#{createTime},
+			#{requestAmount},
+			#{updateTime},
+			#{successTime},
+			#{successAmount},
+			#{productCode},
+			#{type},
+			#{status},
+			#{failReason},
+			#{refundTimes},
+			#{canRefundAmount},
+			#{note},
+			#{feeType},
+			#{feeRatio},
+			#{feeAmount},
+			#{riskcontrolType},
+			#{riskcontrolReason},
+			#{authorizationCode},
+			#{operator},
+			#{processDesc},
+			#{user.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE unionpay_record SET 	
+			unionpay_id = #{unionpayId},
+			prepay_id = #{prepayId},
+			payment_id = #{paymentId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			merchant_user_id = #{merchantUserId},
+			merchant_user_name = #{merchantUserName},
+			merchant_order_no = #{merchantOrderNo},
+			term_id = #{termId},
+			qr_no = #{qrNo},
+			qr_code = #{qrCode},
+			voucher_num = #{voucherNum},
+			payer_info = #{payerInfo},
+			payer_comments = #{payerComments},
+			payee_info = #{payeeInfo},
+			payee_comments = #{payeeComments},
+			settle_key = #{settleKey},
+			settle_date = #{settleDate},
+			encrypt_certid = #{encryptCertid},
+			com_info = #{comInfo},
+			invoice_info = #{invoiceInfo},
+			version = #{version},
+			request_date = #{requestDate},
+			request_ip = #{requestIp},
+			request_user_ip = #{requestUserIp},
+			notify_url = #{notifyUrl},
+			callback_url = #{callbackUrl},
+			request_type = #{requestType},
+			create_time = #{createTime},
+			request_amount = #{requestAmount},
+			update_time = #{updateTime},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			product_code = #{productCode},
+			type = #{type},
+			status = #{status},
+			fail_reason = #{failReason},
+			refund_times = #{refundTimes},
+			can_refund_amount = #{canRefundAmount},
+			note = #{note},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_amount = #{feeAmount},
+			riskcontrol_type = #{riskcontrolType},
+			riskcontrol_reason = #{riskcontrolReason},
+			authorization_code = #{authorizationCode},
+			operator = #{operator},
+			process_desc = #{processDesc},
+			user_id = #{user.id}
+		WHERE unionpay_id = #{unionpayId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM unionpay_record
+		WHERE unionpay_id = #{unionpayId}
+	</update>
+	
+</mapper>

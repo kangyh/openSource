@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsMerchantSuppliersettingDao">
+    
+	<sql id="cbmsMerchantSuppliersettingColumns">
+		a.merchant_id AS "merchantId",
+		a.merchant_no AS "merchantNo",
+		a.email AS "email",
+		a.contry_name AS "contryName",
+		a.type AS "type",
+		a.certificate_type AS "certificateType",
+		a.company_name AS "companyName",
+		a.province_code AS "provinceCode",
+		a.province_name AS "provinceName",
+		a.city_code AS "cityCode",
+		a.city_name AS "cityName",
+		a.county_code AS "countyCode",
+		a.county_name AS "countyName",
+		a.business_address AS "businessAddress",
+		a.website AS "website",
+		a.business_license_no AS "businessLicenseNo",
+		a.business_license_end_time AS "businessLicenseEndTime",
+		a.organization_code AS "organizationCode",
+		a.tax_registration_certificate_no AS "taxRegistrationCertificateNo",
+		a.business_scope AS "businessScope",
+		a.llegalperson AS "llegalperson",
+		a.legal_idcard AS "legalIdcard",
+		a.legal_certificate_end_time AS "legalCertificateEndTime",
+		a.contactor AS "contactor",
+		a.contactor_idcard_no AS "contactorIdcardNo",
+		a.contactor_certificate_end_time AS "contactorCertificateEndTime",
+		a.contactor_phone AS "contactorPhone",
+		a.org_customs_code AS "orgCustomsCode",
+		a.supplier_name AS "supplierName",
+		a.enterprise_name AS "enterpriseName",
+		a.electricity_url AS "electricityUrl",
+		a.org_customs_name AS "orgCustomsName",
+		a.central_office_number AS "centralOfficeNumber",
+		a.cbms_enterprise_type_name AS "cbmsEnterpriseTypeName",
+		a.cbms_supplier_category_name AS "cbmsSupplierCategoryName",
+		a.cbms_trade_type_name AS "cbmsTradeTypeName",
+		a.contry_code AS "contryCode",
+		a.merchant_pos_code AS "merchantPosCode",
+		a.company_phone AS "companyPhone",
+		a.legal_mobile AS "legalMobile",
+		a.charge_type AS "chargeType",
+		a.ipc_no AS "ipcNo",
+		a.permits_accounts AS "permitsAccounts",
+		a.legal_certificate_front AS "legalCertificateFront",
+		a.legal_certificate_back AS "legalCertificateBack",
+		a.tax_registration_certificate AS "taxRegistrationCertificate",
+		a.organization_code_certificate AS "organizationCodeCertificate",
+		a.business_license_file AS "businessLicenseFile",
+		a.trademark_regis_photo_address AS "trademarkRegisPhotoAddress",
+		a.commodity_quality_photo_address AS "commodityQualityPhotoAddress"
+	</sql>
+	
+	<sql id="cbmsMerchantSuppliersettingJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsMerchantSuppliersetting">
+		SELECT 
+			<include refid="cbmsMerchantSuppliersettingColumns"/>
+		FROM cbms_merchant_suppliersetting a
+		<include refid="cbmsMerchantSuppliersettingJoins"/>
+		WHERE a.merchant_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CbmsMerchantSuppliersetting">
+		SELECT 
+			<include refid="cbmsMerchantSuppliersettingColumns"/>
+		FROM cbms_merchant_suppliersetting a
+		<include refid="cbmsMerchantSuppliersettingJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantNo != null and merchantNo != ''">
+				AND a.merchant_no = #{merchantNo}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
+			</if>
+			<if test="contryName != null and contryName != ''">
+				AND a.contry_name = #{contryName}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="certificateType != null and certificateType != ''">
+				AND a.certificate_type = #{certificateType}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="provinceCode != null and provinceCode != ''">
+				AND a.province_code = #{provinceCode}
+			</if>
+			<if test="provinceName != null and provinceName != ''">
+				AND a.province_name = #{provinceName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CbmsMerchantSuppliersetting">
+		SELECT 
+			<include refid="cbmsMerchantSuppliersettingColumns"/>
+		FROM cbms_merchant_suppliersetting a
+		<include refid="cbmsMerchantSuppliersettingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_merchant_suppliersetting(
+			merchant_id,
+			merchant_no,
+			email,
+			contry_name,
+			type,
+			certificate_type,
+			company_name,
+			province_code,
+			province_name,
+			city_code,
+			city_name,
+			county_code,
+			county_name,
+			business_address,
+			website,
+			business_license_no,
+			business_license_end_time,
+			organization_code,
+			tax_registration_certificate_no,
+			business_scope,
+			llegalperson,
+			legal_idcard,
+			legal_certificate_end_time,
+			contactor,
+			contactor_idcard_no,
+			contactor_certificate_end_time,
+			contactor_phone,
+			org_customs_code,
+			supplier_name,
+			enterprise_name,
+			electricity_url,
+			org_customs_name,
+			central_office_number,
+			cbms_enterprise_type_name,
+			cbms_supplier_category_name,
+			cbms_trade_type_name,
+			contry_code,
+			merchant_pos_code,
+			company_phone,
+			legal_mobile,
+			charge_type,
+			ipc_no,
+			permits_accounts,
+			legal_certificate_front,
+			legal_certificate_back,
+			tax_registration_certificate,
+			organization_code_certificate,
+			business_license_file,
+			trademark_regis_photo_address,
+			commodity_quality_photo_address
+		) VALUES (
+			#{merchantId},
+			#{merchantNo},
+			#{email},
+			#{contryName},
+			#{type},
+			#{certificateType},
+			#{companyName},
+			#{provinceCode},
+			#{provinceName},
+			#{cityCode},
+			#{cityName},
+			#{countyCode},
+			#{countyName},
+			#{businessAddress},
+			#{website},
+			#{businessLicenseNo},
+			#{businessLicenseEndTime},
+			#{organizationCode},
+			#{taxRegistrationCertificateNo},
+			#{businessScope},
+			#{llegalperson},
+			#{legalIdcard},
+			#{legalCertificateEndTime},
+			#{contactor},
+			#{contactorIdcardNo},
+			#{contactorCertificateEndTime},
+			#{contactorPhone},
+			#{orgCustomsCode},
+			#{supplierName},
+			#{enterpriseName},
+			#{electricityUrl},
+			#{orgCustomsName},
+			#{centralOfficeNumber},
+			#{cbmsEnterpriseTypeName},
+			#{cbmsSupplierCategoryName},
+			#{cbmsTradeTypeName},
+			#{contryCode},
+			#{merchantPosCode},
+			#{companyPhone},
+			#{legalMobile},
+			#{chargeType},
+			#{ipcNo},
+			#{permitsAccounts},
+			#{legalCertificateFront},
+			#{legalCertificateBack},
+			#{taxRegistrationCertificate},
+			#{organizationCodeCertificate},
+			#{businessLicenseFile},
+			#{trademarkRegisPhotoAddress},
+			#{commodityQualityPhotoAddress}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_merchant_suppliersetting SET 	
+			merchant_id = #{merchantId},
+			merchant_no = #{merchantNo},
+			email = #{email},
+			contry_name = #{contryName},
+			type = #{type},
+			certificate_type = #{certificateType},
+			company_name = #{companyName},
+			province_code = #{provinceCode},
+			province_name = #{provinceName},
+			city_code = #{cityCode},
+			city_name = #{cityName},
+			county_code = #{countyCode},
+			county_name = #{countyName},
+			business_address = #{businessAddress},
+			website = #{website},
+			business_license_no = #{businessLicenseNo},
+			business_license_end_time = #{businessLicenseEndTime},
+			organization_code = #{organizationCode},
+			tax_registration_certificate_no = #{taxRegistrationCertificateNo},
+			business_scope = #{businessScope},
+			llegalperson = #{llegalperson},
+			legal_idcard = #{legalIdcard},
+			legal_certificate_end_time = #{legalCertificateEndTime},
+			contactor = #{contactor},
+			contactor_idcard_no = #{contactorIdcardNo},
+			contactor_certificate_end_time = #{contactorCertificateEndTime},
+			contactor_phone = #{contactorPhone},
+			org_customs_code = #{orgCustomsCode},
+			supplier_name = #{supplierName},
+			enterprise_name = #{enterpriseName},
+			electricity_url = #{electricityUrl},
+			org_customs_name = #{orgCustomsName},
+			central_office_number = #{centralOfficeNumber},
+			cbms_enterprise_type_name = #{cbmsEnterpriseTypeName},
+			cbms_supplier_category_name = #{cbmsSupplierCategoryName},
+			cbms_trade_type_name = #{cbmsTradeTypeName},
+			contry_code = #{contryCode},
+			merchant_pos_code = #{merchantPosCode},
+			company_phone = #{companyPhone},
+			legal_mobile = #{legalMobile},
+			charge_type = #{chargeType},
+			ipc_no = #{ipcNo},
+			permits_accounts = #{permitsAccounts},
+			legal_certificate_front = #{legalCertificateFront},
+			legal_certificate_back = #{legalCertificateBack},
+			tax_registration_certificate = #{taxRegistrationCertificate},
+			organization_code_certificate = #{organizationCodeCertificate},
+			business_license_file = #{businessLicenseFile},
+			trademark_regis_photo_address = #{trademarkRegisPhotoAddress},
+			commodity_quality_photo_address = #{commodityQualityPhotoAddress}
+		WHERE merchant_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_merchant_suppliersetting
+		WHERE merchant_id = #{id}
+	</update>
+	
+</mapper>

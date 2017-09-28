@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.BankQuotaDao">
+    
+	<sql id="bankQuotaColumns">
+		a.id AS "id",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.bank_card_type AS "bankCardType",
+		a.trade_type AS "tradeType",
+		a.perlimit_amount AS "perlimitAmount",
+		a.daylimit_amount AS "daylimitAmount",
+		a.monlimit_amount AS "monlimitAmount"
+	</sql>
+	
+	<sql id="bankQuotaJoins">
+	</sql>
+    
+	<select id="get" resultType="BankQuota">
+		SELECT 
+			<include refid="bankQuotaColumns"/>
+		FROM bank_quota a
+		<include refid="bankQuotaJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getBankQuota" resultType="BankQuota">
+        SELECT 
+            <include refid="bankQuotaColumns"/>
+        FROM bank_quota a
+        <include refid="bankQuotaJoins"/>
+        WHERE a.bank_card_type = #{bankCardType}
+        AND a.bank_id = #{bankId}
+    </select>
+	
+	<select id="findList" resultType="BankQuota">
+		SELECT 
+			<include refid="bankQuotaColumns"/>
+		FROM bank_quota a
+		<include refid="bankQuotaJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BankQuota">
+		SELECT 
+			<include refid="bankQuotaColumns"/>
+		FROM bank_quota a
+		<include refid="bankQuotaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bank_quota(
+			id,
+			bank_id,
+			bank_name,
+			bank_card_type,
+			trade_type,
+			perlimit_amount,
+			daylimit_amount,
+			monlimit_amount
+		) VALUES (
+			#{id},
+			#{bankId},
+			#{bankName},
+			#{bankCardType},
+			#{tradeType},
+			#{perlimitAmount},
+			#{daylimitAmount},
+			#{monlimitAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bank_quota SET 	
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			bank_card_type = #{bankCardType},
+			trade_type = #{tradeType},
+			perlimit_amount = #{perlimitAmount},
+			daylimit_amount = #{daylimitAmount},
+			monlimit_amount = #{monlimitAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bank_quota
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

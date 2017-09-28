@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.SettleCycleManageDao">
+
+	<sql id="settleCycleManageColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.settle_type AS "settleType",
+		a.min_settlement_amount AS "minSettlementAmount",
+		a.effective_start_time AS "effectiveStartTime",
+		a.effective_end_time AS "effectiveEndTime",
+		a.status AS "status",
+		a.settlement_to AS "settlementTo",
+		a.create_user AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_user AS "updateBy.id",
+		a.update_time AS "updateDate"
+	</sql>
+
+	<sql id="settleCycleManageJoins">
+	</sql>
+	
+	<select id="get" resultType="SettleCycleManage">
+		SELECT
+		<include refid="settleCycleManageColumns" />
+		FROM settle_cycle_manage a
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="settleCycleManageJoins" />
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="exsit" resultType="SettleCycleManage">
+		SELECT
+		<include refid="settleCycleManageColumns" />
+		FROM settle_cycle_manage a
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="settleCycleManageJoins" />
+		WHERE a.merchant_id = #{merchantId}
+		AND a.product_code = #{productCode}
+		<if test="id != null and id != ''">
+			AND a.id != #{id}
+		</if>
+	</select>
+
+	<select id="getByMerchantId" resultType="SettleCycleManage">
+		SELECT
+		<include refid="settleCycleManageColumns" />
+		FROM settle_cycle_manage a
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="settleCycleManageJoins" />
+		WHERE a.merchant_id = #{merchantId}
+	</select>	
+
+	<select id="findList" resultType="SettleCycleManage">
+		SELECT
+		<include refid="settleCycleManageColumns" />
+		FROM settle_cycle_manage a
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="settleCycleManageJoins" />
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="settleType != null and settleType != ''">
+				AND a.settle_type = #{settleType}
+			</if>
+			<if test="effectiveStartTime != null ">
+				AND a.effective_start_time &gt;= #{effectiveStartTime}
+			</if>
+			<if test="effectiveEndTime != null ">
+				AND a.effective_end_time &lt;= #{effectiveEndTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when> 
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="SettleCycleManage">
+		SELECT
+		<include refid="settleCycleManageColumns" />
+		FROM settle_cycle_manage a
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="settleCycleManageJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert" >
+		insert into settle_cycle_manage
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="merchantId != null">
+				merchant_id,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="settleType != null">
+				settle_type,
+			</if>
+			<if test="minSettlementAmount != null">
+				min_settlement_amount,
+			</if>
+			<if test="effectiveStartTime != null">
+				effective_start_time,
+			</if>
+			<if test="effectiveEndTime != null">
+				effective_end_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="settlementTo != null">
+				settlement_to,
+			</if>
+			<if test="createBy.id != null">
+				create_user,
+			</if>
+			<if test="createDate != null">
+				create_time,
+			</if>
+			<if test="updateBy.id != null">
+				update_user,
+			</if>
+			<if test="updateDate != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="merchantId != null">
+				#{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="settleType != null">
+				#{settleType,jdbcType=TINYINT},
+			</if>
+			<if test="minSettlementAmount != null">
+				#{minSettlementAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="effectiveStartTime != null">
+				#{effectiveStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="effectiveEndTime != null">
+				#{effectiveEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="settlementTo != null">
+				#{settlementTo,jdbcType=CHAR},
+			</if>
+			<if test="createBy.id != null">
+				#{createBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null">
+				#{updateBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<update id="update" >
+		update settle_cycle_manage
+		<set>
+			<if test="merchantId != null">
+				merchant_id = #{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="settleType != null">
+				settle_type = #{settleType,jdbcType=TINYINT},
+			</if>
+			<if test="minSettlementAmount != null">
+				min_settlement_amount = #{minSettlementAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="effectiveStartTime != null">
+				effective_start_time = #{effectiveStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="effectiveEndTime != null">
+				effective_end_time = #{effectiveEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="settlementTo != null">
+				settlement_to = #{settlementTo,jdbcType=CHAR},
+			</if>
+			<if test="createBy.id != null">
+				create_user = #{createBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_time = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null">
+				update_user = #{updateBy.id,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				update_time = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="delete">
+		DELETE FROM settle_cycle_manage
+		WHERE id = #{id}
+	</update>
+	
+	<update id="status" >
+		UPDATE settle_cycle_manage SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,11 @@
+namespace java com.heepay.rpc.billing.service
+include "SettleChannelRecordModel.thrift"
+
+service SettleChannelRecordService {
+	
+	list<SettleChannelRecordModel.SettleChannelRecordModel> saveSettleChannelRecord(1:SettleChannelRecordModel.SettleChannelRecordModel settleChannelRecordModel);
+	list<SettleChannelRecordModel.SettleChannelRecordModel> query(1:SettleChannelRecordModel.SettleChannelRecordModel settleChannelRecordModel);
+	void updateSettleChannelRecord(1:SettleChannelRecordModel.SettleChannelRecordModel settleChannelRecordModel);
+	void deleteSettleChannelRecord(1:SettleChannelRecordModel.SettleChannelRecordModel settleChannelRecordModel);
+	string getSettleChannelRecordMessage();
+}

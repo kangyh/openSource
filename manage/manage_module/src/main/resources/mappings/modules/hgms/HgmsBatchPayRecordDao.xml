@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsBatchPayRecordDao">
+    
+	<sql id="hgmsBatchPayRecordColumns">
+		a.batch_id AS "batchId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.total_amount AS "totalAmount",
+		a.total_num AS "totalNum",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.success_total_num AS "successTotalNum",
+		a.success_total_amount AS "successTotalAmount",
+		a.failed_total_num AS "failedTotalNum",
+		a.failed_total_amount AS "failedTotalAmount",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_total_amount AS "feeTotalAmount",
+		a.request_source AS "requestSource",
+		a.finish_time AS "finishTime",
+		a.batch_file_name AS "batchFileName",
+		a.batch_file_path AS "batchFilePath",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+	
+	<sql id="hgmsBatchPayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsBatchPayRecord">
+		SELECT 
+			<include refid="hgmsBatchPayRecordColumns"/>
+		FROM hgms_batch_pay_record a
+		<include refid="hgmsBatchPayRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsBatchPayRecord">
+		SELECT 
+			<include refid="hgmsBatchPayRecordColumns"/>
+		FROM hgms_batch_pay_record a
+		<include refid="hgmsBatchPayRecordJoins"/>
+		<where>
+			
+			<if test="batchId != null and batchId != ''">
+				AND a.batch_id = #{batchId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company LIKE  CONCAT(CONCAT('%', #{merchantCompany}),'%')
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			<if test="batchFileName != null and batchFileName != ''">
+				AND a.batch_file_name LIKE  CONCAT(CONCAT('%', #{batchFileName}),'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsBatchPayRecord">
+		SELECT 
+			<include refid="hgmsBatchPayRecordColumns"/>
+		FROM hgms_batch_pay_record a
+		<include refid="hgmsBatchPayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_batch_pay_record(
+			batch_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			total_amount,
+			total_num,
+			create_time,
+			update_time,
+			status,
+			success_total_num,
+			success_total_amount,
+			failed_total_num,
+			failed_total_amount,
+			fee_type,
+			fee_ratio,
+			fee_total_amount,
+			request_source,
+			finish_time,
+			batch_file_name,
+			batch_file_path,
+			extend1,
+			extend2,
+			extend3,
+			extend4,
+			extend5
+		) VALUES (
+			#{batchId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{totalAmount},
+			#{totalNum},
+			#{createTime},
+			#{updateTime},
+			#{status},
+			#{successTotalNum},
+			#{successTotalAmount},
+			#{failedTotalNum},
+			#{failedTotalAmount},
+			#{feeType},
+			#{feeRatio},
+			#{feeTotalAmount},
+			#{requestSource},
+			#{finishTime},
+			#{batchFileName},
+			#{batchFilePath},
+			#{extend1},
+			#{extend2},
+			#{extend3},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hgms_batch_pay_record SET 	
+			batch_id = #{batchId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			total_amount = #{totalAmount},
+			total_num = #{totalNum},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status},
+			success_total_num = #{successTotalNum},
+			success_total_amount = #{successTotalAmount},
+			failed_total_num = #{failedTotalNum},
+			failed_total_amount = #{failedTotalAmount},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_total_amount = #{feeTotalAmount},
+			request_source = #{requestSource},
+			finish_time = #{finishTime},
+			batch_file_name = #{batchFileName},
+			batch_file_path = #{batchFilePath},
+			extend1 = #{extend1},
+			extend2 = #{extend2},
+			extend3 = #{extend3},
+			extend4 = #{extend4},
+			extend5 = #{extend5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_batch_pay_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

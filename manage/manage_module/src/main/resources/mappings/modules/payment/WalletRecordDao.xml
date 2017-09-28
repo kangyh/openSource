@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.WalletRecordDao">
+    
+	<sql id="walletRecordColumns">
+		a.wallet_id AS "walletId",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.product_code AS "productCode",
+		a.trans_type AS "transType",
+		a.status AS "status",
+		a.description AS "description",
+		a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.success_amount AS "successAmount",
+		a.success_time AS "successTime",
+		a.balance_direction AS "balanceDirection",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.currency AS "currency",
+		a.fee_type AS "feeType",
+		a.fee_amount AS "feeAmount",
+		a.operator AS "operator",
+		a.settle_cyc AS "settleCyc",
+		a.create_time AS "createTime",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.wallet_merchant_id AS "walletMerchantId",
+		a.merchant_fee_amount AS "merchantFeeAmount"
+	</sql>
+	
+	<sql id="walletRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WalletRecord">
+		SELECT 
+			<include refid="walletRecordColumns"/>
+		FROM wallet_record a
+		<include refid="walletRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WalletRecord">
+		SELECT 
+			<include refid="walletRecordColumns"/>
+		FROM wallet_record a
+		<include refid="walletRecordJoins"/>
+		<where>
+			<if test="transNo != null and transNo!=''">
+				AND a.trans_no = #{transNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findDifBillList" resultType="WalletRecord">
+		SELECT
+		<include refid="walletRecordColumns"/>
+		FROM wallet_record a
+		<include refid="walletRecordJoins"/>
+		<where>
+			<if test="transNo != null and transNo!=''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="status != null and status!=''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		ORDER BY create_time desc
+	</select>
+
+
+	<select id="findAllList" resultType="WalletRecord">
+		SELECT 
+			<include refid="walletRecordColumns"/>
+		FROM wallet_record a
+		<include refid="walletRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wallet_record(
+			wallet_id,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			product_code,
+			trans_type,
+			status,
+			description,
+			update_time,
+			pay_amount,
+			success_amount,
+			success_time,
+			balance_direction,
+			merchant_order_no,
+			currency,
+			fee_type,
+			fee_amount,
+			operator,
+			settle_cyc,
+			create_time,
+			account_id,
+			account_name,
+			wallet_merchant_id,
+			merchant_fee_amount
+		) VALUES (
+			#{walletId},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{productCode},
+			#{transType},
+			#{status},
+			#{description},
+			#{updateTime},
+			#{payAmount},
+			#{successAmount},
+			#{successTime},
+			#{balanceDirection},
+			#{merchantOrderNo},
+			#{currency},
+			#{feeType},
+			#{feeAmount},
+			#{operator},
+			#{settleCyc},
+			#{createTime},
+			#{accountId},
+			#{accountName},
+			#{walletMerchantId},
+			#{merchantFeeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wallet_record SET 	
+			wallet_id = #{walletId},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			product_code = #{productCode},
+			trans_type = #{transType},
+			status = #{status},
+			description = #{description},
+			update_time = #{updateTime},
+			pay_amount = #{payAmount},
+			success_amount = #{successAmount},
+			success_time = #{successTime},
+			balance_direction = #{balanceDirection},
+			merchant_order_no = #{merchantOrderNo},
+			currency = #{currency},
+			fee_type = #{feeType},
+			fee_amount = #{feeAmount},
+			operator = #{operator},
+			settle_cyc = #{settleCyc},
+			create_time = #{createTime},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			wallet_merchant_id = #{walletMerchantId},
+			merchant_fee_amount = #{merchantFeeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM wallet_record
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateStatusByTransNo">
+		UPDATE wallet_record SET
+		status = #{status}
+		WHERE trans_no = #{transNo}
+	</update>
+
+</mapper>

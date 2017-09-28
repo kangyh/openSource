@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskRuleDetailDao" >
+
+ 	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="riskRuleDetailColumns">
+		a.detail_id AS "detailId",
+		a.detail_code AS "detailCode",
+		a.detail_name AS "detailName",
+		a.relation_key AS "relationKey",
+		a.relation_value AS "relationValue",
+		a.remark AS "remark",
+		a.status AS "status",
+		a.rule_id AS "ruleId",
+		a.level AS "level",
+		a.elemen_detail AS "elemenDetail",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor"
+	</sql>
+	
+	<!-- 根据主键查询类型明细信息  -->
+	<select id="get" resultType="RiskRuleDetail">
+		SELECT
+			<include refid="riskRuleDetailColumns"/>
+		FROM risk_rule_detail a
+		WHERE a.detail_id = #{detailId}
+	</select>
+	
+	<!-- 
+		查询list
+		修改条件时，修改下面的导出SQL条件
+	 -->
+	<select id="findList" resultType="RiskRuleDetail">
+		SELECT 
+			<include refid="riskRuleDetailColumns"/>
+		FROM risk_rule_detail a
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY detail_id desc
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

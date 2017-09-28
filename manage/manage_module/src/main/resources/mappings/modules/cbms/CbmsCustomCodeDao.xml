@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsCustomCodeDao">
+
+    <sql id="cbmsCustomCodeColumns">
+		a.custom_id AS "customId",
+		a.super_id AS "superId",
+		a.level_type AS "levelType",
+		a.custom_code AS "customCode",
+		a.china_name AS "chinaName",
+		a.custom_alias AS "customAlias",
+		a.custom_name AS "customName",
+		a.custom_phone AS "customPhone",
+		a.custom_address AS "customAddress",
+		a.status AS "status",
+		a.created_time AS "createdTime",
+		a.update_time AS "updateTime"
+	</sql>
+    <sql id="cbmsCustomCodeSuperColumns">
+		a.custom_code AS "pcustomCode",
+		a.china_name AS "pchinaName",
+		b.custom_code AS "customCode",
+		b.china_name AS "chinaName",
+		b.created_time AS "createdTime",
+		b.status AS "status"
+	</sql>
+    <sql id="cbmsCustomCodeJoins">
+    </sql>
+
+    <select id="get" resultType="CbmsCustomCode">
+        SELECT
+        <include refid="cbmsCustomCodeColumns"/>
+        FROM cbms_custom_code a
+        <include refid="cbmsCustomCodeJoins"/>
+        WHERE a.custom_id = #{id}
+    </select>
+    <!--根据传入的String字符串查询对应哪个的数据-->
+    <select id="select" parameterType="java.lang.String" resultType="CbmsCustomCode">
+        SELECT
+        <include refid="cbmsCustomCodeColumns"/>
+        FROM cbms_custom_code a
+        <include refid="cbmsCustomCodeJoins"/>
+        WHERE a.custom_code = #{customCode}
+    </select>
+    <select id="findList" resultType="CbmsCustomCode">
+        SELECT
+        <include refid="cbmsCustomCodeColumns"/>
+        FROM cbms_custom_code a
+        <include refid="cbmsCustomCodeJoins"/>
+        <where>
+
+            <if test="chinaName != null and chinaName != ''">
+                AND a.china_name LIKE CONCAT(CONCAT('%', #{chinaName}),'%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="CbmsCustomCode">
+        SELECT
+        <include refid="cbmsCustomCodeColumns"/>
+        FROM cbms_custom_code a
+        <include refid="cbmsCustomCodeJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+    <!--根据custom_id=super_id的来查询海关表中的数据条件支持条件查询-->
+    <select id="findSuperList" resultType="CbmsCustomCodeSuper">
+        SELECT
+        <include refid="cbmsCustomCodeSuperColumns"/>
+        FROM cbms_custom_code a,cbms_custom_code b
+        <include refid="cbmsCustomCodeJoins"/>
+        <where>
+            a.custom_id=b.super_id
+            <if test="pchinaName != null and pchinaName != ''"><!--pchinaName是父级名称-->
+                AND a.china_name LIKE CONCAT(CONCAT('%', #{pchinaName}),'%')
+            </if>
+            <if test="chinaName != null and chinaName != ''"><!--pchinaName是子级名称-->
+                AND b.china_name LIKE CONCAT(CONCAT('%', #{chinaName}),'%')
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+    <insert id="insert">
+		INSERT INTO cbms_custom_code(
+			custom_id,
+			super_id,
+			level_type,
+			custom_code,
+			china_name,
+			custom_alias,
+			custom_name,
+			custom_phone,
+			custom_address,
+			status,
+			created_time,
+			update_time
+		) VALUES (
+			#{customId},
+			#{superId},
+			#{levelType},
+			#{customCode},
+			#{chinaName},
+			#{customAlias},
+			#{customName},
+			#{customPhone},
+			#{customAddress},
+			#{status},
+			#{createdTime},
+			#{updateTime}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE cbms_custom_code SET 	
+			custom_id = #{customId},
+			super_id = #{superId},
+			level_type = #{levelType},
+			custom_code = #{customCode},
+			china_name = #{chinaName},
+			custom_alias = #{customAlias},
+			custom_name = #{customName},
+			custom_phone = #{customPhone},
+			custom_address = #{customAddress},
+			status = #{status},
+			created_time = #{createdTime},
+			update_time = #{updateTime}
+		WHERE custom_id = #{customId}
+	</update>
+
+    <update id="delete">
+		DELETE FROM cbms_custom_code
+		WHERE custom_id = #{id}
+	</update>
+
+    <select id="getNameByCode" parameterType="java.lang.String" resultType="CbmsCustomCode">
+        SELECT
+        <include refid="cbmsCustomCodeColumns"/>
+        FROM cbms_custom_code a
+        WHERE a.custom_code = #{customCode}
+    </select>
+    <select id="findcodenotcustomsetting" resultType="CbmsCustomCode">
+    select
+        <include refid="cbmsCustomCodeColumns"/>
+        from cbms_custom_code a
+            left join cbms_customsetting b on a.custom_code=b.custom_no
+              where isnull(b.custom_no)
+	</select>
+
+    <select id="customCodeList" resultType="CbmsCustomCode">
+        select
+        <include refid="cbmsCustomCodeColumns"/>
+        from cbms_custom_code a
+
+        where a.level_type='0'
+    </select>
+</mapper>

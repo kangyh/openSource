@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.account.dao.TrialBalanceLogDao">
+    
+	<sql id="trialBalanceLogColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.merchant_id AS "merchantId",
+		a.merchant_log_id_form AS "merchantLogIdForm",
+		a.balance_amount_changes_form AS "balanceAmountChangesForm",
+		a.balance_amount_form AS "balanceAmountForm",
+		a.balance_direction_form AS "balanceDirectionForm",
+		a.trans_no_form AS "transNoForm",
+		a.payment_id_form AS "paymentIdForm",
+		a.type_form AS "typeForm",
+		a.merchant_log_id_to AS "merchantLogIdTo",
+		a.balance_amount_changes_to AS "balanceAmountChangesTo",
+		a.balance_amount_to AS "balanceAmountTo",
+		a.balance_direction_to AS "balanceDirectionTo",
+		a.trans_no_to AS "transNoTo",
+		a.payment_id_to AS "paymentIdTo",
+		a.type_to AS "typeTo",
+		a.category AS "category",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="trialBalanceLogJoins">
+	</sql>
+    
+	<select id="get" resultType="TrialBalanceLog">
+		SELECT 
+			<include refid="trialBalanceLogColumns"/>
+		FROM trial_balance_log a
+		<include refid="trialBalanceLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TrialBalanceLog">
+		SELECT 
+			<include refid="trialBalanceLogColumns"/>
+		FROM trial_balance_log a
+		<include refid="trialBalanceLogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TrialBalanceLog">
+		SELECT 
+			<include refid="trialBalanceLogColumns"/>
+		FROM trial_balance_log a
+		<include refid="trialBalanceLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO trial_balance_log(
+			id,
+			account_id,
+			merchant_id,
+			merchant_log_id_form,
+			balance_amount_changes_form,
+			balance_amount_form,
+			balance_direction_form,
+			trans_no_form,
+			payment_id_form,
+			type_form,
+			merchant_log_id_to,
+			balance_amount_changes_to,
+			balance_amount_to,
+			balance_direction_to,
+			trans_no_to,
+			payment_id_to,
+			type_to,
+			category,
+			status,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{merchantId},
+			#{merchantLogIdForm},
+			#{balanceAmountChangesForm},
+			#{balanceAmountForm},
+			#{balanceDirectionForm},
+			#{transNoForm},
+			#{paymentIdForm},
+			#{typeForm},
+			#{merchantLogIdTo},
+			#{balanceAmountChangesTo},
+			#{balanceAmountTo},
+			#{balanceDirectionTo},
+			#{transNoTo},
+			#{paymentIdTo},
+			#{typeTo},
+			#{category},
+			#{status},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trial_balance_log SET 	
+			id = #{id},
+			account_id = #{accountId},
+			merchant_id = #{merchantId},
+			merchant_log_id_form = #{merchantLogIdForm},
+			balance_amount_changes_form = #{balanceAmountChangesForm},
+			balance_amount_form = #{balanceAmountForm},
+			balance_direction_form = #{balanceDirectionForm},
+			trans_no_form = #{transNoForm},
+			payment_id_form = #{paymentIdForm},
+			type_form = #{typeForm},
+			merchant_log_id_to = #{merchantLogIdTo},
+			balance_amount_changes_to = #{balanceAmountChangesTo},
+			balance_amount_to = #{balanceAmountTo},
+			balance_direction_to = #{balanceDirectionTo},
+			trans_no_to = #{transNoTo},
+			payment_id_to = #{paymentIdTo},
+			type_to = #{typeTo},
+			category = #{category},
+			status = #{status},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM trial_balance_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

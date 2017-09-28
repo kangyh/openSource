@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.share.dao.ShareAccountRecordDao">
+    
+	<sql id="shareAccountRecordColumns">
+		a.share_id AS "shareId",
+		a.merchant_id AS "merchantId",
+		a.trans_no AS "transNo",
+		a.trans_create_time AS "transCreateTime",
+		a.trans_pay_amount AS "transPayAmount",
+		a.trans_success_amount AS "transSuccessAmount",
+		a.share_date AS "shareDate",
+		a.status AS "status",
+		a.share_amount AS "shareAmount",
+		a.share_merchant_num AS "shareMerchantNum",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.request_ip AS "requestIp",
+		a.operator AS "operator",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.fee_amount AS "feeAmount"
+	</sql>
+	
+	<sql id="shareAccountRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="ShareAccountRecord">
+		SELECT 
+			<include refid="shareAccountRecordColumns"/>
+		FROM share_account_record a
+		<include refid="shareAccountRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShareAccountRecord">
+		SELECT 
+			<include refid="shareAccountRecordColumns"/>
+		FROM share_account_record a
+		<include refid="shareAccountRecordJoins"/>
+		<where>
+			
+			<if test="shareId != null and shareId != ''">
+				AND a.share_id = #{shareId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="transCreateTime != null and transCreateTime != ''">
+				AND a.trans_create_time = #{transCreateTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="createTime != null and createTime != ''">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="beginTransCreateTime != null and endTransCreateTime != null">
+				AND a.trans_create_time BETWEEN date_format(#{beginTransCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endTransCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+		</where>
+		
+				ORDER BY  a.create_time desc
+		
+	</select>
+	
+	<select id="findAllList" resultType="ShareAccountRecord">
+		SELECT 
+			<include refid="shareAccountRecordColumns"/>
+		FROM share_account_record a
+		<include refid="shareAccountRecordJoins"/>
+		<where>
+			
+		</where>		
+		ORDER BY  a.create_time desc
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO share_account_record(
+			share_id,
+			merchant_id,
+			trans_no,
+			trans_create_time,
+			trans_pay_amount,
+			trans_success_amount,
+			share_date,
+			status,
+			share_amount,
+			share_merchant_num,
+			create_time,
+			update_time,
+			request_ip,
+			operator,
+			merchant_order_no,
+			merchant_login_name,
+			merchant_company,
+			fee_amount
+		) VALUES (
+			#{shareId},
+			#{merchantId},
+			#{transNo},
+			#{transCreateTime},
+			#{transPayAmount},
+			#{transSuccessAmount},
+			#{shareDate},
+			#{status},
+			#{shareAmount},
+			#{shareMerchantNum},
+			#{createTime},
+			#{updateTime},
+			#{requestIp},
+			#{operator},
+			#{merchantOrderNo},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE share_account_record SET 	
+			share_id = #{shareId},
+			merchant_id = #{merchantId},
+			trans_no = #{transNo},
+			trans_create_time = #{transCreateTime},
+			trans_pay_amount = #{transPayAmount},
+			trans_success_amount = #{transSuccessAmount},
+			share_date = #{shareDate},
+			status = #{status},
+			share_amount = #{shareAmount},
+			share_merchant_num = #{shareMerchantNum},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			request_ip = #{requestIp},
+			operator = #{operator},
+			merchant_order_no = #{merchantOrderNo},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM share_account_record
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getShareId" resultType="ShareAccountRecord">
+		SELECT 
+			max(a.share_id) as shareId
+		FROM share_account_record a
+	</select>
+	
+</mapper>

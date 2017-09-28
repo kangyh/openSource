@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.account.dao.MerchantAccountDao">
+    
+	<sql id="merchantAccountColumns">
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.type AS "type",
+		a.balance_amount AS "balanceAmount",
+		a.balance_freezed_amount AS "balanceFreezedAmount",
+		a.balance_available_amount AS "balanceAvailableAmount",
+		a.balance_available_withdraw_amount AS "balanceAvailableWithdrawAmount",
+		a.total_in_amount AS "totalInAmount",
+		a.total_out_amount AS "totalOutAmount",
+		a.retained_amount AS "retainedAmount",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.description AS "description",
+		a.remark AS "remark",
+		a.account_code AS "accountCode",
+		a.account_title AS "accountTitle",
+		a.balance_direction AS "balanceDirection",
+		a.currency AS "currency",
+		a.is_hot AS "isHot",
+		a.version AS "version"
+	</sql>
+	
+	<sql id="merchantAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantAccount">
+		SELECT 
+			<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<include refid="merchantAccountJoins"/>
+		WHERE a.account_id = #{accountId}
+	</select>
+	
+	<select id="findList" resultType="MerchantAccount">
+		SELECT 
+			<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<include refid="merchantAccountJoins"/>
+		<where>
+
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="accountName != null and accountName != ''">
+				AND a.account_name = #{accountName}
+			</if>
+			<if test="accountCodesHidden != null and accountCodesHidden != ''">
+				AND a.account_code in
+		        <foreach item="item" index="index" collection="accCodes" open="(" separator="," close=")">  
+				    #{accCodes[${index}]}
+				</foreach> 
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantAccount">
+		SELECT 
+			<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<include refid="merchantAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_account(
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_login_name,
+			type,
+			balance_amount,
+			balance_freezed_amount,
+			balance_available_amount,
+			balance_available_withdraw_amount,
+			total_in_amount,
+			total_out_amount,
+			retained_amount,
+			create_time,
+			update_time,
+			status,
+			description,
+			remark,
+			account_code,
+			account_title,
+			balance_direction,
+			currency,
+			is_hot,
+			version
+		) VALUES (
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{type},
+			#{balanceAmount},
+			#{balanceFreezedAmount},
+			#{balanceAvailableAmount},
+			#{balanceAvailableWithdrawAmount},
+			#{totalInAmount},
+			#{totalOutAmount},
+			#{retainedAmount},
+			#{createTime},
+			#{updateTime},
+			#{status},
+			#{description},
+			#{remark},
+			#{accountCode},
+			#{accountTitle},
+			#{balanceDirection},
+			#{currency},
+			#{isHot},
+			#{version}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_account SET 	
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			type = #{type},
+			balance_amount = #{balanceAmount},
+			balance_freezed_amount = #{balanceFreezedAmount},
+			balance_available_amount = #{balanceAvailableAmount},
+			balance_available_withdraw_amount = #{balanceAvailableWithdrawAmount},
+			total_in_amount = #{totalInAmount},
+			total_out_amount = #{totalOutAmount},
+			retained_amount = #{retainedAmount},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status},
+			description = #{description},
+			remark = #{remark},
+			account_title = #{accountTitle},
+			balance_direction = #{balanceDirection},
+			currency = #{currency},
+			is_hot = #{isHot},
+			version = #{version}
+		WHERE account_id = #{accountId}
+	</update>
+	
+	<update id="updateMerchantAccount">
+		UPDATE merchant_account SET 	
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			update_time = #{updateTime},
+			description = #{description},
+			remark = #{remark},
+			account_title = #{accountTitle},
+			balance_direction = #{balanceDirection},
+			currency = #{currency},
+			is_hot = #{isHot}
+		WHERE account_id = #{accountId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_account
+		WHERE account_id = #{accountId}
+	</update>
+
+	<update id="updateStatus">
+		UPDATE merchant_account SET
+		status = #{status}
+		WHERE account_id = #{accountId}
+	</update>
+
+
+	<select id="getByMerchantId" resultType="MerchantAccount">
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<include refid="merchantAccountJoins"/>
+		WHERE a.merchant_id = #{merchantId} AND a.type= '2'
+	</select>
+	
+	<!-- 获取入账备付金账户 -->
+	<select id="getReserveAccount" parameterType="java.util.Map" resultType="MerchantAccount" >
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		WHERE a.status=#{status, jdbcType=VARCHAR} 
+		AND a.account_code &gt;= #{accountCodeStart, jdbcType=VARCHAR} 
+		AND a.account_code &lt;= #{accountCodeEnd, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getMerchantAccountByAccountIdAndType" parameterType="java.util.Map" resultType="MerchantAccount">
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		WHERE a.account_id = #{accountId} AND a.type= #{type}
+	</select>
+
+	<select id="getMerchantByType" parameterType="java.util.Map" resultType="MerchantAccount">
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+	</select>
+
+	<select id="getSelectMerchantIds" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT
+		a.merchant_id as merchantId
+		FROM merchant_account a
+		WHERE a.account_code in 
+		<foreach item="item" index="index" collection="accCodes" open="(" separator="," close=")">  
+		    #{accCodes[${index}]}
+		</foreach>
+	</select>
+	
+
+	<select id="getAllMerchantAccount" parameterType="java.util.Map" resultType="MerchantAccount">
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		<!--WHERE a.account_code IN ('20000000','21000000','22000000')-->
+		WHERE a.merchant_login_name !=''
+	</select>
+
+	<select id="getMerchantIdGroupByMerchantId" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT merchant_id FROM merchant_account WHERE merchant_login_name !='' GROUP BY merchant_id HAVING COUNT(*) &lt; 3;
+	</select>
+	<select id="getAllMerchantAccountInMerchantId" parameterType="java.util.Map" resultType="MerchantAccount">
+		SELECT
+		<include refid="merchantAccountColumns"/>
+		FROM merchant_account a
+		WHERE a.merchant_id IN
+		<foreach close=")" collection="merchantIds" item="merchantId" open="(" separator=",">
+			#{merchantId}
+		</foreach>
+	</select>
+	
+	<select id="getAccountId" resultType="MerchantAccount">
+		SELECT 
+			max(a.account_id) as accountId
+		FROM merchant_account a where a.type = '2'
+	</select>
+
+</mapper>

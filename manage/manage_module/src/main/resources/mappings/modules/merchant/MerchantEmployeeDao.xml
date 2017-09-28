@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantEmployeeDao">
+    
+	<sql id="merchantEmployeeColumns">
+		a.employee_id AS "employeeId",
+		a.user_id AS "userId",
+		a.email AS "email",
+		a.mobile AS "mobile",
+		a.merchant_id AS "merchantId",
+		a.name AS "name",
+		a.level AS "level",
+		a.status AS "status",
+		a.type AS "type",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="merchantEmployeeJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantEmployee">
+		SELECT 
+			<include refid="merchantEmployeeColumns"/>
+		FROM merchant_employee a
+		<include refid="merchantEmployeeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantEmployee">
+		SELECT 
+			<include refid="merchantEmployeeColumns"/>
+		FROM merchant_employee a
+		<include refid="merchantEmployeeJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantEmployee">
+		SELECT 
+			<include refid="merchantEmployeeColumns"/>
+		FROM merchant_employee a
+		<include refid="merchantEmployeeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_employee(
+			employee_id,
+			email,
+			mobile,
+			user_id,
+			merchant_id,
+			name,
+			level,
+			status,
+			type,
+			create_time,
+			update_time,
+			remarks
+		) VALUES (
+			#{employeeId},
+			#{email},
+			#{mobile},
+			#{userId},
+			#{merchantId},
+			#{name},
+			#{level},
+			#{status},
+			#{type},
+			#{createTime},
+			#{updateTime},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_employee SET 	
+			employee_id = #{employeeId},
+			email = #{email},
+			mobile = #{mobile},
+			user_id = #{userId},
+			merchant_id = #{merchantId},
+			name = #{name},
+			level = #{level},
+			status = #{status},
+			type = #{type},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_employee
+		WHERE user_id = #{userId}
+	</update>
+	<select id="queryBossIdByEmployeeId" parameterType="java.lang.Integer" resultType="MerchantEmployee">
+		SELECT
+		<include refid="merchantEmployeeColumns"/>
+		FROM merchant_employee a
+		WHERE user_id = #{employeeId}
+	</select>
+	<select id="selectCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		 FROM merchant_employee
+		 WHERE merchant_id = #{merchantId}
+	</select>
+	
+	<select id="getEmployeesByMerchantId" parameterType="java.lang.Integer" resultType="MerchantEmployee">
+         SELECT 
+            <include refid="merchantEmployeeColumns"/>
+         FROM merchant_employee a
+         WHERE a.merchant_id = #{merchantId}
+    </select>
+	
+	<select id="pagingQuery" parameterType="java.util.Map" resultType="MerchantEmployee">
+		SELECT
+		<include refid="merchantEmployeeColumns"/>
+		FROM  merchant_employee a
+		WHERE merchant_id = #{merchantId,jdbcType=BIGINT}
+		limit  #{start,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+	</select>
+	<update id="updateStatusByEmployeeId">
+		UPDATE
+		merchant_employee
+		SET
+		status = #{status}
+		WHERE
+		user_id = #{userId}
+	</update>
+	<update id="updateByEmployeeId" parameterType="MerchantEmployee">
+		UPDATE
+		merchant_employee
+		SET
+		status = #{status,jdbcType=CHAR},
+		update_time = #{updateTime,jdbcType=TIMESTAMP}
+		WHERE
+		employee_id = #{employeeId,jdbcType=BIGINT}
+	</update>
+	<select id="queryEmployeeByEmail" parameterType="java.lang.String" resultType="MerchantEmployee">
+		SELECT
+		<include refid="merchantEmployeeColumns"/>
+		FROM  merchant_employee a
+		WHERE email = #{email}
+	</select>
+	<update id="updateEmployeeMsg" parameterType="MerchantEmployee">
+		UPDATE merchant_employee
+		SET
+		mobile = #{mobile},
+		<if test="remarks != null" >
+			remarks = #{remarks,jdbcType=VARCHAR},
+		</if>
+		update_time = #{updateTime}
+		WHERE employee_id = #{employeeId}
+	</update>
+</mapper>

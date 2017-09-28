@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsRegularRuleDao">
+    
+	<sql id="hgmsRegularRuleColumns">
+		a.rule_id AS "ruleId",
+		a.merchant_id AS "merchantId",
+		a.company_name AS "companyName",
+		a.rule_name AS "ruleName",
+		a.rule_type AS "ruleType",
+		a.rule_mode AS "ruleMode",
+		a.rule_forms AS "ruleForms",
+		a.rule_mode_month AS "ruleModeMonth",
+		a.rule_mode_day AS "ruleModeDay",
+		a.rule_mode_week AS "ruleModeWeek",
+		a.user_status AS "userStatus",
+		a.admin_status AS "adminStatus",
+		a.pay_amount AS "payAmount",
+		a.create_time AS "createTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.trans_way AS "transWay",
+		a.status AS "status",
+		a.operator AS "operator",
+		a.error_record AS "errorRecord",
+		a.rule_detail AS "ruleDetail",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4"
+	</sql>
+	
+	<sql id="hgmsRegularRuleJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsRegularRule">
+		SELECT 
+			<include refid="hgmsRegularRuleColumns"/>
+		FROM hgms_regular_rule a
+		<include refid="hgmsRegularRuleJoins"/>
+		WHERE a.rule_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsRegularRule">
+		SELECT 
+			<include refid="hgmsRegularRuleColumns"/>
+		FROM hgms_regular_rule a
+		<include refid="hgmsRegularRuleJoins"/>
+		<where>
+			
+			<if test="ruleId != null and ruleId != ''">
+				AND a.rule_id = #{ruleId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="ruleName != null and ruleName != ''">
+				AND a.rule_name = #{ruleName}
+			</if>
+			<if test="ruleType != null and ruleType != ''">
+				AND a.rule_type = #{ruleType}
+			</if>
+			<if test="ruleMode != null and ruleMode != ''">
+				AND a.rule_mode = #{ruleMode}
+			</if>
+			<if test="ruleForms != null and ruleForms != ''">
+				AND a.rule_forms = #{ruleForms}
+			</if>
+			<if test="ruleModeMonth != null and ruleModeMonth != ''">
+				AND a.rule_mode_month = #{ruleModeMonth}
+			</if>
+			<if test="ruleModeDay != null and ruleModeDay != ''">
+				AND a.rule_mode_day = #{ruleModeDay}
+			</if>
+			<if test="ruleModeWeek != null and ruleModeWeek != ''">
+				AND a.rule_mode_week = #{ruleModeWeek}
+			</if>
+			<if test="userStatus != null and userStatus != ''">
+				AND a.user_status = #{userStatus}
+			</if>
+			<if test="adminStatus != null and adminStatus != ''">
+				AND a.admin_status = #{adminStatus}
+			</if>
+			<if test="payAmount != null and payAmount != ''">
+				AND a.pay_amount = #{payAmount}
+			</if>
+			<if test="createTime != null">
+				AND a.create_time = #{createTime}
+			</if>
+			<if test="updateUserId != null and updateUserId != ''">
+				AND a.update_user_id = #{updateUserId}
+			</if>
+			<if test="updateTime != null">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="transWay != null and transWay != ''">
+				AND a.trans_way = #{transWay}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="operator != null and operator != ''">
+				AND a.operator = #{operator}
+			</if>
+			<if test="errorRecord != null and errorRecord != ''">
+				AND a.error_record = #{errorRecord}
+			</if>
+			<if test="ruleDetail != null and ruleDetail != ''">
+				AND a.rule_detail = #{ruleDetail}
+			</if>
+			<if test="extend1 != null and extend1 != ''">
+				AND a.extend1 = #{extend1}
+			</if>
+			<if test="extend2 != null and extend2 != ''">
+				AND a.extend2 = #{extend2}
+			</if>
+			<if test="extend3 != null and extend3 != ''">
+				AND a.extend3 = #{extend3}
+			</if>
+			<if test="extend4 != null and extend4 != ''">
+				AND a.extend4 = #{extend4}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsRegularRule">
+		SELECT 
+			<include refid="hgmsRegularRuleColumns"/>
+		FROM hgms_regular_rule a
+		<include refid="hgmsRegularRuleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<update id="update">
+		UPDATE hgms_regular_rule
+		<set>
+
+			<if test="ruleId != null and ruleId != ''">
+				rule_id = #{ruleId},
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				merchant_id = #{merchantId},
+			</if>
+			<if test="companyName != null and companyName != ''">
+				company_name = #{companyName},
+			</if>
+			<if test="ruleName != null and ruleName != ''">
+				rule_name = #{ruleName},
+			</if>
+			<if test="ruleType != null and ruleType != ''">
+				rule_type = #{ruleType},
+			</if>
+			<if test="ruleMode != null and ruleMode != ''">
+				rule_mode = #{ruleMode},
+			</if>
+			<if test="ruleForms != null and ruleForms != ''">
+				rule_forms = #{ruleForms},
+			</if>
+			<if test="ruleModeMonth != null and ruleModeMonth != ''">
+				rule_mode_month = #{ruleModeMonth},
+			</if>
+			<if test="ruleModeDay != null and ruleModeDay != ''">
+				rule_mode_day = #{ruleModeDay},
+			</if>
+			<if test="ruleModeWeek != null and ruleModeWeek != ''">
+				rule_mode_week = #{ruleModeWeek},
+			</if>
+			<if test="userStatus != null and userStatus != ''">
+				user_status = #{userStatus},
+			</if>
+			<if test="adminStatus != null and adminStatus != ''">
+				admin_status = #{adminStatus},
+			</if>
+			<if test="payAmount != null and payAmount != ''">
+				pay_amount = #{payAmount},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updateUserId != null and updateUserId != ''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+			<if test="transWay != null and transWay != ''">
+				trans_way = #{transWay},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="operator != null and operator != ''">
+				operator = #{operator},
+			</if>
+			<if test="errorRecord != null and errorRecord != ''">
+				error_record = #{errorRecord},
+			</if>
+			<if test="ruleDetail != null and ruleDetail != ''">
+				rule_detail = #{ruleDetail},
+			</if>
+			<if test="extend1 != null and extend1 != ''">
+				extend1 = #{extend1},
+			</if>
+			<if test="extend2 != null and extend2 != ''">
+				extend2 = #{extend2},
+			</if>
+			<if test="extend3 != null and extend3 != ''">
+				extend3 = #{extend3},
+			</if>
+			<if test="extend4 != null and extend4 != ''">
+				extend4 = #{extend4}
+			</if>
+		</set>
+		WHERE rule_id = #{ruleId}
+	</update>
+
+	<update id="status">
+		UPDATE hgms_regular_rule
+		<set>
+			<if test="adminStatus != null and adminStatus != ''">
+				admin_status = #{adminStatus}
+			</if>
+		</set>
+		WHERE rule_id = #{ruleId}
+	</update>
+
+	<update id="delete">
+		DELETE FROM hgms_regular_rule
+		WHERE rule_id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantEmployeeOpLogDao">
+    
+	<sql id="merchantEmployeeOpLogColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.employee_id AS "employeeId",
+		a.op_function AS "opFunction",
+		a.op_action AS "opAction",
+		a.old_data AS "oldData",
+		a.new_data AS "newData",
+		a.create_time AS "createDate",
+		a.ip AS "ip",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="merchantEmployeeOpLogJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantEmployeeOpLog">
+		SELECT 
+			<include refid="merchantEmployeeOpLogColumns"/>
+		FROM merchant_employee_op_log a
+		<include refid="merchantEmployeeOpLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantEmployeeOpLog">
+		SELECT 
+			<include refid="merchantEmployeeOpLogColumns"/>
+		FROM merchant_employee_op_log a
+		<include refid="merchantEmployeeOpLogJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="employeeId != null and employeeId != ''">
+				AND a.employee_id = #{employeeId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantEmployeeOpLog">
+		SELECT 
+			<include refid="merchantEmployeeOpLogColumns"/>
+		FROM merchant_employee_op_log a
+		<include refid="merchantEmployeeOpLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_employee_op_log(
+			id,
+			merchant_id,
+			employee_id,
+			op_function,
+			op_action,
+			old_data,
+			new_data,
+			create_time,
+			ip,
+			remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{employeeId},
+			#{opFunction},
+			#{opAction},
+			#{oldData},
+			#{newData},
+			#{createDate},
+			#{ip},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_employee_op_log SET 	
+			merchant_id = #{merchantId},
+			employee_id = #{employeeId},
+			op_function = #{opFunction},
+			op_action = #{opAction},
+			old_data = #{oldData},
+			new_data = #{newData},
+			ip = #{ip},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_employee_op_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

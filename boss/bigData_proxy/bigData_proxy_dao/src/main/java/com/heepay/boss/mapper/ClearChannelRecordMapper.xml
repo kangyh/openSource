@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.ClearChannelRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.boss.entity.ClearChannelRecord" >
+    <id column="clearing_id" property="clearingId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="payment_id_old" property="paymentIdOld" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="trans_no_old" property="transNoOld" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="DECIMAL" />
+    <result column="channel_time" property="channelTime" jdbcType="TIMESTAMP" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_no" property="settleNo" jdbcType="VARCHAR" />
+    <result column="settle_time_plan" property="settleTimePlan" jdbcType="TIMESTAMP" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="cost_time" property="costTime" jdbcType="TIMESTAMP" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="cost_way" property="costWay" jdbcType="VARCHAR" />
+    <result column="cost_settle_cyc" property="costSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="check_bath" property="checkBath" jdbcType="VARCHAR" />
+    <result column="check_num" property="checkNum" jdbcType="INTEGER" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="bank_seq" property="bankSeq" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="channel_provider" property="channelProvider" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    clearing_id, channel_code, channel_name, channel_type, pay_time, currency, payment_id, 
+    payment_id_old, trans_no, trans_no_old, success_amount, channel_time, check_time, 
+    settle_time, settle_no, settle_time_plan, settle_cyc, settle_bath, cost_time, cost_amount, 
+    cost_way, cost_settle_cyc, check_status, check_flg, settle_status, finish_time, check_bath, 
+    check_num, trans_type, remark, is_zip, bank_seq, bank_name, bank_code, channel_provider
+  </sql>
+  
+   <select id="queryForBigData" resultType="com.heepay.boss.entity.ClearChannelRecord">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		clearing_channel_record;
+	</select>
+	
+	<select id="selectByTranNo" resultType="com.heepay.boss.entity.ClearChannelRecord" parameterType="java.lang.String">
+		select 
+		<include refid="Base_Column_List" />
+		FROM
+		clearing_channel_record where trans_no=#{transNo,jdbcType=VARCHAR} limit 1;
+	</select>
+</mapper>

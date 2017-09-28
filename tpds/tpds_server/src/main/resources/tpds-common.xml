@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+    
+	<bean id="tpdsCommonClient" name="tpdsCommonClient" class="com.heepay.tpds.client.TpdsCommonClient">
+         <property name="filePath" value="${tpdsCommonClient.filePath}"></property>
+         <property name="warnBlock" value="${tpdsCommonClient.warnBlock}"></property>
+         <property name="contactPerson" value="${tpdsCommonClient.contactPerson}"></property>
+         <property name="bankHostIp" value="${tpdsCommonClient.bankHostIp}"></property>
+         <property name="bankUserName" value="${tpdsCommonClient.bankUserName}"></property>
+         <property name="bankPassword" value="${tpdsCommonClient.bankPassword}"></property>
+         <property name="bankUploadFilePath" value="${tpdsCommonClient.bankUploadFilePath}"></property>
+         <property name="p2pHostIp" value="${tpdsCommonClient.p2pHostIp}"></property>
+         <property name="p2pUserName" value="${tpdsCommonClient.p2pUserName}"></property>
+         <property name="p2pPassword" value="${tpdsCommonClient.p2pPassword}"></property>
+         <property name="p2pUploadFilePath" value="${tpdsCommonClient.p2pUploadFilePath}"></property>
+         <property name="busiBranchNo" value="${tpdsCommonClient.busiBranchNo}"></property>
+         <property name="BASE64PUBLICKEY" value="${tpdsCommonClient.BASE64PUBLICKEY}"></property>
+         <property name="BASE64PRIVATEKEY" value="${tpdsCommonClient.BASE64PRIVATEKEY}"></property>
+         <property name="signPrivateKey" value="${tpdsCommonClient.signPrivateKey}"></property>
+    </bean>
+</beans>  
+

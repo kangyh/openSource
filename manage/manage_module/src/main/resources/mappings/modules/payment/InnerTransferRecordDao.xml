@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.InnerTransferRecordDao">
+    
+	<sql id="innerTransferRecordColumns">
+		a.inner_transfer_id AS "innerTransferId",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.from_account_id AS "fromAccountId",
+		a.from_account_name AS "fromAccountName",
+		a.from_merchant_id AS "fromMerchantId",
+		a.from_merchant_login_name AS "fromMerchantLoginName",
+		a.from_merchant_company AS "fromMerchantCompany",
+		a.transfer_amount AS "transferAmount",
+		a.fee_amount AS "feeAmount",
+		a.fee_type AS "feeType",
+		a.to_account_id AS "toAccountId",
+		a.to_account_name AS "toAccountName",
+		a.to_merchant_id AS "toMerchantId",
+		a.to_merchant_login_name AS "toMerchantLoginName",
+		a.to_merchant_company AS "toMerchantCompany",
+		a.update_time AS "updateTime",
+		a.create_time AS "createTime",
+		a.product_code AS "productCode",
+		a.merchant_id AS "merchantId",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="innerTransferRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="InnerTransferRecord">
+		SELECT 
+			<include refid="innerTransferRecordColumns"/>
+		FROM inner_transfer_record a
+		<include refid="innerTransferRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="InnerTransferRecord">
+		SELECT 
+			<include refid="innerTransferRecordColumns"/>
+		FROM inner_transfer_record a
+		<include refid="innerTransferRecordJoins"/>
+		<where>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.inner_transfer_id = #{merchantOrderNo}
+			</if>
+			<if test="fromMerchantId != null and fromMerchantId != ''">
+				AND a.from_merchant_id = #{fromMerchantId}
+			</if>
+			<if test="toMerchantId != null and toMerchantId != ''">
+				AND a.to_merchant_id = #{toMerchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InnerTransferRecord">
+		SELECT 
+			<include refid="innerTransferRecordColumns"/>
+		FROM inner_transfer_record a
+		<include refid="innerTransferRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO inner_transfer_record(
+			inner_transfer_id,
+			merchant_order_no,
+			from_account_id,
+			from_account_name,
+			from_merchant_id,
+			from_merchant_login_name,
+			from_merchant_company,
+			transfer_amount,
+			fee_amount,
+			fee_type,
+			to_account_id,
+			to_account_name,
+			to_merchant_id,
+			to_merchant_login_name,
+			to_merchant_company,
+			update_time,
+			create_time,
+			product_code,
+			merchant_id,
+			status
+		) VALUES (
+			#{innerTransferId},
+			#{merchantOrderNo},
+			#{fromAccountId},
+			#{fromAccountName},
+			#{fromMerchantId},
+			#{fromMerchantLoginName},
+			#{fromMerchantCompany},
+			#{transferAmount},
+			#{feeAmount},
+			#{feeType},
+			#{toAccountId},
+			#{toAccountName},
+			#{toMerchantId},
+			#{toMerchantLoginName},
+			#{toMerchantCompany},
+			#{updateTime},
+			#{createTime},
+			#{productCode},
+			#{merchantId},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE inner_transfer_record SET 	
+			inner_transfer_id = #{innerTransferId},
+			merchant_order_no = #{merchantOrderNo},
+			from_account_id = #{fromAccountId},
+			from_account_name = #{fromAccountName},
+			from_merchant_id = #{fromMerchantId},
+			from_merchant_login_name = #{fromMerchantLoginName},
+			from_merchant_company = #{fromMerchantCompany},
+			transfer_amount = #{transferAmount},
+			fee_amount = #{feeAmount},
+			fee_type = #{feeType},
+			to_account_id = #{toAccountId},
+			to_account_name = #{toAccountName},
+			to_merchant_id = #{toMerchantId},
+			to_merchant_login_name = #{toMerchantLoginName},
+			to_merchant_company = #{toMerchantCompany},
+			update_time = #{updateTime},
+			create_time = #{createTime},
+			product_code = #{productCode},
+			merchant_id = #{merchantId},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM inner_transfer_record
+		WHERE id = #{id}
+	</update>
+
+	<select id="findTransferList" resultType="InnerTransferRecord">
+		SELECT
+		<include refid="innerTransferRecordColumns"/>
+		FROM inner_transfer_record a
+		<include refid="innerTransferRecordJoins"/>
+		<where>
+			<if test="transNo != null">
+				a.inner_transfer_id  in
+				<foreach item="item" index="index" collection="transNo"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY create_time desc
+	</select>
+
+</mapper>

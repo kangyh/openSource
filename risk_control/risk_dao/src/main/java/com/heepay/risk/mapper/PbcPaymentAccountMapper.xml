@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcPaymentAccountMapper" >
+<insert id="insert" parameterType="com.heepay.risk.entity.PbcPaymentAccount" useGeneratedKeys="true" keyProperty="paymentAccountId">
+    insert into pbc_payment_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        payment_account_id,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountOwnerName != null" >
+        account_owner_name,
+      </if>
+      <if test="accountOwnerIdType != null" >
+        account_owner_id_type,
+      </if>
+      <if test="accountOwnerId != null" >
+        account_owner_id,
+      </if>
+      <if test="credentialValidity != null" >
+        credential_validity,
+      </if>
+      <if test="telNumber != null" >
+        tel_number,
+      </if>
+      <if test="loginId != null" >
+        login_id,
+      </if>
+      <if test="accountName != null" >
+        account_name,
+      </if>
+      <if test="wechatId != null" >
+        wechat_id,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="regularIp != null" >
+        regular_ip,
+      </if>
+      <if test="regularDeviceNumber != null" >
+        regular_device_number,
+      </if>
+      <if test="onlineShopName != null" >
+        online_shop_name,
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number,
+      </if>
+      <if test="posId != null" >
+        pos_id,
+      </if>
+      <if test="posAddress != null" >
+        pos_address,
+      </if>
+      <if test="posCommonlyUsedAddress != null" >
+        pos_commonly_used_address,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankNumber != null" >
+        bank_number,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardValidationStatus != null" >
+        card_validation_status,
+      </if>
+      <if test="cardExpiryDate != null" >
+        card_expiry_date,
+      </if>
+      <if test="cardInfo != null" >
+        card_info,
+      </if>
+      <if test="freezeSerial != null" >
+        freeze_serial,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="measureType != null" >
+        measure_type,
+      </if>
+      <if test="measureStartTime != null" >
+        measure_start_time,
+      </if>
+      <if test="measureEndTime != null" >
+        measure_end_time,
+      </if>
+      <if test="measureDeptName != null" >
+        measure_dept_name,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="measureBalance != null" >
+        measure_balance,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="feedBackId != null" >
+        feed_back_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        #{paymentAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerName != null" >
+        #{accountOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerIdType != null" >
+        #{accountOwnerIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerId != null" >
+        #{accountOwnerId,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialValidity != null" >
+        #{credentialValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="telNumber != null" >
+        #{telNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="loginId != null" >
+        #{loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatId != null" >
+        #{wechatId,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="regularIp != null" >
+        #{regularIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regularDeviceNumber != null" >
+        #{regularDeviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineShopName != null" >
+        #{onlineShopName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posId != null" >
+        #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="posAddress != null" >
+        #{posAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="posCommonlyUsedAddress != null" >
+        #{posCommonlyUsedAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null" >
+        #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValidationStatus != null" >
+        #{cardValidationStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cardExpiryDate != null" >
+        #{cardExpiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="cardInfo != null" >
+        #{cardInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="freezeSerial != null" >
+        #{freezeSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="measureType != null" >
+        #{measureType,jdbcType=VARCHAR},
+      </if>
+      <if test="measureStartTime != null" >
+        #{measureStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureEndTime != null" >
+        #{measureEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureDeptName != null" >
+        #{measureDeptName,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="measureBalance != null" >
+        #{measureBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackId != null" >
+        #{feedBackId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

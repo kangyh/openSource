@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.differences.dao.SettleDifferMerchantDao" >
+  
+  <sql id="clearingChannelRecordColumns">
+		s.differ_merbill_id  AS "differMerbillId",
+		s.merchant_id  AS "merchantId",
+		s.trans_type AS "transType",
+		s.currency AS "currency",
+		s.error_bath AS "errorBath",
+		s.error_date AS "errorDate",
+		s.update_author AS "updateAuthor",
+		s.deal_time  AS "dealTime",
+		s.trans_no  AS "transNo",
+		s.request_amount  AS "requestAmount",
+		s.settle_amount_plan  AS "settleAmountPlan",
+		s.fee  AS "fee",
+		s.bill_type  AS "billType",
+		s.check_status  AS "checkStatus",
+		s.check_message  AS "checkMessage",
+		s.error_status  AS "errorStatus"
+	</sql>
+	<select id="findList" resultType="SettleDifferMerchant">
+		SELECT 
+			<include refid="clearingChannelRecordColumns"/>
+		FROM settle_differ_merchant s
+		<where>
+			
+			<!-- 差错日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND s.error_date BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+			
+			<!-- error_bath-->
+			<if test="errorBath != null and errorBath != ''">
+				AND s.error_bath = #{errorBath}
+			</if>
+			<!-- error_status-->
+			<if test="errorStatus != null and errorStatus != ''">
+				AND s.error_status = #{errorStatus}
+			</if>
+			
+			<!-- checkStatus-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND s.check_status = #{checkStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY differ_merbill_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY differ_merbill_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="clearingChannelRecordColumns"/>
+		FROM settle_differ_merchant s
+		<where>
+			
+			<!-- 差错日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND s.error_date BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+			
+			<!-- error_bath-->
+			<if test="errorBath != null and errorBath != ''">
+				AND s.error_bath = #{errorBath}
+			</if>
+			<!-- error_status-->
+			<if test="errorStatus != null and errorStatus != ''">
+				AND s.error_status = #{errorStatus}
+			</if>
+			<!-- checkStatus-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND s.check_status = #{checkStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY differ_merbill_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY differ_merbill_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getEntityById" resultType="com.heepay.manage.modules.differences.entity.SettleDifferMerchant">
+		SELECT 
+			<include refid="clearingChannelRecordColumns"/>
+		FROM settle_differ_merchant s
+		WHERE differ_merbill_id = #{differMerbillId}
+	</select>
+	
+	<update id="updateEntity" parameterType="SettleDifferMerchant">
+		UPDATE settle_differ_merchant SET check_status= #{checkStatus},check_message= #{checkMessage},update_author=#{updateAuthor},deal_time=#{dealTime},error_status=#{errorStatus}
+			WHERE differ_merbill_id = #{differMerbillId}
+	</update>
+	<update id="updateErrorStatusById" parameterType="map">
+		update settle_differ_merchant set error_status=#{errorStatus} where differ_merbill_id = #{differMerbillId}
+	</update>
+</mapper>

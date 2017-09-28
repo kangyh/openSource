@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.gatewayaccount.dao.DayGatewayPayStatForInputDao">
+    
+	<sql id="dayGatewayPayStatForInputColumns">
+		a.record_id AS "recordId",
+		a.group_time AS "groupTime",
+		a.pay_type AS "payType",
+		a.channel_code AS "channelCode",
+		a.channel_partners AS "channelPartners",
+		a.channel_partners_name AS "channelPartnersName",
+		a.bank_code AS "bankCode",
+		a.bank_name AS "bankName",
+		a.total_bill_count AS "totalBillCount",
+		a.total_trade_amt AS "totalTradeAmt",
+		a.total_real_amt AS "totalRealAmt",
+		a.success_bill_count AS "successBillCount",
+		a.success_trade_amt AS "successTradeAmt",
+		a.success_real_amt AS "successRealAmt",
+		a.success_settle_amt AS "successSettleAmt",
+		a.refund_bill_count AS "refundBillCount",
+		a.refund_real_amt AS "refundRealAmt",
+		a.auto_check_flag AS "autoCheckFlag",
+		a.auto_check_success_amt AS "autoCheckSuccessAmt",
+		a.auto_check_success_count AS "autoCheckSuccessCount",
+		a.auto_check_fail_amt AS "autoCheckFailAmt",
+		a.auto_check_fail_count AS "autoCheckFailCount",
+		a.input_flag AS "inputFlag",
+		a.input_check_success_amt AS "inputCheckSuccessAmt",
+		a.input_check_success_count AS "inputCheckSuccessCount",
+		a.input_check_fail_amt AS "inputCheckFailAmt",
+		a.input_check_fail_count AS "inputCheckFailCount",
+		a.is_balance AS "isBalance",
+		a.input_note AS "inputNote",
+		a.input_user AS "inputUser",
+		a.input_time AS "inputTime",
+		a.input_settle_amt AS "inputSettleAmt",
+		a.check_note AS "checkNote",
+		a.check_user AS "checkUser",
+		a.check_time AS "checkTime",
+		a.status AS "status",
+		a.deal_merge_flag AS "dealMergeFlag",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="dayGatewayPayStatForInputJoins">
+	</sql>
+    
+	<select id="get" resultType="DayGatewayPayStatForInput">
+		SELECT 
+			<include refid="dayGatewayPayStatForInputColumns"/>
+		FROM day_gateway_pay_stat_for_input a
+		<include refid="dayGatewayPayStatForInputJoins"/>
+		WHERE a.record_id = #{recordId}
+	</select>
+	
+	<select id="findList" resultType="DayGatewayPayStatForInput">
+		SELECT 
+			<include refid="dayGatewayPayStatForInputColumns"/>
+		FROM day_gateway_pay_stat_for_input a
+		<include refid="dayGatewayPayStatForInputJoins"/>
+		<where>
+			<if test="channelCode != null and channelCode != '' and channelCode != 'all' ">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<if test="channelPartners != null and channelPartners != '' ">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="bankCode != null and bankCode != '' ">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="inputFlag != null and inputFlag != '' ">
+				AND a.input_flag = #{inputFlag}
+			</if>
+			<if test="beginTime != null and endTime != null and beginTime != '' and endTime != ''">
+				AND a.group_time &gt;= #{beginTime} AND a.group_time &lt;= #{endTime}
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DayGatewayPayStatForInput">
+		SELECT 
+			<include refid="dayGatewayPayStatForInputColumns"/>
+		FROM day_gateway_pay_stat_for_input a
+		<include refid="dayGatewayPayStatForInputJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO day_gateway_pay_stat_for_input(
+			record_id,
+			group_time,
+			pay_type,
+			channel_code,
+			channel_partners,
+			channel_partners_name,
+			bank_code,
+			bank_name,
+			total_bill_count,
+			total_trade_amt,
+			total_real_amt,
+			success_bill_count,
+			success_trade_amt,
+			success_real_amt,
+			success_settle_amt,
+			refund_bill_count,
+			refund_real_amt,
+			auto_check_flag,
+			auto_check_success_amt,
+			auto_check_success_count,
+			auto_check_fail_amt,
+			auto_check_fail_count,
+			input_flag,
+			input_check_success_amt,
+			input_check_success_count,
+			input_check_fail_amt,
+			input_check_fail_count,
+			is_balance,
+			input_note,
+			input_user,
+			input_time,
+			input_settle_amt,
+			check_note,
+			check_user,
+			check_time,
+			status,
+			deal_merge_flag,
+			create_time
+		) VALUES (
+			#{recordId},
+			#{groupTime},
+			#{payType},
+			#{channelCode},
+			#{channelPartners},
+			#{channelPartnersName},
+			#{bankCode},
+			#{bankName},
+			#{totalBillCount},
+			#{totalTradeAmt},
+			#{totalRealAmt},
+			#{successBillCount},
+			#{successTradeAmt},
+			#{successRealAmt},
+			#{successSettleAmt},
+			#{refundBillCount},
+			#{refundRealAmt},
+			#{autoCheckFlag},
+			#{autoCheckSuccessAmt},
+			#{autoCheckSuccessCount},
+			#{autoCheckFailAmt},
+			#{autoCheckFailCount},
+			#{inputFlag},
+			#{inputCheckSuccessAmt},
+			#{inputCheckSuccessCount},
+			#{inputCheckFailAmt},
+			#{inputCheckFailCount},
+			#{isBalance},
+			#{inputNote},
+			#{inputUser},
+			#{inputTime},
+			#{inputSettleAmt},
+			#{checkNote},
+			#{checkUser},
+			#{checkTime},
+			#{status},
+			#{dealMergeFlag},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE day_gateway_pay_stat_for_input SET 	
+			record_id = #{recordId},
+			group_time = #{groupTime},
+			pay_type = #{payType},
+			channel_code = #{channelCode},
+			channel_partners = #{channelPartners},
+			channel_partners_name = #{channelPartnersName},
+			bank_code = #{bankCode},
+			bank_name = #{bankName},
+			total_bill_count = #{totalBillCount},
+			total_trade_amt = #{totalTradeAmt},
+			total_real_amt = #{totalRealAmt},
+			success_bill_count = #{successBillCount},
+			success_trade_amt = #{successTradeAmt},
+			success_real_amt = #{successRealAmt},
+			success_settle_amt = #{successSettleAmt},
+			refund_bill_count = #{refundBillCount},
+			refund_real_amt = #{refundRealAmt},
+			auto_check_flag = #{autoCheckFlag},
+			auto_check_success_amt = #{autoCheckSuccessAmt},
+			auto_check_success_count = #{autoCheckSuccessCount},
+			auto_check_fail_amt = #{autoCheckFailAmt},
+			auto_check_fail_count = #{autoCheckFailCount},
+			input_flag = #{inputFlag},
+			input_check_success_amt = #{inputCheckSuccessAmt},
+			input_check_success_count = #{inputCheckSuccessCount},
+			input_check_fail_amt = #{inputCheckFailAmt},
+			input_check_fail_count = #{inputCheckFailCount},
+			is_balance = #{isBalance},
+			input_note = #{inputNote},
+			input_user = #{inputUser},
+			input_time = #{inputTime},
+			input_settle_amt = #{inputSettleAmt},
+			check_note = #{checkNote},
+			check_user = #{checkUser},
+			check_time = #{checkTime},
+			status = #{status},
+			deal_merge_flag = #{dealMergeFlag},
+			create_time = #{createTime}
+		WHERE record_id = #{recordId}
+	</update>
+	
+	
+		<update id="updateDayGateWayPayStatForInput">
+		UPDATE day_gateway_pay_stat_for_input SET 	
+			record_id = #{recordId},
+			group_time = #{groupTime},
+			pay_type = #{payType},
+			channel_code = #{channelCode},
+			channel_partners = #{channelPartners},
+			channel_partners_name = #{channelPartnersName},
+			bank_code = #{bankCode},
+			bank_name = #{bankName},
+			total_bill_count = #{totalBillCount},
+			total_trade_amt = #{totalTradeAmt},
+			total_real_amt = #{totalRealAmt},
+			success_bill_count = #{successBillCount},
+			success_trade_amt = #{successTradeAmt},
+			success_real_amt = #{successRealAmt},
+			success_settle_amt = #{successSettleAmt},
+			refund_bill_count = #{refundBillCount},
+			refund_real_amt = #{refundRealAmt},
+			auto_check_flag = #{autoCheckFlag},
+			auto_check_success_amt = #{autoCheckSuccessAmt},
+			auto_check_success_count = #{autoCheckSuccessCount},
+			auto_check_fail_amt = #{autoCheckFailAmt},
+			auto_check_fail_count = #{autoCheckFailCount},
+			input_flag = #{inputFlag},
+			input_check_success_amt = #{inputCheckSuccessAmt},
+			input_check_success_count = #{inputCheckSuccessCount},
+			input_check_fail_amt = #{inputCheckFailAmt},
+			input_check_fail_count = #{inputCheckFailCount},
+			is_balance = #{isBalance},
+			input_note = #{inputNote},
+			input_user = #{inputUser},
+			input_time = #{inputTime},
+			input_settle_amt = #{inputSettleAmt},
+			check_note = #{checkNote},
+			check_user = #{checkUser},
+			check_time = #{checkTime},
+			status = #{status},
+			deal_merge_flag = #{dealMergeFlag},
+			create_time = #{createTime}
+		WHERE record_id = #{recordId}
+	</update>
+	
+	
+	<update id="delete">
+		DELETE FROM day_gateway_pay_stat_for_input
+		WHERE record_id = #{recordId}
+	</update>
+	
+	
+	<select id="getByChannelCodeAndGroupTimeCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+		SELECT count(1) from day_gateway_pay_stat_for_input 
+		WHERE channel_code=#{channelCode}
+		AND group_time=#{groupTime}
+ 	</select>
+ 	
+ 	<select id="getByChannelPartnerAndGroupTimeCount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+		SELECT count(1) from day_gateway_pay_stat_for_input 
+		WHERE channel_partners=#{channelPartners}
+		AND group_time=#{groupTime}
+ 	</select>
+ 	
+	<select id="getBySuccessAmount" resultType="java.lang.Integer"  parameterType="java.util.Map">
+		SELECT count(1) from day_gateway_pay_stat_for_input 
+		WHERE success_bill_count=#{successBillCount}
+		AND success_trade_amt=#{successTradeAmt}
+ 	</select>
+	
+	<select id="getGatewaySelect" resultType="java.util.Map">
+		SELECT distinct channel_code as channelCode, channel_partners_name as channelName, bank_name as bankName 
+		FROM day_gateway_pay_stat_for_input 
+	</select>
+	
+	<select id="getDirconList" resultType="java.util.Map">
+		SELECT  distinct channel_partners as channelPartners,
+		        channel_partners_name as channelPartnersName,
+		        bank_code as bankCode,
+		        bank_name as bankName
+		FROM day_gateway_pay_stat_for_input
+		WHERE channel_partners='DIRCON'
+	</select>
+	
+	<select id="getThirdPartyList" resultType="java.util.Map">
+		SELECT  DISTINCT channel_partners as channelPartners,
+		        channel_partners_name as channelPartnersName
+		FROM day_gateway_pay_stat_for_input
+		WHERE channel_partners &lt;&gt; 'DIRCON'
+	</select>
+	
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.risk.dao.RiskOrderMapper">
+   <insert id="insert" parameterType="com.heepay.risk.entity.RiskOrder" >
+    insert into risk_order (risk_no, merchant_order_no, 
+      trans_no, merchant_id, merchant_name, 
+      trans_amount, product_code, trans_type, 
+      create_time, update_time, update_author, 
+      order_dealwith, order_status, product_name, 
+      quota_id, quota_item,quota_type,rule_detail_id)
+    values (#{riskNo,jdbcType=VARCHAR}, #{merchantOrderNo,jdbcType=VARCHAR}, 
+      #{transNo,jdbcType=VARCHAR}, #{merchantCode,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR}, 
+      #{transAmount,jdbcType=DECIMAL}, #{productCode,jdbcType=VARCHAR}, #{transType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, 
+      #{orderDealwith,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+      #{quotaId,jdbcType=BIGINT}, #{quotaItem,jdbcType=VARCHAR},#{quotaType,jdbcType=VARCHAR},#{ruleDetailId,jdbcType=BIGINT})
+  </insert>
+</mapper>

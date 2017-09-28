@@ -1,0 +1,16 @@
+jdbc.mysql.driverClassName=com.mysql.jdbc.Driver
+jdbc.mysql.url=jdbc:mysql://mycat.hypay.com:3316/ngp_risk?characterEncoding=utf-8
+jdbc.mysql.username=ngp_risk
+jdbc.mysql.password=hyrisk2016
+<<<<<<< HEAD
+
+Ver=dev
+
+=======
+
+
+
+Ver=dev
+
+
+>>>>>>> 16a6b4e2ba84a0e74d25e466d140bb026cb46d98

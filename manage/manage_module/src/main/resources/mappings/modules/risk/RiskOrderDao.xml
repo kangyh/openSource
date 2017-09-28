@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskOrderDao" >
+
+ 	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="riskOrderColumns">
+		a.risk_id AS "riskId",
+		a.risk_no AS "riskNo",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.trans_no AS "transNo",
+		a.payment_id AS "paymentId",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.trans_amount AS "transAmount",
+		a.product_code AS "productCode",
+		a.trans_type AS "transType",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.order_dealwith AS "orderDealwith",
+		a.order_status AS "orderStatus",
+		a.product_name AS "productName",
+		a.quota_id AS "quotaId",
+		a.quota_item AS "quotaItem",
+		a.quota_type AS "quotaType",
+		a.rule_detail_id AS "ruleDetailId"
+	</sql>
+	
+	<!-- 根据主键查询类型明细信息  -->
+	<select id="get" resultType="RiskOrder">
+		SELECT
+			<include refid="riskOrderColumns"/>
+		FROM risk_order a
+		WHERE a.risk_id = #{riskId}
+	</select>
+	
+	<!-- 
+		查询list
+		修改条件时，修改下面的导出SQL条件
+	 -->
+	<select id="findList" resultType="RiskOrder">
+		SELECT 
+			<include refid="riskOrderColumns"/>
+		FROM risk_order a
+		<where>
+			<!-- 商户订单号 -->
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<!-- 交易订单号 -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 交易类型 -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 产品编码 -->
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<!-- 商户编码 -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 商户公司名称 -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<!-- 风控单号 -->
+			<if test="riskNo != null and riskNo != ''">
+				AND a.risk_no = #{riskNo}
+			</if>
+			<!-- 风险订单处理方式  -->
+			<if test="orderDealwith != null and orderDealwith != ''">
+				AND a.order_dealwith = #{orderDealwith}
+			</if>
+			<!-- 风险订单状态  -->
+			<if test="orderStatus != null and orderStatus != ''">
+				AND a.order_status = #{orderStatus}
+			</if>
+			<!-- 规则  -->
+			<if test="ruleDetailId != null and ruleDetailId != ''">
+				AND a.rule_detail_id in (SELECT detail_id FROM risk_rule_detail WHERE rule_id = #{ruleDetailId})
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY risk_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 风险订单导出SQL -->
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="riskOrderColumns"/>
+		FROM risk_order a
+		<where>
+			<!-- 商户订单号 -->
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<!-- 交易订单号 -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 交易类型 -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 产品编码 -->
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<!-- 商户编码 -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 商户公司名称 -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<!-- 风控单号 -->
+			<if test="riskNo != null and riskNo != ''">
+				AND a.risk_no = #{riskNo}
+			</if>
+			<!-- 风险订单处理方式  -->
+			<if test="orderDealwith != null and orderDealwith != ''">
+				AND a.order_dealwith = #{orderDealwith}
+			</if>
+			<!-- 风险订单状态  -->
+			<if test="orderStatus != null and orderStatus != ''">
+				AND a.order_status = #{orderStatus}
+			</if>
+			<!-- 规则  -->
+			<if test="ruleDetailId != null and ruleDetailId != ''">
+				AND a.rule_detail_id in (SELECT detail_id FROM risk_rule_detail WHERE rule_id = #{ruleDetailId})
+			</if>
+		</where>
+		ORDER BY risk_id desc
+	</select>
+	
+	<!-- 去重查询商户公司名称 -->
+	<select id="findMerchantName" resultType="RiskOrder">
+		SELECT DISTINCT a.merchant_name AS "merchantName"
+		FROM risk_order a
+	</select>
+</mapper>

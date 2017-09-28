@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pcac.dao.PcacRiskHintInfoDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.pcac.entity.PcacRiskHintInfo" >
+    <id column="info_id" property="infoId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="reg_name" property="regName" jdbcType="VARCHAR" />
+    <result column="cus_name" property="cusName" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="doc_name" property="docName" jdbcType="VARCHAR" />
+    <result column="leg_doc_type" property="legDocType" jdbcType="VARCHAR" />
+    <result column="leg_doc_code" property="legDocCode" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="risk_type" property="riskType" jdbcType="VARCHAR" />
+    <result column="valid_date" property="validDate" jdbcType="DATE" />
+    <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pcac_risk_hint_info
+    where info_id = #{infoId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.pcac.entity.PcacRiskHintInfo" >
+    insert into pcac_risk_hint_info (info_id, batch_no, reg_name, 
+      cus_name, doc_type, doc_code, 
+      doc_name, leg_doc_type, leg_doc_code, 
+      level, risk_type, valid_date, 
+      valid_status, create_time)
+    values (#{infoId,jdbcType=BIGINT}, #{batchNo,jdbcType=VARCHAR}, #{regName,jdbcType=VARCHAR}, 
+      #{cusName,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{docCode,jdbcType=VARCHAR}, 
+      #{docName,jdbcType=VARCHAR}, #{legDocType,jdbcType=VARCHAR}, #{legDocCode,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{riskType,jdbcType=VARCHAR}, #{validDate,jdbcType=DATE}, 
+      #{validStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertList" parameterType="List">
+  		 insert into pcac_risk_hint_info (batch_no, reg_name, 
+      cus_name, doc_type, doc_code, 
+      doc_name, leg_doc_type, leg_doc_code, 
+      level, risk_type, valid_date, 
+      valid_status, create_time)
+    values 
+    	<foreach collection="list" item="item" index="index" separator=",">
+     (#{item.batchNo,jdbcType=VARCHAR}, #{item.regName,jdbcType=VARCHAR}, 
+      #{item.cusName,jdbcType=VARCHAR}, #{item.docType,jdbcType=VARCHAR}, #{item.docCode,jdbcType=VARCHAR}, 
+      #{item.docName,jdbcType=VARCHAR}, #{item.legDocType,jdbcType=VARCHAR}, #{item.legDocCode,jdbcType=VARCHAR}, 
+      #{item.level,jdbcType=VARCHAR}, #{item.riskType,jdbcType=VARCHAR}, #{item.validDate,jdbcType=DATE}, 
+      #{item.validStatus,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.pcac.entity.PcacRiskHintInfo" >
+    update pcac_risk_hint_info
+    set batch_no = #{batchNo,jdbcType=VARCHAR},
+      reg_name = #{regName,jdbcType=VARCHAR},
+      cus_name = #{cusName,jdbcType=VARCHAR},
+      doc_type = #{docType,jdbcType=VARCHAR},
+      doc_code = #{docCode,jdbcType=VARCHAR},
+      doc_name = #{docName,jdbcType=VARCHAR},
+      leg_doc_type = #{legDocType,jdbcType=VARCHAR},
+      leg_doc_code = #{legDocCode,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      risk_type = #{riskType,jdbcType=VARCHAR},
+      valid_date = #{validDate,jdbcType=DATE},
+      valid_status = #{validStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where info_id = #{infoId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select info_id, batch_no, reg_name, cus_name, doc_type, doc_code, doc_name, leg_doc_type, 
+    leg_doc_code, level, risk_type, valid_date, valid_status, create_time
+    from pcac_risk_hint_info
+    where info_id = #{infoId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select info_id, batch_no, reg_name, cus_name, doc_type, doc_code, doc_name, leg_doc_type, 
+    leg_doc_code, level, risk_type, valid_date, valid_status, create_time
+    from pcac_risk_hint_info
+  </select>
+  
+  
+  <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="pcacRiskHintInfoColumns">
+		a.info_id AS "infoId",
+		a.batch_no AS "batchNo",
+		a.reg_name AS "regName",
+		a.cus_name AS "cusName",
+		a.doc_type AS "docType",
+		a.doc_code AS "docCode",
+		a.doc_name AS "docName",
+		a.leg_doc_type AS "legDocType",
+		a.leg_doc_code AS "legDocCode",
+		a.level AS "level",
+		a.risk_type AS "riskType",
+		a.valid_date AS "validDate",
+		a.valid_status AS "validStatus",
+		a.create_time AS "createTime"
+	</sql>
+   <!-- 分页 -->
+  	<select id="findList" resultType="PcacRiskHintInfo">
+		SELECT 
+			info_id, batch_no, reg_name, cus_name, doc_type, doc_code, doc_name, leg_doc_type, 
+            leg_doc_code, level, risk_type, valid_date, valid_status, create_time
+		FROM pcac_risk_hint_info a
+		<where>
+			
+			<!-- 日期 -->
+			<if test="regName != null and regName != ''">
+			      AND a.reg_name = #{regName} 
+			</if>
+			
+			<!-- 日期 -->
+			<if test="beginCheckTime != null and endCheckTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCheckTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCheckTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<if test="riskType != null and riskType != ''">
+				AND a.risk_type = #{riskType} 
+			</if> 
+			<if test="level != null and level != ''">
+				AND a.level = #{level} 
+			</if>
+			<if test="validStatus != null and validStatus != ''">
+				AND a.valid_status = #{validStatus} 
+			</if>
+			<if test="legDocType != null and legDocType != ''">
+				AND a.leg_doc_type = #{legDocType} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY info_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY info_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="pcacRiskHintInfoColumns"/>
+		FROM pcac_risk_hint_info a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginCheckTime != null">
+				<![CDATA[   and DATE_FORMAT(a.create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginCheckTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endCheckTime != null">
+				<![CDATA[  and DATE_FORMAT(a.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{endCheckTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 日期 -->
+			<if test="regName != null and regName != ''">
+			      AND a.reg_name = #{regName} 
+			</if>
+			<if test="riskType != null and riskType != ''">
+				AND a.risk_type = #{riskType} 
+			</if> 
+			<if test="level != null and level != ''">
+				AND a.level = #{level} 
+			</if>
+			<if test="validStatus != null and validStatus != ''">
+				AND a.valid_status = #{validStatus} 
+			</if>
+			
+		</where>
+		ORDER BY info_id desc
+	</select>
+</mapper>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.account.dao.MerchantTransferDao">
+    
+	<sql id="merchantTransferColumns">
+		a.transfer_id AS "transferId",
+		a.withdraw_flag AS "withdrawFlag",
+		a.transfer_amount AS "transferAmount",
+		a.status AS "status",
+		a.creator AS "creator",
+		a.auditor AS "auditor",
+		a.file_path AS "filePath",
+		a.transfer_reason AS "transferReason",
+		a.audit_remark AS "auditRemark",
+		a.create_time AS "createTime",
+		a.audit_time AS "auditTime",
+		a.d_merchant_id AS "dMerchantId",
+		a.d_account_id AS "dAccountId",
+		a.d_account_name AS "dAccountName",
+		a.c_merchant_id AS "cMerchantId",
+		a.c_account_id AS "cAccountId",
+		a.c_account_name AS "cAccountName",
+		a.op_resource AS "opResource"
+	</sql>
+	
+	<sql id="merchantTransferJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantTransfer">
+		SELECT 
+			<include refid="merchantTransferColumns"/>
+		FROM merchant_transfer a
+		<include refid="merchantTransferJoins"/>
+		WHERE a.transfer_id = #{transferId}
+	</select>
+	
+	<select id="findList" resultType="MerchantTransfer">
+		SELECT 
+			<include refid="merchantTransferColumns"/>
+		FROM merchant_transfer a
+		<include refid="merchantTransferJoins"/>
+		<where>
+			
+			<if test="transferId != null and transferId != ''">
+				AND a.transfer_id = #{transferId}
+			</if>
+			<if test="creator != null and creator != ''">
+				AND a.creator = #{creator}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="dMerchantId != null and dMerchantId != ''">
+				AND a.d_merchant_id = #{dMerchantId}
+			</if>
+			<if test="dAccountId != null and dAccountId != ''">
+				AND a.d_account_id = #{dAccountId}
+			</if>
+			<if test="dAccountName != null and dAccountName != ''">
+				AND a.d_account_name = #{dAccountName}
+			</if>
+			<if test="cMerchantId != null and cMerchantId != ''">
+				AND a.c_merchant_id = #{cMerchantId}
+			</if>
+			<if test="cAccountId != null and cAccountId != ''">
+				AND a.c_account_id = #{cAccountId}
+			</if>
+			<if test="cAccountName != null and cAccountName != ''">
+				AND a.c_account_name = #{cAccountName}
+			</if>
+			<if test="opResource != null and opResource != ''">
+				AND a.op_resource = #{opResource}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d 00:00:00') AND date_format(#{endCreateTime},'%Y-%m-%d 23:59:59')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantTransfer">
+		SELECT 
+			<include refid="merchantTransferColumns"/>
+		FROM merchant_transfer a
+		<include refid="merchantTransferJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_transfer(
+			transfer_id,
+			withdraw_flag,
+			transfer_amount,
+			status,
+			creator,
+			auditor,
+			file_path,
+			transfer_reason,
+			audit_remark,
+			create_time,
+			audit_time,
+			d_merchant_id,
+			d_account_id,
+			d_account_name,
+			c_merchant_id,
+			c_account_id,
+			c_account_name,
+			op_resource
+		) VALUES (
+			#{transferId},
+			#{withdrawFlag},
+			#{transferAmount},
+			#{status},
+			#{creator},
+			#{auditor},
+			#{filePath},
+			#{transferReason},
+			#{auditRemark},
+			#{createTime},
+			#{auditTime},
+			#{dMerchantId},
+			#{dAccountId},
+			#{dAccountName},
+			#{cMerchantId},
+			#{cAccountId},
+			#{cAccountName},
+			#{opResource}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_transfer SET 	
+			transfer_id = #{transferId},
+			withdraw_flag = #{withdrawFlag},
+			transfer_amount = #{transferAmount},
+			status = #{status},
+			creator = #{creator},
+			auditor = #{auditor},
+			file_path = #{filePath},
+			transfer_reason = #{transferReason},
+			audit_remark = #{auditRemark},
+			create_time = #{createTime},
+			audit_time = #{auditTime},
+			d_merchant_id = #{dMerchantId},
+			d_account_id = #{dAccountId},
+			d_account_name = #{dAccountName},
+			c_merchant_id = #{cMerchantId},
+			c_account_id = #{cAccountId},
+			c_account_name = #{cAccountName},
+			op_resource = #{opResource}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_transfer
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateStatus">
+		UPDATE merchant_transfer SET
+		status = #{status},
+		auditor = #{auditor},
+		audit_time = #{auditTime},
+		audit_remark = #{auditRemark}
+		WHERE transfer_id = #{transferId}
+	</update>
+</mapper>

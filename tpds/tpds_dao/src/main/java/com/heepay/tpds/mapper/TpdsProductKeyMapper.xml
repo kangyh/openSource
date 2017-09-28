@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsProductKeyMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsProductKey" >
+    <id column="key_id" property="keyId" jdbcType="BIGINT" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="sign_key" property="signKey" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="create_operator" property="createOperator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_operator" property="updateOperator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    key_id, merchant_no, product_code, product_name, sign_key, trans_type, create_operator, 
+    create_time, update_operator, update_time
+  </sql>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsProductKey" >
+    insert into tpds_product_key
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="keyId != null" >
+        key_id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="signKey != null" >
+        sign_key,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="createOperator != null" >
+        create_operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateOperator != null" >
+        update_operator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="keyId != null" >
+        #{keyId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="signKey != null" >
+        #{signKey,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateOperator != null" >
+        #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsProductKey" >
+    update tpds_product_key
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="signKey != null" >
+        sign_key = #{signKey,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        create_operator = #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateOperator != null" >
+        update_operator = #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where key_id = #{keyId,jdbcType=BIGINT}
+  </update>
+ 
+  
+  <select id="selectTpdsProductKeyByMerchantNo" parameterType="map" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from
+  		tpds_product_key
+  	where
+  		merchant_no = #{merchantNo,jdbcType=VARCHAR} and product_code = #{productCode,jdbcType=VARCHAR}
+  </select>
+   <select id="getList" resultType="com.heepay.tpds.entity.TpdsProductKey">
+  select   key_id, merchant_no, product_code, product_name, sign_key, trans_type, create_operator, 
+    create_time, update_operator, update_time from tpds_product_key 
+  </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+

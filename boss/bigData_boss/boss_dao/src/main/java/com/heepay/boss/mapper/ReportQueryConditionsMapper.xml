@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.ReportQueryConditionsMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.boss.entity.ReportQueryConditions" >
+    <id column="report_id" property="reportId" jdbcType="BIGINT" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="pay_type_name" property="payTypeName" jdbcType="VARCHAR" />
+    <result column="bank_provider" property="bankProvider" jdbcType="VARCHAR" />
+    <result column="bank_provider_name" property="bankProviderName" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_name_re" property="bankNameRe" jdbcType="VARCHAR" />
+    <result column="pay_type_java" property="payTypeJava" jdbcType="VARCHAR" />
+    <result column="pay_type_name_java" property="payTypeNameJava" jdbcType="VARCHAR" />
+    <result column="bank_id_java" property="bankIdJava" jdbcType="VARCHAR" />
+    <result column="bank_name_java" property="bankNameJava" jdbcType="VARCHAR" />
+    <result column="channel_partner_java" property="channelPartnerJava" jdbcType="VARCHAR" />
+    <result column="channel_partner_name_java" property="channelPartnerNameJava" jdbcType="VARCHAR" />
+    <result column="company_id" property="companyId" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    report_id, pay_type, pay_type_name, bank_provider, bank_provider_name, bank_id, bank_name,
+    bank_name_re, pay_type_java, pay_type_name_java, bank_id_java, bank_name_java, channel_partner_java,
+    channel_partner_name_java, company_id, company_name, creator, create_time, update_author,
+    update_time, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.boss.entity.ReportQueryConditionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from report_query_conditions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from report_query_conditions
+    where report_id = #{reportId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from report_query_conditions
+    where report_id = #{reportId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.boss.entity.ReportQueryConditionsExample" >
+    delete from report_query_conditions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.boss.entity.ReportQueryConditions" >
+    insert into report_query_conditions (report_id, pay_type, pay_type_name,
+    bank_provider, bank_provider_name, bank_id,
+    bank_name, bank_name_re, pay_type_java,
+    pay_type_name_java, bank_id_java, bank_name_java,
+    channel_partner_java, channel_partner_name_java,
+    company_id, company_name, creator,
+    create_time, update_author, update_time,
+    status)
+    values (#{reportId,jdbcType=BIGINT}, #{payType,jdbcType=VARCHAR}, #{payTypeName,jdbcType=VARCHAR},
+    #{bankProvider,jdbcType=VARCHAR}, #{bankProviderName,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR},
+    #{bankName,jdbcType=VARCHAR}, #{bankNameRe,jdbcType=VARCHAR}, #{payTypeJava,jdbcType=VARCHAR},
+    #{payTypeNameJava,jdbcType=VARCHAR}, #{bankIdJava,jdbcType=VARCHAR}, #{bankNameJava,jdbcType=VARCHAR},
+    #{channelPartnerJava,jdbcType=VARCHAR}, #{channelPartnerNameJava,jdbcType=VARCHAR},
+    #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR},
+    #{createTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+    #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.boss.entity.ReportQueryConditions" >
+    insert into report_query_conditions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        report_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payTypeName != null" >
+        pay_type_name,
+      </if>
+      <if test="bankProvider != null" >
+        bank_provider,
+      </if>
+      <if test="bankProviderName != null" >
+        bank_provider_name,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankNameRe != null" >
+        bank_name_re,
+      </if>
+      <if test="payTypeJava != null" >
+        pay_type_java,
+      </if>
+      <if test="payTypeNameJava != null" >
+        pay_type_name_java,
+      </if>
+      <if test="bankIdJava != null" >
+        bank_id_java,
+      </if>
+      <if test="bankNameJava != null" >
+        bank_name_java,
+      </if>
+      <if test="channelPartnerJava != null" >
+        channel_partner_java,
+      </if>
+      <if test="channelPartnerNameJava != null" >
+        channel_partner_name_java,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reportId != null" >
+        #{reportId,jdbcType=BIGINT},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeName != null" >
+        #{payTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProvider != null" >
+        #{bankProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProviderName != null" >
+        #{bankProviderName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNameRe != null" >
+        #{bankNameRe,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeJava != null" >
+        #{payTypeJava,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeNameJava != null" >
+        #{payTypeNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIdJava != null" >
+        #{bankIdJava,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNameJava != null" >
+        #{bankNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPartnerJava != null" >
+        #{channelPartnerJava,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPartnerNameJava != null" >
+        #{channelPartnerNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.boss.entity.ReportQueryConditionsExample" resultType="java.lang.Integer" >
+    select count(*) from report_query_conditions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update report_query_conditions
+    <set >
+      <if test="record.reportId != null" >
+        report_id = #{record.reportId,jdbcType=BIGINT},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payTypeName != null" >
+        pay_type_name = #{record.payTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankProvider != null" >
+        bank_provider = #{record.bankProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankProviderName != null" >
+        bank_provider_name = #{record.bankProviderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankId != null" >
+        bank_id = #{record.bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankNameRe != null" >
+        bank_name_re = #{record.bankNameRe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payTypeJava != null" >
+        pay_type_java = #{record.payTypeJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payTypeNameJava != null" >
+        pay_type_name_java = #{record.payTypeNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankIdJava != null" >
+        bank_id_java = #{record.bankIdJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankNameJava != null" >
+        bank_name_java = #{record.bankNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelPartnerJava != null" >
+        channel_partner_java = #{record.channelPartnerJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelPartnerNameJava != null" >
+        channel_partner_name_java = #{record.channelPartnerNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyId != null" >
+        company_id = #{record.companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyName != null" >
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creator != null" >
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAuthor != null" >
+        update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update report_query_conditions
+    set report_id = #{record.reportId,jdbcType=BIGINT},
+    pay_type = #{record.payType,jdbcType=VARCHAR},
+    pay_type_name = #{record.payTypeName,jdbcType=VARCHAR},
+    bank_provider = #{record.bankProvider,jdbcType=VARCHAR},
+    bank_provider_name = #{record.bankProviderName,jdbcType=VARCHAR},
+    bank_id = #{record.bankId,jdbcType=VARCHAR},
+    bank_name = #{record.bankName,jdbcType=VARCHAR},
+    bank_name_re = #{record.bankNameRe,jdbcType=VARCHAR},
+    pay_type_java = #{record.payTypeJava,jdbcType=VARCHAR},
+    pay_type_name_java = #{record.payTypeNameJava,jdbcType=VARCHAR},
+    bank_id_java = #{record.bankIdJava,jdbcType=VARCHAR},
+    bank_name_java = #{record.bankNameJava,jdbcType=VARCHAR},
+    channel_partner_java = #{record.channelPartnerJava,jdbcType=VARCHAR},
+    channel_partner_name_java = #{record.channelPartnerNameJava,jdbcType=VARCHAR},
+    company_id = #{record.companyId,jdbcType=VARCHAR},
+    company_name = #{record.companyName,jdbcType=VARCHAR},
+    creator = #{record.creator,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+    status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.boss.entity.ReportQueryConditions" >
+    update report_query_conditions
+    <set >
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeName != null" >
+        pay_type_name = #{payTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProvider != null" >
+        bank_provider = #{bankProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="bankProviderName != null" >
+        bank_provider_name = #{bankProviderName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNameRe != null" >
+        bank_name_re = #{bankNameRe,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeJava != null" >
+        pay_type_java = #{payTypeJava,jdbcType=VARCHAR},
+      </if>
+      <if test="payTypeNameJava != null" >
+        pay_type_name_java = #{payTypeNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="bankIdJava != null" >
+        bank_id_java = #{bankIdJava,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNameJava != null" >
+        bank_name_java = #{bankNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPartnerJava != null" >
+        channel_partner_java = #{channelPartnerJava,jdbcType=VARCHAR},
+      </if>
+      <if test="channelPartnerNameJava != null" >
+        channel_partner_name_java = #{channelPartnerNameJava,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where report_id = #{reportId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.boss.entity.ReportQueryConditions" >
+    update report_query_conditions
+    set pay_type = #{payType,jdbcType=VARCHAR},
+    pay_type_name = #{payTypeName,jdbcType=VARCHAR},
+    bank_provider = #{bankProvider,jdbcType=VARCHAR},
+    bank_provider_name = #{bankProviderName,jdbcType=VARCHAR},
+    bank_id = #{bankId,jdbcType=VARCHAR},
+    bank_name = #{bankName,jdbcType=VARCHAR},
+    bank_name_re = #{bankNameRe,jdbcType=VARCHAR},
+    pay_type_java = #{payTypeJava,jdbcType=VARCHAR},
+    pay_type_name_java = #{payTypeNameJava,jdbcType=VARCHAR},
+    bank_id_java = #{bankIdJava,jdbcType=VARCHAR},
+    bank_name_java = #{bankNameJava,jdbcType=VARCHAR},
+    channel_partner_java = #{channelPartnerJava,jdbcType=VARCHAR},
+    channel_partner_name_java = #{channelPartnerNameJava,jdbcType=VARCHAR},
+    company_id = #{companyId,jdbcType=VARCHAR},
+    company_name = #{companyName,jdbcType=VARCHAR},
+    creator = #{creator,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_author = #{updateAuthor,jdbcType=VARCHAR},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    status = #{status,jdbcType=VARCHAR}
+    where report_id = #{reportId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from report_query_conditions
+    where status = 'Y'
+  </select>
+</mapper>

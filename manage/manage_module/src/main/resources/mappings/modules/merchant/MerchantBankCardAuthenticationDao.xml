@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.heepay.manage.modules.merchant.dao.MerchantBankCardAuthenticationDao">
+
+	<sql id="merchantBankCardAuthenticationColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_company_name AS "merchantCompanyName",
+		a.legal_representative AS "legalRepresentative",
+		a.bank_no AS "bankNo",
+		a.open_bank_name AS "openBankName",
+		a.pay_amount AS "payAmount",
+		a.pay_status AS "payStatus",
+		a.authentication_amount AS "authenticationAmount",
+		a.authentication_status AS "authenticationStatus",
+		a.level AS "level",
+		a.create_time AS "createDate",
+		a.reason AS "reason",
+		a.cause AS "cause"
+	</sql>
+
+	<sql id="merchantBankCardAuthenticationJoins">
+	</sql>
+
+	<select id="get" resultType="MerchantBankCardAuthentication">
+		SELECT
+		<include refid="merchantBankCardAuthenticationColumns" />
+		FROM merchant_bank_card_authentication a
+		<include refid="merchantBankCardAuthenticationJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="MerchantBankCardAuthentication">
+		SELECT
+		<include refid="merchantBankCardAuthenticationColumns" />
+		FROM merchant_bank_card_authentication a
+		<include refid="merchantBankCardAuthenticationJoins" />
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompanyName != null and merchantCompanyName != ''">
+				AND a.merchant_company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{merchantCompanyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantCompanyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantCompanyName},'%')</if>
+			</if>
+			<if test="payStatus != null and payStatus != ''">
+				AND a.pay_status = #{payStatus}
+			</if>
+			<if test="authenticationStatus != null and authenticationStatus != ''">
+				AND a.authentication_status = #{authenticationStatus}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN #{beginCreateTime} AND
+				#{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="MerchantBankCardAuthentication">
+		SELECT
+		<include refid="merchantBankCardAuthenticationColumns" />
+		FROM merchant_bank_card_authentication a
+		<include refid="merchantBankCardAuthenticationJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		insert into merchant_bank_card_authentication
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="merchantId != null">
+				merchant_id,
+			</if>
+			<if test="merchantCompanyName != null">
+				merchant_company_name,
+			</if>
+			<if test="legalRepresentative != null">
+				legal_representative,
+			</if>
+			<if test="bankNo != null">
+				bank_no,
+			</if>
+			<if test="openBankName != null">
+				open_bank_name,
+			</if>
+			<if test="payAmount != null">
+				pay_amount,
+			</if>
+			<if test="payStatus != null">
+				pay_status,
+			</if>
+			<if test="authenticationAmount != null">
+				authentication_amount,
+			</if>
+			<if test="authenticationStatus != null">
+				authentication_status,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="createDate != null">
+				create_time,
+			</if>
+			<if test="reason != null">
+				reason,
+			</if>
+			<if test="cause != null">
+				cause,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="merchantId != null">
+				#{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="merchantCompanyName != null">
+				#{merchantCompanyName,jdbcType=VARCHAR},
+			</if>
+			<if test="legalRepresentative != null">
+				#{legalRepresentative,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null">
+				#{bankNo,jdbcType=VARCHAR},
+			</if>
+			<if test="openBankName != null">
+				#{openBankName,jdbcType=VARCHAR},
+			</if>
+			<if test="payAmount != null">
+				#{payAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="payStatus != null">
+				#{payStatus,jdbcType=CHAR},
+			</if>
+			<if test="authenticationAmount != null">
+				#{authenticationAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="authenticationStatus != null">
+				#{authenticationStatus,jdbcType=CHAR},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=TINYINT},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reason != null">
+				#{reason,jdbcType=VARCHAR},
+			</if>
+			<if test="cause != null">
+				#{cause,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update">
+		update merchant_bank_card_authentication
+		<set>
+			<if test="merchantId != null">
+				merchant_id = #{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="merchantCompanyName != null">
+				merchant_company_name = #{merchantCompanyName,jdbcType=VARCHAR},
+			</if>
+			<if test="legalRepresentative != null">
+				legal_representative = #{legalRepresentative,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null">
+				bank_no = #{bankNo,jdbcType=VARCHAR},
+			</if>
+			<if test="openBankName != null">
+				open_bank_name = #{openBankName,jdbcType=VARCHAR},
+			</if>
+			<if test="payAmount != null">
+				pay_amount = #{payAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="payStatus != null">
+				pay_status = #{payStatus,jdbcType=CHAR},
+			</if>
+			<if test="authenticationAmount != null">
+				authentication_amount = #{authenticationAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="authenticationStatus != null">
+				authentication_status = #{authenticationStatus,jdbcType=CHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=TINYINT},
+			</if>
+			<if test="createDate != null">
+				create_time = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reason != null">
+				reason = #{reason,jdbcType=VARCHAR},
+			</if>
+			<if test="cause != null">
+				cause = #{cause,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+	<update id="delete">
+		DELETE FROM merchant_bank_card_authentication
+		WHERE id
+		= #{id}
+	</update>
+
+	<update id="status">
+		UPDATE merchant_bank_card_authentication SET
+		pay_amount = #{payAmount},
+		pay_status = #{payStatus},
+		cause = #{cause},
+		authentication_status = #{authenticationStatus},
+		create_time = now()
+		WHERE id = #{id}
+	</update>
+
+	<update id="statusAut">
+		UPDATE merchant_bank_card_authentication
+		SET
+		authentication_status = #{authenticationStatus},
+		authentication_amount = #{authenticationAmount}
+		WHERE merchant_id =
+		#{merchantId}
+	</update>
+
+	<select id="getByMerchantId" resultType="MerchantBankCardAuthentication">
+		SELECT
+		<include refid="merchantBankCardAuthenticationColumns" />
+		FROM merchant_bank_card_authentication a
+		WHERE a.merchant_id =
+		#{merchantId}
+	</select>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcAttachmentQueryMapper" >
+<insert id="insert" parameterType="com.heepay.risk.entity.PbcAttachmentQuery" useGeneratedKeys="true" keyProperty="pbcId">
+    insert into pbc_attachment_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        pbc_id,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+        <if test="fileContent != null" >
+        file_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        #{pbcId,jdbcType=BIGINT},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+        <if test="fileContent != null" >
+        #{fileContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

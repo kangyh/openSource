@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsMerchantInfoDao">
+
+	<sql id="hgmsMerchantInfoColumns">
+		a.company_id AS "companyId",
+		a.merchant_id AS "merchantId",
+		a.company_name AS "companyName",
+		a.superior_id AS "superiorId",
+		a.superior_name AS "superiorName",
+		a.email AS "email",
+		a.company_type AS "companyType",
+		a.employee_account AS "employeeAccount",
+		a.bank_no AS "bankNo",
+		a.bank_name AS "bankName",
+		a.open_bank_code AS "openBankCode",
+		a.open_bank_name AS "openBankName",
+		a.bank_info AS "bankInfo",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_type AS "bankcardType",
+		a.bankcard_expired_date AS "bankcardExpiredDate",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.associate_line_number AS "associateLineNumber",
+		a.authentication_status AS "authenticationStatus",
+		a.busipermit AS "busipermit",
+		a.busiaddr AS "busiaddr",
+		a.legal_persion_address AS "legalPersionAddress",
+		a.legal_persion_email AS "legalPersionEmail",
+		a.contactor_persion_address AS "contactorPersionAddress",
+		a.contactor_persion_email AS "contactorPersionEmail",
+		a.merchant_ip AS "merchantIp",
+		a.contract_time AS "contractTime",
+		a.inputuser_id AS "inputuserId",
+		a.created_time AS "createdTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.industry_types AS "industryTypes",
+		a.risk_level AS "riskLevel",
+		a.credit_level AS "creditLevel",
+		a.merchant_pos_code AS "merchantPosCode",
+		a.legal_representative AS "legalRepresentative",
+		a.company_phone AS "companyPhone",
+		a.legal_mobile AS "legalMobile",
+		a.website AS "website",
+		a.business_address AS "businessAddress",
+		a.contry_code AS "contryCode",
+		a.contry_name AS "contryName",
+		a.province_code AS "provinceCode",
+		a.province_name AS "provinceName",
+		a.city_code AS "cityCode",
+		a.city_name AS "cityName",
+		a.county_code AS "countyCode",
+		a.county_name AS "countyName",
+		a.contact_address AS "contactAddress",
+		a.contactor AS "contactor",
+		a.type AS "type",
+		a.level AS "level",
+		a.charge_type AS "chargeType",
+		a.request_ways AS "requestWays",
+		a.request_version AS "requestVersion",
+		a.allowed_ips AS "allowedIps",
+		a.signed_type AS "signedType",
+		a.status AS "status",
+		a.op_audit_time AS "opAuditTime",
+		a.op_auditor AS "opAuditor",
+		a.rc_audit_status AS "rcAuditStatus",
+		a.rc_audit_time AS "rcAuditTime",
+		a.rc_auditor AS "rcAuditor",
+		a.legal_audit_status AS "legalAuditStatus",
+		a.legal_audit_time AS "legalAuditTime",
+		a.legal_auditor AS "legalAuditor",
+		a.sales_id AS "salesId",
+		a.incharger_id AS "inchargerId",
+		a.remark AS "remark",
+		a.create_time AS "createTime",
+		a.welcome_message AS "welcomeMessage",
+		a.certificate_type AS "certificateType",
+		a.business_license_end_time AS "businessLicenseEndTime",
+		a.organization_code AS "organizationCode",
+		a.tax_registration_certificate_no AS "taxRegistrationCertificateNo",
+		a.business_scope AS "businessScope",
+		a.legal_idcard AS "legalIdcard",
+		a.legal_certificate_end_time AS "legalCertificateEndTime",
+		a.contactor_idcard_no AS "contactorIdcardNo",
+		a.contactor_certificate_end_time AS "contactorCertificateEndTime",
+		a.contactor_phone AS "contactorPhone",
+		a.ipc_no AS "ipcNo",
+		a.permits_accounts AS "permitsAccounts",
+		a.legal_certificate_front AS "legalCertificateFront",
+		a.legal_certificate_back AS "legalCertificateBack",
+		a.tax_registration_certificate AS "taxRegistrationCertificate",
+		a.organization_code_certificate AS "organizationCodeCertificate",
+		a.business_license_file AS "businessLicenseFile",
+		a.business_license_no AS "businessLicenseNo",
+		a.objection AS "objection",
+		a.retained_amount AS "retainedAmount",
+		a.union_pay_province_code AS "unionPayProvinceCode",
+		a.union_pay_province_name AS "unionPayProvinceName",
+		a.union_pay_city_code AS "unionPayCityCode",
+		a.union_pay_city_name AS "unionPayCityName",
+		a.mcc_type AS "mccType",
+		a.mcc_server AS "mccServer",
+		a.mcc_detail AS "mccDetail",
+		a.industry_category AS "industryCategory",
+		a.protocol_number AS "protocolNumber",
+		a.remark1 AS "remark1",
+		a.remark2 AS "remark2",
+		a.remark3 AS "remark3",
+		a.remark4 AS "remark4"
+	</sql>
+
+	<sql id="hgmsMerchantInfoJoins" >
+	</sql>
+
+	<select id="get" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+		SELECT
+		<include refid="hgmsMerchantInfoColumns"/>
+		FROM hgms_merchant_info a
+		<include refid="hgmsMerchantInfoJoins"/>
+		WHERE a.merchant_id = #{id}
+	</select>
+
+	<select id="getByCompanyId" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo" parameterType="String">
+		SELECT
+		<include refid="hgmsMerchantInfoColumns"/>
+		FROM hgms_merchant_info a
+		<include refid="hgmsMerchantInfoJoins"/>
+		WHERE a.company_id = #{companyId}
+	</select>
+
+	<select id="queryEmailExist" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+		SELECT
+		<include refid="hgmsMerchantInfoColumns"/>
+		FROM hgms_merchant_info a
+		<include refid="hgmsMerchantInfoJoins"/>
+		WHERE a.email = #{email}
+	</select>
+
+	<select id="findList" parameterType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo" >
+		SELECT
+		<include refid="hgmsMerchantInfoColumns"/>
+		FROM hgms_merchant_info a
+		<include refid="hgmsMerchantInfoJoins"/>
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<if test="companyType != null and companyType != ''">
+				AND a.company_type = #{companyType}
+			</if>
+			<if test="superiorId != null and superiorId != ''">
+				AND a.superior_id = #{superiorId}
+			</if>
+			<if test="superiorName != null and superiorName != ''">
+				AND a.superior_name = #{superiorName}
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email = #{email}
+			</if>
+			<if test="legalAuditStatus != null and legalAuditStatus != ''">
+				AND a.legal_audit_status = #{legalAuditStatus}
+			</if>
+            <choose>
+                <when test="legalAuditStatus != null and legalAuditStatus != '' and legalAuditStatus != 'NotNull'">
+                    AND a.legal_audit_status = #{legalAuditStatus}
+                </when>
+                <when test="legalAuditStatus == 'NotNull'">
+                    AND a.legal_audit_status != ''
+                </when>
+            </choose>
+            <choose>
+                <when test="rcAuditStatus != null and rcAuditStatus != '' and rcAuditStatus != 'NotNull'">
+                    AND a.rc_audit_status = #{rcAuditStatus}
+                </when>
+                <when test="rcAuditStatus == 'NotNull'">
+                    AND a.rc_audit_status != ''
+                </when>
+            </choose>
+			<choose>
+				<when test="beginCreateTime != null and endCreateTime != null ">
+					AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+				</when>
+				<when test="beginCreateTime != null and endCreateTime == null">
+					AND a.create_time &gt; #{beginCreateTime}
+				</when>
+				<when test="beginCreateTime == null and endCreateTime != null">
+					AND a.create_time &lt; #{endCreateTime}
+				</when>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+		SELECT
+		<include refid="hgmsMerchantInfoColumns"/>
+		FROM hgms_merchant_info a
+		<include refid="hgmsMerchantInfoJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert" parameterType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo" >
+		INSERT INTO hgms_merchant_info(
+		company_id,
+		merchant_id,
+		company_name,
+		superior_id,
+		superior_name,
+		email,
+		company_type,
+		employee_account,
+		bank_no,
+		bank_name,
+		open_bank_code,
+		open_bank_name,
+		bank_info,
+		bankcard_no,
+		bankcard_type,
+		bankcard_expired_date,
+		bankcard_owner_mobile,
+		bankcard_owner_name,
+		bankcard_owner_idcard,
+		bankcard_owner_type,
+		associate_line_number,
+		authentication_status,
+		busipermit,
+		busiaddr,
+		legal_persion_address,
+		legal_persion_email,
+		contactor_persion_address,
+		contactor_persion_email,
+		merchant_ip,
+		contract_time,
+		inputuser_id,
+		created_time,
+		update_user_id,
+		update_time,
+		industry_types,
+		risk_level,
+		credit_level,
+		merchant_pos_code,
+		legal_representative,
+		company_phone,
+		legal_mobile,
+		website,
+		business_address,
+		contry_code,
+		contry_name,
+		province_code,
+		province_name,
+		city_code,
+		city_name,
+		county_code,
+		county_name,
+		contact_address,
+		contactor,
+		type,
+		level,
+		charge_type,
+		request_ways,
+		request_version,
+		allowed_ips,
+		signed_type,
+		status,
+		op_audit_time,
+		op_auditor,
+		rc_audit_status,
+		rc_audit_time,
+		rc_auditor,
+		legal_audit_status,
+		legal_audit_time,
+		legal_auditor,
+		sales_id,
+		incharger_id,
+		remark,
+		create_time,
+		welcome_message,
+		certificate_type,
+		business_license_end_time,
+		organization_code,
+		tax_registration_certificate_no,
+		business_scope,
+		legal_idcard,
+		legal_certificate_end_time,
+		contactor_idcard_no,
+		contactor_certificate_end_time,
+		contactor_phone,
+		ipc_no,
+		permits_accounts,
+		legal_certificate_front,
+		legal_certificate_back,
+		tax_registration_certificate,
+		organization_code_certificate,
+		business_license_file,
+		business_license_no,
+		objection,
+		retained_amount,
+		union_pay_province_code,
+		union_pay_province_name,
+		union_pay_city_code,
+		union_pay_city_name,
+		mcc_type,
+		mcc_server,
+		mcc_detail,
+		industry_category,
+		protocol_number,
+		remark1,
+		remark2,
+		remark3,
+		remark4
+		) VALUES (
+		#{companyId},
+		#{merchantId},
+		#{companyName},
+		#{superiorId},
+		#{superiorName},
+		#{email},
+		#{companyType},
+		#{employeeAccount},
+		#{bankNo},
+		#{bankName},
+		#{openBankCode},
+		#{openBankName},
+		#{bankInfo},
+		#{bankcardNo},
+		#{bankcardType},
+		#{bankcardExpiredDate},
+		#{bankcardOwnerMobile},
+		#{bankcardOwnerName},
+		#{bankcardOwnerIdcard},
+		#{bankcardOwnerType},
+		#{associateLineNumber},
+		#{authenticationStatus},
+		#{busipermit},
+		#{busiaddr},
+		#{legalPersionAddress},
+		#{legalPersionEmail},
+		#{contactorPersionAddress},
+		#{contactorPersionEmail},
+		#{merchantIp},
+		#{contractTime},
+		#{inputuserId},
+		#{createdTime},
+		#{updateUserId},
+		#{updateTime},
+		#{industryTypes},
+		#{riskLevel},
+		#{creditLevel},
+		#{merchantPosCode},
+		#{legalRepresentative},
+		#{companyPhone},
+		#{legalMobile},
+		#{website},
+		#{businessAddress},
+		#{contryCode},
+		#{contryName},
+		#{provinceCode},
+		#{provinceName},
+		#{cityCode},
+		#{cityName},
+		#{countyCode},
+		#{countyName},
+		#{contactAddress},
+		#{contactor},
+		#{type},
+		#{level},
+		#{chargeType},
+		#{requestWays},
+		#{requestVersion},
+		#{allowedIps},
+		#{signedType},
+		#{status},
+		#{opAuditTime},
+		#{opAuditor},
+		#{rcAuditStatus},
+		#{rcAuditTime},
+		#{rcAuditor},
+		#{legalAuditStatus},
+		#{legalAuditTime},
+		#{legalAuditor},
+		#{salesId},
+		#{inchargerId},
+		#{remark},
+		#{createTime},
+		#{welcomeMessage},
+		#{certificateType},
+		#{businessLicenseEndTime},
+		#{organizationCode},
+		#{taxRegistrationCertificateNo},
+		#{businessScope},
+		#{legalIdcard},
+		#{legalCertificateEndTime},
+		#{contactorIdcardNo},
+		#{contactorCertificateEndTime},
+		#{contactorPhone},
+		#{ipcNo},
+		#{permitsAccounts},
+		#{legalCertificateFront},
+		#{legalCertificateBack},
+		#{taxRegistrationCertificate},
+		#{organizationCodeCertificate},
+		#{businessLicenseFile},
+		#{businessLicenseNo},
+		#{objection},
+		#{retainedAmount},
+		#{unionPayProvinceCode},
+		#{unionPayProvinceName},
+		#{unionPayCityCode},
+		#{unionPayCityName},
+		#{mccType},
+		#{mccServer},
+		#{mccDetail},
+		#{industryCategory},
+		#{protocolNumber},
+		#{remark1},
+		#{remark2},
+		#{remark3},
+		#{remark4}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+		UPDATE hgms_merchant_info
+		<set>
+        <if test="companyId != null" >
+            company_id = #{companyId},
+        </if>
+        <if test="merchantId != null" >
+            merchant_id = #{merchantId},
+        </if>
+        <if test="companyName != null" >
+            company_name = #{companyName},
+        </if>
+        <if test="superiorId != null" >
+            superior_id = #{superiorId},
+        </if>
+        <if test="superiorName != null" >
+            superior_name = #{superiorName},
+        </if>
+        <if test="email != null" >
+            email = #{email},
+        </if>
+        <if test="companyType != null" >
+            company_type = #{companyType},
+        </if>
+        <if test="employeeAccount != null" >
+            employee_account = #{employeeAccount},
+        </if>
+        <if test="bankNo != null" >
+            bank_no = #{bankNo},
+        </if>
+        <if test="bankName != null" >
+            bank_name = #{bankName},
+        </if>
+        <if test="openBankCode != null" >
+            open_bank_code = #{openBankCode},
+        </if>
+        <if test="openBankName != null" >
+            open_bank_name = #{openBankName},
+        </if>
+        <if test="bankInfo != null" >
+            bank_info = #{bankInfo},
+        </if>
+        <if test="bankcardNo != null" >
+            bankcard_no = #{bankcardNo},
+        </if>
+        <if test="bankcardType != null" >
+            bankcard_type = #{bankcardType},
+        </if>
+        <if test="bankcardExpiredDate != null" >
+            bankcard_expired_date = #{bankcardExpiredDate},
+        </if>
+        <if test="bankcardOwnerMobile != null" >
+            bankcard_owner_mobile = #{bankcardOwnerMobile},
+        </if>
+        <if test="bankcardOwnerName != null" >
+            bankcard_owner_name = #{bankcardOwnerName},
+        </if>
+        <if test="bankcardOwnerIdcard != null" >
+            bankcard_owner_idcard = #{bankcardOwnerIdcard},
+        </if>
+        <if test="bankcardOwnerType != null" >
+            bankcard_owner_type = #{bankcardOwnerType},
+        </if>
+        <if test="associateLineNumber != null" >
+            associate_line_number = #{associateLineNumber},
+        </if>
+        <if test="authenticationStatus != null" >
+            authentication_status = #{authenticationStatus},
+        </if>
+        <if test="busipermit != null" >
+            busipermit = #{busipermit},
+        </if>
+        <if test="busiaddr != null" >
+            busiaddr = #{busiaddr},
+        </if>
+        <if test="legalPersionAddress != null" >
+            legal_persion_address = #{legalPersionAddress},
+        </if>
+        <if test="legalPersionEmail != null" >
+            legal_persion_email = #{legalPersionEmail},
+        </if>
+        <if test="contactorPersionAddress != null" >
+            contactor_persion_address = #{contactorPersionAddress},
+        </if>
+        <if test="contactorPersionEmail != null" >
+            contactor_persion_email = #{contactorPersionEmail},
+        </if>
+        <if test="merchantIp != null" >
+            merchant_ip = #{merchantIp},
+        </if>
+        <if test="contractTime != null" >
+            contract_time = #{contractTime},
+        </if>
+        <if test="inputuserId != null" >
+            inputuser_id = #{inputuserId},
+        </if>
+        <if test="createdTime != null" >
+            created_time = #{createdTime},
+        </if>
+        <if test="updateUserId != null" >
+            update_user_id = #{updateUserId},
+        </if>
+        <if test="updateTime != null" >
+            update_time = #{updateTime},
+        </if>
+        <if test="industryTypes != null" >
+            industry_types = #{industryTypes},
+        </if>
+        <if test="riskLevel != null" >
+            risk_level = #{riskLevel},
+        </if>
+        <if test="creditLevel != null" >
+            credit_level = #{creditLevel},
+        </if>
+        <if test="merchantPosCode != null" >
+            merchant_pos_code = #{merchantPosCode},
+        </if>
+        <if test="legalRepresentative != null" >
+            legal_representative = #{legalRepresentative},
+        </if>
+        <if test="companyPhone != null" >
+            company_phone = #{companyPhone},
+        </if>
+        <if test="legalMobile != null" >
+            legal_mobile = #{legalMobile},
+        </if>
+        <if test="website != null" >
+            website = #{website},
+        </if>
+        <if test="businessAddress != null" >
+            business_address = #{businessAddress},
+        </if>
+        <if test="contryCode != null" >
+            contry_code = #{contryCode},
+        </if>
+        <if test="contryName != null">
+            contry_name = #{contryName,jdbcType=VARCHAR},
+        </if>
+        <if test="provinceCode != null">
+            province_code = #{provinceCode,jdbcType=CHAR},
+        </if>
+        <if test="provinceName != null">
+            province_name = #{provinceName,jdbcType=VARCHAR},
+        </if>
+        <if test="cityCode != null">
+            city_code = #{cityCode,jdbcType=CHAR},
+        </if>
+        <if test="cityName != null">
+            city_name = #{cityName,jdbcType=VARCHAR},
+        </if>
+        <if test="countyCode != null">
+            county_code = #{countyCode,jdbcType=CHAR},
+        </if>
+        <if test="countyName != null">
+            county_name = #{countyName,jdbcType=VARCHAR},
+        </if>
+        <if test="contactAddress != null">
+            contact_address = #{contactAddress,jdbcType=VARCHAR},
+        </if>
+        <if test="contactor != null">
+            contactor = #{contactor,jdbcType=VARCHAR},
+        </if>
+        <if test="type != null">
+            type = #{type,jdbcType=TINYINT},
+        </if>
+        <if test="level != null">
+            level = #{level,jdbcType=TINYINT},
+        </if>
+        <if test="chargeType != null">
+            charge_type = #{chargeType,jdbcType=TINYINT},
+        </if>
+        <if test="requestWays != null">
+            request_ways = #{requestWays,jdbcType=CHAR},
+        </if>
+        <if test="requestVersion != null">
+            request_version = #{requestVersion,jdbcType=TINYINT},
+        </if>
+        <if test="allowedIps != null">
+            allowed_ips = #{allowedIps,jdbcType=VARCHAR},
+        </if>
+        <if test="signedType != null">
+            signed_type = #{signedType,jdbcType=CHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=CHAR},
+        </if>
+        <if test="opAuditTime != null">
+            op_audit_time = #{opAuditTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="opAuditor != null">
+            op_auditor = #{opAuditor,jdbcType=SMALLINT},
+        </if>
+        <if test="rcAuditStatus != null">
+            rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+        </if>
+        <if test="rcAuditTime != null">
+            rc_audit_time = #{rcAuditTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="rcAuditor != null">
+            rc_auditor = #{rcAuditor,jdbcType=SMALLINT},
+        </if>
+        <if test="legalAuditStatus != null">
+            legal_audit_status = #{legalAuditStatus,jdbcType=CHAR},
+        </if>
+        <if test="legalAuditTime != null">
+            legal_audit_time = #{legalAuditTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="legalAuditor != null">
+            legal_auditor = #{legalAuditor,jdbcType=SMALLINT},
+        </if>
+        <if test="salesId != null">
+            sales_id = #{salesId,jdbcType=SMALLINT},
+        </if>
+        <if test="inchargerId != null">
+            incharger_id = #{inchargerId,jdbcType=SMALLINT},
+        </if>
+        <if test="remark != null">
+            remark = #{remark,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="welcomeMessage != null">
+            welcome_message = #{welcomeMessage,jdbcType=VARCHAR},
+        </if>
+        <if test="certificateType != null">
+            certificate_type = #{certificateType,jdbcType=CHAR},
+        </if>
+        <if test="businessLicenseEndTime != null">
+            business_license_end_time = #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="organizationCode != null">
+            organization_code = #{organizationCode,jdbcType=VARCHAR},
+        </if>
+        <if test="taxRegistrationCertificateNo != null">
+            tax_registration_certificate_no = #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+        </if>
+        <if test="businessScope != null">
+            business_scope = #{businessScope,jdbcType=VARCHAR},
+        </if>
+        <if test="legalIdcard != null">
+            legal_idcard = #{legalIdcard,jdbcType=VARCHAR},
+        </if>
+        <if test="legalCertificateEndTime != null">
+            legal_certificate_end_time = #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="contactorIdcardNo != null">
+            contactor_idcard_no = #{contactorIdcardNo,jdbcType=VARCHAR},
+        </if>
+        <if test="contactorCertificateEndTime != null">
+            contactor_certificate_end_time = #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="contactorPhone != null">
+            contactor_phone = #{contactorPhone,jdbcType=VARCHAR},
+        </if>
+        <if test="ipcNo != null">
+            ipc_no = #{ipcNo,jdbcType=VARCHAR},
+        </if>
+        <if test="permitsAccounts != null">
+            permits_accounts = #{permitsAccounts,jdbcType=VARCHAR},
+        </if>
+        <if test="legalCertificateFront != null">
+            legal_certificate_front = #{legalCertificateFront,jdbcType=VARCHAR},
+        </if>
+        <if test="legalCertificateBack != null">
+            legal_certificate_back = #{legalCertificateBack,jdbcType=VARCHAR},
+        </if>
+        <if test="taxRegistrationCertificate != null">
+            tax_registration_certificate = #{taxRegistrationCertificate,jdbcType=VARCHAR},
+        </if>
+        <if test="organizationCodeCertificate != null">
+            organization_code_certificate = #{organizationCodeCertificate,jdbcType=VARCHAR},
+        </if>
+        <if test="businessLicenseFile != null">
+            business_license_file = #{businessLicenseFile,jdbcType=VARCHAR},
+        </if>
+        <if test="businessLicenseNo != null">
+            business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+        </if>
+        <if test="objection != null">
+            objection = #{objection,jdbcType=VARCHAR},
+        </if>
+        <if test="retainedAmount != null">
+            retained_amount = #{retainedAmount,jdbcType=DECIMAL},
+        </if>
+        <if test="unionPayProvinceCode != null">
+            union_pay_province_code = #{unionPayProvinceCode,jdbcType=VARCHAR},
+        </if>
+        <if test="unionPayProvinceName != null">
+            union_pay_province_name = #{unionPayProvinceName,jdbcType=VARCHAR},
+        </if>
+        <if test="unionPayCityCode != null">
+            union_pay_city_code = #{unionPayCityCode,jdbcType=VARCHAR},
+        </if>
+        <if test="unionPayCityName != null">
+            union_pay_city_name = #{unionPayCityName,jdbcType=VARCHAR},
+        </if>
+        <if test="mccType != null">
+            mcc_type = #{mccType,jdbcType=VARCHAR},
+        </if>
+        <if test="mccServer != null">
+            mcc_server = #{mccServer,jdbcType=VARCHAR},
+        </if>
+        <if test="mccDetail != null">
+            mcc_detail = #{mccDetail,jdbcType=VARCHAR},
+        </if>
+        <if test="industryCategory != null">
+            industry_category = #{industryCategory,jdbcType=VARCHAR},
+        </if>
+        <if test="protocolNumber != null">
+            protocol_number = #{protocolNumber,jdbcType=VARCHAR},
+        </if>
+        <if test="remark1 != null">
+            remark1 = #{remark1,jdbcType=VARCHAR},
+        </if>
+        <if test="remark2 != null">
+            remark2 = #{remark2,jdbcType=VARCHAR},
+        </if>
+        <if test="remark3 != null">
+            remark3 = #{remark3,jdbcType=VARCHAR},
+        </if>
+        <if test="remark4 != null">
+            remark4 = #{remark4,jdbcType=VARCHAR},
+        </if>
+        </set>
+		WHERE merchant_id = #{merchantId}
+	</update>
+
+    <update id="legalAuditStatus" parameterType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+        UPDATE hgms_merchant_info
+        <set>
+            <if test="legalAuditTime != null">
+                legal_audit_time = #{legalAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="legalAuditor != null">
+                legal_auditor = #{legalAuditor,jdbcType=SMALLINT},
+            </if>
+            <if test="objection != null">
+                objection = #{objection,jdbcType=VARCHAR},
+            </if>
+            <if test="legalAuditStatus != null">
+                legal_audit_status = #{legalAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="rcAuditStatus != null">
+                rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="creditLevel != null">
+                credit_level = #{creditLevel,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE merchant_id = #{merchantId}
+    </update>
+
+    <update id="rcAuditStatus" parameterType="com.heepay.manage.modules.hgms.entity.HgmsMerchantInfo">
+        UPDATE hgms_merchant_info
+        <set>
+            rc_audit_time = #{rcAuditTime},
+            rc_auditor = #{rcAuditor},
+            <if test="objection != null">
+                objection = #{objection,jdbcType=VARCHAR},
+            </if>
+            <if test="rcAuditStatus != null">
+                rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=TINYINT},
+            </if>
+        </set>
+        WHERE merchant_id = #{merchantId}
+    </update>
+
+	<update id="delete">
+		DELETE FROM hgms_merchant_info
+		WHERE id = #{id}
+	</update>
+
+	<update id="status" >
+		UPDATE hgms_merchant_info SET
+		remark2 = #{remark2}
+		<where>
+			<choose>
+				<when test="merchantId !=null ">
+					merchant_id = #{merchantId}
+				</when >
+
+				<otherwise>
+					company_id=#{companyId}
+				</otherwise>
+			</choose>
+		</where>
+	</update>
+
+</mapper>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleRuleControlDao" >
+
+ 	<sql id="settleRuleControlColumns">
+		a.rule_control_id AS "ruleControlId",
+		a.channel_code AS "channelCode",
+		a.channel_type AS "channelType",
+		a.bill_type AS "billType",
+		a.payment_id AS "paymentId",
+		a.channel_no AS "channelNo",
+		a.cost_amount AS "costAmount",
+		a.success_amount AS "successAmount",
+		a.trans_status AS "transStatus",
+		a.split_flg AS "splitFlg",
+		a.begin_row_num AS "beginRowNum",
+		a.end_flg AS "endFlg",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.promotion_amount AS "promotionAmount",
+		a.settle_way AS "settleWay"
+	</sql>
+	
+	<select id="findList" resultType="SettleRuleControl">
+		SELECT 
+			<include refid="settleRuleControlColumns"/>
+		FROM settle_rule_control a
+		<where>
+			<!-- 通道名称 -->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code LIKE #{channelCode}
+			</if>
+			<!-- 通道类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 对账状态 -->
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY rule_control_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY rule_control_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getEntity" resultType="SettleRuleControl">
+		SELECT 
+			<include refid="settleRuleControlColumns"/>
+		FROM settle_rule_control a
+		WHERE a.rule_control_id=#{ruleControlId}
+	</select>
+	
+	
+	<insert id="save" parameterType="SettleRuleControl">
+		INSERT INTO settle_rule_control(channel_code,channel_type,bill_type,payment_id,channel_no,cost_amount,success_amount,trans_status,split_flg,begin_row_num,end_flg,status,promotion_amount,create_time,create_author,update_author,update_time,settle_way)
+			VALUES(#{channelCode},#{channelType},#{billType},#{paymentId},#{channelNo},#{costAmount},#{successAmount},#{transStatus},#{splitFlg},#{beginRowNum},#{endFlg},#{status},#{promotionAmount},#{createTime},#{createAuthor},#{updateAuthor},#{updateTime},#{settleWay})
+	</insert>
+	
+	<insert id="saveEntity" parameterType="SettleRuleControl" useGeneratedKeys="true" keyProperty="ruleControlId">
+        insert into settle_rule_control
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+          <if test="ruleControlId != null" >
+            rule_control_id,
+          </if>
+          <if test="channelCode != null" >
+            channel_code,
+          </if>
+          <if test="channelType != null" >
+            channel_type,
+          </if>
+          <if test="billType != null" >
+            bill_type,
+          </if>
+          <if test="paymentId != null" >
+            payment_id,
+          </if>
+          <if test="channelNo != null" >
+            channel_no,
+          </if>
+          <if test="costAmount != null" >
+            cost_amount,
+          </if>
+          <if test="successAmount != null" >
+            success_amount,
+          </if>
+          <if test="transStatus != null" >
+            trans_status,
+          </if>
+          <if test="splitFlg != null" >
+            split_flg,
+          </if>
+          <if test="beginRowNum != null" >
+            begin_row_num,
+          </if>
+          <if test="endFlg != null" >
+            end_flg,
+          </if>
+          <if test="status != null" >
+            status,
+          </if>
+          <if test="promotionAmount != null" >
+            promotion_amount,
+          </if>
+          <if test="createTime != null" >
+            create_time,
+          </if>
+          <if test="createAuthor != null" >
+            create_author,
+          </if>
+          <if test="updateTime != null" >
+            update_time,
+          </if>
+          <if test="updateAuthor != null" >
+            update_author,
+          </if>
+          <if test="settleWay != null" >
+            settle_way,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+          <if test="ruleControlId != null" >
+            #{ruleControlId,jdbcType=BIGINT},
+          </if>
+          <if test="channelCode != null" >
+            #{channelCode,jdbcType=VARCHAR},
+          </if>
+          <if test="channelType != null" >
+            #{channelType,jdbcType=VARCHAR},
+          </if>
+          <if test="billType != null" >
+            #{billType,jdbcType=VARCHAR},
+          </if>
+          <if test="paymentId != null" >
+            #{paymentId,jdbcType=TINYINT},
+          </if>
+          <if test="channelNo != null" >
+            #{channelNo,jdbcType=TINYINT},
+          </if>
+          <if test="costAmount != null" >
+            #{costAmount,jdbcType=TINYINT},
+          </if>
+          <if test="successAmount != null" >
+            #{successAmount,jdbcType=TINYINT},
+          </if>
+          <if test="transStatus != null" >
+            #{transStatus},
+          </if>
+          <if test="splitFlg != null" >
+            #{splitFlg,jdbcType=VARCHAR},
+          </if>
+          <if test="beginRowNum != null" >
+            #{beginRowNum,jdbcType=TINYINT},
+          </if>
+          <if test="endFlg != null" >
+            #{endFlg,jdbcType=VARCHAR},
+          </if>
+          <if test="status != null" >
+            #{status,jdbcType=VARCHAR},
+          </if>
+          <if test="promotionAmount != null" >
+            #{promotionAmount,jdbcType=TINYINT},
+          </if>
+          <if test="createTime != null" >
+            #{createTime},
+          </if>
+          <if test="createAuthor != null" >
+            #{createAuthor,jdbcType=VARCHAR},
+          </if>
+          <if test="updateTime != null" >
+            #{updateTime},
+          </if>
+          <if test="updateAuthor != null" >
+            #{updateAuthor,jdbcType=VARCHAR},
+          </if>
+          <if test="settleWay != null" >
+            #{settleWay,jdbcType=VARCHAR},
+          </if>
+        </trim>
+  </insert>
+	
+	
+	
+	<update id="updateEntity" parameterType="SettleRuleControl">
+		UPDATE 
+			settle_rule_control
+		<set>
+			<if test="billType != null and billType != ''">
+				bill_type=#{billType},
+			</if>
+			<if test="paymentId != null and paymentId != ''">
+				payment_id=#{paymentId},
+			</if>
+			<if test="channelNo != null and channelNo != ''">
+				channel_no=#{channelNo},
+			</if>
+			
+			<if test="successAmount != null and successAmount != ''">
+				success_amount=#{successAmount},
+            </if>
+			<if test="splitFlg != null and splitFlg != ''">
+				split_flg=#{splitFlg},
+			</if>
+
+			<if test="beginRowNum != null and beginRowNum != ''">
+				begin_row_num=#{beginRowNum},
+			</if>
+			<if test="status != null and status != ''">
+				status=#{status},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime},
+			</if>
+			<if test="updateAuthor != null and updateAuthor != ''">
+				update_author=#{updateAuthor},
+			</if>
+			<if test="settleWay != null and settleWay != ''">
+				settle_way=#{settleWay},
+			</if>
+				channel_no=#{channelNo},
+				trans_status=#{transStatus},
+				split_flg=#{splitFlg},
+				end_flg=#{endFlg},
+				cost_amount=#{costAmount},
+				promotion_amount=#{promotionAmount}
+		</set> 
+			WHERE rule_control_id=#{ruleControlId}
+	</update>
+	
+	<delete id="deleteEntity">
+	 DELETE FROM settle_rule_control
+ 	 WHERE rule_control_id=#{ruleControlId}
+	</delete>
+
+    <select id="repeat" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM settle_rule_control a
+        <where>
+            <!-- 通道合作方 -->
+            <if test="channelCode != null and channelCode != ''">
+                AND a.channel_code = #{channelCode}
+            </if>
+            <!-- 通道类型 -->
+            <if test="channelType != null and channelType != ''">
+                AND a.channel_type = #{channelType}
+            </if>
+            <!-- 对账方式 -->
+            <if test="settleWay != null and settleWay != ''">
+                AND a.settle_way = #{settleWay}
+            </if>
+            <!-- 账单类型 -->
+            <if test="billType != null and billType != ''">
+                AND a.bill_type = #{billType}
+            </if>
+        </where>
+    </select>
+</mapper>

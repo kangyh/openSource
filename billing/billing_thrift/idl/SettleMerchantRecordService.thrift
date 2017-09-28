@@ -1,0 +1,12 @@
+namespace java com.heepay.rpc.billing.service
+include "SettleMerchantRecordModel.thrift"
+
+service SettleMerchantRecordService {
+	
+	void saveSettleMerchantRecord(1:SettleMerchantRecordModel.SettleMerchantRecordModel settleMerchantRecordModel);
+	list<SettleMerchantRecordModel.SettleMerchantRecordModel> query(1:SettleMerchantRecordModel.SettleMerchantRecordModel settleMerchantRecordModel);
+	void updateSettleMerchantRecord(1:SettleMerchantRecordModel.SettleMerchantRecordModel settleMerchantRecordModel);
+	void deleteSettleMerchantRecord(1:SettleMerchantRecordModel.SettleMerchantRecordModel settleMerchantRecordModel);
+	list<SettleMerchantRecordModel.SettleMerchantMessageModel> querySettleMessage(1:SettleMerchantRecordModel.SettleMerchantRecordModel settleMerchantRecordModel);
+
+}

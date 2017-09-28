@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.ProductDao">
+    
+	<sql id="productColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.create_user AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_user AS "updateBy.id",
+		a.update_time AS "updateDate",
+		a.status AS "status",
+		a.audit_status AS "auditStatus",
+		a.objection AS "objection",
+        a.business_type AS "businessType",
+		a.trx_type AS "trxType",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="productJoins">
+	</sql>
+	
+	<select id="selectList" resultType="Product">
+		select
+		<include refid="productColumns" />
+		from product a
+		WHERE status = 'ENABLE'
+	</select>
+    
+	<select id="get" resultType="Product">
+		SELECT 
+			<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="count" resultType="Integer">
+		SELECT count(1) FROM product
+	</select>
+	
+	
+	<select id="selectByCode" resultType="Product">
+		SELECT 
+			<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		WHERE a.code = #{code}
+	</select>
+	
+	<select id="selectByCodeEnable" resultType="Product">
+        SELECT 
+            <include refid="productColumns"/>
+        FROM product a
+        <include refid="productJoins"/>
+        WHERE a.code = #{code}
+        AND a.status = 'ENABLE'
+    </select>
+	
+	<select id="selectByType" resultType="Product">
+        SELECT 
+            <include refid="productColumns"/>
+        FROM product a
+        <include refid="productJoins"/>
+        <where>
+	        <if test="trxType != null and trxType != ''">
+	            AND a.trx_type = #{trxType}
+	        </if>
+	            AND status = 'ENABLE'
+        </where>
+    </select>
+	
+	<select id="getProductList" resultType="Product">
+        SELECT 
+            <include refid="productColumns"/>
+        FROM product a
+		<where>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			AND a.status = 'ENABLE'
+		</where>
+    </select>
+	
+	<select id="findList" resultType="Product">
+		SELECT 
+			<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		<where>			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="trxType != null and trxType != ''">
+                AND a.trx_type = #{trxType}
+            </if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="auditStatus != null and auditStatus != ''">
+				AND a.audit_status = #{auditStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findCertifyList" resultType="Product">
+		SELECT
+		<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		<where>
+			<if test="code != null and code != ''">
+				AND a.code ${code}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	
+	<select id="findListChannel" resultType="Product">
+		SELECT 
+			<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		<where>
+			AND code ${code}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="status != null and status !=''">
+				AND a.status = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findAllList" resultType="Product">
+		SELECT 
+			<include refid="productColumns"/>
+		FROM product a
+		<include refid="productJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO product(
+			id,
+			code,
+			name,
+			create_user,
+			create_time,
+			update_user,
+			update_time,
+			status,
+			audit_status,
+			objection,
+			business_type,
+			trx_type,
+			remark
+		) VALUES (
+			#{id},
+			#{code},
+			#{name},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{status},
+			#{auditStatus},
+			#{objection},
+			#{businessType},
+			#{trxType},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE product SET 	
+			code = #{code},
+			name = #{name},
+			create_user = #{createBy.id},
+			create_time = #{createDate},
+			update_user = #{updateBy.id},
+			update_time = #{updateDate},
+			status = #{status},
+			audit_status = #{auditStatus},
+			objection = #{objection},
+			business_type = #{businessType},
+			trx_type = #{trxType},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM product
+		WHERE id = #{id}
+	</update>
+	
+	<update id="status" >
+		UPDATE product SET
+		status = #{status},
+		audit_status = #{auditStatus},
+		objection = #{objection}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="existByName" resultType="Product">
+        SELECT 
+            <include refid="productColumns"/>
+        FROM product a
+        <include refid="productJoins"/>
+        WHERE a.name = #{name}
+        <if test="id != null and id != ''">
+            AND a.id != #{id}
+        </if>
+    </select>
+	
+	
+	<!-- 风控系统  默认限额添加查询不同产品编码的所有产品名称   wangdong  2016年11月21日10:40:24 -->
+	<select id="findDistinctNameList" resultType="Product">
+		SELECT 
+			DISTINCT a.code AS "code",a.name AS "name"
+		FROM product a
+		GROUP BY a.code,a.name
+	</select>
+</mapper>

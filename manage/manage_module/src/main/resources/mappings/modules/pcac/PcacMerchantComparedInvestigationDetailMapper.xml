@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pcac.dao.PcacMerchantComparedInvestigationDetailDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigationDetail" >
+    <id column="detail_id" property="detailId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="investigation_id" property="investigationId" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pcac_merchant_compared_investigation_detail
+    where detail_id = #{detailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigationDetail" >
+    insert into pcac_merchant_compared_investigation_detail (detail_id, batch_no, code, 
+      name, legal_name, create_time, 
+      investigation_id)
+    values (#{detailId,jdbcType=BIGINT}, #{batchNo,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{investigationId,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigationDetail" >
+    update pcac_merchant_compared_investigation_detail
+    set batch_no = #{batchNo,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      investigation_id = #{investigationId,jdbcType=BIGINT}
+    where detail_id = #{detailId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select detail_id, batch_no, code, name, legal_name, create_time, investigation_id
+    from pcac_merchant_compared_investigation_detail
+    where detail_id = #{detailId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select detail_id, batch_no, code, name, legal_name, create_time, investigation_id
+    from pcac_merchant_compared_investigation_detail
+  </select>
+  
+  <!-- 根据InvestigationId查询 -->
+  <select id="getEntityByInvestigationId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select detail_id, batch_no, code, name, legal_name, create_time, investigation_id
+    from pcac_merchant_compared_investigation_detail
+    where investigation_id = #{investigationId,jdbcType=BIGINT}
+  </select>
+</mapper>

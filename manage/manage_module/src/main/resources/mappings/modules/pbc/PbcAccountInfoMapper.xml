@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcAccountInfoDao" >
+  
+    <sql id="includeEntity">
+	  a.pbc_id, 
+	  a.subject_type, 
+	  a.account_number, 
+      a.account_type, 
+      a.account_status, 
+      a.currency, 
+      a.account_balance, 
+      a.account_info, 
+      a.account_open_time, 
+      a.account_open_ip_address, 
+      a.account_open_machine_number, 
+      a.last_transaction_time, 
+      a.application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcAccountInfo">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_info a
+		<where>
+			<!--accountNumber -->
+			<if test="accountNumber != null and accountNumber != ''">
+				AND a.account_number = #{accountNumber} 
+			</if> 
+			<!-- account_status-->
+			<if test="accountStatus != null and accountStatus != ''">
+				AND a.account_status = #{accountStatus} 
+			</if> 
+			<!-- accountOpenMachineNumber -->
+			<if test="accountOpenMachineNumber != null and accountOpenMachineNumber != ''">
+				AND a.account_open_machine_number = #{accountOpenMachineNumber} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND a.application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY a.pbc_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.pbc_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <insert id="saveMap" parameterType="Map" >
+    insert into pbc_account_info (subject_type, account_number, 
+      account_type, account_status, currency, 
+      account_balance, account_info, account_open_time, 
+      account_open_ip_address, account_open_machine_number, 
+      last_transaction_time,application_code)
+    values (#{subjectType,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{accountInfo,jdbcType=VARCHAR}, #{accountOpenTime,jdbcType=VARCHAR}, 
+      #{accountOpenIpAddress,jdbcType=VARCHAR}, #{accountOpenMachineNumber,jdbcType=VARCHAR}, 
+      #{lastTransactionTime,jdbcType=TIMESTAMP},#{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="saveEntity" parameterType="PbcAccountInfo" useGeneratedKeys="true" keyProperty="pbcId">
+    insert into pbc_account_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        pbc_id,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="accountInfo != null" >
+        account_info,
+      </if>
+      <if test="accountOpenTime != null" >
+        account_open_time,
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        account_open_ip_address,
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        account_open_machine_number,
+      </if>
+      <if test="lastTransactionTime != null" >
+        last_transaction_time,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        #{pbcId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInfo != null" >
+        #{accountInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenTime != null" >
+        #{accountOpenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        #{accountOpenIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTransactionTime != null" >
+        #{lastTransactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateEntity" parameterType="PbcAccountInfo" >
+     update pbc_account_info
+    <set >
+      <if test="subjectType != null" >
+        subject_type = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountStatus != null" >
+        account_status = #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInfo != null" >
+        account_info = #{accountInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenTime != null" >
+        account_open_time = #{accountOpenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        account_open_ip_address = #{accountOpenIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        account_open_machine_number = #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTransactionTime != null" >
+        last_transaction_time = #{lastTransactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <update id="update" parameterType="PbcAccountInfo" >
+    update pbc_account_info
+    set subject_type = #{subjectType,jdbcType=VARCHAR},
+      account_number = #{accountNumber,jdbcType=VARCHAR},
+      account_type = #{accountType,jdbcType=VARCHAR},
+      account_status = #{accountStatus,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      account_balance = #{accountBalance,jdbcType=DECIMAL},
+      account_info = #{accountInfo,jdbcType=VARCHAR},
+      account_open_time = #{accountOpenTime,jdbcType=VARCHAR},
+      account_open_ip_address = #{accountOpenIpAddress,jdbcType=VARCHAR},
+      account_open_machine_number = #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      last_transaction_time = #{lastTransactionTime,jdbcType=TIMESTAMP},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getEntityById" resultType="PbcAccountInfo">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_info a
+	WHERE pbc_id = #{pbcId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcAccountInfo">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_info
+    WHERE application_code = #{applicationCode}
+  </select>
+  
+  <delete id="delete" parameterType="PbcAccountInfo" >
+    delete from pbc_account_info
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insertValue" parameterType="List">
+  insert into pbc_account_info (pbc_id, subject_type, account_number, 
+      account_type, account_status, currency, 
+      account_balance, account_info, account_open_time, 
+      account_open_ip_address, account_open_machine_number, 
+      last_transaction_time,application_code)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+     (#{item.pbcId}, #{item.subjectType}, #{item.accountNumber}, 
+      #{item.accountType}, #{item.accountStatus}, #{item.currency}, 
+      #{item.accountBalance}, #{item.accountInfo}, #{item.accountOpenTime}, 
+      #{item.accountOpenIpAddress}, #{item.accountOpenMachineNumber}, 
+      #{item.lastTransactionTime}, #{item.applicationCode})
+   </foreach>
+  </insert>
+  
+  <insert id="saveEntityToMap" parameterType="Map">
+  	insert into pbc_account_info (pbc_id, subject_type, account_number, 
+      account_type, account_status, currency, 
+      account_balance, account_info, account_open_time, 
+      account_open_ip_address, account_open_machine_number, 
+      last_transaction_time, application_code)
+    values (#{pbcId,jdbcType=BIGINT}, #{subjectType,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{accountInfo,jdbcType=VARCHAR}, #{accountOpenTime,jdbcType=VARCHAR}, 
+      #{accountOpenIpAddress,jdbcType=VARCHAR}, #{accountOpenMachineNumber,jdbcType=VARCHAR}, 
+      #{lastTransactionTime,jdbcType=TIMESTAMP},#{applicationCode,jdbcType=VARCHAR})
+  </insert>
+</mapper>

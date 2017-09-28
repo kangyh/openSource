@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskIpbaseDao">
+    
+	<sql id="riskIpbaseColumns">
+		a.ip AS "ip",
+		a.country AS "country",
+		a.province AS "province",
+		a.city AS "city",
+		a.region AS "region",
+		a.province_id AS "provinceId",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="riskIpbaseJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskIpbase">
+		SELECT 
+			<include refid="riskIpbaseColumns"/>
+		FROM risk_ipbase a
+		<include refid="riskIpbaseJoins"/>
+		WHERE a.ip = #{ip}
+	</select>
+	
+	<select id="findList" resultType="RiskIpbase">
+		SELECT 
+			<include refid="riskIpbaseColumns"/>
+		FROM risk_ipbase a
+		<include refid="riskIpbaseJoins"/>
+		<where>
+			<!-- 状态  -->
+			<if test="country != null and country != ''">
+				AND a.country = #{country}
+			</if>
+			<!-- 规则ID -->
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<!-- 监控对象 -->
+			<if test="city != null and city != ''">
+				AND a.city = #{city}
+			</if>
+			<!-- 业务类型 -->
+			<if test="region != null and region != ''">
+				AND a.region = #{region}
+			</if>
+			<!-- 业务类型 -->
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<!-- 业务类型 -->
+			<if test="ip != null and ip != ''">
+				AND a.ip = #{ip}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskIpbase">
+		SELECT 
+			<include refid="riskIpbaseColumns"/>
+		FROM risk_ipbase a
+		<include refid="riskIpbaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_ipbase(
+			ip,
+			country,
+			province,
+			city,
+			region,
+			province_id,
+			remark
+		) VALUES (
+			#{ip},
+			#{country},
+			#{province},
+			#{city},
+			#{region},
+			#{provinceId},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_ipbase SET 	
+			ip = #{ip},
+			country = #{country},
+			province = #{province},
+			city = #{city},
+			region = #{region},
+			province_id = #{provinceId},
+			remark = #{remark}
+		WHERE ip = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_ipbase
+		WHERE ip = #{id}
+	</update>
+	
+</mapper>

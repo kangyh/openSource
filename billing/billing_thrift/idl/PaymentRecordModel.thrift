@@ -1,0 +1,36 @@
+namespace java com.heepay.rpc.payment.model
+
+struct PaymentRecordModel {
+    1: string paymentId;
+    2: string transNo;
+    3: i64 merchantId;
+    4: string merchantLoginName;
+    5: string merchantCompany;
+    6: string type;
+    7: string status;
+    8: string description;
+    9: string updateTime;
+    10: string payAmount;
+    11: string payTime;
+    12: string successAmount;
+    13: string successTime;
+    14: string merchantOrderNo;
+    15: i32 bankId;
+    16: string bankName;
+    17: string bankReturnUrl;
+    18: string bankcardType;
+    19: string bankcardNo;
+    20: string bankcardOwner;
+    21: string bankcardOwnerIdcard;
+    22: string bankcardOwnerMobile;
+    23: byte bankcardOwnerType;
+    24: string bankSerialNo;
+    25: string authorizationCode;
+    26: i32 channelCode;
+    27: string channelName;
+    28: string currency;
+    29: string gatewayToken;
+    30: string gatewayRescode;
+    31: string shortCardno;
+    32: string productCode;
+}

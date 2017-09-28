@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.differences.dao.ClearingProfitRecordDao" >
+ 
+  <sql id="clearingChannelRecordColumns">
+		s.profit_id  AS "profitId",
+		s.share_detail_id  AS "shareDetailId",
+		s.merchant_id  AS "merchantId",
+		s.trans_no AS "transNo",
+		s.profit_amount AS "profitAmount",
+		s.profit_amount_plan AS "profitAmountPlan",
+		s.profit_fee AS "profitFee",
+		s.fee_way  AS "feeWay",
+		s.profit_bath  AS "profitBath",
+		s.profit_time  AS "profitTime",
+		s.profit_status  AS "profitStatus",
+		s.trans_type  AS "transType"
+	</sql>
+	<select id="findList" resultType="ClearingProfitRecord">
+		SELECT 
+			<include refid="clearingChannelRecordColumns"/>
+		FROM clearing_profit_record s
+		<where>
+			
+			<!-- 通道对账日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND s.profit_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- share_detail_idbigint(20) NULL分润明细ID（交易传过来的ID）-->
+			<if test="shareDetailId != null and shareDetailId != ''">
+				AND s.share_detail_id = #{shareDetailId}
+			</if>
+			<!-- profitStatus-->
+			<if test="profitStatus != null and profitStatus != ''">
+				AND s.profit_status = #{profitStatus}
+			</if>
+			<!-- feeWay-->
+			<if test="feeWay != null and feeWay != ''">
+				AND s.fee_way = #{feeWay}
+			</if>
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- profit_bath-->
+			<if test="profitBath != null and profitBath != ''">
+				AND s.profit_bath = #{profitBath}
+			</if>
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY profit_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY profit_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="clearingChannelRecordColumns"/>
+		FROM clearing_profit_record s
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND s.profit_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- share_detail_idbigint(20) NULL分润明细ID（交易传过来的ID）-->
+			<if test="shareDetailId != null and shareDetailId != ''">
+				AND s.share_detail_id = #{shareDetailId}
+			</if>
+			<!-- profitStatus-->
+			<if test="profitStatus != null and profitStatus != ''">
+				AND s.profit_status = #{profitStatus}
+			</if>
+			<!-- feeWay-->
+			<if test="feeWay != null and feeWay != ''">
+				AND s.fee_way = #{feeWay}
+			</if>
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- profit_bath-->
+			<if test="profitBath != null and profitBath != ''">
+				AND s.profit_bath = #{profitBath}
+			</if>
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY profit_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY profit_id DESC
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.WechatRecordDao">
+    
+	<sql id="wechatRecordColumns">
+		a.wechat_id AS "wechatId",
+		a.merchant_id AS "merchantId",
+		a.appid AS "appid",
+		a.wx_appid AS "wxAppid",
+		a.device_info AS "deviceInfo",
+		a.nonce_str AS "nonceStr",
+		a.version AS "version",
+		a.prepay_id AS "prepayId",
+		a.code_url AS "codeUrl",
+		a.jsapi_appid AS "jsapiAppid",
+		a.jsapi_timestamp AS "jsapiTimestamp",
+		a.jsapi_noncestr AS "jsapiNoncestr",
+		a.jsapi_package AS "jsapiPackage",
+		a.jsapi_signtype AS "jsapiSigntype",
+		a.jsapi_paysign AS "jsapiPaysign",
+		a.spbill_create_ip AS "spbillCreateIp",
+		a.notify_url AS "notifyUrl",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.success_time AS "successTime",
+		a.body AS "body",
+		a.detail AS "detail",
+		a.attach AS "attach",
+		a.out_trade_no AS "outTradeNo",
+		a.currency AS "currency",
+		a.total_fee AS "totalFee",
+		a.time_start AS "timeStart",
+		a.time_expire AS "timeExpire",
+		a.goods_tag AS "goodsTag",
+		a.trade_type AS "tradeType",
+		a.openid AS "openid",
+		a.product_id AS "productId",
+		a.limit_pay AS "limitPay",
+		a.success_amount AS "successAmount",
+		a.product_code AS "productCode",
+		a.type AS "type",
+		a.status AS "status",
+		a.refund_times AS "refundTimes",
+		a.can_refund_amount AS "canRefundAmount",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.operator AS "operator",
+		a.process_desc AS "processDesc",
+		a.coupon_fee AS "couponFee",
+		a.transaction_id AS "transactionId",
+		a.pass_trade_no AS "passTradeNo",
+		a.channel_code AS "channelCode",
+		a.settle_cyc AS "settleCyc"
+	</sql>
+	
+	<sql id="wechatRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WechatRecord">
+		SELECT 
+			<include refid="wechatRecordColumns"/>
+		FROM wechat_record a
+		<include refid="wechatRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WechatRecord">
+		SELECT 
+			<include refid="wechatRecordColumns"/>
+		FROM wechat_record a
+		<include refid="wechatRecordJoins"/>
+		<where>
+			
+			<if test="wechatId != null and wechatId != ''">
+				AND a.wechat_id = #{wechatId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.success_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="outTradeNo != null and outTradeNo != ''">
+				AND a.out_trade_no = #{outTradeNo}
+			</if>
+			<if test="currency != null and currency != ''">
+				AND a.currency = #{currency}
+			</if>
+			<if test="totalFee != null and totalFee != ''">
+				AND a.total_fee = #{totalFee}
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				AND a.trade_type = #{tradeType}
+			</if>
+			<if test="successAmount != null and successAmount != ''">
+				AND a.success_amount = #{successAmount}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="feeAmount != null and feeAmount != ''">
+				AND a.fee_amount = #{feeAmount}
+			</if>
+			<if test="couponFee != null and couponFee != ''">
+				AND a.coupon_fee = #{couponFee}
+			</if>
+			<if test="transactionId != null and transactionId != ''">
+				AND a.transaction_id = #{transactionId}
+			</if>
+			<if test="passTradeNo != null and passTradeNo != ''">
+				AND a.pass_trade_no = #{passTradeNo}
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 
+			<choose>
+		        <when test="productCode ==null or productCode == ''">
+		            and product_code in ('CP18','CP19')
+		        </when>
+		        <otherwise>
+		            and product_code = #{productCode}
+		        </otherwise>
+		    </choose>
+		     -->
+		</where>
+			ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findAllList" resultType="WechatRecord">
+		SELECT 
+			<include refid="wechatRecordColumns"/>
+		FROM wechat_record a
+		<include refid="wechatRecordJoins"/>
+		<where>
+			
+		</where>		
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="getWechatId" resultType="WechatRecord">
+		SELECT 
+			max(a.wechat_id) as wechatId
+		FROM wechat_record a
+	</select>
+	
+	
+	<update id="updatewechatRecordPAYING">
+		UPDATE wechat_record SET 	
+			status='PAYING',update_time=now
+		WHERE id = #{id}
+	</update>
+	
+	
+</mapper>

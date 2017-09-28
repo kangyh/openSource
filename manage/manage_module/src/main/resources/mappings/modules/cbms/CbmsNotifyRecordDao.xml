@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsNofityRecordDao">
+
+
+    <sql id="cbmsNotifyRecordColumns">
+        a.notify_id AS "notifyId",
+        a.merchant_id AS "merchantId",
+        a.merchant_batch_no AS "merchantBatchNo",
+        a.import_batch_no AS "importBatchNo",
+        a.notify_url AS "notifyUrl",
+        a.status AS "status",
+        a.notify_request_params AS "notifyRequestParams",
+        a.notify_response AS "notifyResponse",
+        a.notify_number AS "notifyNumber",
+        a.notify_type AS "notifyType",
+        a.notify_time AS "notifyTime",
+        a.update_time AS "updateTime",
+        a.create_time AS "createTime"
+    </sql>
+
+    <select id="findList" resultType="CbmsNofityRecord">
+        SELECT
+        <include refid="cbmsNotifyRecordColumns"/>
+        FROM cbms_notify_record a
+        <where>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="importBatchNo != null and importBatchNo != ''">
+                AND a.import_batch_no = #{importBatchNo}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true">
+        INSERT INTO cbms_nofity_record(
+        notify_id,
+        merchant_id,
+        merchant_batch_no,
+        import_batch_no,
+        notify_url,
+        status,
+        notify_request_params,
+        notify_response,
+        notify_number,
+        notify_type,
+        notify_time,
+        update_time,
+        create_time
+        ) VALUES (
+        #{notifyId},
+        #{merchantId},
+        #{merchantBatchNo},
+        #{importBatchNo},
+        #{notifyUrl},
+        #{status},
+        #{notifyRequestParams},
+        #{notifyResponse},
+        #{notifyNumber},
+        #{notifyType},
+        #{notifyTime},
+        #{updateTime},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE cbms_nofity_record SET
+            merchant_id=#{merchantId},
+            merchant_batch_no=#{merchantBatchNo},
+            import_batch_no=#{importBatchNo},
+            notify_url=#{notifyUrl},
+            status=#{status},
+            notify_request_params=#{notifyRequestParams},
+            notify_response=#{notifyResponse},
+            notify_number=#{notifyNumber},
+            notify_type=#{notifyType},
+            notify_time=#{notifyTime},
+            update_time=#{updateTime},
+            create_time=#{createTime}
+        WHERE notify_id = #{notifyId}
+    </update>
+
+</mapper>

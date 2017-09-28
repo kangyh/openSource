@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.GatewayRecordDao">
+    
+	<sql id="gatewayRecordColumns">
+		a.gateway_id AS "gatewayId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.merchant_user_id AS "merchantUserId",
+		a.merchant_user_name AS "merchantUserName",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.version AS "version",
+		a.request_date AS "requestDate",
+		a.request_ip AS "requestIp",
+		a.request_user_ip AS "requestUserIp",
+		a.notify_url AS "notifyUrl",
+		a.callback_url AS "callbackUrl",
+		a.request_type AS "requestType",
+		a.create_time AS "createDate",
+		a.update_time AS "updateDate",
+		a.request_amount AS "requestAmount",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.type AS "type",
+		a.status AS "status",
+		a.note AS "note",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.riskcontrol_type AS "riskcontrolType",
+		a.riskcontrol_reason AS "riskcontrolReason",
+		a.authorization_code AS "authorizationCode"
+	</sql>
+	
+	<sql id="gatewayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="GatewayRecord">
+		SELECT 
+			<include refid="gatewayRecordColumns"/>
+		FROM gateway_record a
+		<include refid="gatewayRecordJoins"/>
+		WHERE a.gateway_id = #{id}
+	</select>
+	
+	<select id="getOne" resultType="GatewayRecord">
+		SELECT 
+			<include refid="gatewayRecordColumns"/>
+		FROM gateway_record a
+		<include refid="gatewayRecordJoins"/>
+		WHERE a.merchant_order_no = #{merchantOrderNo}
+	</select>
+	
+	<select id="findList" resultType="GatewayRecord">
+		SELECT 
+			<include refid="gatewayRecordColumns"/>
+		FROM gateway_record a
+		<include refid="gatewayRecordJoins"/>
+		<where>
+			
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="type == null or type == ''">
+				AND a.type IN ('PAYMNT','DPTPAY')
+			</if>
+			<if test="feeType != null and feeType != ''">
+				AND a.fee_type = #{feeType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+		
+			<if test="sortOrder == 'ASC'">
+	            ORDER BY createDate ASC
+	        </if>
+	        <if test="sortOrder == 'DESC'">
+	            ORDER BY createDate DESC
+	        </if>
+		
+	</select>
+	
+	<select id="findAllList" resultType="GatewayRecord">
+		SELECT 
+			<include refid="gatewayRecordColumns"/>
+		FROM gateway_record a
+		<include refid="gatewayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gateway_record(
+			gateway_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			merchant_user_id,
+			merchant_user_name,
+			merchant_order_no,
+			version,
+			request_date,
+			request_ip,
+			request_user_ip,
+			notify_url,
+			callback_url,
+			request_type,
+			create_time,
+			request_amount,
+			success_time,
+			success_amount,
+			type,
+			status,
+			note,
+			fee_type,
+			fee_ratio,
+			fee_amount,
+			riskcontrol_type,
+			riskcontrol_reason,
+			authorization_code
+		) VALUES (
+			#{gatewayId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{merchantUserId},
+			#{merchantUserName},
+			#{merchantOrderNo},
+			#{version},
+			#{requestDate},
+			#{requestIp},
+			#{requestUserIp},
+			#{notifyUrl},
+			#{callbackUrl},
+			#{requestType},
+			#{createTime},
+			#{requestAmount},
+			#{successTime},
+			#{successAmount},
+			#{type},
+			#{status},
+			#{note},
+			#{feeType},
+			#{feeRatio},
+			#{feeAmount},
+			#{riskcontrolType},
+			#{riskcontrolReason},
+			#{authorizationCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gateway_record SET 	
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			merchant_user_id = #{merchantUserId},
+			merchant_user_name = #{merchantUserName},
+			merchant_order_no = #{merchantOrderNo},
+			version = #{version},
+			request_date = #{requestDate},
+			request_ip = #{requestIp},
+			request_user_ip = #{requestUserIp},
+			notify_url = #{notifyUrl},
+			callback_url = #{callbackUrl},
+			request_type = #{requestType},
+			create_time = #{createTime},
+			request_amount = #{requestAmount},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			type = #{type},
+			status = #{status},
+			note = #{note},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_amount = #{feeAmount},
+			riskcontrol_type = #{riskcontrolType},
+			riskcontrol_reason = #{riskcontrolReason},
+			authorization_code = #{authorizationCode}
+		WHERE gateway_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM gateway_record
+		WHERE gateway_id = #{id}
+	</update>
+	
+	<update id="freezeAndThaw">
+		UPDATE gateway_record SET
+			status = #{status}
+		WHERE gateway_id = #{id}
+	</update>
+	
+	
+	<update id="updateGatewayRecordPAYING">
+		UPDATE gateway_record SET
+			status = 'PAYING',update_time=now()
+		WHERE gateway_id = #{id}
+	</update>
+	<select id="getGatewayId" resultType="GatewayRecord">
+		SELECT 
+			max(a.gateway_id) as gatewayId
+		FROM gateway_record a
+	</select>
+	
+</mapper>

@@ -1,0 +1,199 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- parent -->
+	<parent>
+		<groupId>com.heepay.risk</groupId>
+		<artifactId>risk_parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../risk_parent</relativePath>
+	</parent>
+  <repositories>
+		<repository>
+			<id>springframework-releases</id>
+			<url>http://maven.springframework.org/release/</url>
+		</repository>
+		<repository>
+			<id>spring-plugin-releases</id>
+			<url>http://repo.springsource.org/plugins-release/</url>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.springsource.org/libs-milestone/</url>
+		</repository>
+		<repository>
+		 	<id>maven2-repository.java.net</id> 
+		 	<name>Java.net Repository for Maven</name> 
+		 	<url>http://download.java.net/maven/2/</url> 
+		 	<layout>default</layout> 
+		</repository>
+</repositories>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.heepay</groupId>
+	<artifactId>risk_notify</artifactId>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+			<version>1.6.1.RELEASE</version>
+		</dependency>
+		 <dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-kafka</artifactId>
+			<version>1.0.0.M2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+      </dependency>
+      <dependency>
+			<groupId>com.espertech</groupId>
+			<artifactId>esper</artifactId>
+			<version>4.6.0</version>
+</dependency>
+		<dependency>
+			<groupId>com.heepay</groupId>
+			<artifactId>risk_common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.heepay</groupId>
+			<artifactId>risk_thrift</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<!-- quartz定时器 -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+		<!--log4j2的包开始 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-web</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		
+		<!--log4j2的包结束 -->
+		<!-- https://mvnrepository.com/artifact/com.alibaba.rocketmq/rocketmq-all -->
+		<!-- https://mvnrepository.com/artifact/com.alibaba.rocketmq/rocketmq-client -->
+		<dependency>
+    		<groupId>com.alibaba.rocketmq</groupId>
+    		<artifactId>rocketmq-client</artifactId>
+    		<version>3.5.9</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<filters>
+			<filter>src/main/filters/${env}/rabbitmq.properties</filter>
+			<filter>src/main/filters/${env}/thrift.properties</filter>
+		</filters>
+	
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<targetPath>../conf</targetPath>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>com.heepay.queue.consume.MqConsumeRun</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>conf/</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- 打包 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<descriptor>src/main/assembly/assembly.xml</descriptor>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

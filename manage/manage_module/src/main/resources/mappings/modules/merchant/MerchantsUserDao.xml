@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantsUserDao">
+
+    <sql id="merchantsUserColumns">
+		a.id AS "id",
+		a.login_name AS "loginName",
+		a.login_nickname AS "loginNickname",
+		a.user_type AS "userType",
+		a.login_password AS "loginPassword",
+		a.pay_password AS "payPassword",
+		a.secret_question AS "secretQuestion",
+		a.answer_secret_question AS "answerSecretQuestion",
+		a.phone AS "phone",
+		a.mobile AS "mobile",
+		a.qq AS "qq",
+		a.link_address AS "linkAddress",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.source AS "source",
+		a.remarks AS "remarks",
+		a.merchant_id AS "merchantId",
+		a.id_no AS "idNo",
+		a.realname_auth_sign AS "realnameAuthSign",
+		a.bankcard_auth_sign AS "bankcardAuthSign",
+		a.face_auth AS "faceAuth",
+		a.life_auth AS "lifeAuth",
+		a.user_level AS "userLevel",
+		a.real_name AS "realName"
+	</sql>
+
+    <select id="get" resultType="MerchantsUser">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="select" resultType="MerchantsUser">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        WHERE a.id = #{id}
+        AND a.merchant_id = #{merchantId}
+    </select>
+
+    <select id="findList" resultType="MerchantsUser">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        <where>
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="realName != null and realName != ''">
+                AND a.real_name = #{realName}
+            </if>
+            <if test="loginName != null and loginName != ''">
+                AND a.login_name = #{loginName}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findAllList" resultType="MerchantsUser">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+    <insert id="insert" parameterType="MerchantsUser" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO merchants_user(
+			login_name,
+			login_nickname,
+			user_type,
+			login_password,
+			pay_password,
+			secret_question,
+			answer_secret_question,
+			phone,
+			mobile,
+			qq,
+			link_address,
+			status,
+			create_time,
+			source,
+			remarks,
+			merchant_id,
+			id_no,
+			realname_auth_sign,
+			bankcard_auth_sign,
+			face_auth,
+			life_auth,
+			user_level,
+			real_name
+		) VALUES (
+			#{loginName},
+			#{loginNickname},
+			#{userType},
+			#{loginPassword},
+			#{payPassword},
+			#{secretQuestion},
+			#{answerSecretQuestion},
+			#{phone},
+			#{mobile},
+			#{qq},
+			#{linkAddress},
+			#{status},
+			#{createTime},
+			#{source},
+			#{remarks},
+			#{merchantId},
+			#{idNo},
+			#{realnameAuthSign},
+			#{bankcardAuthSign},
+			#{faceAuth},
+		  	#{lifeAuth},
+			#{userLevel},
+			#{realName}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.heepay.manage.modules.merchant.vo.MerchantUser">
+        update merchants_user
+        <set>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginNickname != null">
+                login_nickname = #{loginNickname,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=CHAR},
+            </if>
+            <if test="loginPassword != null">
+                login_password = #{loginPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null">
+                pay_password = #{payPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="secretQuestion != null">
+                secret_question = #{secretQuestion,jdbcType=VARCHAR},
+            </if>
+            <if test="answerSecretQuestion != null">
+                answer_secret_question = #{answerSecretQuestion,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="qq != null">
+                qq = #{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="linkAddress != null">
+                link_address = #{linkAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=CHAR},
+            </if>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=VARCHAR},
+            </if>
+            <if test="idNo != null">
+                id_no = #{idNo,jdbcType=VARCHAR},
+            </if>
+            <if test="realnameAuthSign != null">
+                realname_auth_sign = #{realnameAuthSign,jdbcType=CHAR},
+            </if>
+            <if test="bankcardAuthSign != null">
+                bankcard_auth_sign = #{bankcardAuthSign,jdbcType=CHAR},
+            </if>
+            <if test="faceAuth != null">
+                face_auth = #{faceAuth,jdbcType=CHAR},
+            </if>
+            <if test="lifeAuth != null">
+                life_auth = #{lifeAuth,jdbcType=CHAR},
+            </if>
+            <if test="userLevel != null">
+                user_level = #{userLevel,jdbcType=CHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete">
+		DELETE FROM merchants_user
+		WHERE id = #{id}
+	</update>
+
+    <update id="resetPayPassword">
+		UPDATE merchants_user SET
+		pay_password = #{payPassword}
+		WHERE id = #{id}
+		AND merchant_id = #{merchantId}
+	</update>
+	<update id="resetLoginPassword">
+		UPDATE merchants_user SET
+		login_password = #{loginPassword}
+		WHERE id = #{id}
+		AND merchant_id = #{merchantId}
+	</update>
+	
+	
+	<update id="resetLoginNameAndPhone">
+		UPDATE merchants_user SET
+		 phone = #{phone},
+		 login_name = #{loginName}
+		WHERE id = #{id}
+		AND merchant_id = #{merchantId}
+	</update>
+	
+    <select id="queryByLoginNameAndMerchantId" resultType="MerchantsUser">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        WHERE a.login_name = #{loginName}
+        AND a.merchant_id = #{merchantId}
+    </select>
+
+    <select id="queryMerchantsUser" resultType="MerchantsUser" parameterType="java.util.Map">
+        select
+        <include refid="merchantsUserColumns"/>
+        from merchants_user a
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.id = #{userId}
+            </if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="realName != null and realName != ''">
+                AND a.real_name = #{realName}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND a.phone = #{phone}
+            </if>
+            <if test="timeFrom != null and timeFrom != ''" >
+                and create_time &gt;= #{timeFrom,jdbcType=VARCHAR}
+            </if>
+            <if test="timeTo != null and timeTo != ''" >
+                and create_time &lt;= #{timeTo,jdbcType=VARCHAR}
+            </if>
+            ORDER BY create_time DESC
+        </where>
+        limit #{start,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryMerchantsUserCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(*)
+        from merchants_user a
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.id = #{userId}
+            </if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="realName != null and realName != ''">
+                AND a.real_name = #{realName}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND a.phone = #{phone}
+            </if>
+            <if test="timeFrom != null and timeFrom != ''" >
+                and create_time &gt;= #{timeFrom,jdbcType=VARCHAR}
+            </if>
+            <if test="timeTo != null and timeTo != ''" >
+                and create_time &lt;= #{timeTo,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+</mapper>

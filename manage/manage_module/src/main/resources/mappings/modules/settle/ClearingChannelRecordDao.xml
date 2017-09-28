@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.settle.dao.ClearingChannelRecordDao">
+
+    <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="clearingChannelRecordColumns">
+		a.clearing_id AS "clearingId",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_type AS "channelType",
+		a.pay_time AS "payTime",
+		a.currency AS "currency",
+		a.payment_id AS "paymentId",
+		a.payment_id_old AS "paymentIdOld",
+		a.trans_no AS "transNo",
+		a.trans_no_old AS "transNoOld",
+		a.success_amount AS "successAmount",
+		a.channel_time AS "channelTime",
+		a.check_time AS "checkTime",
+		a.settle_time AS "settleTime",
+		a.settle_no AS "settleNo",
+		a.settle_time_plan AS "settleTimePlan",
+		a.settle_cyc AS "settleCyc",
+		a.settle_bath AS "settleBath",
+		a.cost_time AS "costTime",
+		a.cost_amount AS "costAmount",
+		a.cost_way AS "costWay",
+		a.cost_settle_cyc AS "costSettleCyc",
+		a.check_status AS "checkStatus",
+		a.check_flg AS "checkFlg",
+		a.settle_status AS "settleStatus",
+		a.finish_time AS "finishTime",
+		a.check_bath AS "checkBath",
+		a.check_num AS "checkNum",
+		a.trans_type AS "transType",
+		a.remark AS "remark",
+		a.is_zip AS "isZip",
+		a.bank_seq AS "bankSeq",
+		a.bank_name AS "bankName",
+		a.bank_code AS "bankCode",
+		a.channel_provider AS "channelProvider"
+	</sql>
+
+	<!--
+		修改条件是请同时修改下面的文件导出的查询条件
+		findListExcel
+	 -->
+
+	<select id="findList" resultType="ClearingChannelRecord">
+		SELECT
+			<include refid="clearingChannelRecordColumns"/>
+		FROM clearing_channel_record a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginChannelTime != null">
+				<![CDATA[   and DATE_FORMAT(a.channel_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginChannelTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endChannelTime != null">
+				<![CDATA[  and DATE_FORMAT(a.channel_time, '%Y-%m-%d') <= DATE_FORMAT(#{endChannelTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_channel_record where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 支付单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 银行流水-->
+			<if test="bankSeq != null and bankSeq != ''">
+				AND a.bank_seq = #{bankSeq}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY clearing_id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--金额汇总查询-->
+	<select id="sumNum" resultType="ClearingChannelRecord">
+		SELECT
+            SUM(success_amount) AS "sumSuccessAmount",
+            SUM(cost_amount) AS "sumCostAmount"
+		FROM clearing_channel_record a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginChannelTime != null">
+				<![CDATA[   and DATE_FORMAT(a.channel_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginChannelTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endChannelTime != null">
+				<![CDATA[  and DATE_FORMAT(a.channel_time, '%Y-%m-%d') <= DATE_FORMAT(#{endChannelTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_channel_record where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 支付单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 银行流水-->
+			<if test="bankSeq != null and bankSeq != ''">
+				AND a.bank_seq = #{bankSeq}
+			</if>
+		</where>
+	</select>
+
+	<!-- 导出通道侧清算记录文件专用SQL -->
+	<select id="findListExcel" resultType="hashmap">
+		SELECT
+			<include refid="clearingChannelRecordColumns"/>
+		FROM clearing_channel_record a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginChannelTime != null">
+				<![CDATA[   and DATE_FORMAT(a.channel_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginChannelTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endChannelTime != null">
+				<![CDATA[  and DATE_FORMAT(a.channel_time, '%Y-%m-%d') <= DATE_FORMAT(#{endChannelTime}, '%Y-%m-%d')    ]]>
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 交易订单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_channel_record where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 银行流水-->
+			<if test="bankSeq != null and bankSeq != ''">
+				AND a.bank_seq = #{bankSeq}
+			</if>
+		</where>
+		ORDER BY clearing_id desc
+	</select>
+
+	<!-- 去重查询通道合作方 -->
+	<select id="findChannelRecordName" resultType="ClearingChannelRecord">
+		SELECT DISTINCT a.channel_name AS "channelName"
+		FROM clearing_channel_record a
+	</select>
+
+	<select id="getEntityById" resultType="ClearingChannelRecord">
+		SELECT
+		<include refid="clearingChannelRecordColumns"/>
+		FROM clearing_channel_record a
+		WHERE a.clearing_id = #{clearingId}
+	</select>
+</mapper>

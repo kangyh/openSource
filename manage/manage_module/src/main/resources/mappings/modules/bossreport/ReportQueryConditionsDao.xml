@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.bossreport.dao.ReportQueryConditionsDao">
+    
+	<sql id="reportQueryConditionsColumns">
+		a.report_id AS "reportId",
+		a.pay_type AS "payType",
+		a.pay_type_name AS "payTypeName",
+		a.bank_provider AS "bankProvider",
+		a.bank_provider_name AS "bankProviderName",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.bank_name_re AS "bankNameRe",
+		a.pay_type_java AS "payTypeJava",
+		a.pay_type_name_java AS "payTypeNameJava",
+		a.bank_id_java AS "bankIdJava",
+		a.bank_name_java AS "bankNameJava",
+		a.channel_partner_java AS "channelPartnerJava",
+		a.channel_partner_name_java AS "channelPartnerNameJava",
+		a.company_id AS "companyId",
+		a.company_name AS "companyName",
+		a.creator AS "creator",
+		a.create_time AS "createTime",
+		a.update_author AS "updateAuthor",
+		a.update_time AS "updateTime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="reportQueryConditionsJoins">
+	</sql>
+    
+	<select id="get" resultType="ReportQueryConditions">
+		SELECT 
+			<include refid="reportQueryConditionsColumns"/>
+		FROM report_query_conditions a
+		<include refid="reportQueryConditionsJoins"/>
+		WHERE a.report_id = #{reportId}
+	</select>
+	
+	<select id="findList" resultType="ReportQueryConditions">
+		SELECT 
+			<include refid="reportQueryConditionsColumns"/>
+		FROM report_query_conditions a
+		<include refid="reportQueryConditionsJoins"/>
+		<where>
+			<if test="payType != null and payType != ''">
+				AND pay_type = #{payType}
+			</if>
+			<if test="bankProvider != null and bankProvider != ''">
+				AND bank_provider = #{bankProvider}
+			</if>
+			<if test="bankId != null and bankId != ''">
+				AND bank_id = #{bankId}
+			</if>
+			<if test="payTypeJava != null and payTypeJava != ''">
+				AND pay_type_java = #{payTypeJava}
+			</if>
+			<if test="bankIdJava != null and bankIdJava != ''">
+				AND bank_id_java = #{bankIdJava}
+			</if>
+			<if test="channelPartnerJava != null and channelPartnerJava != ''">
+				AND channel_partner_java = #{channelPartnerJava}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				AND company_id = #{companyId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ReportQueryConditions">
+		SELECT 
+			<include refid="reportQueryConditionsColumns"/>
+		FROM report_query_conditions a
+		<include refid="reportQueryConditionsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO report_query_conditions(
+			pay_type,
+			pay_type_name,
+			bank_provider,
+			bank_provider_name,
+			bank_id,
+			bank_name,
+			bank_name_re,
+			pay_type_java,
+			pay_type_name_java,
+			bank_id_java,
+			bank_name_java,
+			channel_partner_java,
+			channel_partner_name_java,
+			company_id,
+			company_name,
+			creator,
+			status
+		) VALUES (
+			#{payType},
+			#{payTypeName},
+			#{bankProvider},
+			#{bankProviderName},
+			#{bankId},
+			#{bankName},
+			#{bankNameRe},
+			#{payTypeJava},
+			#{payTypeNameJava},
+			#{bankIdJava},
+			#{bankNameJava},
+			#{channelPartnerJava},
+			#{channelPartnerNameJava},
+			#{companyId},
+			#{companyName},
+			#{creator},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE report_query_conditions SET 	
+			pay_type = #{payType},
+			pay_type_name = #{payTypeName},
+			bank_provider = #{bankProvider},
+			bank_provider_name = #{bankProviderName},
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			bank_name_re = #{bankNameRe},
+			pay_type_java = #{payTypeJava},
+			pay_type_name_java = #{payTypeNameJava},
+			bank_id_java = #{bankIdJava},
+			bank_name_java = #{bankNameJava},
+			channel_partner_java = #{channelPartnerJava},
+			channel_partner_name_java = #{channelPartnerNameJava},
+			company_id = #{companyId},
+			company_name = #{companyName},
+			update_author = #{updateAuthor},
+			status = #{status}
+		WHERE report_id = #{reportId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM report_query_conditions
+		WHERE report_id = #{reportId}
+	</update>
+
+	<select id="findExistInfo" resultType="int">
+		SELECT
+		count(1)
+		FROM report_query_conditions
+		<where>
+			<if test="payType != null and payType != ''">
+				AND pay_type = #{payType}
+			</if>
+			<if test="bankProvider != null and bankProvider != ''">
+				AND bank_provider = #{bankProvider}
+			</if>
+			<if test="bankId != null and bankId != ''">
+				AND bank_id = #{bankId}
+			</if>
+			<if test="payTypeJava != null and payTypeJava != ''">
+				AND pay_type_java = #{payTypeJava}
+			</if>
+			<if test="bankIdJava != null and bankIdJava != ''">
+				AND bank_id_java = #{bankIdJava}
+			</if>
+			<if test="channelPartnerJava != null and channelPartnerJava != ''">
+				AND channel_partner_java = #{channelPartnerJava}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				AND company_id = #{companyId}
+			</if>
+			<if test="reportId != null and reportId != ''">
+				AND report_id != #{reportId}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

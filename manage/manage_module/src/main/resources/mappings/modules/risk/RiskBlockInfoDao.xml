@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskBlockInfoDao">
+    
+	<sql id="riskBlockInfoColumns">
+		a.block_id AS "blockId",
+		a.block_type AS "blockType",
+		a.rule_id AS "ruleId",
+		a.fileds AS "fileds",
+		a.monitor_object AS "monitorObject",
+		a.buzi_type AS "buziType",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="riskBlockInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskBlockInfo">
+		SELECT 
+			<include refid="riskBlockInfoColumns"/>
+		FROM risk_block_info a
+		<include refid="riskBlockInfoJoins"/>
+		WHERE a.block_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskBlockInfo">
+		SELECT 
+			<include refid="riskBlockInfoColumns"/>
+		FROM risk_block_info a
+		<include refid="riskBlockInfoJoins"/>
+		<where>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.createtime BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 状态  -->
+			<if test="blockType != null and blockType != ''">
+				AND a.block_type = #{blockType}
+			</if>
+			<!-- 规则ID -->
+			<if test="ruleId != null and ruleId != ''">
+				AND a.rule_id = #{ruleId}
+			</if>
+			<!-- 监控对象 -->
+			<if test="monitorObject != null and monitorObject != ''">
+				AND a.monitor_object = #{monitorObject}
+			</if>
+			<!-- 业务类型 -->
+			<if test="buziType != null and buziType != ''">
+				AND a.buzi_type = #{buziType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskBlockInfo">
+		SELECT 
+			<include refid="riskBlockInfoColumns"/>
+		FROM risk_block_info a
+		<include refid="riskBlockInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_block_info(
+			block_id,
+			block_type,
+			rule_id,
+			fileds,
+			monitor_object,
+			buzi_type,
+			createtime
+		) VALUES (
+			#{id},
+			#{blockType},
+			#{ruleId},
+			#{fileds},
+			#{monitorObject},
+			#{buziType},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_block_info SET 	
+			block_type = #{blockType},
+			rule_id = #{ruleId},
+			fileds = #{fileds},
+			monitor_object = #{monitorObject},
+			buzi_type = #{buziType},
+			createtime = #{createtime}
+		WHERE block_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_block_info
+		WHERE block_id = #{id}
+	</update>
+	
+</mapper>

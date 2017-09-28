@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<reqHeader obj="json">
+	<version type="varchar" value="3" code="1002" req="M">version字段不应超过3位有效字符</version>
+	<merchantCode type="varchar" value="11" code="1002" req="M">merchantCode字段应为11位有效字符</merchantCode>
+	<txnType type="varchar" value="6" code="1002" req="M">txnType字段不应超过6位有效字符</txnType>
+	<clientSn type="varchar" value="50" code="1002" req="M">clientSn字段不应超过50位有效字段</clientSn>
+	<clientDate type="char" value="8" code="1002" req="M">clientDate字段的日期格式为YYYYMMDD</clientDate>
+	<clientTime type="char" value="6" code="1002" req="M">clientTime字段的日期格式为HHmmss</clientTime>
+	<fileName type="varchar" value="255" code="1002" req="O">fileName字段不应超过255位有效字符</fileName>
+	<signTime type="varchar" value="30" code="1002" req="M">signTime字段不应超过30位有效字符</signTime>
+	<signature type="varchar" value="4000" code="1002" req="M">signature字段不应超过4000位有效字符</signature>
+</reqHeader>
+<inBody obj="json">
+	<checkType type="varchar" value="2" req="M">checkType字段不应超过2位有效字符</checkType>
+	<customerId type="varchar" value="64" req="O">customerId字段不应超过64位有效字符</customerId>
+	<accountNo type="varchar" value="128" req="O">accountNo字段不应超过128位有效字符</accountNo>
+	<beginDate type="varchar" value="8" req="O">beginDate字段应为8位有效字符</beginDate>
+	<endDate type="varchar" value="8" req="O">endDate字段应为8位有效字符</endDate>	
+	<endPage type="varchar" value="8" req="O">endPage字段应为8位有效字符</endPage>
+	<beginPage type="varchar" value="8" req="O">beginPage字段应为8位有效字符</beginPage>	
+	<showNum type="varchar" value="2" req="M">showNum字段应为2位有效字符</showNum>
+	<note type="varchar" value="100" req="O">note字段应为100位有效字符</note>
+</inBody>
+</root>

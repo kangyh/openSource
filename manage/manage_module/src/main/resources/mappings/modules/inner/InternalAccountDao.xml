@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.inner.dao.InternalAccountDao">
+    
+	<sql id="internalAccountColumns">
+		a.internal_account_serial_number AS "internalAccountSerialNumber",
+		a.internal_account_name AS "internalAccountName",
+		a.internal_account_type_id AS "internalAccountTypeId",
+		a.internal_account_details_type_id AS "internalAccountDetailsTypeId",
+		a.internal_account_balance_direction AS "internalAccountBalanceDirection",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.description AS "description",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="internalAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="InternalAccount">
+		SELECT 
+			<include refid="internalAccountColumns"/>
+		FROM internal_account a
+		<include refid="internalAccountJoins"/>
+		WHERE a.internal_account_serial_number = #{internalAccountSerialNumber}
+	</select>
+	
+	<select id="findList" resultType="InternalAccount">
+		SELECT 
+			<include refid="internalAccountColumns"/>
+		FROM internal_account a
+		<include refid="internalAccountJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="InternalAccount">
+		SELECT 
+			<include refid="internalAccountColumns"/>
+		FROM internal_account a
+		<include refid="internalAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO internal_account(
+			internal_account_serial_number,
+			internal_account_name,
+			internal_account_type_id,
+			internal_account_details_type_id,
+			internal_account_balance_direction,
+			create_time,
+			update_time,
+			description,
+			remark
+		) VALUES (
+			#{internalAccountSerialNumber},
+			#{internalAccountName},
+			#{internalAccountTypeId},
+			#{internalAccountDetailsTypeId},
+			#{internalAccountBalanceDirection},
+			#{createTime},
+			#{updateTime},
+			#{description},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE internal_account SET 	
+			internal_account_serial_number = #{internalAccountSerialNumber},
+			internal_account_name = #{internalAccountName},
+			internal_account_type_id = #{internalAccountTypeId},
+			internal_account_details_type_id = #{internalAccountDetailsTypeId},
+			internal_account_balance_direction = #{internalAccountBalanceDirection},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			description = #{description},
+			remark = #{remark}
+		WHERE internal_account_serial_number = #{internalAccountSerialNumber}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM internal_account
+		WHERE internal_account_serial_number = #{internalAccountSerialNumber}
+	</update>
+	
+	<select id="getMaxId" resultType="java.util.HashMap"  parameterType="java.util.Map" >
+		select max(internal_account_serial_number) as internalAccountSerialNumber 
+		from internal_account a
+		where a.internal_account_serial_number BETWEEN #{startId} and #{endId}
+	</select>
+	
+	
+</mapper>

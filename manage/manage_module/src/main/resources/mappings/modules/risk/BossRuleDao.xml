@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.BossRuleDao">
+    
+	<sql id="bossRuleColumns">
+		a.rule_id AS "ruleId",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.creat_author AS "creatAuthor",
+		a.create_time AS "createTime",
+		a.update_author AS "updateAuthor",
+		a.update_time AS "updateTime",
+		a.job_start_time AS "jobStartTime",
+		a.job_end_time AS "jobEndTime",
+		a.take_time AS "takeTime",
+		a.job_status AS "jobStatus",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="bossRuleJoins">
+	</sql>
+    
+	<select id="get" resultType="BossRule">
+		SELECT 
+			<include refid="bossRuleColumns"/>
+		FROM boss_rule a
+		<include refid="bossRuleJoins"/>
+		WHERE a.rule_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BossRule">
+		SELECT 
+			<include refid="bossRuleColumns"/>
+		FROM boss_rule a
+		<include refid="bossRuleJoins"/>
+		<where>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.start_date BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 结束时间  -->
+			<if test="beginOperEndTime1 != null and endOperEndTime1 != null">
+				AND a.end_date BETWEEN date_format(#{beginOperEndTime1},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime1},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 状态  -->
+			<if test="jobStatus != null and jobStatus != ''">
+				AND a.job_status = #{jobStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY rule_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BossRule">
+		SELECT 
+			<include refid="bossRuleColumns"/>
+		FROM boss_rule a
+		<include refid="bossRuleJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO boss_rule(
+			start_date,
+			end_date,
+			creat_author,
+			create_time,
+			update_author,
+			update_time,
+			job_start_time,
+			job_end_time,
+			take_time,
+			job_status,
+			remark
+		) VALUES (
+			#{startDate},
+			#{endDate},
+			#{creatAuthor},
+			#{createTime},
+			#{updateAuthor},
+			#{updateTime},
+			#{jobStartTime},
+			#{jobEndTime},
+			#{takeTime},
+			#{jobStatus},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE boss_rule SET 	
+			rule_id = #{ruleId},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			creat_author = #{creatAuthor},
+			create_time = #{createTime},
+			update_author = #{updateAuthor},
+			update_time = #{updateTime},
+			job_start_time = #{jobStartTime},
+			job_end_time = #{jobEndTime},
+			take_time = #{takeTime},
+			job_status = #{jobStatus},
+			remark = #{remark}
+		WHERE rule_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM boss_rule
+		WHERE rule_id = #{id}
+	</update>
+	
+	<select id="selectByStatus" resultType="BossRule">
+		SELECT 
+			<include refid="bossRuleColumns"/>
+		FROM boss_rule a
+		WHERE a.job_status = #{status}
+	</select>
+</mapper>

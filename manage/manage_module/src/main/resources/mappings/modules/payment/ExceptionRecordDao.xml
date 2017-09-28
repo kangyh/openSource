@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.ExceptionRecordDao">
+    
+	<sql id="exceptionRecordColumns">
+		a.complain_process_id AS "complainProcessId", 
+		a.merchant_id AS "merchantId", 
+		a.merchant_company AS "merchantCompany", 
+		a.merchant_login_name AS "merchantLoginName", 
+		a.trans_no AS "transNo", 
+        a.create_time AS "createTime", 
+        a.trans_amount AS "transAmount", 
+        a.status AS "status", 
+        a.operator AS "operator", 
+        a.process_time AS "processTime", 
+        a.process_desc AS "processDesc",
+        a.trans_type AS "transType",
+        a.reset_operator AS "resetOperator",
+        a.reset_time AS "resetTime",
+        a.reset_desc AS "resetDesc"
+	</sql>
+	
+	<sql id="exceptionRecordJoins">
+	</sql>
+	
+	<select id="findList" resultType="ExceptionRecord">
+		SELECT 
+			<include refid="exceptionRecordColumns"/>
+		FROM complain_process_record a
+		<include refid="exceptionRecordJoins"/>
+		<where>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+            <if test="merchantCompany != null and merchantCompany != ''">
+                AND a.merchant_company = #{merchantCompany}
+            </if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.process_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+		</where>
+			ORDER BY createTime DESC
+	</select>
+	
+	<select id="getRecordByTransNo" resultType="ExceptionRecord">
+		SELECT 
+			<include refid="exceptionRecordColumns"/>
+		FROM complain_process_record a
+		<include refid="exceptionRecordJoins"/>
+		WHERE a.trans_no = #{transNo}
+	</select>
+
+	<update id="reset">
+		update complain_process_record a
+		   set a.reset_operator = #{resetOperator},
+		       a.reset_time = now(),
+		       a.reset_desc = #{resetDesc}
+		 where a.complain_process_id = #{resetId}
+		   and a.reset_operator is null
+	</update>
+
+</mapper>

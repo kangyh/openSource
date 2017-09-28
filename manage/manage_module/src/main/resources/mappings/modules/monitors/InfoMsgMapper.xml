@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.monitors.dao.InfoMsgDao">
+
+    <sql id="includeEntity">
+    msg_id, 
+    group_id, 
+    type, 
+    sender_user, 
+    msg_head, 
+    msg_body, 
+    is_add, 
+    create_time, 
+    send_time, 
+    send_status, 
+    remark
+  </sql>
+
+    <select id="findList" resultType="InfoMsg">
+        SELECT
+            msg_id,
+            group_id,
+            type,
+            sender_user,
+            msg_head,
+            is_add,
+            create_time,
+            send_time,
+            send_status,
+            remark
+        FROM info_msg
+        <where>
+            <!-- 创建时间 -->
+            <if test="beginOperEndTime != null and endOperEndTime != null">
+                AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND
+                date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <!-- groupId -->
+            <if test="groupId != null and groupId != ''">
+                AND group_id = #{groupId}
+            </if>
+            <!-- isAdd -->
+            <if test="isAdd != null and isAdd != ''">
+                AND is_add = #{isAdd}
+            </if>
+            <!-- sendStatus -->
+            <if test="sendStatus != null and sendStatus != ''">
+                AND send_status = #{sendStatus}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY msg_id DESC,${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY msg_id DESC
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectEntity" resultType="InfoMsg" parameterType="java.lang.Integer">
+        select
+        <include refid="includeEntity"/>
+        from info_msg
+        where msg_id = #{msgId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteEntity" parameterType="java.lang.Integer">
+    delete from info_msg
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="saveEntiy" parameterType="InfoMsg">
+        insert into info_msg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                msg_id,
+            </if>
+            <if test="groupId != null">
+                group_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="senderUser != null">
+                sender_user,
+            </if>
+            <if test="msgHead != null">
+                msg_head,
+            </if>
+            <if test="isAdd != null">
+                is_add,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="sendTime != null">
+                send_time,
+            </if>
+            <if test="sendStatus != null">
+                send_status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="msgBody != null">
+                msg_body,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="msgId != null">
+                #{msgId,jdbcType=INTEGER},
+            </if>
+            <if test="groupId != null">
+                #{groupId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="senderUser != null">
+                #{senderUser,jdbcType=VARCHAR},
+            </if>
+            <if test="msgHead != null">
+                #{msgHead,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdd != null">
+                #{isAdd,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendTime != null">
+                #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null">
+                #{sendStatus,jdbcType=CHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="msgBody != null">
+                #{msgBody,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="InfoMsg">
+        update info_msg
+        <set>
+            <if test="groupId != null">
+                group_id = #{groupId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="senderUser != null">
+                sender_user = #{senderUser,jdbcType=VARCHAR},
+            </if>
+            <if test="msgHead != null">
+                msg_head = #{msgHead,jdbcType=VARCHAR},
+            </if>
+            <if test="isAdd != null">
+                is_add = #{isAdd,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendTime != null">
+                send_time = #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null">
+                send_status = #{sendStatus,jdbcType=CHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="msgBody != null">
+                msg_body = #{msgBody,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where msg_id = #{msgId,jdbcType=INTEGER}
+    </update>
+
+
+    <update id="updateEntity" parameterType="InfoMsg">
+    update info_msg
+    set group_id = #{groupId,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      sender_user = #{senderUser,jdbcType=VARCHAR},
+      msg_head = #{msgHead,jdbcType=VARCHAR},
+      is_add = #{isAdd,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      send_status = #{sendStatus,jdbcType=CHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where msg_id = #{msgId,jdbcType=INTEGER}
+  </update>
+</mapper>

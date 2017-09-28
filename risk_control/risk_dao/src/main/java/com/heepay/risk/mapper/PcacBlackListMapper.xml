@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PcacBlackListMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.PcacBlackList" >
+    <id column="black_id" property="blackId" jdbcType="BIGINT" />
+    <result column="bach_no" property="bachNo" jdbcType="VARCHAR" />
+    <result column="reg_name" property="regName" jdbcType="VARCHAR" />
+    <result column="cus_name" property="cusName" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="doc_name" property="docName" jdbcType="VARCHAR" />
+    <result column="leg_doc_type" property="legDocType" jdbcType="VARCHAR" />
+    <result column="leg_doc_code" property="legDocCode" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="risk_type" property="riskType" jdbcType="VARCHAR" />
+    <result column="valid_date" property="validDate" jdbcType="DATE" />
+    <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    black_id, bach_no, reg_name, cus_name, doc_type, doc_code, doc_name, leg_doc_type, 
+    leg_doc_code, level, risk_type, valid_date, valid_status, createtime
+  </sql>
+ <select id="selectByBatchNo" parameterType="java.lang.String" resultType="com.heepay.risk.entity.PcacBlackList">
+ select black_id from pcac_blacklist where bach_no= #{batchNo,jdbcType=VARCHAR}
+ </select>
+   <update id="update" parameterType="com.heepay.risk.entity.PcacBlackList" >
+    update pcac_blacklist
+    <set >
+      <if test="bachNo != null" >
+        bach_no = #{bachNo,jdbcType=VARCHAR},
+      </if>
+      <if test="regName != null" >
+        reg_name = #{regName,jdbcType=VARCHAR},
+      </if>
+      <if test="cusName != null" >
+        cus_name = #{cusName,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null" >
+        doc_type = #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        doc_code = #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docName != null" >
+        doc_name = #{docName,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocType != null" >
+        leg_doc_type = #{legDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocCode != null" >
+        leg_doc_code = #{legDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="riskType != null" >
+        risk_type = #{riskType,jdbcType=VARCHAR},
+      </if>
+      <if test="validDate != null" >
+        valid_date = #{validDate,jdbcType=DATE},
+      </if>
+      <if test="validStatus != null" >
+        valid_status = #{validStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where black_id = #{blackId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByCondition" parameterType="com.heepay.risk.entity.PcacBlackList" resultType="com.heepay.risk.entity.PcacBlackList" >
+  select black_id from pcac_blacklist where reg_name= #{regName,jdbcType=VARCHAR} 
+  and doc_type=#{docType,jdbcType=VARCHAR}  
+  and doc_code=#{docCode,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.heepay.risk.entity.PcacBlackList" >
+    insert into pcac_blacklist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bachNo != null" >
+        bach_no,
+      </if>
+      <if test="regName != null" >
+        reg_name,
+      </if>
+      <if test="cusName != null" >
+        cus_name,
+      </if>
+      <if test="docType != null" >
+        doc_type,
+      </if>
+      <if test="docCode != null" >
+        doc_code,
+      </if>
+      <if test="docName != null" >
+        doc_name,
+      </if>
+      <if test="legDocType != null" >
+        leg_doc_type,
+      </if>
+      <if test="legDocCode != null" >
+        leg_doc_code,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="riskType != null" >
+        risk_type,
+      </if>
+      <if test="validDate != null" >
+        valid_date,
+      </if>
+      <if test="validStatus != null" >
+        valid_status,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bachNo != null" >
+        #{bachNo,jdbcType=VARCHAR},
+      </if>
+      <if test="regName != null" >
+        #{regName,jdbcType=VARCHAR},
+      </if>
+      <if test="cusName != null" >
+        #{cusName,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null" >
+        #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docName != null" >
+        #{docName,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocType != null" >
+        #{legDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocCode != null" >
+        #{legDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="riskType != null" >
+        #{riskType,jdbcType=VARCHAR},
+      </if>
+      <if test="validDate != null" >
+        #{validDate,jdbcType=DATE},
+      </if>
+      <if test="validStatus != null" >
+        #{validStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

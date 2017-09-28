@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <!--启动AspectJ自动代理注解
+    <aop:aspectj-autoproxy proxy-target-class="true"/> -->
+    
+    <bean id="commAspect" class="com.heepay.aop.aspect.CommAspect" scope="singleton"></bean>
+    <aop:config>  
+        <aop:aspect id="aspect" ref="commAspect">  
+            <aop:pointcut id="pointMgr" expression="execution(* com.heepay..*.service.*.Iface.*(..))"/> 
+            <aop:before method="doBefore"  pointcut-ref="pointMgr"/>  
+            <aop:after method="doAfter"  pointcut-ref="pointMgr"/>  
+            <aop:around method="doAround"  pointcut-ref="pointMgr"/>  
+            <aop:after-returning method="doReturn"  pointcut-ref="pointMgr"/>  
+            <aop:after-throwing method="doThrowing" throwing="ex" pointcut-ref="pointMgr"/>  
+        </aop:aspect>  
+    </aop:config>  
+</beans>

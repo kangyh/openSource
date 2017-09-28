@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleMerchantRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleMerchantRecord" >
+    <id column="settle_id" property="settleId" jdbcType="BIGINT" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="pay_num" property="payNum" jdbcType="INTEGER" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="settle_amount" property="settleAmount" jdbcType="DECIMAL" />
+    <result column="fee_time" property="feeTime" jdbcType="TIMESTAMP" />
+    <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+    <result column="fee_way" property="feeWay" jdbcType="VARCHAR" />
+    <result column="fee_settle_cyc" property="feeSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    settle_id, merchant_id, merchant_type, trans_type, currency, pay_num, total_amount, 
+    check_time, settle_time, settle_cyc, settle_bath, settle_amount, fee_time, total_fee, 
+    fee_way, fee_settle_cyc, check_status, settle_status, is_zip, merchant_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleMerchantRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_merchant_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_merchant_record
+    where settle_id = #{settleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_merchant_record
+    where settle_id = #{settleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleMerchantRecordExample" >
+    delete from settle_merchant_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleMerchantRecord" >
+    insert into settle_merchant_record (settle_id, merchant_id, merchant_type, 
+      trans_type, currency, pay_num, 
+      total_amount, check_time, settle_time, 
+      settle_cyc, settle_bath, settle_amount, 
+      fee_time, total_fee, fee_way, 
+      fee_settle_cyc, check_status, settle_status, 
+      is_zip, merchant_name)
+    values (#{settleId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER}, #{merchantType,jdbcType=VARCHAR}, 
+      #{transType,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, #{payNum,jdbcType=INTEGER}, 
+      #{totalAmount,jdbcType=DECIMAL}, #{checkTime,jdbcType=TIMESTAMP}, #{settleTime,jdbcType=TIMESTAMP}, 
+      #{settleCyc,jdbcType=VARCHAR}, #{settleBath,jdbcType=VARCHAR}, #{settleAmount,jdbcType=DECIMAL}, 
+      #{feeTime,jdbcType=TIMESTAMP}, #{totalFee,jdbcType=DECIMAL}, #{feeWay,jdbcType=VARCHAR}, 
+      #{feeSettleCyc,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{settleStatus,jdbcType=VARCHAR}, 
+      #{isZip,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleMerchantRecord" >
+    insert into settle_merchant_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="settleId != null" >
+        settle_id,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="merchantType != null" >
+        merchant_type,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="payNum != null" >
+        pay_num,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="settleTime != null" >
+        settle_time,
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc,
+      </if>
+      <if test="settleBath != null" >
+        settle_bath,
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount,
+      </if>
+      <if test="feeTime != null" >
+        fee_time,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="feeWay != null" >
+        fee_way,
+      </if>
+      <if test="feeSettleCyc != null" >
+        fee_settle_cyc,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="settleStatus != null" >
+        settle_status,
+      </if>
+      <if test="isZip != null" >
+        is_zip,
+      </if>
+      <if test="merchantName != null" >
+        merchant_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="settleId != null" >
+        #{settleId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantType != null" >
+        #{merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="payNum != null" >
+        #{payNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleTime != null" >
+        #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleCyc != null" >
+        #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="settleAmount != null" >
+        #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="feeTime != null" >
+        #{feeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWay != null" >
+        #{feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="feeSettleCyc != null" >
+        #{feeSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantName != null" >
+        #{merchantName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleMerchantRecordExample" resultType="java.lang.Integer" >
+    select count(*) from settle_merchant_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_merchant_record
+    <set >
+      <if test="record.settleId != null" >
+        settle_id = #{record.settleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.merchantId != null" >
+        merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="record.merchantType != null" >
+        merchant_type = #{record.merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transType != null" >
+        trans_type = #{record.transType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currency != null" >
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payNum != null" >
+        pay_num = #{record.payNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalAmount != null" >
+        total_amount = #{record.totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.checkTime != null" >
+        check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleTime != null" >
+        settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleCyc != null" >
+        settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleBath != null" >
+        settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleAmount != null" >
+        settle_amount = #{record.settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.feeTime != null" >
+        fee_time = #{record.feeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.totalFee != null" >
+        total_fee = #{record.totalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.feeWay != null" >
+        fee_way = #{record.feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feeSettleCyc != null" >
+        fee_settle_cyc = #{record.feeSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkStatus != null" >
+        check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleStatus != null" >
+        settle_status = #{record.settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isZip != null" >
+        is_zip = #{record.isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantName != null" >
+        merchant_name = #{record.merchantName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_merchant_record
+    set settle_id = #{record.settleId,jdbcType=BIGINT},
+      merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      merchant_type = #{record.merchantType,jdbcType=VARCHAR},
+      trans_type = #{record.transType,jdbcType=VARCHAR},
+      currency = #{record.currency,jdbcType=VARCHAR},
+      pay_num = #{record.payNum,jdbcType=INTEGER},
+      total_amount = #{record.totalAmount,jdbcType=DECIMAL},
+      check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+      settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      settle_amount = #{record.settleAmount,jdbcType=DECIMAL},
+      fee_time = #{record.feeTime,jdbcType=TIMESTAMP},
+      total_fee = #{record.totalFee,jdbcType=DECIMAL},
+      fee_way = #{record.feeWay,jdbcType=VARCHAR},
+      fee_settle_cyc = #{record.feeSettleCyc,jdbcType=VARCHAR},
+      check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      settle_status = #{record.settleStatus,jdbcType=VARCHAR},
+      is_zip = #{record.isZip,jdbcType=VARCHAR},
+      merchant_name = #{record.merchantName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleMerchantRecord" >
+    update settle_merchant_record
+    <set >
+      <if test="merchantId != null" >
+        merchant_id = #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantType != null" >
+        merchant_type = #{merchantType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="payNum != null" >
+        pay_num = #{payNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleTime != null" >
+        settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        settle_bath = #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="settleAmount != null" >
+        settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="feeTime != null" >
+        fee_time = #{feeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalFee != null" >
+        total_fee = #{totalFee,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWay != null" >
+        fee_way = #{feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="feeSettleCyc != null" >
+        fee_settle_cyc = #{feeSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        settle_status = #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        is_zip = #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantName != null" >
+        merchant_name = #{merchantName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where settle_id = #{settleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleMerchantRecord" >
+    update settle_merchant_record
+    set merchant_id = #{merchantId,jdbcType=INTEGER},
+      merchant_type = #{merchantType,jdbcType=VARCHAR},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      pay_num = #{payNum,jdbcType=INTEGER},
+      total_amount = #{totalAmount,jdbcType=DECIMAL},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{settleBath,jdbcType=VARCHAR},
+      settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      fee_time = #{feeTime,jdbcType=TIMESTAMP},
+      total_fee = #{totalFee,jdbcType=DECIMAL},
+      fee_way = #{feeWay,jdbcType=VARCHAR},
+      fee_settle_cyc = #{feeSettleCyc,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=VARCHAR},
+      settle_status = #{settleStatus,jdbcType=VARCHAR},
+      is_zip = #{isZip,jdbcType=VARCHAR},
+      merchant_name = #{merchantName,jdbcType=VARCHAR}
+    where settle_id = #{settleId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateMerchantStatus" parameterType="map">
+  	UPDATE
+		settle_merchant_record
+	SET
+		check_status=#{checkStatus,jdbcType=CHAR}
+	WHERE
+		check_time=#{checkTime,jdbcType=CHAR}
+  </update>
+  
+  <update id="batchUpdateMerchantStatus" parameterType="com.heepay.billing.entity.SettleMerchantRecord">
+  	UPDATE 
+  		settle_merchant_record
+	SET 
+		settle_status = #{settleStatus}
+ 	WHERE 
+ 		settle_status='D' AND settle_bath=#{settleBath}
+  </update>
+  
+  <resultMap id="summarizingMap" type="java.util.Map" >    
+    <result column="num" property="num" jdbcType="DECIMAL" javaType="int" />
+    <result column="totalAmout" property="totalAmout" jdbcType="DECIMAL" />
+    <result column="totalFee" property="totalFee" jdbcType="DECIMAL" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />   
+    <result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />   
+  </resultMap>
+ 
+  <select id="querySettleMerchantDetail" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	   	 <include refid="Base_Column_List" />
+	FROM
+		settle_merchant_record t
+	where t.trans_type  = #{transType} and t.settle_status = #{settleStatus} and t.check_status  = #{checkStatus} and t.check_time  = #{checkDate}
+	
+  
+  </select>
+  
+  <!-- 通过结算批次查询 -->
+  <select id="querySettleMerchantByBatchNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+     
+     	SELECT
+	   	 <include refid="Base_Column_List" />
+		FROM
+		   settle_merchant_record t
+		where t.settle_bath = #{batchNo}
+  
+  </select>
+  
+  <update id="updateSettleMerchantByBathcNo" parameterType="com.heepay.billing.entity.SettleMerchantRecord" >
+         update settle_merchant_record t	      
+	         set t.settle_status = #{settleStatus}
+	         where t.settle_bath = #{settleBath}
+  </update>
+  
+  <update id="upateByFeeWay" parameterType="com.heepay.billing.entity.SettleMerchantRecord">
+   	  update settle_merchant_record set settle_time=#{settleTime} where settle_bath=#{settleBath}
+<!--  update settle_merchant_record set fee_way=#{feeWay},settle_time=#{settleTime} where settle_bath=#{settleBath} -->
+   </update>
+   
+    <!-- 查找已对账未结算成功的数据 -->
+  <select id="getSettleMerchantRecordByStatus" parameterType="map" resultMap="BaseResultMap">
+  		select   
+  	   <include refid="Base_Column_List" />
+  	   from settle_merchant_record t
+  	 where t.check_status = #{checkStatus,jdbcType=VARCHAR}
+  	 	and t.settle_status != #{settleStatus,jdbcType=VARCHAR}
+  	 	and t.settle_time = #{settleTime,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查找所有已结算，且结算日期为当日的结算记录 -->
+  <select id="queryAgentforSettle" parameterType="map" resultMap="BaseResultMap">
+     
+   SELECT 
+      <include refid="Base_Column_List" />
+    FROM settle_merchant_record t 
+      WHERE DATE_FORMAT(t.settle_time, '%Y-%m-%d') = DATE_FORMAT(#{settleDate,jdbcType=TIMESTAMP}, '%Y-%m-%d') 
+       AND t.settle_status = #{settleStatus,jdbcType=VARCHAR} and t.trans_type = #{transType,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 资金存管系统查询结算数据 -->
+  <select id="querySettleMerchantRecord" parameterType="map" resultMap="BaseResultMap">
+  	select   
+  	   <include refid="Base_Column_List" />
+  	   from settle_merchant_record t
+  	   where 1=1
+  	  <if test="merchantId != null" >
+       and  merchant_id = #{merchantId,jdbcType=INTEGER}
+      </if>
+      <if test="transType != null">
+      	and trans_type = #{transType,jdbcType=VARCHAR} 
+      </if>
+      <if test="settleTime != null">
+        and settle_time = #{settleTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="settleStatus != null">
+        and settle_status = #{settleStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="settleBath != null">
+        and settle_bath = #{settleBath,jdbcType=VARCHAR}
+      </if>
+     
+  </select>
+  
+  <select id="querySettleMerchantByMerchantId" parameterType="map" resultMap="BaseResultMap">
+	select
+		<include refid="Base_Column_List" />
+  	from 
+  		settle_merchant_record t 
+  	where
+  		merchant_id = #{merchantId,jdbcType=INTEGER} and settle_time = #{settleTime,jdbcType=TIMESTAMP} 
+  		and settle_status = #{settleStatus,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="queryAllSettleData" parameterType="map" resultType="java.lang.String">
+  	select 
+  		distinct t.merchant_id 
+  	from
+  		settle_merchant_record t 
+  	where 
+  		settle_time = #{settleTime,jdbcType=TIMESTAMP}
+  </select>
+  
+</mapper>
+
+
+
+

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.differences.dao.SettleDifferMerchantHisDao" >
+  
+  <sql id="settleDifferMerchantHisColumns">
+		his_id, differ_merbill_id, merchant_id, trans_type, currency, error_bath, error_date, 
+	    deal_time, trans_no, request_amount, settle_amount_plan, fee, bill_type, error_status, 
+	    check_status, check_message, merchant_order_no, merchant_name, date_zip
+	</sql>
+	<select id="findList" resultType="SettleDifferMerchantHis">
+		SELECT 
+			<include refid="settleDifferMerchantHisColumns"/>
+		FROM settle_differ_merchant_his s
+		<where>
+			
+			<!-- error_date -->
+			<if test="beginErrorTime != null and endErrorTime != null">
+				AND s.error_date BETWEEN date_format(#{beginErrorTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endErrorTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+			
+			<!-- error_bath-->
+			<if test="errorBath != null and errorBath != ''">
+				AND s.error_bath = #{errorBath}
+			</if>
+			<!-- error_status-->
+			<if test="errorStatus != null and errorStatus != ''">
+				AND s.error_status = #{errorStatus}
+			</if>
+			
+			<!-- checkStatus-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND s.check_status = #{checkStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY his_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="settleDifferMerchantHisColumns"/>
+		FROM settle_differ_merchant_his s
+		<where>
+			
+			<!-- error_date -->
+			<if test="beginErrorTime != null and endErrorTime != null">
+				AND s.error_date BETWEEN date_format(#{beginErrorTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endErrorTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- trans_no-->
+			<if test="transNo != null and transNo != ''">
+				AND s.trans_no = #{transNo}
+			</if>
+			
+			<!-- trans_type-->
+			<if test="transType != null and transType != ''">
+				AND s.trans_type = #{transType}
+			</if>
+			
+			<!-- error_bath-->
+			<if test="errorBath != null and errorBath != ''">
+				AND s.error_bath = #{errorBath}
+			</if>
+			<!-- error_status-->
+			<if test="errorStatus != null and errorStatus != ''">
+				AND s.error_status = #{errorStatus}
+			</if>
+			<!-- checkStatus-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND s.check_status = #{checkStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY his_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id DESC
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

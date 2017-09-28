@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.B4ChargeRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.boss.entity.B4ChargeRecord" >
+    <id column="b4_id" property="b4Id" jdbcType="BIGINT" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="request_amount" property="requestAmount" jdbcType="DECIMAL" />
+    <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
+    <result column="bankcard_type" property="bankcardType" jdbcType="VARCHAR" />
+    <result column="cardholder_gender" property="cardholderGender" jdbcType="VARCHAR" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_trans_type" property="channelTransType" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="request_status" property="requestStatus" jdbcType="VARCHAR" />
+    <result column="request_ip" property="requestIp" jdbcType="VARCHAR" />
+    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+    <result column="request_time" property="requestTime" jdbcType="TIMESTAMP" />
+    <result column="pay_finish_time" property="payFinishTime" jdbcType="TIMESTAMP" />
+    <result column="settle_part" property="settlePart" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
+    <result column="bank_short_name" property="bankShortName" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_number" property="productNumber" jdbcType="VARCHAR" />
+    <result column="product_description" property="productDescription" jdbcType="VARCHAR" />
+    <result column="settle_amount" property="settleAmount" jdbcType="DECIMAL" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="create_person" property="createPerson" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_person" property="updatePerson" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="channle_no" property="channleNo" jdbcType="VARCHAR" />
+    <result column="fee_amount" property="feeAmount" jdbcType="DECIMAL" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from b4_charge_record
+    where b4_id = #{b4Id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.boss.entity.B4ChargeRecord" >
+    insert into b4_charge_record (b4_id, merchant_no, trans_no, 
+      merchant_id, request_amount, pay_amount, 
+      bankcard_type, cardholder_gender, channel_code, 
+      channel_trans_type, bank_code, request_status, 
+      request_ip, province_id, request_time, 
+      pay_finish_time, settle_part, bank_id, 
+      bank_short_name, product_code, product_number, 
+      product_description, settle_amount, settle_status, 
+      create_person, create_time, update_person, 
+      update_time, channle_no, fee_amount
+      )
+    values (#{b4Id,jdbcType=BIGINT}, #{merchantNo,jdbcType=VARCHAR}, #{transNo,jdbcType=VARCHAR}, 
+      #{merchantId,jdbcType=VARCHAR}, #{requestAmount,jdbcType=DECIMAL}, #{payAmount,jdbcType=DECIMAL}, 
+      #{bankcardType,jdbcType=VARCHAR}, #{cardholderGender,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, 
+      #{channelTransType,jdbcType=VARCHAR}, #{bankCode,jdbcType=VARCHAR}, #{requestStatus,jdbcType=VARCHAR}, 
+      #{requestIp,jdbcType=VARCHAR}, #{provinceId,jdbcType=VARCHAR}, #{requestTime,jdbcType=TIMESTAMP}, 
+      #{payFinishTime,jdbcType=TIMESTAMP}, #{settlePart,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, 
+      #{bankShortName,jdbcType=VARCHAR}, #{productCode,jdbcType=VARCHAR}, #{productNumber,jdbcType=VARCHAR}, 
+      #{productDescription,jdbcType=VARCHAR}, #{settleAmount,jdbcType=DECIMAL}, #{settleStatus,jdbcType=VARCHAR}, 
+      #{createPerson,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updatePerson,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{channleNo,jdbcType=VARCHAR}, #{feeAmount,jdbcType=DECIMAL}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.boss.entity.B4ChargeRecord" >
+    update b4_charge_record
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      merchant_id = #{merchantId,jdbcType=VARCHAR},
+      request_amount = #{requestAmount,jdbcType=DECIMAL},
+      pay_amount = #{payAmount,jdbcType=DECIMAL},
+      bankcard_type = #{bankcardType,jdbcType=VARCHAR},
+      cardholder_gender = #{cardholderGender,jdbcType=VARCHAR},
+      channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_trans_type = #{channelTransType,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      request_status = #{requestStatus,jdbcType=VARCHAR},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=TIMESTAMP},
+      pay_finish_time = #{payFinishTime,jdbcType=TIMESTAMP},
+      settle_part = #{settlePart,jdbcType=VARCHAR},
+      bank_id = #{bankId,jdbcType=VARCHAR},
+      bank_short_name = #{bankShortName,jdbcType=VARCHAR},
+      product_code = #{productCode,jdbcType=VARCHAR},
+      product_number = #{productNumber,jdbcType=VARCHAR},
+      product_description = #{productDescription,jdbcType=VARCHAR},
+      settle_amount = #{settleAmount,jdbcType=DECIMAL},
+      settle_status = #{settleStatus,jdbcType=VARCHAR},
+      create_person = #{createPerson,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_person = #{updatePerson,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      channle_no = #{channleNo,jdbcType=VARCHAR},
+      fee_amount = #{feeAmount,jdbcType=DECIMAL}
+    where b4_id = #{b4Id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select b4_id, merchant_no, trans_no, merchant_id, request_amount, pay_amount, bankcard_type, 
+    cardholder_gender, channel_code, channel_trans_type, bank_code, request_status, request_ip, 
+    province_id, request_time, pay_finish_time, settle_part, bank_id, bank_short_name, 
+    product_code, product_number, product_description, settle_amount, settle_status, 
+    create_person, create_time, update_person, update_time, channle_no, fee_amount
+    from b4_charge_record
+    where b4_id = #{b4Id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select b4_id, merchant_no, trans_no, merchant_id, request_amount, pay_amount, bankcard_type, 
+    cardholder_gender, channel_code, channel_trans_type, bank_code, request_status, request_ip, 
+    province_id, request_time, pay_finish_time, settle_part, bank_id, bank_short_name, 
+    product_code, product_number, product_description, settle_amount, settle_status, 
+    create_person, create_time, update_person, update_time, channle_no, fee_amount
+    from b4_charge_record
+  </select>
+</mapper>

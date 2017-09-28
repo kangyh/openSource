@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.MerchantLogDetailDao">
+    
+	<sql id="merchantLogDetailColumns">
+		a.detail_id AS "detailId",
+		a.log_id AS "logId",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.type AS "type",
+		a.settle_id AS "settleId",
+		a.trans_no AS "transNo",
+		a.create_time AS "createTime",
+		a.balance_amount AS "balanceAmount",
+		a.settlement_amount AS "settlementAmount",
+		a.fee_amount AS "feeAmount",
+		a.update_time AS "updateTime",
+		a.description AS "description",
+		a.remark AS "remark",
+		a.account_date AS "accountDate",
+		a.balance_direction AS "balanceDirection"
+	</sql>
+	
+	<sql id="merchantLogDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantLogDetail">
+		SELECT 
+			<include refid="merchantLogDetailColumns"/>
+		FROM merchant_log_detail a
+		<include refid="merchantLogDetailJoins"/>
+		WHERE a.settle_id = #{settleId}
+	</select>
+	
+	<select id="findList" resultType="MerchantLogDetail">
+		SELECT 
+			<include refid="merchantLogDetailColumns"/>
+		FROM merchant_log_detail a
+		<include refid="merchantLogDetailJoins"/>
+		<where>
+			
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="settleId != null and settleId != ''">
+				AND a.settle_id = #{settleId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="accountDate != null and accountDate != ''">
+				AND a.account_date = #{accountDate}
+			</if>
+		</where>
+		ORDER BY createTime DESC
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantLogDetail">
+		SELECT 
+			<include refid="merchantLogDetailColumns"/>
+		FROM merchant_log_detail a
+		<include refid="merchantLogDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_log_detail(
+			detail_id,
+			log_id,
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_name,
+			type,
+			settle_id,
+			trans_no,
+			create_time,
+			balance_amount,
+			settlement_amount,
+			fee_amount,
+			update_time,
+			description,
+			remark,
+			account_date,
+			balance_direction
+		) VALUES (
+			#{detailId},
+			#{logId},
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantName},
+			#{type},
+			#{settleId},
+			#{transNo},
+			#{createTime},
+			#{balanceAmount},
+			#{settlementAmount},
+			#{feeAmount},
+			#{updateTime},
+			#{description},
+			#{remark},
+			#{accountDate},
+			#{balanceDirection}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_log_detail SET 	
+			detail_id = #{detailId},
+			log_id = #{logId},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			type = #{type},
+			settle_id = #{settleId},
+			trans_no = #{transNo},
+			create_time = #{createTime},
+			balance_amount = #{balanceAmount},
+			settlement_amount = #{settlementAmount},
+			fee_amount = #{feeAmount},
+			update_time = #{updateTime},
+			description = #{description},
+			remark = #{remark},
+			account_date = #{accountDate},
+			balance_direction = #{balanceDirection}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_log_detail
+		WHERE id = #{id}
+	</update>
+
+	<insert id="batchInsertMerchantLogDetails"  parameterType="com.heepay.manage.modules.payment.entity.MerchantLogDetail" >
+		insert into merchant_log_detail (detail_id, log_id, account_id,
+		account_name, merchant_id, merchant_name,
+		type, settle_id, trans_no,
+		create_time, balance_amount,settlement_amount,fee_amount,update_time, description,
+		remark, account_date, balance_direction
+		)
+		values
+		<foreach collection ="list" item ="item" index ="index" separator =",">
+			(
+			#{item.detailId,jdbcType=BIGINT}, #{item.logId,jdbcType=BIGINT}, #{item.accountId,jdbcType=BIGINT},
+			#{item.accountName,jdbcType=VARCHAR}, #{item.merchantId,jdbcType=BIGINT}, #{item.merchantName,jdbcType=VARCHAR},
+			#{item.type,jdbcType=CHAR}, #{item.settleId,jdbcType=VARCHAR}, #{item.transNo,jdbcType=CHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},#{item.balanceAmount,jdbcType=DECIMAL},#{item.settlementAmount,jdbcType=DECIMAL},
+			#{item.feeAmount,jdbcType=DECIMAL},#{item.updateTime,jdbcType=TIMESTAMP}, #{item.description,jdbcType=VARCHAR},
+			#{item.remark,jdbcType=VARCHAR}, #{item.accountDate,jdbcType=CHAR}, #{item.balanceDirection,jdbcType=CHAR}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="deleteBySettleId" parameterType="com.heepay.manage.modules.payment.entity.MerchantLogDetail">
+		DELETE FROM merchant_log_detail
+		WHERE settle_id = #{settleId}
+	</delete>
+
+
+</mapper>

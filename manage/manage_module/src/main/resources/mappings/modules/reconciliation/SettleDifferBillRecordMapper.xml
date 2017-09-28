@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleDifferBillRecordDao" >
+
+  <sql id="Base_Column_List" >
+    bill_differ_id,
+    channel_code,
+    channel_name,
+    channel_type,
+    trans_type,
+    success_time,
+    cost_way,
+    bank_seq,
+    bank_name,
+    bank_code,
+    channel_provider,
+    save_time,
+    payment_id,
+    trans_no,
+    channle_no,
+    success_amount,
+    fee,
+    check_bath_no,
+    promotion_amount,
+    remark,
+    fee_service,
+    differ_type,
+    field1,
+    field2,
+    field3
+  </sql>
+
+  <select id="findList" resultType="SettleDifferBillRecord">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from settle_differ_bill_record
+    <where>
+      <!-- 入库时间 -->
+      <if test="beginOperEndTime != null and endOperEndTime != null">
+        AND save_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+      </if>
+      <!-- 通道编码 -->
+      <if test="channelCode != null and channelCode != ''">
+        AND channel_code = #{channelCode}
+      </if>
+
+      <!-- 通道业务类型 -->
+      <if test="channelType != null and channelType != ''">
+        AND channel_type = #{channelType}
+      </if>
+      <!-- 交易类型 -->
+      <if test="transType != null and transType != ''">
+        AND trans_type = #{transType}
+      </if>
+
+      <!-- 银行流水 -->
+      <if test="bankSeq != null and bankSeq != ''">
+        AND bank_seq = #{bankSeq}
+      </if>
+      <!-- 银行编码 -->
+      <if test="bankCode != null and bankCode != ''">
+        AND bank_code = #{bankCode}
+      </if>
+      <!-- 上游流水号 -->
+      <if test="channleNo != null and channleNo != ''">
+        AND channle_no = #{channleNo}
+      </if>
+      <!-- 支付订单号 -->
+      <if test="paymentId != null and paymentId != ''">
+        AND payment_id = #{paymentId}
+      </if>
+      <!-- 对账批次 -->
+      <if test="checkBathNo != null and checkBathNo != ''">
+        AND check_bath_no = #{checkBathNo}
+      </if>
+      <!-- 差异类型 -->
+      <if test="differType != null and differType != ''">
+        AND differ_type = #{differType}
+      </if>
+      <!-- 摘要 -->
+      <if test="remark != null and remark != ''">
+        AND remark = #{remark}
+      </if>
+    </where>
+    <choose>
+      <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+        ORDER BY bill_differ_id DESC,${page.orderBy}
+      </when>
+      <otherwise>
+        ORDER BY bill_differ_id DESC
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="getEntity" resultType="SettleDifferBillRecord" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_differ_bill_record
+    where bill_differ_id = #{billDifferId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_differ_bill_record
+    where bill_differ_id = #{billDifferId,jdbcType=BIGINT}
+  </delete>
+
+
+  <insert id="saveEntity" parameterType="SettleDifferBillRecord" >
+    insert into settle_differ_bill_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billDifferId != null" >
+        bill_differ_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="successTime != null" >
+        success_time,
+      </if>
+      <if test="costWay != null" >
+        cost_way,
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider,
+      </if>
+      <if test="saveTime != null" >
+        save_time,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="transNo != null" >
+        trans_no,
+      </if>
+      <if test="channleNo != null" >
+        channle_no,
+      </if>
+      <if test="successAmount != null" >
+        success_amount,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no,
+      </if>
+      <if test="promotionAmount != null" >
+        promotion_amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="feeService != null" >
+        fee_service,
+      </if>
+      <if test="differType != null" >
+        differ_type,
+      </if>
+      <if test="field1 != null" >
+        field1,
+      </if>
+      <if test="field2 != null" >
+        field2,
+      </if>
+      <if test="field3 != null" >
+        field3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billDifferId != null" >
+        #{billDifferId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="successTime != null" >
+        #{successTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costWay != null" >
+        #{costWay,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelProvider != null" >
+        #{channelProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="saveTime != null" >
+        #{saveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="transNo != null" >
+        #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="channleNo != null" >
+        #{channleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="checkBathNo != null" >
+        #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionAmount != null" >
+        #{promotionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        #{feeService,jdbcType=DECIMAL},
+      </if>
+      <if test="differType != null" >
+        #{differType,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null" >
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        #{field3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateEntity" parameterType="SettleDifferBillRecord" >
+    update settle_differ_bill_record
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="successTime != null" >
+        success_time = #{successTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costWay != null" >
+        cost_way = #{costWay,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq = #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider = #{channelProvider,jdbcType=VARCHAR},
+      </if>
+      <if test="saveTime != null" >
+        save_time = #{saveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="transNo != null" >
+        trans_no = #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="channleNo != null" >
+        channle_no = #{channleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        success_amount = #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no = #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionAmount != null" >
+        promotion_amount = #{promotionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        fee_service = #{feeService,jdbcType=DECIMAL},
+      </if>
+      <if test="differType != null" >
+        differ_type = #{differType,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null" >
+        field1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        field2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        field3 = #{field3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bill_differ_id = #{billDifferId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

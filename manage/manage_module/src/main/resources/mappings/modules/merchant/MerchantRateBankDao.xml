@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantRateBankDao">
+
+    <sql id="merchantRateBankColumns">
+		a.id AS "id",
+		a.rate_id AS "rateId",
+		a.bank_no AS "bankNo",
+		a.bank_name AS "bankName",
+		a.bank_card_type AS "bankCardType",
+		a.charge_type AS "chargeType",
+		a.charge_ratio AS "chargeRatio",
+		a.charge_fee AS "chargeFee",
+		a.max_fee AS "maxFee",
+		a.min_fee AS "minFee",
+		a.create_user AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_user AS "updateBy.id",
+		a.update_time AS "updateDate",
+		a.charge_max AS "chargeMax",
+		a.charge_min AS "chargeMin",
+		a.charge_max2 AS "chargeMax2",
+		a.charge_min2 AS "chargeMin2",
+		a.charge_ratio2 AS "chargeRatio2",
+		a.charge_fee2 AS "chargeFee2",
+		a.charge_max3 AS "chargeMax3",
+		a.charge_min3 AS "chargeMin3",
+		a.charge_ratio3 AS "chargeRatio3",
+		a.charge_fee3 AS "chargeFee3"
+	</sql>
+
+    <sql id="merchantRateBankJoins">
+    </sql>
+
+    <select id="get" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        <include refid="merchantRateBankJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getBankCardType" resultType="MerchantRateBank">
+        SELECT
+        a.bank_card_type AS "bankCardType"
+        FROM merchant_rate_bank a
+        <include refid="merchantRateBankJoins"/>
+        WHERE a.rate_id = #{rateId}
+        GROUP BY a.bank_card_type
+    </select>
+
+    <select id="findList" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        <include refid="merchantRateBankJoins"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND a.id = #{id}
+            </if>
+            <if test="rateId != null and rateId != ''">
+                AND a.rate_id = #{rateId}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        <include refid="merchantRateBankJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        insert into merchant_rate_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="rateId != null">
+                rate_id,
+            </if>
+            <if test="bankNo != null">
+                bank_no,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankCardType != null">
+                bank_card_type,
+            </if>
+            <if test="chargeType != null">
+                charge_type,
+            </if>
+            <if test="chargeRatio != null">
+                charge_ratio,
+            </if>
+            <if test="chargeFee != null">
+                charge_fee,
+            </if>
+            <if test="maxFee != null">
+                max_fee,
+            </if>
+            <if test="minFee != null">
+                min_fee,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="createBy != null">
+                create_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="chargeMax != null">
+                charge_max,
+            </if>
+            <if test="chargeMin != null">
+                charge_min,
+            </if>
+            <if test="chargeMax2 != null">
+                charge_max2,
+            </if>
+            <if test="chargeMin2 != null">
+                charge_min2,
+            </if>
+            <if test="chargeRatio2 != null">
+                charge_ratio2,
+            </if>
+            <if test="chargeFee2 != null">
+                charge_fee2,
+            </if>
+            <if test="chargeMax3 != null">
+                charge_max3,
+            </if>
+            <if test="chargeMin3 != null">
+                charge_min3,
+            </if>
+            <if test="chargeRatio3 != null">
+                charge_ratio3,
+            </if>
+            <if test="chargeFee3 != null">
+                charge_fee3,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="rateId != null">
+                #{rateId,jdbcType=INTEGER},
+            </if>
+            <if test="bankNo != null">
+                #{bankNo,jdbcType=CHAR},
+            </if>
+            <if test="bankName != null">
+                #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCardType != null">
+                #{bankCardType,jdbcType=CHAR},
+            </if>
+            <if test="chargeType != null">
+                #{chargeType,jdbcType=CHAR},
+            </if>
+            <if test="chargeRatio != null">
+                #{chargeRatio,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeFee != null">
+                #{chargeFee,jdbcType=DECIMAL},
+            </if>
+            <if test="maxFee != null">
+                #{maxFee,jdbcType=DECIMAL},
+            </if>
+            <if test="minFee != null">
+                #{minFee,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                #{createBy.id,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy.id,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeMax != null">
+                #{chargeMax,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeMin != null">
+                #{chargeMin,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeMax2 != null">
+                #{chargeMax2,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeMin2 != null">
+                #{chargeMin2,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeRatio2 != null">
+                #{chargeRatio2,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeFee2 != null">
+                #{chargeFee2,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeMax3 != null">
+                #{chargeMax3,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeMin3 != null">
+                #{chargeMin3,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeRatio3 != null">
+                #{chargeRatio3,jdbcType=DECIMAL},
+            </if>
+            <if test="chargeFee3 != null">
+                #{chargeFee3,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update merchant_rate_bank
+        <set>
+            <if test="rateId != null">
+                rate_id = #{rateId,jdbcType=INTEGER},
+            </if>
+            <if test="bankNo != null">
+                bank_no = #{bankNo,jdbcType=CHAR},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCardType != null">
+                bank_card_type = #{bankCardType,jdbcType=CHAR},
+            </if>
+            <if test="chargeType != null">
+                charge_type = #{chargeType,jdbcType=CHAR},
+            </if>
+            charge_ratio = #{chargeRatio,jdbcType=DECIMAL},
+            charge_fee = #{chargeFee,jdbcType=DECIMAL},
+            max_fee = #{maxFee,jdbcType=DECIMAL},
+            min_fee = #{minFee,jdbcType=DECIMAL},
+            charge_max = #{chargeMax,jdbcType=DECIMAL},
+            charge_min = #{chargeMin,jdbcType=DECIMAL},
+            charge_max2 = #{chargeMax2,jdbcType=DECIMAL},
+            charge_min2 = #{chargeMin2,jdbcType=DECIMAL},
+            charge_ratio2 = #{chargeRatio2,jdbcType=DECIMAL},
+            charge_fee2 = #{chargeFee2,jdbcType=DECIMAL},
+            charge_max3 = #{chargeMax3,jdbcType=DECIMAL},
+            charge_min3 = #{chargeMin3,jdbcType=DECIMAL},
+            charge_ratio3 = #{chargeRatio3,jdbcType=DECIMAL},
+            charge_fee3 = #{chargeFee3,jdbcType=DECIMAL},
+            <if test="createDate != null">
+                create_time = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createBy != null">
+                create_user = #{createBy.id,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy.id,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="delete">
+		DELETE FROM merchant_rate_bank
+		WHERE id = #{id}
+	</update>
+
+    <update id="deleteByRateId">
+        DELETE FROM merchant_rate_bank
+        WHERE rate_id = #{rateId}
+    </update>
+
+    <select id="getRateBank" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        <where>
+            <if test="rateId != null and rateId != ''">
+                AND a.rate_id = #{rateId}
+            </if>
+            <if test="bankNo != null and bankNo != ''">
+                AND a.bank_no = #{bankNo}
+            </if>
+            <if test="bankCardType != null and bankCardType != ''">
+                AND a.bank_card_type = #{bankCardType}
+            </if>
+        </where>
+    </select>
+
+    <!--查询整个对象-->
+    <select id="getEntityByRateId" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        WHERE a.rate_id = #{rateId}
+    </select>
+    <!--批量更新费率-->
+    <update id="updateRateFee">
+        update merchant_rate_bank
+        <set>
+            <if test="rateId != null">
+                rate_id = #{rateId,jdbcType=INTEGER},
+            </if>
+            <if test="bankCardType != null and bankCardType != ''">
+                bank_card_type = #{bankCardType,jdbcType=CHAR},
+            </if>
+            <if test="chargeType != null">
+                charge_type = #{chargeType,jdbcType=CHAR},
+            </if>
+            charge_ratio = #{chargeRatio,jdbcType=DECIMAL},
+            charge_fee = #{chargeFee,jdbcType=DECIMAL},
+            max_fee = #{maxFee,jdbcType=DECIMAL},
+            min_fee = #{minFee,jdbcType=DECIMAL},
+            charge_max = #{chargeMax,jdbcType=DECIMAL},
+            charge_min = #{chargeMin,jdbcType=DECIMAL},
+            charge_max2 = #{chargeMax2,jdbcType=DECIMAL},
+            charge_min2 = #{chargeMin2,jdbcType=DECIMAL},
+            charge_ratio2 = #{chargeRatio2,jdbcType=DECIMAL},
+            charge_fee2 = #{chargeFee2,jdbcType=DECIMAL},
+            charge_max3 = #{chargeMax3,jdbcType=DECIMAL},
+            charge_min3 = #{chargeMin3,jdbcType=DECIMAL},
+            charge_ratio3 = #{chargeRatio3,jdbcType=DECIMAL},
+            charge_fee3 = #{chargeFee3,jdbcType=DECIMAL},
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy.id,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="rateId != null and rateId != ''">
+                AND rate_id = #{rateId}
+            </if>
+            <if test="bankCardType != null and bankCardType != ''">
+                AND bank_card_type = #{bankCardType}
+            </if>
+        </where>
+    </update>
+
+    <select id="selectInfoByBankCardType" resultType="MerchantRateBank">
+        SELECT
+        <include refid="merchantRateBankColumns"/>
+        FROM merchant_rate_bank a
+        WHERE a.rate_id = #{rateId}
+        <if test="bankCardType != null and bankCardType != ''">
+            AND a.bank_card_type = #{bankCardType}
+        </if>
+    </select>
+
+    <insert id="beachInsert" parameterType="java.util.List">
+        insert into merchant_rate_bank
+           (id, rate_id, bank_no,
+            bank_name, bank_card_type, charge_type,
+            charge_ratio, charge_fee, max_fee,
+            min_fee, create_time, create_user,
+            update_time, update_user, charge_min,
+            charge_max, charge_min2, charge_max2,
+            charge_ratio2, charge_fee2, charge_min3,
+            charge_max3, charge_ratio3, charge_fee3
+            )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.id,jdbcType=INTEGER}, #{item.rateId,jdbcType=INTEGER}, #{item.bankNo,jdbcType=CHAR},
+            #{item.bankName,jdbcType=VARCHAR}, #{item.bankCardType,jdbcType=CHAR}, #{item.chargeType,jdbcType=CHAR},
+            #{item.chargeRatio,jdbcType=DECIMAL}, #{item.chargeFee,jdbcType=DECIMAL}, #{item.maxFee,jdbcType=DECIMAL},
+            #{item.minFee,jdbcType=DECIMAL}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.createBy.id,jdbcType=VARCHAR},
+            #{item.updateDate,jdbcType=TIMESTAMP}, #{item.updateBy.id,jdbcType=VARCHAR}, #{item.chargeMin,jdbcType=DECIMAL},
+            #{item.chargeMax,jdbcType=DECIMAL}, #{item.chargeMin2,jdbcType=DECIMAL}, #{item.chargeMax2,jdbcType=DECIMAL},
+            #{item.chargeRatio2,jdbcType=DECIMAL}, #{item.chargeFee2,jdbcType=DECIMAL}, #{item.chargeMin3,jdbcType=DECIMAL},
+            #{item.chargeMax3,jdbcType=DECIMAL}, #{item.chargeRatio3,jdbcType=DECIMAL}, #{item.chargeFee3,jdbcType=DECIMAL})
+        </foreach>
+    </insert>
+
+    <update id="beachInsertAndUpdate" parameterType="java.util.List">
+        insert into merchant_rate_bank
+           (id, rate_id, bank_no,
+            bank_name, bank_card_type, charge_type,
+            charge_ratio, charge_fee, max_fee,
+            min_fee, create_time, create_user,
+            update_time, update_user, charge_min,
+            charge_max, charge_min2, charge_max2,
+            charge_ratio2, charge_fee2, charge_min3,
+            charge_max3, charge_ratio3, charge_fee3
+            )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.id,jdbcType=INTEGER}, #{item.rateId,jdbcType=INTEGER}, #{item.bankNo,jdbcType=CHAR},
+            #{item.bankName,jdbcType=VARCHAR}, #{item.bankCardType,jdbcType=CHAR}, #{item.chargeType,jdbcType=CHAR},
+            #{item.chargeRatio,jdbcType=DECIMAL}, #{item.chargeFee,jdbcType=DECIMAL}, #{item.maxFee,jdbcType=DECIMAL},
+            #{item.minFee,jdbcType=DECIMAL}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.createBy.id,jdbcType=VARCHAR},
+            #{item.updateDate,jdbcType=TIMESTAMP}, #{item.updateBy.id,jdbcType=VARCHAR}, #{item.chargeMin,jdbcType=DECIMAL},
+            #{item.chargeMax,jdbcType=DECIMAL}, #{item.chargeMin2,jdbcType=DECIMAL}, #{item.chargeMax2,jdbcType=DECIMAL},
+            #{item.chargeRatio2,jdbcType=DECIMAL}, #{item.chargeFee2,jdbcType=DECIMAL}, #{item.chargeMin3,jdbcType=DECIMAL},
+            #{item.chargeMax3,jdbcType=DECIMAL}, #{item.chargeRatio3,jdbcType=DECIMAL}, #{item.chargeFee3,jdbcType=DECIMAL})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            rate_id = values(rate_id),
+            bank_no = values(bank_no),
+            bank_name = values(bank_name),
+            bank_card_type = values(bank_card_type),
+            charge_type = values(charge_type),
+            charge_ratio = values(charge_ratio),
+            charge_fee = values(charge_fee),
+            max_fee = values(max_fee),
+            min_fee = values(min_fee),
+            create_time = values(create_time),
+            create_user = values(create_user),
+            update_time = values(update_time),
+            update_user = values(update_user),
+            charge_min = values(charge_min),
+            charge_max = values(charge_max),
+            charge_min2 = values(charge_min2),
+            charge_max2 = values(charge_max2),
+            charge_ratio2 = values(charge_ratio2),
+            charge_fee2 = values(charge_fee2),
+            charge_min3 = values(charge_min3),
+            charge_max3 = values(charge_max3),
+            charge_ratio3 = values(charge_ratio3),
+            charge_fee3 = values(charge_fee3)
+    </update>
+
+</mapper>

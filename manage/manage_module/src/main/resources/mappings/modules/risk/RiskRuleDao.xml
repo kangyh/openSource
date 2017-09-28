@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskRuleDao" >
+
+ 	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="riskRuleColumns">
+		a.rule_id AS "ruleId",
+		a.risk_code AS "riskCode",
+		a.risk_name AS "riskName",
+		a.scope AS "scope",
+		a.scope_type AS "scopeType",
+		a.trigger_type AS "triggerType",
+		a.monitor AS "monitor",
+		a.level AS "level",
+		a.handle_type AS "handleType",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.remark AS "remark"
+	</sql>
+	
+	<!-- 根据主键查询类型明细信息  -->
+	<select id="get" resultType="RiskRule">
+		SELECT
+			<include refid="riskRuleColumns"/>
+		FROM risk_rule a
+		WHERE a.rule_id = #{detailId}
+	</select>
+	
+	<!-- 
+		查询list
+		修改条件时，修改下面的导出SQL条件
+	 -->
+	<select id="findList" resultType="RiskRule">
+		SELECT 
+			<include refid="riskRuleColumns"/>
+		FROM risk_rule a
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY rule_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询不同的规则 -->
+	<select id="findDistructRule" resultType="RiskRule">
+		SELECT DISTINCT
+			a.rule_id AS "ruleId",
+			a.risk_name AS "riskName"
+		FROM risk_rule a
+	</select>
+</mapper>

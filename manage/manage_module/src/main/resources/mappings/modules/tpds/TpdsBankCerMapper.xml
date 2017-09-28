@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.tpds.dao.TpdsBankCerDao" >
+  <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+  <sql id="includeEntity" >
+    tpds_bank_id, 
+    bank_no, 
+    pub_key, 
+    pri_key, 
+    cer_path, 
+    create_time, 
+    update_time, 
+    update_user, 
+    note
+  </sql>
+  
+  <select id="findList" resultType="TpdsBankCer">
+		select 
+	    <include refid="includeEntity" />
+	    from tpds_bank_cer
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- 商户编码-->
+			<if test="bankNo != null and bankNo != ''">
+				AND bank_no = #{bankNo} 
+			</if> 
+			
+			<!-- 商户公司名称 -->
+			<if test="pubKey != null and pubKey != ''">
+				AND pub_key = #{pubKey} 
+			</if> 
+			
+		</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY tpds_bank_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY tpds_bank_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="saveEntity" parameterType="TpdsBankCer" >
+    insert into tpds_bank_cer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tpdsBankId != null" >
+        tpds_bank_id,
+      </if>
+      <if test="bankNo != null" >
+        bank_no,
+      </if>
+      <if test="pubKey != null" >
+        pub_key,
+      </if>
+      <if test="priKey != null" >
+        pri_key,
+      </if>
+      <if test="cerPath != null" >
+        cer_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tpdsBankId != null" >
+        #{tpdsBankId,jdbcType=INTEGER},
+      </if>
+      <if test="bankNo != null" >
+        #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="pubKey != null" >
+        #{pubKey,jdbcType=VARCHAR},
+      </if>
+      <if test="priKey != null" >
+        #{priKey,jdbcType=VARCHAR},
+      </if>
+      <if test="cerPath != null" >
+        #{cerPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateEntity" parameterType="TpdsBankCer" >
+    update tpds_bank_cer
+    <set >
+      <if test="bankNo != null" >
+        bank_no = #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="pubKey != null" >
+        pub_key = #{pubKey,jdbcType=VARCHAR},
+      </if>
+      <if test="priKey != null" >
+        pri_key = #{priKey,jdbcType=VARCHAR},
+      </if>
+      <if test="cerPath != null" >
+        cer_path = #{cerPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tpds_bank_id = #{tpdsBankId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="getEntityById"  resultType="TpdsBankCer">
+    select 
+    <include refid="includeEntity" />
+    from tpds_bank_cer
+    where tpds_bank_id = #{tpdsBankId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="changeValue"  resultType="java.lang.Integer">
+	select 
+	  count(1) 
+	from
+	  tpds_bank_cer where bank_no=#{bankNo};
+  </select>
+  
+  <delete id="deleteEntity">
+  	DELETE FROM  tpds_bank_cer WHERE  tpds_bank_id = #{tpdsBankId}
+  </delete>
+  
+</mapper>

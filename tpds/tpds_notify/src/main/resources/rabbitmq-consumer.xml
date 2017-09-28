@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/rabbit 
+http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
+	<context:component-scan base-package="com.heepay.queue.consume" />
+	
+	<!-- 连接服务配置  channel-cache-size="25" -->
+   	<rabbit:connection-factory id="connectionFactory" addresses="${addresses}" username="${username}" password="${password}" />
+   	
+	<!-- Admin object for creation of queues -->
+	<rabbit:admin connection-factory="connectionFactory"  />
+	
+ 	<!--<rabbit:queue id="sms" durable="true" auto-delete="false" exclusive="false" name="sms"/>-->
+   	
+   	<!-- tpds begin -->
+   	<rabbit:queue id="hytbdsClearMerchantQueue" durable="true" auto-delete="false" exclusive="false" name="hytbdsClearMerchantQueue"/>
+   	<rabbit:queue id="hytbdsClearChannelQueue" durable="true" auto-delete="false" exclusive="false" name="hytbdsClearChannelQueue"/>
+   <!-- 	<rabbit:queue id="hytbdsChannelResultQueue" durable="true" auto-delete="false" exclusive="false" name="hytbdsChannelResultQueue"/> -->
+   	<!--  -->
+   <!-- 	<rabbit:queue id="hytbdsMerchantResultQueue" durable="true" auto-delete="false" exclusive="false" name="hytbdsMerchantResultQueue"/> -->
+   	
+   	<!-- 商户、通道侧监听账务系统返回结果 -->
+   	<rabbit:queue id="hytbdsSettleMerchantRecordResponseQueue" durable="true" auto-delete="false" exclusive="false" name="hytbdsSettleMerchantRecordResponseQueue"/>
+   	
+   	 <!-- 交易系统分润队列 -->
+   	<rabbit:queue id="hyShareResultQueue" durable="true" auto-delete="false" exclusive="false" name="hyShareResultQueue"/>
+   	
+   	 <!-- 配置线程池 -->
+	<bean id ="taskExecutor"  class ="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+	    <!-- 线程池维护线程的最少数量 -->
+		<property name ="corePoolSize" value ="${ThreadPool.corePoolSize}" />
+	    <!-- 线程池维护线程所允许的空闲时间 -->
+		<property name ="keepAliveSeconds" value ="${ThreadPool.keepAliveSeconds}" />
+	    <!-- 线程池维护线程的最大数量 -->
+		<property name ="maxPoolSize" value ="${ThreadPool.maxPoolSize}" />
+	    <!-- 线程池所使用的缓冲队列 -->
+		<property name ="queueCapacity" value ="${ThreadPool.queueCapacity}" />
+	</bean>   	
+   
+    
+    <!-- 消息监听器 -->  
+   
+    <!-- tpds begin -->
+    <bean id="mqClearMerchantConsumeMessageListener" class="com.heepay.queue.consume.MqClearMerchantConsumeMain"/>
+    <bean id="mqClearChannelConsumeMessageListener" class="com.heepay.queue.consume.MqClearChannelConsumeMain"/>
+<!--     <bean id="mqChannelResultMessageListener" class="com.heepay.queue.consume.MqChannelResultconsumeMain"/> -->
+    
+   <!--  <bean id="mqMerchantResultMessageListener" class="com.heepay.queue.consume.MqMerchantResultconsumeMain"/> -->
+    
+    <bean id="hytbdsSettleMerchantRecordResponseQueueListener" class="com.heepay.queue.consume.MqClearMerchantResultMain"/>
+    
+    <!--<bean id="consumerMessageListener2" class="com.test.rabbit.customer.DemoCustomerMessage"/>-->
+    
+    <!-- 交易系统分润 -->
+    <bean id="hyShareResultQueueListener" class="com.heepay.queue.consume.MqClearProfitMain"/>
+
+	<!-- queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象-->
+    <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual" task-executor="taskExecutor" max-concurrency="1" prefetch="4">
+      
+        <rabbit:listener queues="hyShareResultQueue" ref="hyShareResultQueueListener"/>
+        
+        <rabbit:listener queues="hytbdsSettleMerchantRecordResponseQueue" ref="hytbdsSettleMerchantRecordResponseQueueListener"/>
+        <rabbit:listener queues="hytbdsClearMerchantQueue" ref="mqClearMerchantConsumeMessageListener"/>
+        <rabbit:listener queues="hytbdsClearChannelQueue" ref="mqClearChannelConsumeMessageListener"/>
+        <!-- <rabbit:listener queues="hytbdsChannelResultQueue" ref="mqChannelResultMessageListener"/> -->
+        
+        <!-- <rabbit:listener queues="hytbdsMerchantResultQueue" ref="mqMerchantResultMessageListener"/>    -->     
+
+    </rabbit:listener-container>
+
+  
+</beans>

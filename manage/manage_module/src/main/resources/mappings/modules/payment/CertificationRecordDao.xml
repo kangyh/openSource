@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.CertificationRecordDao">
+    <!-- a.payment_id AS "paymentId", -->
+	<sql id="certificationRecordColumns">
+		a.certification_id AS "certificationId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.certification_name AS "certificationName",
+		a.certification_idcard AS "certificationIdcard",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.fee_amount AS "feeAmount",
+		a.fee_type AS "feeType",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.return_time AS "returnTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="certificationRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="CertificationRecord">
+		SELECT 
+			<include refid="certificationRecordColumns"/>
+		FROM certification_record a
+		<include refid="certificationRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CertificationRecord">
+		SELECT 
+			<include refid="certificationRecordColumns"/>
+		FROM certification_record a
+		<include refid="certificationRecordJoins"/>
+		<where>
+			
+			<if test="certificationId != null and certificationId != ''">
+				AND a.certification_id = #{certificationId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+	            ORDER BY create_time ASC
+	        </if>
+	        <if test="sortOrder == 'DESC'">
+	            ORDER BY create_time DESC
+	        </if>
+	</select>
+	
+	<select id="findAllList" resultType="CertificationRecord">
+		SELECT 
+			<include refid="certificationRecordColumns"/>
+		FROM certification_record a
+		<include refid="certificationRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<!-- payment_id, -->
+	<insert id="insert">
+		INSERT INTO certification_record(
+			certification_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			certification_name,
+			certification_idcard,
+			account_id,
+			account_name,
+			fee_amount,
+			fee_type,
+			status,
+			create_time,
+			return_time,
+			remark
+		) VALUES (
+			#{certificationId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{certificationName},
+			#{certificationIdcard},
+			#{accountId},
+			#{accountName},
+			#{feeAmount},
+			#{feeType},
+			#{status},
+			#{createTime},
+			#{returnTime},
+			#{remark}
+		)
+	</insert>
+	<!-- 	payment_id = #{paymentId}, -->
+	<update id="update">
+		UPDATE certification_record SET 	
+			certification_id = #{certificationId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			certification_name = #{certificationName},
+			certification_idcard = #{certificationIdcard},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			fee_amount = #{feeAmount},
+			fee_type = #{feeType},
+			status = #{status},
+			create_time = #{createTime},
+			return_time = #{returnTime},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM certification_record
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getCertificationId" resultType="CertificationRecord">
+		SELECT 
+			max(a.certification_id) as certificationId
+		FROM certification_record a
+	</select>
+	
+</mapper>

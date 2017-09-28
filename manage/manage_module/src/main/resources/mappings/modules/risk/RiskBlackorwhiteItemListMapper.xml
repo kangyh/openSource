@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskBlackorwhiteItemListDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    <id column="black_item_id" property="blackItemId" jdbcType="INTEGER" />
+    <result column="black_id" property="blackId" jdbcType="INTEGER" />
+    <result column="black_item_value" property="blackItemValue" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <delete id="deleteRiskBlackorwhiteItem" parameterType="java.lang.Integer" >
+    delete from risk_blackorwhite_item_list
+    where black_item_id = #{blackItemId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertRiskBlackorwhiteItem" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    insert into risk_blackorwhite_item_list ( black_id, black_item_value, 
+      status, create_time, update_time, 
+      create_author, update_author)
+    values ( #{blackId,jdbcType=INTEGER}, #{blackItemValue,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createAuthor,jdbcType=VARCHAR}, #{updateAuthor,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertMapItems" parameterType="Map"  useGeneratedKeys="true" keyProperty="blackItemId">
+  	insert into risk_blackorwhite_item_list ( black_id, black_item_value, 
+      status, create_time, update_time, 
+      create_author, update_author)
+    values ( #{blackId,jdbcType=INTEGER}, #{blackItemValue,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createAuthor,jdbcType=VARCHAR}, #{updateAuthor,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateRiskBlackorwhiteItem" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    update risk_blackorwhite_item_list b
+    <set >
+      <if test="blackItemValue != null and blackItemValue !='' " >
+        b.black_item_value = #{blackItemValue,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null and status != ''" >
+        b.status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        b.create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        b.update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null and createAuthor != ''" >
+        b.create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAuthor != null and updateAuthor != ''" >
+        b.update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where b.black_item_id = #{blackItemId,jdbcType=INTEGER}
+  </update>
+  <select id="getRiskBlackorwhiteItemById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select black_item_id, black_id, black_item_value, status, create_time, update_time, 
+    create_author, update_author
+    from risk_blackorwhite_item_list
+    where black_item_id = #{blackItemId,jdbcType=INTEGER}
+  </select>
+  <select id="getItemIdByValueAndBlackId" resultType="java.lang.String" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    select black_item_id 
+    from risk_blackorwhite_item_list
+    where black_id = #{blackId,jdbcType=INTEGER} and black_item_value = #{blackItemValue,jdbcType=VARCHAR}
+  </select>
+  <select id="getCountByItemValue" resultType="java.lang.Integer" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    select count(1) 
+    from risk_blackorwhite_item_list 
+    where black_item_value=#{blackItemValue,jdbcType=VARCHAR} and black_id = #{blackId,jdbcType=INTEGER} 
+  </select>
+  <select id="findList" resultMap="BaseResultMap" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteItemList" >
+    SELECT 
+			<include refid="RbwDetailColumns"/>
+		FROM risk_blackorwhite_item_list b
+		<include refid="RbwDetailWhere"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY b.black_item_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY b.black_item_id DESC
+			</otherwise>
+		</choose>
+  </select>
+    <sql id="RbwDetailColumns" >
+    b.black_item_id, b.black_id, b.black_item_value, b.status, b.create_time, b.update_time, 
+    b.create_author, b.update_author
+  </sql>
+  <sql id="RbwDetailWhere" >
+		where 1=1 
+			<!-- 创建时间 -->
+			<if test="beginCreTime != null and endCreTime != null">
+				AND b.create_time BETWEEN date_format(#{beginCreTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 更新时间 -->
+			<if test="beginUpdTime != null and endUpdTime != null">
+				AND b.update_time BETWEEN date_format(#{beginUpdTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endUpdTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 状态 -->
+			<if test="status != null and status != ''">
+				AND b.status = #{status} 
+			</if>
+			<!-- 黑名单明细元素值 -->
+			<if test=" blackItemValue != null and blackItemValue != ''">
+				AND b.black_item_value  = #{blackItemValue}
+			</if>
+			<!-- 明细编号 -->
+			<if test=" blackItemId !=null and blackItemId !='' ">
+			    AND b.black_item_id = #{blackItemId}
+			</if>
+			<!--创建人 -->
+			<if test=" createAuthor!=null and createAuthor!='' ">
+			    AND b.create_author LIKE CONCAT(CONCAT('%', #{createAuthor}),'%') 
+			</if>
+			<!--更新人-->
+			<if test=" updateAuthor !=null and updateAuthor !='' ">
+			    AND b.update_author LIKE CONCAT(CONCAT('%', #{updateAutor}),'%') 
+			</if>
+			<!-- 黑白名单类型编号 -->
+			<if test=" blackId != null and blackId != ''">
+				AND b.black_id  = #{blackId}
+			</if>
+			<!--  
+			<if test="blackItemIds != null and blackItemIds != ''">
+				AND black_item_id in 
+		        <foreach item="item" index="index" collection="blackItemIds" open="(" separator="," close=")">  
+				    #{item}<foreach item="item" index="index" collection="merchantIds" open="(" separator="," close=")">  
+				    #{merchantIds[${index}]}
+				</foreach>
+				</foreach> 
+			</if> -->
+			<if test="blackItemValues != null and blackItemValues != ''">
+				AND black_item_value in 
+		        <foreach item="item" index="index" collection="blackItemValues" open="(" separator="," close=")">  
+				    '${item}'
+				</foreach> 
+			</if>
+	</sql>
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantIndustryBaseDao">
+    
+	<sql id="merchantIndustryBaseColumns">
+		a.id AS "id",
+		a.industry_id AS "industryId",
+		a.industry_name AS "industryName",
+		a.industry_child_id AS "industryChildId",
+		a.industry_child_name AS "industryChildName",
+		a.parent_id AS "parentId",
+		a.child_parent_id AS "childParentId",
+		a.mcc AS "mcc",
+		a.industry_describe AS "industryDescribe"
+	</sql>
+	
+	<sql id="merchantIndustryBaseJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantIndustryBase">
+		SELECT 
+			<include refid="merchantIndustryBaseColumns"/>
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getMcc" resultType="MerchantIndustryBase">
+		SELECT 
+			<include refid="merchantIndustryBaseColumns"/>
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.mcc = #{mcc}
+	</select>
+
+	<select id="getIndustryChildName" resultType="MerchantIndustryBase">
+		SELECT
+			<include refid="merchantIndustryBaseColumns"/>
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.industry_child_id = #{industryChildId}
+		limit 1
+	</select>
+	
+	<select id="findList" resultType="MerchantIndustryBase">
+		SELECT 
+			<include refid="merchantIndustryBaseColumns"/>
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		<where>
+			<if test="industryChildId != null and industryChildId != '' ">
+				AND a.industry_child_id = #{industryChildId}
+			</if>
+			<if test="mcc != null and mcc != '' ">
+				AND a.mcc = #{mcc}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantIndustryBase">
+		SELECT 
+			<include refid="merchantIndustryBaseColumns"/>
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_industry_base(
+			id,
+			industry_id,
+			industry_name,
+			industry_child_id,
+			industry_child_name,
+			parent_id,
+			child_parent_id,
+			mcc,
+			industry_describe
+		) VALUES (
+			#{id},
+			#{industryId},
+			#{industryName},
+			#{industryChildId},
+			#{industryChildName},
+			#{parentId},
+			#{childParentId},
+			#{mcc},
+			#{industryDescribe}
+		)
+	</insert>
+	
+	<select id="getIndustry" resultType="MerchantIndustryBase">
+		SELECT 
+			distinct(a.industry_id) AS "industryId",
+			a.industry_name AS "industryName"
+		FROM merchant_industry_base a
+	</select>
+	
+	<select id="industryChild" resultType="MerchantIndustryBase">
+		SELECT 
+			distinct(a.industry_child_id) AS "industryChildId",
+			a.industry_child_name AS "industryChildName"
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.parent_id = #{parentId}
+	</select>
+	
+	<select id="industryMcc" resultType="MerchantIndustryBase">
+		SELECT 
+			distinct(a.mcc) AS "mcc",
+			a.industry_describe AS "industryDescribe"
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.child_parent_id = #{childParentId}
+	</select>
+
+	<select id="getIndustryChildId" resultType="MerchantIndustryBase">
+		SELECT
+		distinct(a.industry_child_id) AS "industryChildId",
+		a.industry_child_name AS "industryChildName"
+		FROM merchant_industry_base a
+		<include refid="merchantIndustryBaseJoins"/>
+		WHERE a.industry_child_name = #{industryChildName}
+	</select>
+
+	<select id="maxChildId" resultType="Integer">
+		SELECT MAX(industry_child_id) FROM merchant_industry_base
+	</select>
+	
+	<update id="update">
+		UPDATE merchant_industry_base SET 	
+			industry_id = #{industryId},
+			industry_name = #{industryName},
+			industry_child_id = #{industryChildId},
+			industry_child_name = #{industryChildName},
+			parent_id = #{parentId},
+			child_parent_id = #{childParentId},
+			mcc = #{mcc},
+			industry_describe = #{industryDescribe}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_industry_base
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

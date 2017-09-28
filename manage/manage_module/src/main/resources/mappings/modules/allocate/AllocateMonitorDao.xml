@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.allocate.dao.AllocateMonitorDao">
+    
+	<sql id="allocateMonitorColumns">
+		a.monitor_id AS "monitorId",
+		a.threshold_value AS "thresholdValue",
+		a.monitor_account AS "monitorAccount",
+		a.email AS "email",
+		a.phone_num AS "phoneNum",
+		a.email_status AS "emailStatus",
+		a.sms_status AS "smsStatus",
+		a.creator AS "creator",
+		a.modifier AS "modifier",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="allocateMonitorJoins">
+	</sql>
+    
+	<select id="get" resultType="AllocateMonitor">
+		SELECT 
+			<include refid="allocateMonitorColumns"/>
+		FROM allocate_monitor a
+		<include refid="allocateMonitorJoins"/>
+		WHERE a.monitor_id = #{monitorId}
+	</select>
+	
+	<select id="findList" resultType="AllocateMonitor">
+		SELECT 
+			<include refid="allocateMonitorColumns"/>
+		FROM allocate_monitor a
+		<include refid="allocateMonitorJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AllocateMonitor">
+		SELECT 
+			<include refid="allocateMonitorColumns"/>
+		FROM allocate_monitor a
+		<include refid="allocateMonitorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO allocate_monitor(
+			monitor_id,
+			threshold_value,
+			monitor_account,
+			email,
+			phone_num,
+			email_status,
+			sms_status,
+			creator,
+			modifier,
+			create_time,
+			update_time
+		) VALUES (
+			#{monitorId},
+			#{thresholdValue},
+			#{monitorAccount},
+			#{email},
+			#{phoneNum},
+			#{emailStatus},
+			#{smsStatus},
+			#{creator},
+			#{modifier},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE allocate_monitor SET 	
+			monitor_id = #{monitorId},
+			threshold_value = #{thresholdValue},
+			monitor_account = #{monitorAccount},
+			email = #{email},
+			phone_num = #{phoneNum},
+			email_status = #{emailStatus},
+			sms_status = #{smsStatus},
+			creator = #{creator},
+			modifier = #{modifier},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE monitor_id = #{monitorId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM allocate_monitor
+		WHERE monitor_id = #{monitorId}
+	</update>
+	
+	<update id="updateAllocateMonitor">
+		UPDATE allocate_monitor SET 	
+			monitor_id = #{monitorId},
+			threshold_value = #{thresholdValue},
+			monitor_account = #{monitorAccount},
+			email = #{email},
+			phone_num = #{phoneNum},
+			email_status = #{emailStatus},
+			sms_status = #{smsStatus}
+		WHERE monitor_id = #{monitorId}
+	</update>
+	
+</mapper>

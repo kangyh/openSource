@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/rabbit 
+http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
+
+	<context:component-scan base-package="com.test.rabbit.producer" />
+
+	<context:annotation-config />
+
+	<!-- 连接服务配置 --> 
+   	<rabbit:connection-factory id="connectionFactory" addresses="${addresses}" username="${username}" password="${password}"  />
+
+	<!-- Admin object for creation of queues -->
+	<rabbit:admin connection-factory="connectionFactory" />
+	
+	<!-- queue statement-->
+   
+   	<rabbit:queue id="hyBillingSettleMerchantQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleMerchantQueue"/>
+	<rabbit:queue id="hyBillingSettleChannelRecordDetailQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleChannelRecordDetailQueue"/>
+   	<!-- exchange queue binging key 绑定 -->
+    <rabbit:direct-exchange name="ltest_exchange" durable="true" auto-delete="false" id="ltest_exchange">
+        <rabbit:bindings>            
+            <rabbit:binding queue="hyBillingSettleMerchantQueue" key="hyBillingSettleMerchantQueue_key"/> 
+            <rabbit:binding queue="hyBillingSettleChannelRecordDetailQueue" key="hyBillingSettleChannelRecordDetailQueue_key"/>          
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列 -->
+    <!-- <bean id="jsonMessageConverter"  class="com.exiao.platform.common.message.mq.provider.JacksonMessageConverter"></bean> -->
+    <!-- 声明消息转换器为SimpleMessageConverter -->
+    <bean id="mqMessageConverter"
+        class="org.springframework.amqp.support.converter.SimpleMessageConverter">
+    </bean>
+
+    <rabbit:template exchange="ltest_exchange" id="hyBillingSettleMerchantqueueAmqpTemplate" routing-key= "hyBillingSettleMerchantQueue_key" queue="hyBillingSettleMerchantQueue" connection-factory="connectionFactory" message-converter="mqMessageConverter" />
+    <rabbit:template exchange="ltest_exchange" id="hyBillingSettleChannelRecordDetailMqTemplate" routing-key= "hyBillingSettleChannelRecordDetailQueue_key" queue="hyBillingSettleChannelRecordDetailQueue" connection-factory="connectionFactory" message-converter="mqMessageConverter" />    
+</beans>

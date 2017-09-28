@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.risk.dao.RiskRuleDetailMapper">
+   <select id="getRuleDetailList"  resultType="com.heepay.risk.entity.RiskRuleDetail"  parameterType="java.lang.Long" >
+    select detail_id, detail_code, detail_name, relation_key, relation_value, remark, status, 
+    rule_id, level from risk_rule_detail
+    where status = 'ENABLE' and rule_id=#{ruleId,jdbcType=BIGINT} order by level desc,create_time desc
+  </select>
+   <select id="getRuleDetailByDetailCode"  resultType="com.heepay.risk.entity.RiskRuleDetail"  parameterType="java.lang.String" >
+    select detail_id, detail_code, detail_name, relation_key, relation_value, remark, status, 
+    rule_id, level from risk_rule_detail
+    where status = 'ENABLE' and detail_code=#{detailCode,jdbcType=VARCHAR} 
+  </select>
+</mapper>

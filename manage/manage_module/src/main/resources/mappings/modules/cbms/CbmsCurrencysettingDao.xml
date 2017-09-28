@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsCurrencysettingDao">
+    
+	<sql id="cbmsCurrencysettingColumns">
+		a.currency_id AS "currencyId",
+		a.currency_no AS "currencyNo",
+		a.currency_name AS "currencyName",
+		a.inputuser_id AS "inputuserId",
+		a.created_time AS "createdTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="cbmsCurrencysettingJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsCurrencysetting">
+		SELECT 
+			<include refid="cbmsCurrencysettingColumns"/>
+		FROM cbms_currencysetting a
+		<include refid="cbmsCurrencysettingJoins"/>
+		WHERE a.currency_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CbmsCurrencysetting">
+		SELECT 
+			<include refid="cbmsCurrencysettingColumns"/>
+		FROM cbms_currencysetting a
+		<include refid="cbmsCurrencysettingJoins"/>
+		<where>
+			
+			<if test="currencyNo != null and currencyNo != ''">
+				AND a.currency_no = #{currencyNo}
+			</if>
+			<if test="currencyName != null and currencyName != ''">
+				AND a.currency_name LIKE  CONCAT(CONCAT('%', #{currencyName}),'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CbmsCurrencysetting">
+		SELECT 
+			<include refid="cbmsCurrencysettingColumns"/>
+		FROM cbms_currencysetting a
+		<include refid="cbmsCurrencysettingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_currencysetting(
+			currency_id,
+			currency_no,
+			currency_name,
+			inputuser_id,
+			created_time,
+			update_user_id,
+			update_time,
+			status
+		) VALUES (
+			#{currencyId},
+			#{currencyNo},
+			#{currencyName},
+			#{inputuserId},
+			#{createdTime},
+			#{updateUserId},
+			#{updateTime},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_currencysetting SET 	
+			currency_id = #{currencyId},
+			currency_no = #{currencyNo},
+			currency_name = #{currencyName},
+			inputuser_id = #{inputuserId},
+			created_time = #{createdTime},
+			update_user_id = #{updateUserId},
+			update_time = #{updateTime},
+			status = #{status}
+		WHERE currency_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_currencysetting
+		WHERE currency_id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.RiskMerchantProductQuotaMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskMerchantProductQuota" >
+    <id column="mer_pro_id" property="merProId" jdbcType="BIGINT" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="per_item" property="perItem" jdbcType="DECIMAL" />
+    <result column="per_day" property="perDay" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="per_month" property="perMonth" jdbcType="DECIMAL" />
+      <result column="account_type" jdbcType="VARCHAR" property="accountType" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="bankcard_type" jdbcType="VARCHAR" property="bankcardType" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mer_pro_id, product_code, product_name, merchant_code, merchant_name, per_item, per_day, 
+    status, per_month, account_type, bankcard_type,merchant_account,create_time, create_author, update_time, update_author
+  </sql>
+  <select id="selectProductQuotaList" resultType="com.heepay.risk.entity.RiskMerchantProductQuota"  parameterType="com.heepay.risk.vo.MerchantProductSelectVO" >
+    select mer_pro_id, product_code, product_name, merchant_id, merchant_name, per_item, per_day, 
+    status, per_month, account_type, create_time, create_author, update_time, update_author, bankcard_type from risk_merchant_product_quota
+    where status = #{status,jdbcType=VARCHAR} and merchant_id=#{merchantId,jdbcType=INTEGER}  and 
+   product_code=#{productCode,jdbcType=VARCHAR} 
+   and account_type=#{accountType,jdbcType=VARCHAR} 
+   <choose>
+    <when test="bankcardType != null ">
+       and  bankcard_type=#{bankcardType,jdbcType=VARCHAR} 
+    </when>
+    <otherwise>
+      and bankcard_type  is null
+    </otherwise>
+  </choose>   
+  </select>
+  
+  
+  <select id="selectMerchantProductQuotaList" resultType="com.heepay.risk.entity.RiskMerchantProductQuota"  >
+    select mer_pro_id, product_code, product_name, merchant_id, merchant_name, per_item, per_day, 
+    status, per_month, account_type, create_time, create_author, update_time, update_author, bankcard_type from risk_merchant_product_quota
+   </select>
+  
+  <!-- 修改商户限额信息表 -->
+	<update id="update">
+		UPDATE risk_merchant_product_quota
+		<set>
+			<if test="perItem != null">per_item = #{perItem},</if>
+			<if test="perDay != null">per_day = #{perDay},</if>
+			<if test="perMonth != null">per_month = #{perMonth},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="updateAuthor != null">update_author = #{updateAuthor},</if>
+		</set>
+		WHERE mer_pro_id = #{merProId}
+	</update>
+	<!-- 插入商户产品限额信息 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="merProId">
+    insert into risk_merchant_product_quota (mer_pro_id, product_code, product_name, 
+      merchant_id, merchant_name, per_item, 
+      per_day, status, per_month, 
+      account_type, create_time, create_author, 
+      update_time, update_author, bankcard_type, 
+      merchant_account)
+    values (#{merProId,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+      #{merchantId,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR}, #{perItem,jdbcType=DECIMAL}, 
+      #{perDay,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{perMonth,jdbcType=DECIMAL}, 
+      #{accountType,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createAuthor,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, #{bankcardType,jdbcType=CHAR}, 
+      #{merchantAccount,jdbcType=VARCHAR})
+  </insert>
+</mapper>

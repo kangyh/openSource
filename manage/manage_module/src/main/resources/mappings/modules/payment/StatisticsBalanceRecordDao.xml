@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.StatisticsBalanceRecordDao">
+    
+	<sql id="statisticsBalanceRecordColumns">
+		a.id AS "id",
+		a.trans_date AS "transDate",
+		a.begin_in_amount AS "beginInAmount",
+		a.begin_out_amount AS "beginOutAmount",
+		a.begin_balance_amount AS "beginBalanceAmount",
+		a.begin_fee_amount AS "beginFeeAmount",
+		a.trans_in_amount AS "transInAmount",
+		a.trans_out_amount AS "transOutAmount",
+		a.trans_fee_amount AS "transFeeAmount",
+		a.end_in_amount AS "endInAmount",
+		a.end_out_amount AS "endOutAmount",
+		a.end_balance_amount AS "endBalanceAmount",
+		a.end_fee_amount AS "endFeeAmount"
+	</sql>
+	
+	<sql id="statisticsBalanceRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsBalanceRecord">
+		SELECT 
+			<include refid="statisticsBalanceRecordColumns"/>
+		FROM statistics_balance_record a
+		<include refid="statisticsBalanceRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StatisticsBalanceRecord">
+		SELECT 
+			<include refid="statisticsBalanceRecordColumns"/>
+		FROM statistics_balance_record a
+		<include refid="statisticsBalanceRecordJoins"/>
+		<where>
+			
+			<if test="beginTransDate != null and endTransDate != null">
+				AND a.trans_date BETWEEN #{beginTransDate} AND #{endTransDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsBalanceRecord">
+		SELECT 
+			<include refid="statisticsBalanceRecordColumns"/>
+		FROM statistics_balance_record a
+		<include refid="statisticsBalanceRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_balance_record(
+			id,
+			trans_date,
+			begin_in_amount,
+			begin_out_amount,
+			begin_balance_amount,
+			begin_fee_amount,
+			trans_in_amount,
+			trans_out_amount,
+			trans_fee_amount,
+			end_in_amount,
+			end_out_amount,
+			end_balance_amount,
+			end_fee_amount
+		) VALUES (
+			#{id},
+			#{transDate},
+			#{beginInAmount},
+			#{beginOutAmount},
+			#{beginBalanceAmount},
+			#{beginFeeAmount},
+			#{transInAmount},
+			#{transOutAmount},
+			#{transFeeAmount},
+			#{endInAmount},
+			#{endOutAmount},
+			#{endBalanceAmount},
+			#{endFeeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_balance_record SET 	
+			trans_date = #{transDate},
+			begin_in_amount = #{beginInAmount},
+			begin_out_amount = #{beginOutAmount},
+			begin_balance_amount = #{beginBalanceAmount},
+			begin_fee_amount = #{beginFeeAmount},
+			trans_in_amount = #{transInAmount},
+			trans_out_amount = #{transOutAmount},
+			trans_fee_amount = #{transFeeAmount},
+			end_in_amount = #{endInAmount},
+			end_out_amount = #{endOutAmount},
+			end_balance_amount = #{endBalanceAmount},
+			end_fee_amount = #{endFeeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_balance_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

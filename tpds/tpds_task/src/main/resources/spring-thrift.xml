@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<bean id="heepayClient" class="com.heepay.rpc.client.ThriftClientProxy">
+<!-- 		<property name="serverIp" value="${thrift.server.ip}"></property>
+     	<property name="serverPort" value="${thrift.server.port}"></property>
+     	<property name="nodename" value="${thrift.server.nodename}"></property>
+     	<property name="zkserverip" value="${zookeeper.ens.ip}"></property>
+     	<property name="singleton" value="${zookeeper.ens.singleton}"></property> -->
+         <property name="address" value="${thrift.ens.ip}"></property>
+		 <property name="open" value="${zookeeper.ens.open}"></property> 	
+	     <property name="nodename" value="${thrift.ens.nodename}"></property>
+	     <property name="zkserverip" value="${zookeeper.ens.ip}"></property>
+    </bean>
+    
+    
+    <bean id="tpdsClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${tpdsbillapi.thrift.ens.ip}"></property>
+		 <property name="open" value="${tpdsbillapi.zookeeper.ens.open}"></property>
+		  <property name="nodename" value="${tpdsbillapi.thrift.ens.nodename}"></property> 	
+	     <property name="zkserverip" value="${tpdsbillapi.zookeeper.ens.ip}"></property>
+    </bean>
+</beans>  

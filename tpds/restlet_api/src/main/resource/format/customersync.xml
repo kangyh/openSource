@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<reqHeader obj="json">
+	<version type="varchar" value="3" code="1002" req="M">version字段不应超过3位有效字符</version>
+	<merchantCode type="varchar" value="11" code="1002" req="M">merchantCode字段应为11位有效字符</merchantCode>
+	<txnType type="varchar" value="6" code="1002" req="M">txnType字段不应超过6位有效字符</txnType>
+	<clientSn type="varchar" value="50" code="1002" req="M">clientSn字段不应超过50位有效字段</clientSn>
+	<clientDate type="char" value="8" code="1002" req="M">clientDate字段的日期格式为YYYYMMDD</clientDate>
+	<clientTime type="char" value="6" code="1002" req="M">clientTime字段的日期格式为HHmmss</clientTime>
+	<fileName type="varchar" value="255" code="1002" req="O">fileName字段不应超过255位有效字符</fileName>
+	<signTime type="varchar" value="30" code="1002" req="M">signTime字段不应超过30位有效字符</signTime>
+	<signature type="varchar" value="4000" code="1002" req="M">signature字段不应超过4000位有效字符</signature>
+</reqHeader>
+<inBody obj="json">
+	<customerId type="varchar" value="64" req="M">customerId字段不应超过64位有效字符</customerId>
+	<businessSeqNo type="varchar" value="64" req="M">businessSeqNo字段不应超过64位有效字符</businessSeqNo>
+	<busiTradeType type="varchar" value="3" req="M">busiTradeType字段不应超过3位有效字符</busiTradeType>
+	<ctype type="varchar" value="2" req="O">ctype字段应为2位有效字符</ctype>
+	<crole type="varchar" value="2" req="O">crole字段应为2位有效字符</crole>
+	<username type="varchar" value="32" req="O">username字段应为32位有效字符</username>
+	<certType type="varchar" value="2" req="O">certType字段应为2位有效字符</certType>
+	<certNo type="varchar" value="30" req="O">certNo字段应为30位有效字符</certNo>
+	<certFImage type="varchar" value="20000" req="O">certFImage字段应为20000位有效字符</certFImage>
+	<certBImage type="varchar" value="20000" req="O">certBImage字段应为20000位有效字符</certBImage>
+	<certInfo type="varchar" value="500" req="O">certInfo字段应为500位有效字符</certInfo>
+	<idvalidDate type="varchar" value="10" req="O">idvalidDate字段应为10位有效字符</idvalidDate>
+	<idexpiryDate type="varchar" value="10" req="O">idexpiryDate字段应为10位有效字符</idexpiryDate>
+	<jobType type="varchar" value="10" req="O">jobType字段应为10位有效字符</jobType>
+	<job type="varchar" value="250" req="O">job字段应为250位有效字符</job>
+	<postcode type="varchar" value="6" req="O">postcode字段应为6位有效字符</postcode>
+	<address type="varchar" value="250" req="O">address字段应为250位有效字符</address>
+	<national type="varchar" value="2" req="O">national字段应为2位有效字符</national>
+	<completeFlag type="varchar" value="1" req="O">completeFlag字段应为1位有效字符</completeFlag>
+	<phoneNo type="varchar" value="20" req="O">phoneNo字段应为20位有效字符</phoneNo>
+	<busiLiceNo type="varchar" value="30" req="O">busiLiceNo字段应为30位有效字符</busiLiceNo>
+	<busiLiceDir type="varchar" value="60" req="O">busiLiceDir字段应为60位有效字符</busiLiceDir>
+	<orgCodeNo type="varchar" value="30" req="O">orgCodeNo字段应为30位有效字符</orgCodeNo>
+	<orgCodeDir type="varchar" value="60" req="O">orgCodeDir字段应为60位有效字符</orgCodeDir>
+	<taxRegisNo type="varchar" value="30" req="O">taxRegisNo字段应为30位有效字符</taxRegisNo>
+	<taxRegisDir type="varchar" value="60" req="O">taxRegisDir字段应为60位有效字符</taxRegisDir>
+	<uniSocCreCode type="varchar" value="30" req="O">uniSocCreCode字段应为30位有效字符</uniSocCreCode>
+	<uniSocCreDir type="varchar" value="60" req="O">uniSocCreDir字段应为60位有效字符</uniSocCreDir>
+	<bindFlag type="varchar" value="2" req="O">bindFlag字段应为2位有效字符</bindFlag>
+	<bindType type="varchar" value="2" req="O">bindType字段应为2位有效字符</bindType>
+	<acctype type="varchar" value="2" req="O">acctype字段应为2位有效字符</acctype>
+	<oldbankAccountNo type="varchar" value="22" req="O">oldbankAccountNo字段应为22位有效字符</oldbankAccountNo>
+	<bankAccountNo type="varchar" value="22" req="O">bankAccountNo字段应为22位有效字符</bankAccountNo>
+	<bankAccountName type="varchar" value="60" req="O">bankAccountName字段应为60位有效字符</bankAccountName>
+	<bankAccountTelNo type="varchar" value="15" req="O">bankAccountTelNo字段应为15位有效字符</bankAccountTelNo>
+	<note type="varchar" value="100" req="O">note字段应为100位有效字符</note>
+</inBody>
+</root>

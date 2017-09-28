@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BatchPayRecordDetailDao">
+    
+	<sql id="batchPayRecordDetailColumns">
+		a.batch_pay_id AS "batchPayId",
+		a.merchant_pay_no AS "merchantPayNo",
+		a.batch_id AS "batchId",
+		a.merchant_batch_no AS "merchantBatchNo",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.status AS "status",
+		a.fail_reason AS "failReason",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.payment_id AS "paymentId",
+		a.bank_order_id AS "bankOrderId",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.province AS "province",
+		a.city AS "city",
+		a.openbank_name AS "openbankName",
+		a.pay_reason AS "payReason",
+		a.audit_reason AS "auditReason",
+		a.fee_amount AS "feeAmount",
+		a.audit_flag AS "auditFlag",
+		a.associate_line_number AS "associateLineNumber",
+		a.bankcard_type AS "bankcardType",
+		a.exception_status AS "exceptionStatus",
+		a.intoaccount_time AS "intoaccountTime",
+		a.operator AS "operator",
+		a.audit_person AS "auditPerson",
+		a.user_id AS "userId"
+	</sql>
+	
+	<sql id="batchPayRecordDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="BatchPayRecordDetail">
+		SELECT 
+			<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a
+		<include refid="batchPayRecordDetailJoins"/>
+		WHERE a.batch_pay_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BatchPayRecordDetail">
+		SELECT 
+			<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a
+		<include refid="batchPayRecordDetailJoins"/>
+		<where>
+			<if test="batchId != null and batchId != ''">
+                AND a.batch_id = #{batchId}
+            </if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="status != '' and status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="batchPayId != '' and batchPayId != null">
+                AND a.batch_pay_id = #{batchPayId}
+            </if>
+			<if test="merchantPayNo != '' and merchantPayNo != null">
+				AND a.merchant_pay_no = #{merchantPayNo}
+			</if>
+			<if test="paymentId != '' and paymentId != null">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name = #{bankName}
+			</if>
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+			<if test="bankcardOwnerType != null and bankcardOwnerType != ''">
+				AND a.bankcard_owner_type = #{bankcardOwnerType}
+			</if>
+		</where>
+		ORDER BY a.create_time DESC
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BatchPayRecordDetail">
+		SELECT 
+			<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a
+		<include refid="batchPayRecordDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO batch_pay_record_detail(
+			batch_pay_id,
+			merchant_pay_no,
+			batch_id,
+			merchant_batch_no,
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			create_time,
+			update_time,
+			pay_amount,
+			bankcard_no,
+			bankcard_owner_mobile,
+			bankcard_owner_name,
+			bankcard_owner_idcard,
+			bank_id,
+			bank_name,
+			status,
+			success_time,
+			success_amount,
+			payment_id,
+			bank_order_id,
+			bankcard_owner_type,
+			province,
+			city,
+			openbank_name,
+			pay_reason,
+			audit_reason,
+			fee_amount
+		) VALUES (
+			#{batchPayId},
+			#{merchantPayNo},
+			#{batchId},
+			#{merchantBatchNo},
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{createTime},
+			#{updateTime},
+			#{payAmount},
+			#{bankcardNo},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerName},
+			#{bankcardOwnerIdcard},
+			#{bankId},
+			#{bankName},
+			#{status},
+			#{successTime},
+			#{successAmount},
+			#{paymentId},
+			#{bankOrderId},
+			#{bankcardOwnerType},
+			#{province},
+			#{city},
+			#{openbankName},
+			#{payReason},
+			#{auditReason},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE batch_pay_record_detail SET 	
+			batch_pay_id = #{batchPayId},
+			merchant_pay_no = #{merchantPayNo},
+			batch_id = #{batchId},
+			merchant_batch_no = #{merchantBatchNo},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			pay_amount = #{payAmount},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			status = #{status},
+			fail_reason = #{failReason},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			payment_id = #{paymentId},
+			bank_order_id = #{bankOrderId},
+			bankcard_owner_type = #{bankcardOwnerType},
+			province = #{province},
+			city = #{city},
+			openbank_name = #{openbankName},
+			pay_reason = #{payReason},
+			audit_reason = #{auditReason},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM batch_pay_record_detail
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateAuditState"  parameterType="BatchPayRecordDetail">
+		UPDATE batch_pay_record_detail set
+		status = #{status},
+		update_time = now(),
+		audit_flag ='1',
+		audit_person = #{auditPerson}
+		where batch_pay_id = #{batchPayId}
+	</update>
+
+	<select id="findListByBatchPayId" resultType="BatchPayRecordDetail">
+		SELECT
+		<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a
+		<include refid="batchPayRecordDetailJoins"/>
+		<where>
+			batch_pay_id in
+		</where>
+		<foreach collection="list" item="batchPayId" index="index" open="(" separator="," close=")">
+			#{batchPayId}
+		</foreach>
+	</select>
+	
+	<select id="getDetailsByBatchId" resultType="BatchPayRecordDetail">
+        SELECT 
+            <include refid="batchPayRecordDetailColumns"/>
+        FROM batch_pay_record_detail a
+        <include refid="batchPayRecordDetailJoins"/>
+		<where>
+			batch_id in
+		</where>
+		<foreach collection="list" item="batchId" index="index" open="(" separator="," close=")">
+			#{batchId}
+		</foreach>
+			and a.status = 'PREAUD' and a.exception_status = 'NORMAL'
+        <!--<choose>-->
+            <!--<when test="page !=null and page.orderBy != null and page.orderBy != ''">-->
+                <!--ORDER BY ${page.orderBy}-->
+            <!--</when>-->
+            <!--<otherwise>-->
+            <!--</otherwise>-->
+        <!--</choose>-->
+    </select>
+    
+    <select id="getBtachPayId" resultType="BatchPayRecordDetail">
+		SELECT 
+			max(a.batch_pay_id) as batchPayId,
+			max(a.batch_id) as batchId
+		FROM batch_pay_record_detail a
+	</select>
+	
+	<select id="findPageByStatus" resultType="BatchPayRecordDetail">
+		SELECT 
+			<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a,batch_pay_record b
+	
+		<include refid="batchPayRecordDetailJoins"/>
+		<where>
+			<if test="batchId != null and batchId != ''">
+                AND a.batch_id = #{batchId}
+            </if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="status != '' and status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="batchPayId != '' and batchPayId != null">
+                AND a.batch_pay_id = #{batchPayId}
+            </if>
+			<if test="merchantPayNo != '' and merchantPayNo != null">
+				AND a.merchant_pay_no = #{merchantPayNo}
+			</if>
+			<if test="paymentId != '' and paymentId != null">
+				AND a.payment_id = #{paymentId}
+			</if>
+            <if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+            </if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name = #{bankName}
+			</if>
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+			<if test="bankcardOwnerType != null and bankcardOwnerType != ''">
+				AND a.bankcard_owner_type = #{bankcardOwnerType}
+			</if>
+            and a.batch_id = b.batch_id and b.STATUS != 'PREAUD' AND b.STATUS != 'AUDREJ'
+		</where>
+		ORDER BY a.create_time DESC
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findListByStatus" resultType="BatchPayRecordDetail">
+		SELECT 
+			<include refid="batchPayRecordDetailColumns"/>
+		FROM batch_pay_record_detail a,batch_pay_record b
+	
+		<include refid="batchPayRecordDetailJoins"/>
+		<where>
+			<if test="batchId != null and batchId != ''">
+                AND a.batch_id = #{batchId}
+            </if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="status != '' and status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="batchPayId != '' and batchPayId != null">
+                AND a.batch_pay_id = #{batchPayId}
+            </if>
+			<if test="merchantPayNo != '' and merchantPayNo != null">
+				AND a.merchant_pay_no = #{merchantPayNo}
+			</if>
+			<if test="paymentId != '' and paymentId != null">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.bank_name = #{bankName}
+			</if>
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+			<if test="bankcardOwnerType != null and bankcardOwnerType != ''">
+				AND a.bankcard_owner_type = #{bankcardOwnerType}
+			</if>
+            and a.batch_id = b.batch_id and b.STATUS != 'PREAUD' AND b.STATUS != 'AUDREJ'
+		</where>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<update id="updateBatchPayRecordPROCES">
+		UPDATE batch_pay_record_detail set
+		status = 'PROCES',
+		update_time =now()
+		WHERE batch_pay_id = #{id}
+	</update>
+</mapper>

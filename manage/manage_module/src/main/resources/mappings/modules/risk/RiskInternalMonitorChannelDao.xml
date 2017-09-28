@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskInternalMonitorChannelDao">
+    
+	<sql id="riskInternalMonitorChannelColumns">
+		a.internal_channel_id AS "internalChannelId",
+		a.channel_partner_code AS "channelPartnerCode",
+		a.channel_partner_name AS "channelPartnerName",
+		a.channel_type_code AS "channelTypeCode",
+		a.channel_type_name AS "ChannelTypeName",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.frequency AS "frequency",
+		a.threshold AS "threshold",
+		a.operator AS "operator",
+		a.create_time AS "createTime",
+		a.change_rate AS "changeRate",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="riskInternalMonitorChannelJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskInternalMonitorChannel">
+		SELECT 
+			<include refid="riskInternalMonitorChannelColumns"/>
+		FROM risk_internal_monitor_channel a
+		<include refid="riskInternalMonitorChannelJoins"/>
+		WHERE a.internal_channel_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskInternalMonitorChannel">
+		SELECT 
+			<include refid="riskInternalMonitorChannelColumns"/>
+		FROM risk_internal_monitor_channel a
+		<include refid="riskInternalMonitorChannelJoins"/>
+		<where>
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND a.channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND a.channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="frequency != null and frequency != ''">
+				AND a.frequency = #{frequency}
+			</if>
+			<if test="threshold != null and threshold != ''">
+				AND a.threshold = #{threshold}
+			</if>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d 00:00:00') AND date_format(#{endOperEndTime},'%Y-%m-%d 23:59:59')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.internal_channel_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskInternalMonitorChannel">
+		SELECT 
+			<include refid="riskInternalMonitorChannelColumns"/>
+		FROM risk_internal_monitor_channel a
+		<include refid="riskInternalMonitorChannelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

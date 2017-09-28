@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.settle.dao.SettleChannelRecordDao">
+    
+    <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="settleChannelRecordColumns">
+		a.settle_id AS "clearingId",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_type AS "channelType",
+		a.currency AS "currency",
+		a.pay_num AS "payNum",
+		a.total_amount AS "totalAmount",
+		a.check_time AS "checkTime",
+		a.settle_time AS "settleTime",
+		a.settle_cyc AS "settleCyc",
+		a.settle_bath AS "settleBath",
+		a.cost_time AS "costTime",
+		a.cost_amount AS "costAmount",
+		a.cost_settle_cyc AS "costSettleCyc",
+		a.check_status AS "checkStatus",
+		a.settle_status AS "settleStatus"
+	</sql>
+	
+	<!-- 
+		修改条件是请同时修改下面的文件导出的查询条件
+		findListToExcel
+	 -->
+	
+	<select id="findList" resultType="SettleChannelRecord">
+		SELECT 
+			<include refid="settleChannelRecordColumns"/>
+		FROM settle_channel_record a
+		<where>
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY settle_id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--金额求和-->
+	<select id="sumNum" resultType="SettleChannelRecord">
+		SELECT
+			SUM(pay_num) AS "sumPayNum",
+			SUM(total_amount) AS "sumTotalAmount",
+			SUM(cost_amount) AS "sumCostAmount"
+		FROM settle_channel_record a
+		<where>
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出通道侧结算记录文件专用SQL -->
+	<select id="findListToExcel" resultType="hashmap">
+		SELECT 
+			<include refid="settleChannelRecordColumns"/>
+		FROM settle_channel_record a
+		<where>
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		ORDER BY a.settle_id desc
+	</select>
+	
+	<!-- 去重查询通道合作方 -->
+	<select id="findChannelRecordName" resultType="SettleChannelRecord">
+		SELECT DISTINCT a.channel_name AS "channelName"
+		FROM settle_channel_record a
+	</select>
+
+	<select id="getEntity" resultType="SettleChannelRecord">
+		SELECT
+		<include refid="settleChannelRecordColumns"/>
+		FROM settle_channel_record a
+		where a.settle_bath = #{settleBath,jdbcType=VARCHAR}
+	</select>
+
+	<!--不结算-->
+	<update id="updateEntity" parameterType="SettleChannelRecord">
+		UPDATE settle_channel_record
+		<set >
+			<if test="settleStatus != null and settleStatus != ''" >
+				settle_status = #{settleStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where settle_bath = #{settleBath,jdbcType=VARCHAR}
+	</update>
+</mapper>

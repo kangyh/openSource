@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="GBK"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="restlet" class="org.restlet.ext.spring.SpringComponent">
+    	<property name="server">
+          <bean class="org.restlet.ext.spring.SpringServer">
+            <constructor-arg value="http" />
+            <constructor-arg value="${restlet_api.port}" />
+          </bean>
+        </property>
+         <property name="defaultTarget" ref="default" /> 
+	 </bean>
+
+	<bean id="default" class="org.restlet.ext.spring.SpringRouter">
+    	<property name="attachments">
+        <map>
+            <entry key="/customer/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="customerResource" />
+                </bean>
+            </entry>
+            <entry key="/dataQuery/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="dataQueryResource" />
+                </bean>
+            </entry>
+            <entry key="/transStatusQuery/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="transStatusQueryResource" />
+                </bean>
+            </entry>
+            <entry key="/fundTrans/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="fundTransResource" />
+                </bean>
+            </entry>
+            <entry key="/bankWQ/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="bankWQResource" />
+                </bean>
+            </entry>
+            <!-- h5 -->
+             <entry key="/bankH5/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="h5BankInfoResource" />
+                </bean>
+            </entry>
+            <entry key="/asynNotice/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="asynNoticeResource" />
+                </bean>
+            </entry>
+            <entry key="/b2CAsynNotice/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="b2cAsynNoticeResource" />
+                </bean>
+            </entry>
+            <entry key="/passWord/{routeName}">
+                <bean class="org.restlet.ext.spring.SpringFinder">
+                    <lookup-method name="create"
+                        bean="passWordResource" />
+                </bean>
+            </entry>
+        </map>
+    </property>
+	</bean>
+	   
+    <bean id="dataQueryResource"  class="com.heepay.tpds.resource.DataInfoResource"  scope="prototype" />
+    <bean id="transStatusQueryResource" class="com.heepay.tpds.resource.TransStatusResource" scope="prototype" />
+    <bean id="fundTransResource" class="com.heepay.tpds.resource.FundTransResource" scope="prototype" />
+	<bean id="customerResource"  class="com.heepay.tpds.resource.CustomerResource"  scope="prototype" />
+	<bean id="bankWQResource"  class="com.heepay.tpds.resource.BankWQResource"  scope="prototype" />
+	<bean id="asynNoticeResource"  class="com.heepay.tpds.resource.AsynNoticeResource"  scope="prototype" />
+	<bean id="b2cAsynNoticeResource"  class="com.heepay.tpds.resource.B2CAsynNoticeResource"  scope="prototype" />
+	<!-- h5 -->
+	<bean id="h5BankInfoResource"  class="com.heepay.tpds.resource.H5BankInfoResource" scope="prototype"/>
+	
+	<bean id="passWordResource"  class="com.heepay.tpds.resource.PasswordResource" scope="prototype"/>
+	
+</beans>  

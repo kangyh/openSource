@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.TransferapplyDao">
+    
+	<sql id="transfer_applyColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.order_id AS "orderId",
+		a.amount AS "amount",
+		a.transfer_type AS "transferType",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.apply_status AS "applyStatus",
+		a.auditor AS "auditor",
+		a.reject_reason AS "rejectReason",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3"
+	</sql>
+	
+	<sql id="transfer_applyJoins">
+	</sql>
+    
+	<select id="get" resultType="Transferapply">
+		SELECT 
+			<include refid="transfer_applyColumns"/>
+		FROM transfer_apply a
+		<include refid="transfer_applyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Transferapply">
+		SELECT 
+			<include refid="transfer_applyColumns"/>
+		FROM transfer_apply a
+		<include refid="transfer_applyJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="transferType != null and transferType != ''">
+				AND a.transfer_type = #{transferType}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			<if test="applyStatus != null and applyStatus != ''">
+				AND a.apply_status = #{applyStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Transferapply">
+		SELECT 
+			<include refid="transfer_applyColumns"/>
+		FROM transfer_apply a
+		<include refid="transfer_applyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO transfer_apply(
+			id,
+			merchant_id,
+			order_id,
+			amount,
+			transfer_type,
+			create_time,
+			update_time,
+			apply_status,
+			auditor,
+			reject_reason,
+			extend1,
+			extend2,
+			extend3
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{orderId},
+			#{amount},
+			#{transferType},
+			#{createTime},
+			#{updateTime},
+			#{applyStatus},
+			#{auditor},
+			#{rejectReason},
+			#{extend1},
+			#{extend2},
+			#{extend3}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE transfer_apply SET 	
+			merchant_id = #{merchantId},
+			order_id = #{orderId},
+			amount = #{amount},
+			transfer_type = #{transferType},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			apply_status = #{applyStatus},
+			auditor = #{auditor},
+			reject_reason = #{rejectReason},
+			extend1 = #{extend1},
+			extend2 = #{extend2},
+			extend3 = #{extend3}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM transfer_apply
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

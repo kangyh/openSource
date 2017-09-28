@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleChannelManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleChannelManager" >
+    <id column="channel_manange_id" property="channelManangeId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="cost_settle_cyc" property="costSettleCyc" jdbcType="VARCHAR" />
+    <result column="effect_flg" property="effectFlg" jdbcType="VARCHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="remote_adress" property="remoteAdress" jdbcType="VARCHAR" />
+    <result column="remote_user_name" property="remoteUserName" jdbcType="VARCHAR" />
+    <result column="remote_password" property="remotePassword" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="VARCHAR" />
+    <result column="local_file_path" property="localFilePath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="settle_way" property="settleWay" jdbcType="VARCHAR" />
+    <result column="rule_type" property="ruleType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    channel_manange_id, channel_code, channel_name, channel_type, cost_settle_cyc, effect_flg, 
+    check_flg, settle_cyc, remote_adress, remote_user_name, remote_password, port, local_file_path, 
+    create_time, create_author, update_time, update_author, settle_way, rule_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleChannelManagerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_channel_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_channel_manager
+    where channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_channel_manager
+    where channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleChannelManagerExample" >
+    delete from settle_channel_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleChannelManager" >
+    insert into settle_channel_manager (channel_manange_id, channel_code, channel_name, 
+      channel_type, cost_settle_cyc, effect_flg, 
+      check_flg, settle_cyc, remote_adress, 
+      remote_user_name, remote_password, port, 
+      local_file_path, create_time, create_author, 
+      update_time, update_author, settle_way, 
+      rule_type)
+    values (#{channelManangeId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{channelType,jdbcType=VARCHAR}, #{costSettleCyc,jdbcType=VARCHAR}, #{effectFlg,jdbcType=VARCHAR}, 
+      #{checkFlg,jdbcType=VARCHAR}, #{settleCyc,jdbcType=VARCHAR}, #{remoteAdress,jdbcType=VARCHAR}, 
+      #{remoteUserName,jdbcType=VARCHAR}, #{remotePassword,jdbcType=VARCHAR}, #{port,jdbcType=VARCHAR}, 
+      #{localFilePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createAuthor,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, #{settleWay,jdbcType=VARCHAR}, 
+      #{ruleType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleChannelManager" >
+    insert into settle_channel_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="channelManangeId != null" >
+        channel_manange_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="costSettleCyc != null" >
+        cost_settle_cyc,
+      </if>
+      <if test="effectFlg != null" >
+        effect_flg,
+      </if>
+      <if test="checkFlg != null" >
+        check_flg,
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc,
+      </if>
+      <if test="remoteAdress != null" >
+        remote_adress,
+      </if>
+      <if test="remoteUserName != null" >
+        remote_user_name,
+      </if>
+      <if test="remotePassword != null" >
+        remote_password,
+      </if>
+      <if test="port != null" >
+        port,
+      </if>
+      <if test="localFilePath != null" >
+        local_file_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+      <if test="settleWay != null" >
+        settle_way,
+      </if>
+      <if test="ruleType != null" >
+        rule_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="channelManangeId != null" >
+        #{channelManangeId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="costSettleCyc != null" >
+        #{costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="effectFlg != null" >
+        #{effectFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFlg != null" >
+        #{checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="settleCyc != null" >
+        #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteAdress != null" >
+        #{remoteAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteUserName != null" >
+        #{remoteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="remotePassword != null" >
+        #{remotePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="localFilePath != null" >
+        #{localFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="settleWay != null" >
+        #{settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null" >
+        #{ruleType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleChannelManagerExample" resultType="java.lang.Integer" >
+    select count(*) from settle_channel_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_channel_manager
+    <set >
+      <if test="record.channelManangeId != null" >
+        channel_manange_id = #{record.channelManangeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelCode != null" >
+        channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelName != null" >
+        channel_name = #{record.channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costSettleCyc != null" >
+        cost_settle_cyc = #{record.costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.effectFlg != null" >
+        effect_flg = #{record.effectFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFlg != null" >
+        check_flg = #{record.checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleCyc != null" >
+        settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteAdress != null" >
+        remote_adress = #{record.remoteAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remoteUserName != null" >
+        remote_user_name = #{record.remoteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remotePassword != null" >
+        remote_password = #{record.remotePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.port != null" >
+        port = #{record.port,jdbcType=VARCHAR},
+      </if>
+      <if test="record.localFilePath != null" >
+        local_file_path = #{record.localFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createAuthor != null" >
+        create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAuthor != null" >
+        update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleWay != null" >
+        settle_way = #{record.settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ruleType != null" >
+        rule_type = #{record.ruleType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_channel_manager
+    set channel_manange_id = #{record.channelManangeId,jdbcType=BIGINT},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      channel_name = #{record.channelName,jdbcType=VARCHAR},
+      channel_type = #{record.channelType,jdbcType=VARCHAR},
+      cost_settle_cyc = #{record.costSettleCyc,jdbcType=VARCHAR},
+      effect_flg = #{record.effectFlg,jdbcType=VARCHAR},
+      check_flg = #{record.checkFlg,jdbcType=VARCHAR},
+      settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      remote_adress = #{record.remoteAdress,jdbcType=VARCHAR},
+      remote_user_name = #{record.remoteUserName,jdbcType=VARCHAR},
+      remote_password = #{record.remotePassword,jdbcType=VARCHAR},
+      port = #{record.port,jdbcType=VARCHAR},
+      local_file_path = #{record.localFilePath,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      settle_way = #{record.settleWay,jdbcType=VARCHAR},
+      rule_type = #{record.ruleType,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleChannelManager" >
+    update settle_channel_manager
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="costSettleCyc != null" >
+        cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="effectFlg != null" >
+        effect_flg = #{effectFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFlg != null" >
+        check_flg = #{checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteAdress != null" >
+        remote_adress = #{remoteAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="remoteUserName != null" >
+        remote_user_name = #{remoteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="remotePassword != null" >
+        remote_password = #{remotePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=VARCHAR},
+      </if>
+      <if test="localFilePath != null" >
+        local_file_path = #{localFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="settleWay != null" >
+        settle_way = #{settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null" >
+        rule_type = #{ruleType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleChannelManager" >
+    update settle_channel_manager
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+      effect_flg = #{effectFlg,jdbcType=VARCHAR},
+      check_flg = #{checkFlg,jdbcType=VARCHAR},
+      settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      remote_adress = #{remoteAdress,jdbcType=VARCHAR},
+      remote_user_name = #{remoteUserName,jdbcType=VARCHAR},
+      remote_password = #{remotePassword,jdbcType=VARCHAR},
+      port = #{port,jdbcType=VARCHAR},
+      local_file_path = #{localFilePath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR},
+      settle_way = #{settleWay,jdbcType=VARCHAR},
+      rule_type = #{ruleType,jdbcType=VARCHAR}
+    where channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+  </update>
+  <!-- 查询通道管理数据-->
+  <select id="querySettleChannelManagerDetail" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+		settle_channel_manager  where  check_flg =#{checkFlg,jdbcType=VARCHAR} and effect_flg = #{effectFlg,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- billing begin -->
+  <select id="checkSettleChannelManagerRule" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	  <include refid="Base_Column_List" /> 
+  	from 
+  	  settle_channel_manager 
+  	where 
+  	  channel_code=#{channelCode,jdbcType=VARCHAR} and channel_type=#{channelType,jdbcType=VARCHAR} and 
+  	  effect_flg=#{effectFlg,jdbcType=VARCHAR} and settle_way = #{settleWay,jdbcType=VARCHAR} and 
+  	  rule_type = #{ruleType,jdbcType=VARCHAR}
+  	
+  </select>
+  
+  <!-- 根据通道编码获取通道名称 -->
+  <select id="findChannelNameBySettleChannelManageChannelCode" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	  <include refid="Base_Column_List" /> 
+  	from 
+  	  settle_channel_manager 
+  	where 
+  	  channel_code=#{channelCode,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 获取最新配置的通道(后续修改目前通道数据没有排重) -->
+  <select id="queryEffectSettleChannel" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+		settle_channel_manager  where effect_flg = #{effectFlg,jdbcType=VARCHAR};
+		
+  </select>
+  
+   <!-- 获取最新配置的通道(排重) -->
+  <select id="queryEffectSettleChannelWarn" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+	DISTINCT channel_code,channel_type,channel_name
+	FROM
+		settle_channel_manager  where effect_flg = #{effectFlg,jdbcType=VARCHAR};
+		
+  </select>
+  
+  <select id="querySettleChannelManager" resultMap="BaseResultMap" parameterType="java.util.Map">
+	SELECT
+		DISTINCT channel_code,channel_type,channel_name
+	     FROM settle_channel_manager  WHERE (channel_code, channel_type) NOT IN
+
+      (SELECT channel_code, channel_type FROM settle_channel_log t 
+         WHERE  DATE_FORMAT(t.oper_begin_time, '%Y-%m-%d') = #{operBeginTime, jdbcType=VARCHAR} and t.check_status =  #{checkStatus,jdbcType=VARCHAR})  
+               and effect_flg = #{effectFlg,jdbcType=VARCHAR}
+		
+  </select>
+  
+  <select id="getSettleChannelManager" parameterType="map" resultMap="BaseResultMap">
+  	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+		settle_channel_manager  
+	where  
+		check_flg =#{checkFlg,jdbcType=VARCHAR} and effect_flg = #{effectFlg,jdbcType=VARCHAR} and 
+		channel_code = #{channelCode,jdbcType=VARCHAR} and channel_type = #{channelType,jdbcType=VARCHAR}
+		and remote_adress = #{remoteAdress,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

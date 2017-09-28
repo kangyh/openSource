@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.sys.dao.HatAreasDao">
+    
+	<sql id="hatAreasColumns">
+		a.id AS "id",
+		a.areaid AS "areaid",
+		a.area AS "area",
+		a.father AS "father"
+	</sql>
+	
+	<sql id="hatAreasJoins">
+	</sql>
+	
+	 <select id="selectByFather" resultType="HatAreas">
+		select
+			<include refid="hatAreasColumns" />
+		from hat_area a
+		<include refid="hatAreasJoins"/>
+		where a.father = #{father}
+  	</select>
+    
+	<select id="get" resultType="HatAreas">
+		SELECT 
+			<include refid="hatAreasColumns"/>
+		FROM hat_area a
+		<include refid="hatAreasJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HatAreas">
+		SELECT 
+			<include refid="hatAreasColumns"/>
+		FROM hat_area a
+		<include refid="hatAreasJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HatAreas">
+		SELECT 
+			<include refid="hatAreasColumns"/>
+		FROM hat_area a
+		<include refid="hatAreasJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hat_area(
+			id,
+			areaid,
+			area,
+			father
+		) VALUES (
+			#{id},
+			#{areaid},
+			#{area},
+			#{father}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hat_area SET 	
+			areaid = #{areaid},
+			area = #{area},
+			father = #{father}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hat_area
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

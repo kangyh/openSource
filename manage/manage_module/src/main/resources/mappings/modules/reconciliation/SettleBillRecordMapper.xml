@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleBillRecordDao" >
+  
+  <sql id="Base_Column_List" >
+    bill_detail_id AS "billDetailId",
+    channel_code AS "channelCode",
+    channel_type AS "channelType",
+    save_time AS "saveTime",
+    payment_id AS "paymentId",
+    channle_no AS "channleNo",
+    success_amount AS "successAmount",
+    fee AS "fee",
+    bill_status AS "billStatus",
+    check_bath_no AS "checkBathNo",
+    promotion_amount AS "promotionAmount",
+    remark AS "remark",
+    is_zip AS "isZip",
+    fee_service AS "feeService",
+    field1 AS "field1",
+    field2 AS "field2",
+    field3 AS "field3"
+  </sql>
+  
+  <select id="findList" resultType="SettleBillRecord">
+		SELECT 
+			<include refid="Base_Column_List"/>
+		FROM settle_bill_record
+		<where>
+			<!-- 入库时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND save_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 通道编码 -->
+			<if test="channelCode != null and channelCode != ''">
+				AND channel_code = #{channelCode}
+			</if>
+			<!-- 通道业务类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND channel_type = #{channelType}
+			</if>
+			<!-- 支付订单号 -->
+			<if test="paymentId != null and paymentId != ''">
+				AND payment_id = #{paymentId}
+			</if>
+			<!-- 上游流水号 -->
+			<if test="channleNo != null and channleNo != ''">
+				AND channle_no = #{channleNo}
+			</if>
+			<!-- 对账批次 -->
+			<if test="checkBathNo != null and checkBathNo != ''">
+				AND check_bath_no = #{checkBathNo}
+			</if>
+			<!-- 摘要 -->
+			<if test="remark != null and remark != ''">
+				AND remark = #{remark}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY bill_detail_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY bill_detail_id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getChannelCodeEnum" resultType="SettleBillRecord">
+		SELECT DISTINCT(channel_code)  FROM settle_bill_record
+	</select>
+</mapper>

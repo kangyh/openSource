@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskMerchantFreezeDao" >
+  
+  <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="includeEntity">
+		a.freeze_id AS "freezeId",
+		a.freeze_no AS "freezeNo",
+		a.freeze_type AS "freezeType",
+		a.defreeze_no AS "defreezeNo",
+		a.merchant_code AS "merchantCode",
+		a.merchant_name AS "merchantName",
+		a.trans_amount AS "transAmount",
+		a.freeze_remark AS "freezeRemark",
+		a.fail_reason AS "failReason",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.remark1 AS "remark1",
+		a.remark2 AS "remark2",
+		a.remark3 AS "remark3",
+		a.remark4 AS "remark4",
+		a.thaw_messages AS "thawMessages",
+		a.thaw_log AS "thawLog",
+		a.freeze_message AS "freezeMessage"
+	</sql>
+	
+	<select id="findList" resultType="RiskMerchantFreeze">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM risk_merchant_freeze a
+		<where>
+			
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- merchant_name 商户账号 -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName} 
+			</if> 
+			
+			<!-- merchantCode 商户编码 -->
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode} 
+			</if> 
+			
+			<!-- freeze_no 冻结编号 -->
+			<if test="freezeNo != null and freezeNo != ''">
+				AND a.freeze_no = #{freezeNo} 
+			</if> 
+			
+			<!-- defreeze_no 解冻编号 -->
+			<if test="defreezeNo != null and defreezeNo != ''">
+				AND a.defreeze_no = #{defreezeNo} 
+			</if> 
+			
+			<!-- freeze_no  -->
+			<if test="freezeType  != null and freezeType != ''"> 
+				AND a.freeze_type = #{freezeType} 
+			</if> 
+			
+			<!-- freeze_remark 冻结/解冻原因 -->
+			<if test="freezeRemark  != null and freezeRemark != ''"> 
+				AND a.freeze_remark = #{freezeRemark} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="status  != null and status != ''"> 
+				AND a.status = #{status} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="yes  != null and yes != ''"> 
+				AND a.status IN(#{statusthree},#{statusTwo}) 
+			</if> 
+			
+			<!-- remark1备注1 -->
+			<if test="remark1 != null and remark1 != ''"> 
+				AND a.remark1 = #{remark1} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY freeze_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY freeze_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+	<include refid="includeEntity"/>
+		FROM risk_merchant_freeze a
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- merchant_name 商户账号 -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName} 
+			</if> 
+			
+			<!-- merchantCode 商户编码 -->
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode} 
+			</if> 
+			
+			<!-- freeze_no 冻结编号 -->
+			<if test="freezeNo != null and freezeNo != ''">
+				AND a.freeze_no = #{freezeNo} 
+			</if> 
+			
+			<!-- defreeze_no 解冻编号 -->
+			<if test="defreezeNo != null and defreezeNo != ''">
+				AND a.defreeze_no = #{defreezeNo} 
+			</if> 
+			
+			<!-- freeze_no  -->
+			<if test="freezeType  != null and freezeType != ''"> 
+				AND a.freeze_type = #{freezeType} 
+			</if> 
+			
+			<!-- freeze_remark 冻结/解冻原因 -->
+			<if test="freezeRemark  != null and freezeRemark != ''"> 
+				AND a.freeze_remark = #{freezeRemark} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="status  != null and status != ''"> 
+				AND a.status = #{status} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="yes  != null and yes != ''"> 
+				AND a.status IN(#{statusthree},#{statusTwo}) 
+			</if> 
+			
+			<!-- remark1备注1 -->
+			<if test="remark1 != null and remark1 != ''"> 
+				AND a.remark1 = #{remark1} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY freeze_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY freeze_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<insert id="saveEntity" parameterType="RiskMerchantFreeze">
+		INSERT INTO risk_merchant_freeze (
+		  freeze_no,
+		  merchant_name,
+		  merchant_code,
+		  trans_amount,
+		  freeze_remark,
+		  status,
+		  create_time,
+		  create_author,
+		  remark1,
+		  remark2,
+		  remark3,
+		  remark4
+		) 
+		VALUES
+		  (#{freezeNo},#{merchantName},#{merchantCode},#{transAmount},#{freezeRemark},#{status},#{createTime},#{createAuthor},#{remark1},#{remark2},#{remark3},#{remark4}); 
+	</insert>
+	
+	<!-- 更新操作 -->
+	<update id="updateEntity">
+		UPDATE 
+		  risk_merchant_freeze 
+		<set>
+			<if test="status != null and status != ''">
+			status=#{status},
+			</if>
+			<if test="freezeType != null and freezeType != ''">
+			freeze_type=#{freezeType},
+			</if>
+			<if test="updateTime != null">
+			update_time=#{updateTime},
+			</if>
+			<if test="transAmount != null and transAmount != ''">
+			trans_amount=#{transAmount},
+			</if>
+			<if test="freezeRemark != null and freezeRemark != ''">
+			freeze_remark=#{freezeRemark},
+			</if>
+			<if test="defreezeNo != null and defreezeNo != ''">
+			defreeze_no=#{defreezeNo},
+			</if>
+			<if test="thawMessages != null and thawMessages != ''">
+			thaw_messages=#{thawMessages},
+			</if>
+			<if test="freezeMessage != null and freezeMessage != ''">
+			freeze_message=#{freezeMessage},
+			</if>
+			<if test="updateAuthor != null and updateAuthor != ''">
+			update_author=#{updateAuthor},
+			</if>
+			<if test="thawLog != null and thawLog != ''">
+			thaw_log=#{thawLog},
+			</if>
+		</set>
+		   WHERE freeze_id=#{freezeId} 
+	</update>
+	
+	
+	<select id="getEntity" resultType="RiskMerchantFreeze">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM risk_merchant_freeze a
+		WHERE freeze_id = #{freezeId}
+	</select>
+	
+	<select id="getRemark1" resultType="boolean" >
+		SELECT COUNT(1) FROM risk_merchant_freeze WHERE remark1=#{remark1}
+	</select>
+</mapper>

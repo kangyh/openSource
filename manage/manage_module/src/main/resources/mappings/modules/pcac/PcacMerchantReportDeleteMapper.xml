@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pcac.dao.PcacMerchantReportDeleteDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantReportDelete" >
+    <id column="delete_id" property="deleteId" jdbcType="BIGINT" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="cus_type" property="cusType" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="cus_code" property="cusCode" jdbcType="VARCHAR" />
+    <result column="result_status" property="resultStatus" jdbcType="VARCHAR" />
+    <result column="result_code" property="resultCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pcac_merchant_report_delete
+    where delete_id = #{deleteId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReportDelete" >
+    insert into pcac_merchant_report_delete (delete_id, createtime, batch_no, 
+      cus_type, doc_type, doc_code, 
+      cus_code, result_status, result_code,report_id
+      )
+    values (#{deleteId,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, #{batchNo,jdbcType=VARCHAR}, 
+      #{cusType,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{docCode,jdbcType=VARCHAR}, 
+      #{cusCode,jdbcType=VARCHAR}, #{resultStatus,jdbcType=VARCHAR}, #{resultCode,jdbcType=VARCHAR},
+      #{reportId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReportDelete" >
+    update pcac_merchant_report_delete
+    set createtime = #{createtime,jdbcType=TIMESTAMP},
+      batch_no = #{batchNo,jdbcType=VARCHAR},
+      cus_type = #{cusType,jdbcType=VARCHAR},
+      doc_type = #{docType,jdbcType=VARCHAR},
+      doc_code = #{docCode,jdbcType=VARCHAR},
+      cus_code = #{cusCode,jdbcType=VARCHAR},
+      result_status = #{resultStatus,jdbcType=VARCHAR},
+      result_code = #{resultCode,jdbcType=VARCHAR}
+    where delete_id = #{deleteId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select delete_id, createtime, batch_no, cus_type, doc_type, doc_code, cus_code, result_status, 
+    result_code
+    from pcac_merchant_report_delete
+    where delete_id = #{deleteId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select delete_id, createtime, batch_no, cus_type, doc_type, doc_code, cus_code, result_status, 
+    result_code
+    from pcac_merchant_report_delete
+  </select>
+</mapper>

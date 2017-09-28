@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleChannelManagerDao" >
+ 
+ <sql id="includeSQL">
+		s.channel_manange_id AS "channelManangeId",
+		s.channel_code AS "channelCode",
+		s.channel_name AS "channelName",
+		s.channel_type AS "channelType",
+		s.cost_settle_cyc AS "costSettleCyc",
+		s.effect_flg AS "effectFlg",
+		s.check_flg AS "checkFlg",
+		s.settle_cyc AS "settleCyc",
+		s.remote_adress AS "remoteAdress",
+		s.remote_user_name AS "remoteUserName",
+		s.remote_password AS "remotePassword",
+		s.port AS "port",
+		s.create_time AS "createTime",
+		s.create_author AS "createAuthor",
+		s.update_time AS "updateTime",
+		s.update_author AS "updateAuthor",
+		s.local_file_path AS "localFilePath",
+		s.settle_way AS "settleWay",
+		s.rule_type AS "ruleType"
+	</sql>
+	
+	<select id="findList" resultType="SettleChannelManager">
+		SELECT 
+			<include refid="includeSQL"/>
+		FROM settle_channel_manager s
+		<where>
+			<!-- 通道名称
+			<if test="channelName != null and channelName != ''">
+				AND s.channel_name = #{channelName}
+			</if> -->
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND s.channel_code = #{channelCode}
+			</if>
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND s.channel_type = #{channelType}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkFlg != null and checkFlg != ''">
+				AND s.check_flg = #{checkFlg}
+			</if>
+			
+			<if test="effectFlg != null and effectFlg != ''">
+				AND s.effect_flg = #{effectFlg}
+			</if>
+			<!-- 对账方式 -->
+			<if test="settleWay != null and settleWay != ''">
+				AND s.settle_way = #{settleWay}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY channel_manange_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY channel_manange_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="includeSQL"/>
+		FROM settle_channel_manager s
+		<where>
+			<!-- 通道编码-->
+			<if test="channelCode != null and channelCode != ''">
+				AND s.channel_code = #{channelCode}
+			</if>
+			
+			<!-- 通道类型-->
+			<if test="channelType != null and channelType != ''">
+				AND s.channel_type = #{channelType}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkFlg != null and checkFlg != ''">
+				AND s.check_flg = #{checkFlg}
+			</if>
+			
+			<if test="effectFlg != null and effectFlg != ''">
+				AND s.effect_flg = #{effectFlg}
+			</if>
+			<!-- 对账方式 -->
+			<if test="settleWay != null and settleWay != ''">
+				AND s.settle_way = #{settleWay}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY channel_manange_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY channel_manange_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="getEntity" resultType="com.heepay.manage.modules.reconciliation.entity.SettleChannelManager">
+		SELECT 
+			<include refid="includeSQL"/>
+		FROM settle_channel_manager s
+		WHERE s.channel_manange_id=#{channelManangeId}
+	</select>
+	
+	
+	<update id="deleteEntity">
+		UPDATE settle_channel_manager SET effect_flg='N'  WHERE channel_manange_id=#{channelManangeId}
+	</update>
+	
+	<insert id="addEntity">
+		INSERT INTO settle_channel_manager(channel_name,channel_code,channel_type,check_flg,remote_adress,local_file_path,effect_flg,remote_user_name,remote_password,port,create_time,create_author,settle_way,rule_type)
+			VALUES(#{channelName},#{channelCode},#{channelType},#{checkFlg},#{remoteAdress},#{localFilePath},#{effectFlg},#{remoteUserName},#{remotePassword},#{port},#{createTime},#{createAuthor},#{settleWay},#{ruleType})
+	</insert>
+	
+	<update id="saveEntity">
+		UPDATE settle_channel_manager SET channel_code=#{channelCode},
+			   channel_name=#{channelName},channel_type=#{channelType},
+			   check_flg=#{checkFlg},remote_adress=#{remoteAdress},
+			   local_file_path=#{localFilePath},remote_user_name=#{remoteUserName},
+			   remote_password=#{remotePassword},port=#{port},effect_flg=#{effectFlg},
+			   update_time=#{updateTime},
+			   update_author=#{updateAuthor},
+			   settle_way=#{settleWay}
+		WHERE channel_manange_id=#{channelManangeId}
+	</update>
+	
+	<select id="getChannel" resultType="SettleChannelManager">
+		SELECT DISTINCT(channel_name) FROM settle_channel_manager WHERE channel_name IS NOT NULL
+	</select>
+	
+	<select id="getChannelName" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT DISTINCT(channel_name) FROM settle_channel_manager WHERE channel_code=#{channelCode}
+	</select>
+	
+	
+	<select id="getBatchName" resultType="SettleChannelManager">
+		SELECT DISTINCT(channel_code),channel_name FROM settle_channel_manager
+	</select>
+	
+	<select id="getChannelType" resultType="SettleChannelManager">
+		SELECT DISTINCT(channel_type) FROM settle_channel_manager 
+	</select>
+	
+	<!-- 为上传文件是选择通道名称和类型获取数据 -->
+	<select id="getBatchManagerName" resultType="SettleChannelManager"  parameterType="SettleChannelManager">
+		SELECT DISTINCT(channel_code),channel_name FROM settle_channel_manager WHERE check_flg= #{checkFlg} AND effect_flg = #{effectFlg}
+	</select>
+	<!-- 为上传文件是选择通道名称和类型获取数据 -->
+	<select id="getManagerChannelType" resultType="SettleChannelManager"  parameterType="SettleChannelManager">
+		SELECT DISTINCT(channel_type) FROM settle_channel_manager WHERE check_flg= #{checkFlg} AND effect_flg = #{effectFlg}
+	</select>
+	
+	<!-- 上传文件查询 -->
+	<select id="getLocalPath" resultType="java.lang.String" parameterType="SettleChannelManager">
+		SELECT local_file_path FROM settle_channel_manager WHERE check_flg='FI' AND effect_flg='Y' AND channel_code=#{channelCode} AND channel_type=#{channelType} 
+	</select>
+	
+	<select id="getSettleChangeManagerEntity" resultType="SettleChannelManager" parameterType="SettleChannelManager">
+	 SELECT s.channel_manange_id AS "channelManangeId",
+			s.channel_code AS "channelCode",
+			s.channel_name AS "channelName",
+			s.channel_type AS "channelType",
+			s.cost_settle_cyc AS "costSettleCyc",
+			s.effect_flg AS "effectFlg",
+			s.check_flg AS "checkFlg",
+			s.settle_cyc AS "settleCyc",
+			s.remote_adress AS "remoteAdress",
+			s.remote_user_name AS "remoteUserName",
+			s.remote_password AS "remotePassword",
+			s.port AS "port",
+			s.create_time AS "createTime",
+			s.create_author AS "createAuthor",
+			s.update_time AS "updateTime",
+			s.update_author AS "updateAuthor",
+			s.settle_way AS "settleWay",
+			s.local_file_path AS "localFilePath" FROM settle_channel_manager s WHERE channel_type=#{channelType} AND  channel_code=#{channelCode} AND effect_flg=#{effectFlg} AND check_flg=#{checkFlg}
+	</select>
+
+
+	<update id="updateEntity" parameterType="SettleChannelManager" >
+		update settle_channel_manager
+		<set >
+			<if test="channelCode != null" >
+				channel_code = #{channelCode,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null" >
+				channel_name = #{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelType != null" >
+				channel_type = #{channelType,jdbcType=VARCHAR},
+			</if>
+			<if test="costSettleCyc != null" >
+				cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+			</if>
+			<if test="effectFlg != null" >
+				effect_flg = #{effectFlg,jdbcType=VARCHAR},
+			</if>
+			<if test="checkFlg != null" >
+				check_flg = #{checkFlg,jdbcType=VARCHAR},
+			</if>
+			<if test="settleCyc != null" >
+				settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+			</if>
+			<if test="remoteAdress != null" >
+				remote_adress = #{remoteAdress,jdbcType=VARCHAR},
+			</if>
+			<if test="remoteUserName != null" >
+				remote_user_name = #{remoteUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="remotePassword != null" >
+				remote_password = #{remotePassword,jdbcType=VARCHAR},
+			</if>
+			<if test="port != null" >
+				port = #{port,jdbcType=VARCHAR},
+			</if>
+			<if test="localFilePath != null" >
+				local_file_path = #{localFilePath,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createAuthor != null" >
+				create_author = #{createAuthor,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateAuthor != null" >
+				update_author = #{updateAuthor,jdbcType=VARCHAR},
+			</if>
+			<if test="settleWay != null" >
+				settle_way = #{settleWay,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleType != null" >
+				rule_type = #{ruleType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+	</update>
+
+	<delete id="deleteEntityById">
+		DELETE from settle_channel_manager WHERE  channel_manange_id = #{channelManangeId,jdbcType=BIGINT}
+	</delete>
+	
+	<update id="updateAll" parameterType="map">
+		update settle_channel_manager set remote_user_name=#{remoteUserName},remote_password=#{remotePassword} 
+		where remote_user_name=#{userName}
+	</update>
+	
+</mapper>

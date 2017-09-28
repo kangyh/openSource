@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!-- parent -->
+	<parent>
+		<groupId>com.heepay.risk</groupId>
+		<artifactId>risk_parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../risk_parent</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.heepay</groupId>
+	<artifactId>risk_dao</artifactId>
+	<packaging>jar</packaging>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.heepay</groupId>
+			<artifactId>ngp_common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.heepay</groupId>
+			<artifactId>risk_es_engine</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java/com/heepay/risk/mapper</directory>
+				<includes>
+				<include>**/*.xml</include>
+				</includes>
+				<targetPath>com/heepay/risk/mapper</targetPath>
+			</resource>
+		</resources>
+	</build>
+	</project>
+

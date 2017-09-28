@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleChannelLogDao" >
+
+ 	<sql id="settleChannelLogColumns">
+		a.log_id AS "logId",
+		a.channel_code AS "channelCode",
+		a.channel_type AS "channelType",
+		a.check_bath_no AS "checkBathNo",
+		a.oper_begin_time AS "operBeginTime",
+		a.oper_end_time AS "operEndTime",
+		a.record_num AS "recordNum",
+		a.total_amount AS "totalAmount",
+		a.check_status AS "checkStatus",
+		a.out_record_num AS "outRecordNum",
+		a.out_total_amount AS "outTotalAmount",
+		a.in_record_num AS "inRecordNum",
+		a.in_total_amount AS "inTotalAmount",
+		a.error_record_num AS "errorRecordNum",
+		a.error_total_amount AS "errorTotalAmount",
+		a.check_file_name AS "checkFileName",
+		a.check_file_where AS "checkFileWhere",
+		a.check_file_from AS "checkFileFrom",
+		a.rule_type AS "ruleType"
+	</sql>
+	
+	
+	<select id="findList" resultType="SettleChannelLog">
+		SELECT 
+			<include refid="settleChannelLogColumns"/>
+		FROM settle_channel_log a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.oper_end_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 对账批次号 -->
+			<if test="checkBathNo != null and checkBathNo != ''">
+				AND a.check_bath_no = #{checkBathNo}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 通道类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 对账状态 -->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status in (#{checkStatus},#{checkStatusTwo})
+			</if>
+			
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY log_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY log_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findListExcel" resultType="map">
+		SELECT 
+			<include refid="settleChannelLogColumns"/>
+		FROM settle_channel_log a
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.oper_end_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 对账批次号 -->
+			<if test="checkBathNo != null and checkBathNo != ''">
+				AND a.check_bath_no = #{checkBathNo}
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 通道类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 对账状态 -->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status in (#{checkStatus},#{checkStatusTwo})
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY log_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY log_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="addLog" parameterType="com.heepay.manage.modules.reconciliation.entity.SettleChannelLog">
+		INSERT INTO settle_channel_log(channel_code,channel_type,check_bath_no,oper_begin_time,check_status,check_file_name) 
+		VALUES(#{channelCode},#{channelType},#{checkBathNo},#{operBeginTime},#{checkStatus},#{checkFileName})
+	</insert>
+	
+	<select id="getPath" parameterType="String" resultType="boolean">
+		SELECT COUNT(check_file_name) FROM settle_channel_log WHERE check_file_name= #{path};
+	</select>
+	
+	<select id="findCheckDateRemarkSettleChannelLog" resultType="SettleChannelLog">
+		SELECT 
+		  	a.channel_code AS "channelCode",
+		  	r.channel_name AS "channelName",
+		  	a.channel_type AS "channelType",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.out_total_amount) AS "outTotalAmount",
+			SUM(a.in_total_amount) AS "inTotalAmount",
+			SUM(a.error_total_amount) AS "errorTotalAmount"
+		FROM settle_channel_log a
+		LEFT JOIN (SELECT channel_code,channel_name FROM settle_channel_manager c GROUP BY c.channel_code,c.channel_name) r ON r.channel_code = a.channel_code
+		<where>
+			<!-- 通道对账日期 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.oper_end_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="channelCode != null and channelCode != null">
+				AND a.channel_code = #{channelCode}
+			</if>
+			AND a.check_status = 'CE'
+		</where>
+		GROUP BY a.channel_code,a.channel_type,r.channel_name
+		ORDER BY a.channel_code
+	</select>
+	
+	<select id="findChannelCodeAndName" resultType="SettleChannelLog">
+		SELECT 
+	  		l.channel_code AS "channelCode",
+		  	r.channel_name AS "channelName"
+		FROM settle_channel_log l 
+	  	LEFT JOIN (SELECT channel_code,channel_name FROM settle_channel_manager c GROUP BY c.channel_code,c.channel_name) r ON r.channel_code = l.channel_code 
+		GROUP BY l.channel_code,r.channel_name 
+	</select>
+	
+	<select id="getEntityByNo" resultType="SettleChannelLog">
+	 SELECT a.log_id AS "logId",
+			a.channel_code AS "channelCode",
+			a.channel_type AS "channelType",
+			a.check_bath_no AS "checkBathNo",
+			a.oper_begin_time AS "operBeginTime",
+			a.oper_end_time AS "operEndTime",
+			a.record_num AS "recordNum",
+			a.total_amount AS "totalAmount",
+			a.check_status AS "checkStatus",
+			a.out_record_num AS "outRecordNum",
+			a.out_total_amount AS "outTotalAmount",
+			a.in_record_num AS "inRecordNum",
+			a.in_total_amount AS "inTotalAmount",
+			a.error_record_num AS "errorRecordNum",
+			a.error_total_amount AS "errorTotalAmount",
+			a.check_file_where AS "checkFileWhere",
+			a.check_file_from AS "checkFileFrom",
+			a.check_file_name AS "checkFileName" FROM settle_channel_log a WHERE check_bath_no=#{checkBathNo};  
+	</select>
+	
+	<select id="getEntityById" resultType="SettleChannelLog">
+		SELECT 
+			<include refid="settleChannelLogColumns"/>
+		FROM settle_channel_log a
+		WHERE a.log_id = #{logId};  
+	</select>
+</mapper>

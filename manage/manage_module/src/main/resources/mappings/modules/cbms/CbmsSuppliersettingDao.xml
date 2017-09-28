@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsSuppliersettingDao">
+    
+	<sql id="cbmsSuppliersettingColumns">
+		a.merchant_id AS "merchantId",
+		a.merchant_no AS "merchantNo",
+		a.supplier_name AS "supplierName",
+		a.org_customs_code AS "orgCustomsCode",
+		a.org_customs_name AS "orgCustomsName",
+		a.central_office_number AS "centralOfficeNumber",
+		a.enterprise_name AS "enterpriseName",
+		a.busipermit AS "busipermit",
+		a.llegalperson AS "llegalperson",
+		a.province_no AS "provinceNo",
+		a.city_code AS "cityCode",
+		a.busiaddr AS "busiaddr",
+		a.llegal_person_front_photo_address AS "llegalPersonFrontPhotoAddress",
+		a.llegal_person_bank_photo_address AS "llegalPersonBankPhotoAddress",
+		a.bus_license_photo_address AS "busLicensePhotoAddress",
+		a.org_code_photo_address AS "orgCodePhotoAddress",
+		a.tax_regis_cert_photo_address AS "taxRegisCertPhotoAddress",
+		a.trademark_regis_photo_address AS "trademarkRegisPhotoAddress",
+		a.commodity_quality_photo_address AS "commodityQualityPhotoAddress",
+		a.contact_name AS "contactName",
+		a.phone AS "phone",
+		a.contact_fix_phone AS "contactFixPhone",
+		a.email AS "email",
+		a.country_id AS "countryId",
+		a.merchant_key AS "merchantKey",
+		a.merchant_ip AS "merchantIp",
+		a.contract_time AS "contractTime",
+		a.inputuser_id AS "inputuserId",
+		a.created_time AS "createdTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.electricity_name AS "electricityName",
+		a.electricity_url AS "electricityUrl",
+		a.cbms_enterprise_type_name AS "cbmsEnterpriseTypeName",
+		a.cbms_supplier_category_name AS "cbmsSupplierCategoryName",
+		a.cbms_trade_type_name AS "cbmsTradeTypeName",
+		a.business_scope AS "businessScope",
+		a.auto_audit AS "automaticAudit",
+		a.time_interval AS "timeInterval"
+	</sql>
+
+
+	<sql id="cbmsSuppliersettingJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsSuppliersetting">
+		SELECT 
+			<include refid="cbmsSuppliersettingColumns"/>
+		FROM cbms_suppliersetting a
+		<include refid="cbmsSuppliersettingJoins"/>
+		WHERE a.merchant_no = #{merchantNo}
+	</select>
+	
+	<select id="findList" resultType="CbmsSuppliersetting">
+		SELECT 
+			<include refid="cbmsSuppliersettingColumns"/>
+		FROM cbms_suppliersetting a
+		<include refid="cbmsSuppliersettingJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantNo != null and merchantNo != ''">
+				AND a.merchant_no = #{merchantNo}
+			</if>
+			<if test="supplierName != null and supplierName != ''">
+				AND a.supplier_name = #{supplierName}
+			</if>
+			<if test="orgCustomsCode != null and orgCustomsCode != ''">
+				AND a.org_customs_code = #{orgCustomsCode}
+			</if>
+			<if test="orgCustomsName != null and orgCustomsName != ''">
+				AND a.org_customs_name = #{orgCustomsName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<sql id="MerchantUserSuppliersettingColumns">
+		m.user_id AS "merchantNo",
+		m.email AS "email",
+		m.company_name AS "companyName",
+		m.incharger_id AS "inchargerId",
+		m.contactor AS "contactName",
+		u.status AS "status",
+		m.create_time AS "createdTime"
+	</sql>
+	<select id="findCbmsSuppliersettingList" resultType="CbmsSuppliersetting">
+		SELECT
+		<include refid="MerchantUserSuppliersettingColumns"/>
+		from  merchant m,user u
+		<where>
+			m.user_id=u.id  AND rc_audit_status='SUCCES'AND  u.source='cbpays'
+			<if test="merchantNo != null and merchantNo != ''">
+				AND m.user_id = #{merchantNo}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND m.company_name = #{companyName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findAllList" resultType="CbmsSuppliersetting">
+		SELECT 
+			<include refid="cbmsSuppliersettingColumns"/>
+		FROM cbms_suppliersetting a
+		<include refid="cbmsSuppliersettingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_suppliersetting(
+			merchant_id,
+			merchant_no,
+			supplier_name,
+			org_customs_code,
+			org_customs_name,
+			central_office_number,
+			enterprise_name,
+			busipermit,
+			llegalperson,
+			province_no,
+			city_code,
+			busiaddr,
+			llegal_person_front_photo_address,
+			llegal_person_bank_photo_address,
+			bus_license_photo_address,
+			org_code_photo_address,
+			tax_regis_cert_photo_address,
+			trademark_regis_photo_address,
+			commodity_quality_photo_address,
+			contact_name,
+			phone,
+			contact_fix_phone,
+			email,
+			country_id,
+			merchant_key,
+			merchant_ip,
+			contract_time,
+			inputuser_id,
+			created_time,
+			update_user_id,
+			update_time,
+			status,
+			electricity_name,
+			electricity_url,
+			cbms_enterprise_type_name,
+			cbms_supplier_category_name,
+			cbms_trade_type_name,
+			business_scope,
+			time_interval,
+			auto_audit
+		) VALUES (
+			#{merchantId},
+			#{merchantNo},
+			#{supplierName},
+			#{orgCustomsCode},
+			#{orgCustomsName},
+			#{centralOfficeNumber},
+			#{enterpriseName},
+			#{busipermit},
+			#{llegalperson},
+			#{provinceNo},
+			#{cityCode},
+			#{busiaddr},
+			#{llegalPersonFrontPhotoAddress},
+			#{llegalPersonBankPhotoAddress},
+			#{busLicensePhotoAddress},
+			#{orgCodePhotoAddress},
+			#{taxRegisCertPhotoAddress},
+			#{trademarkRegisPhotoAddress},
+			#{commodityQualityPhotoAddress},
+			#{contactName},
+			#{phone},
+			#{contactFixPhone},
+			#{email},
+			#{countryId},
+			#{merchantKey},
+			#{merchantIp},
+			#{contractTime},
+			#{inputuserId},
+			#{createdTime},
+			#{updateUserId},
+			#{updateTime},
+			#{status},
+			#{electricityName},
+			#{electricityUrl},
+			#{cbmsEnterpriseTypeName},
+			#{cbmsSupplierCategoryName},
+			#{cbmsTradeTypeName},
+			#{businessScope},
+			#{timeInterval},
+			#{automaticAudit}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE cbms_suppliersetting
+		 <set>
+			 <if test="merchantId != null" >
+				 merchant_id = #{merchantId},
+			 </if>
+			 <if test="merchantNo != null" >
+				 merchant_no = #{merchantNo},
+			 </if>
+			 <if test="supplierName != null" >
+				 supplier_name = #{supplierName},
+			 </if>
+			 <if test="orgCustomsCode != null" >
+				 org_customs_code = #{orgCustomsCode},
+			 </if>
+			 <if test="orgCustomsName != null" >
+				 org_customs_name = #{orgCustomsName},
+			 </if>
+			 <if test="centralOfficeNumber != null" >
+				 central_office_number = #{centralOfficeNumber},
+			 </if>
+			 <if test="enterpriseName != null" >
+				 enterprise_name = #{enterpriseName},
+			 </if>
+			 <if test="busipermit != null" >
+				 busipermit = #{busipermit},
+			 </if>
+			 <if test="llegalperson != null" >
+				 llegalperson = #{llegalperson},
+			 </if>
+			 <if test="provinceNo != null" >
+				 province_no = #{provinceNo},
+			 </if>
+			 <if test="cityCode != null" >
+				 city_code = #{cityCode},
+			 </if>
+			 <if test="busiaddr != null" >
+				 busiaddr = #{busiaddr},
+			 </if>
+			 <if test="llegalPersonFrontPhotoAddress != null" >
+				 llegal_person_front_photo_address = #{llegalPersonFrontPhotoAddress},
+			 </if>
+			 <if test="llegalPersonBankPhotoAddress != null" >
+				 llegal_person_bank_photo_address = #{llegalPersonBankPhotoAddress},
+			 </if>
+			 <if test="busLicensePhotoAddress != null" >
+				 bus_license_photo_address = #{busLicensePhotoAddress},
+			 </if>
+			 <if test="orgCodePhotoAddress != null" >
+				 org_code_photo_address = #{orgCodePhotoAddress},
+			 </if>
+			 <if test="taxRegisCertPhotoAddress != null" >
+				 tax_regis_cert_photo_address = #{taxRegisCertPhotoAddress},
+			 </if>
+			 <if test="trademarkRegisPhotoAddress != null" >
+				 trademark_regis_photo_address = #{trademarkRegisPhotoAddress},
+			 </if>
+			 <if test="commodityQualityPhotoAddress != null" >
+				 commodity_quality_photo_address = #{commodityQualityPhotoAddress},
+			 </if>
+			 <if test="contactName != null" >
+				 contact_name = #{contactName},
+			 </if>
+			 <if test="phone != null" >
+				 phone = #{phone},
+			 </if>
+			 <if test="contactFixPhone != null" >
+				 contact_fix_phone = #{contactFixPhone},
+			 </if>
+			 <if test="email != null" >
+				 email = #{email},
+			 </if>
+			 <if test="countryId != null" >
+				 country_id = #{countryId},
+			 </if>
+			 <if test="merchantKey != null" >
+				 merchant_key = #{merchantKey},
+			 </if>
+			 <if test="merchantIp != null" >
+				 merchant_ip = #{merchantIp},
+			 </if>
+			 <if test="contractTime != null" >
+				 contract_time = #{contractTime},
+			 </if>
+			 <if test="inputuserId != null" >
+				 inputuser_id = #{inputuserId},
+			 </if>
+			 <if test="createdTime != null" >
+				 created_time = #{createdTime},
+			 </if>
+			 <if test="updateUserId != null" >
+				 update_user_id = #{updateUserId},
+			 </if>
+			 <if test="updateTime != null" >
+				 update_time = #{updateTime},
+			 </if>
+			 <if test="status != null" >
+				 status = #{status},
+			 </if>
+			 <if test="electricityName != null" >
+				 electricity_name = #{electricityName},
+			 </if>
+			 <if test="electricityUrl != null" >
+				 electricity_url = #{electricityUrl},
+			 </if>
+			 <if test="cbmsEnterpriseTypeName != null" >
+				 cbms_enterprise_type_name = #{cbmsEnterpriseTypeName},
+			 </if>
+			 <if test="cbmsSupplierCategoryName != null" >
+				 cbms_supplier_category_name = #{cbmsSupplierCategoryName},
+			 </if>
+			 <if test="cbmsTradeTypeName != null" >
+				 cbms_trade_type_name = #{cbmsTradeTypeName},
+			 </if>
+			 <if test="businessScope != null" >
+				 business_scope = #{businessScope},
+			 </if>
+			 <if test="timeInterval != null" >
+				 time_interval = #{timeInterval}
+			 </if>
+
+		 </set>
+		WHERE merchant_no = #{merchantNo}
+	</update>
+
+	<update id="updatecbmsSuppliersetting" parameterType="CbmsSuppliersetting">
+		UPDATE cbms_suppliersetting
+		<set>
+			<if test="automaticAudit != null" >
+				auto_audit = #{automaticAudit}
+			</if>
+			<if test="timeInterval != null" >
+				time_interval = #{timeInterval}
+			</if>
+
+		</set>
+		WHERE merchant_no = #{merchantNo}
+	</update>
+	<update id="delete">
+		DELETE FROM cbms_suppliersetting
+		WHERE merchant_no = #{id}
+	</update>
+
+	<!-- 根据MerchantNo获取Merchant对象 -->
+	<select id="getMerchantByNo" parameterType="java.lang.Integer" resultType="CbmsSuppliersetting">
+		SELECT
+		<include refid="cbmsSuppliersettingColumns"/>
+		FROM cbms_suppliersetting a
+		WHERE a.merchant_no = #{merchantNo}
+	</select>
+
+	<!-- 根据email获取Merchant对象 -->
+	<select id="queryEmailExist" parameterType="java.lang.String" resultType="CbmsSuppliersetting">
+		SELECT
+		<include refid="cbmsSuppliersettingColumns"/>
+		FROM cbms_suppliersetting a
+		WHERE a.email = #{email}
+	</select>
+
+</mapper>

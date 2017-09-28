@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsMerchantAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsMerchantAccount" >
+    <!--<id column="id" property="id" jdbcType="INTEGER" />-->
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="system_no" property="systemNo" jdbcType="VARCHAR" />
+    <result column="acc_no" property="accNo" jdbcType="VARCHAR" />
+    <result column="cert_no" property="certNo" jdbcType="VARCHAR" />
+    <result column="bank_card" property="bankCard" jdbcType="VARCHAR" />
+    <result column="bank_card_branch" property="bankCardBranch" jdbcType="VARCHAR" />
+    <result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="bank_account_branch" property="bankAccountBranch" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsMerchantAccount" >
+    insert into tpds_merchant_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="systemNo != null" >
+        system_no,
+      </if>
+      <if test="accNo != null" >
+        acc_no,
+      </if>
+      <if test="certNo != null" >
+        cert_no,
+      </if>
+      <if test="bankCard != null" >
+        bank_card,
+      </if>
+      <if test="bankCardBranch != null" >
+        bank_card_branch,
+      </if>
+      <if test="bankAccount != null" >
+        bank_account,
+      </if>
+      <if test="bankAccountBranch != null" >
+        bank_account_branch,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNo != null" >
+        #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardBranch != null" >
+        #{bankCardBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountBranch != null" >
+        #{bankAccountBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="getList" resultType="com.heepay.tpds.entity.TpdsMerchantAccount">
+  select  merchant_no, login_name, 
+      system_no, acc_no, cert_no, 
+      bank_card, bank_card_branch, bank_account, 
+      bank_account_branch, create_time, update_time, 
+      update_user, status from tpds_merchant_account where status='ENABLE'
+  </select>
+ <update id="update" parameterType="com.heepay.tpds.entity.TpdsMerchantAccount" >
+   update tpds_merchant_account
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNo != null" >
+        system_no = #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        acc_no = #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        cert_no = #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        bank_card = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardBranch != null" >
+        bank_card_branch = #{bankCardBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        bank_account = #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountBranch != null" >
+        bank_account_branch = #{bankAccountBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tpds_merchant_id = #{tpdsMerchantId,jdbcType=INTEGER}
+  </update> 
+  <select id="selectByMerchantId" parameterType="java.lang.String" resultType="com.heepay.tpds.entity.TpdsMerchantAccount">
+  select id,merchant_no,login_name,system_no,acc_no,bank_card,bank_card_branch,create_time,update_time,update_user,status
+  from tpds_merchant_account where merchant_no=#{MerchantId,jdbcType=VARCHAR} and status='ENABLE'
+  </select>
+  <select id="selectBySysNoAndBankNo" parameterType="com.heepay.tpds.entity.TpdsMerchantAccount" resultType="com.heepay.tpds.entity.TpdsMerchantAccount">
+  select merchant_no,login_name,system_no,acc_no,bank_card,bank_card_branch,create_time,update_time,update_user,status
+  from tpds_merchant_account where system_no=#{systemNo,jdbcType=VARCHAR} and status='ENABLE'
+  </select>
+  <select id="selectBankCardBranchIdBySystemNo" parameterType="java.lang.String" resultType="com.heepay.tpds.entity.TpdsMerchantAccount">
+  select id,merchant_no,login_name,system_no,acc_no,bank_card,bank_card_branch,create_time,update_time,update_user,status
+  from tpds_merchant_account where bank_card_branch=#{bankCardBranch,jdbcType=VARCHAR} and status='ENABLE'
+  </select>
+  
+  <select id="selectAccountRecordByStatus" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	merchant_no,login_name,system_no,acc_no,bank_card,bank_card_branch,create_time,update_time,update_user,status
+  	from tpds_merchant_account 
+  	where status=#{status,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAccountRecordByStatusSystemNo" parameterType="map" resultType="com.heepay.tpds.entity.TpdsMerchantAccount">
+  		select 
+  	merchant_no,login_name,system_no,acc_no,bank_card,bank_card_branch,create_time,update_time,update_user,status
+  	from tpds_merchant_account 
+  	where status=#{status,jdbcType=VARCHAR} and system_no=#{systemNo,jdbcType=VARCHAR}
+  </select>
+</mapper>
+
+
+
+

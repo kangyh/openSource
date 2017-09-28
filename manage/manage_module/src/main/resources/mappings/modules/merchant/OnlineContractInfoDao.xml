@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.OnlineContractInfoDao">
+
+    <sql id="onlineContractInfoColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.norm_product_code AS "normProductCode",
+		a.url AS "url",
+		a.notify_url AS "notifyUrl",
+		a.back_url AS "backUrl",
+		a.ip_domain AS "ipDomain",
+		a.file1 AS "file1",
+		a.file2 AS "file2",
+		a.file3 AS "file3",
+		a.file4 AS "file4",
+		a.file5 AS "file5",
+		a.objection AS "objection",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.pass_time AS "passTime",
+		a.success_time AS "successTime",
+		a.contract_time AS "contractTime",
+		a.reject_time AS "rejectTime",
+		a.other_information AS "otherInformation",
+		a.times AS "times",
+		a.rc_audit_status AS "rcAuditStatus",
+		a.rc_audit_time AS "rcAuditTime",
+		a.rc_auditor AS "rcAuditor",
+		a.legal_audit_status AS "legalAuditStatus",
+		a.legal_audit_time AS "legalAuditTime",
+		a.legal_auditor AS "legalAuditor",
+		a.original_file_path AS "originalFilePath",
+		a.middle_file_path AS "middleFilePath",
+		a.final_file_path AS "finalFilePath",
+		a.batch_no AS "batchNo"
+	</sql>
+
+    <sql id="onlineContractInfoJoins">
+    </sql>
+
+    <select id="get" resultType="OnlineContractInfo">
+        SELECT
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        <include refid="onlineContractInfoJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="OnlineContractInfo">
+        SELECT
+            user_id AS "userId",
+            count(1) AS "count",
+            create_time AS "createTime",
+            rc_audit_status AS "rcAuditStatus",
+            legal_audit_status AS "legalAuditStatus",
+            company_name AS "merchantCompanyName",
+            batch_no AS "batchNo"
+        FROM (
+            SELECT a.user_id,a.create_time, a.rc_audit_status,a.legal_audit_status,b.company_name,a.batch_no
+            FROM online_contract_info a
+            LEFT JOIN merchant b ON a.user_id = b.user_id
+            <where>
+                <if test="userId != null and userId != ''">
+                    AND a.user_id = #{userId}
+                </if>
+                <if test="merchantCompanyName != null and merchantCompanyName != ''">
+                    AND b.company_name LIKE
+                    <if test="dbName == 'oracle'">'%'||#{merchantCompanyName}||'%'</if>
+                    <if test="dbName == 'mssql'">'%'+#{merchantCompanyName}+'%'</if>
+                    <if test="dbName == 'mysql'">concat('%',#{merchantCompanyName},'%')</if>
+                </if>
+                <if test="rcAuditStatus != null and rcAuditStatus != ''">
+                    AND a.rc_audit_status = #{rcAuditStatus}
+                </if>
+                <choose>
+                    <when test="legalAuditStatus != null and legalAuditStatus != '' and legalAuditStatus != 'NotNull'">
+                        AND a.legal_audit_status = #{legalAuditStatus}
+                    </when>
+                    <when test="legalAuditStatus == 'NotNull'">
+                        AND a.legal_audit_status != ''
+                    </when>
+                </choose>
+                <choose>
+                    <when test="beginCreateTime != null and endCreateTime != null ">
+                        AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+                    </when>
+                    <when test="beginCreateTime != null and endCreateTime == null">
+                        AND a.create_time &gt; #{beginCreateTime}
+                    </when>
+                    <when test="beginCreateTime == null and endCreateTime != null">
+                        AND a.create_time &lt; #{endCreateTime}
+                    </when>
+                </choose>
+            </where>
+            <choose>
+                <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                    ORDER BY ${page.orderBy}
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            ) t
+        GROUP BY batch_no,user_id,create_time
+    </select>
+
+    <select id="findAllList" resultType="OnlineContractInfo">
+        SELECT
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        <include refid="onlineContractInfoJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findProductList" resultType="OnlineContractInfo">
+        SELECT
+            a.file1 AS "file1",
+            a.file2 AS "file2",
+            a.file3 AS "file3",
+            a.file4 AS "file4",
+            a.file5 AS "file5",
+            a.original_file_path AS "originalFilePath",
+            a.norm_product_code AS "normProductCode",
+            a.notify_url AS "notifyUrl",
+            a.back_url AS "backUrl",
+            a.ip_domain AS "ipDomain"
+        FROM online_contract_info a
+        <where>
+            <if test="batchNo != null and batchNo != ''">
+                AND a.batch_no = #{batchNo}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO online_contract_info(
+			id,
+			user_id,
+			norm_product_code,
+			url,
+			notify_url,
+			back_url,
+			ip_domain,
+			file1,
+			file2,
+			file3,
+			file4,
+			file5,
+			objection,
+			status,
+			create_time,
+			pass_time,
+			success_time,
+			contract_time,
+			reject_time,
+			other_information,
+			legal_audit_status,
+			original_file_path,
+			middle_file_path,
+			final_file_path,
+			batch_no
+		) VALUES (
+			#{id},
+			#{userId},
+			#{normProductCode},
+			#{url},
+			#{notifyUrl},
+			#{backUrl},
+			#{ipDomain},
+			#{file1},
+			#{file2},
+			#{file3},
+			#{file4},
+			#{file5},
+			#{objection},
+			#{status},
+			#{createTime},
+			#{passTime},
+			#{successTime},
+			#{contractTime},
+			#{rejectTime},
+			#{otherInformation},
+			#{legalAuditStatus},
+			#{originalFilePath},
+			#{middleFilePath},
+			#{finalFilePath},
+			#{batchNo}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE online_contract_info SET 	
+			user_id = #{userId},
+			norm_product_code = #{normProductCode},
+			url = #{url},
+			notify_url = #{notifyUrl},
+			back_url = #{backUrl},
+			ip_domain = #{ipDomain},
+			file1 = #{file1},
+			file2 = #{file2},
+			file3 = #{file3},
+			file4 = #{file4},
+			file5 = #{file5},
+			objection = #{objection},
+			status = #{status},
+			create_time = #{createTime},
+			pass_time = #{passTime},
+			success_time = #{successTime},
+			contract_time = #{contractTime},
+			reject_time = #{rejectTime},
+			other_information = #{otherInformation},
+			original_file_path = #{originalFilePath},
+			middle_file_path = #{middleFilePath},
+			final_file_path = #{finalFilePath}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM online_contract_info
+		WHERE id = #{id}
+	</update>
+
+    <select id="queryUnfinishedProductInfoByUserId" resultType="OnlineContractInfo">
+        SELECT
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        WHERE a.user_id = #{userId} AND a.status != 'SUCCES'
+    </select>
+
+    <select id="queryAllProductInfoByUserId" resultType="OnlineContractInfo">
+        SELECT
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        WHERE a.user_id = #{userId}
+    </select>
+
+    <select id="queryProductIsOpenByProductCode" resultType="java.lang.String">
+		SELECT
+			a.status
+		FROM online_contract_info a
+		WHERE a.user_id = #{0} AND a.norm_product_code =#{1}
+	</select>
+
+    <select id="queryProductByUserIdAndProductCode" resultType="OnlineContractInfo">
+        SELECT
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        WHERE a.user_id = #{0} AND a.norm_product_code =#{1}
+    </select>
+
+    <select id="selectOnlineContractInfo" resultType="OnlineContractInfo">
+        SELECT
+        b.company_name AS "merchantCompanyName",
+        c.name AS "productName",
+        c.business_type AS "businessType",
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        LEFT JOIN merchant b ON a.user_id = b.user_id
+        LEFT JOIN product c ON a.product_code = c.code
+        WHERE a.user_id = #{userId}
+    </select>
+
+    <update id="legalAudit">
+        UPDATE online_contract_info
+        <set>
+            legal_audit_time = #{updateDate},
+            legal_auditor = #{updateBy.id},
+            <if test="legalAuditStatus != null">
+                legal_audit_status = #{legalAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="rcAuditStatus != null">
+                rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="objection != null and objection != ''">
+                objection = #{objection},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="successTime != null">
+                success_time = #{successTime},
+            </if>
+            <if test="rejectTime != null">
+                reject_time = #{rejectTime},
+            </if>
+        </set>
+        WHERE batch_no = #{batchNo}
+    </update>
+
+    <update id="rcAudit">
+        UPDATE online_contract_info
+        <set>
+            rc_audit_time = #{updateDate},
+            rc_auditor = #{updateBy.id},
+            <if test="rcAuditStatus != null">
+                rc_audit_status = #{rcAuditStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="objection != null and objection != ''">
+                objection = #{objection},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="successTime != null">
+                success_time = #{successTime},
+            </if>
+            <if test="rejectTime != null">
+                reject_time = #{rejectTime},
+            </if>
+            <if test="finalFilePath != null and finalFilePath != ''">
+                final_file_path = #{finalFilePath},
+            </if>
+        </set>
+        WHERE batch_no = #{batchNo}
+    </update>
+
+    <select id="queryMaxBatchNoByUserId" resultType="java.lang.String">
+        SELECT
+        max(batch_no)
+        FROM
+          online_contract_info
+        WHERE
+        user_id = #{userId}
+    </select>
+
+    <select id="queryProductsBybatchNoAndUserId" resultType="OnlineContractInfo">
+        SELECT
+        b.company_name AS "merchantCompanyName",
+        <include refid="onlineContractInfoColumns"/>
+        FROM online_contract_info a
+        LEFT JOIN merchant b ON a.user_id = b.user_id
+        WHERE a.batch_no =#{0} AND a.user_id = #{1}
+    </select>
+
+    <select id="queryProductsBatchByUserId" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT batch_no)
+        FROM online_contract_info
+        WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateSignFailProduct">
+        UPDATE online_contract_info
+        <set>
+            url = #{url},
+            notify_url = #{notifyUrl},
+            back_url = #{backUrl},
+            ip_domain = #{ipDomain},
+            status = #{status},
+            create_time = #{createTime},
+            pass_time = #{passTime},
+            contract_time = #{contractTime},
+            reject_time = #{rejectTime}
+            <if test="file1 != null">
+               file1 = #{file1},
+            </if>
+            <if test="file1 != null">
+                file2 = #{file2},
+            </if>
+            <if test="file1 != null">
+               file3 = #{file3},
+            </if>
+            <if test="file1 != null">
+                file4 = #{file4},
+            </if>
+            <if test="file1 != null">
+                file5 = #{file5},
+            </if>
+        </set>
+        WHERE user_id = #{userId} AND batch_no = #{batchNo} AND norm_product_code = #{normProductCode}
+    </update>
+</mapper>

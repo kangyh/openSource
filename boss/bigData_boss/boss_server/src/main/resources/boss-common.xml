@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+    
+	<!--<bean id="bossCommonClient" name="bossCommonClient" class="com.heepay.boss.client.BossCommonClient">
+         <property name="filePath" value="${bossCommonClient.filePath}"></property>
+         <property name="warnBlock" value="${bossCommonClient.warnBlock}"></property>
+         <property name="contactPerson" value="${bossCommonClient.contactPerson}"></property>
+         <property name="bankHostIp" value="${bossCommonClient.bankHostIp}"></property>
+         <property name="bankUserName" value="${bossCommonClient.bankUserName}"></property>
+         <property name="bankPassword" value="${bossCommonClient.bankPassword}"></property>
+         <property name="bankUploadFilePath" value="${bossCommonClient.bankUploadFilePath}"></property>
+         <property name="p2pHostIp" value="${bossCommonClient.p2pHostIp}"></property>
+         <property name="p2pUserName" value="${bossCommonClient.p2pUserName}"></property>
+         <property name="p2pPassword" value="${bossCommonClient.p2pPassword}"></property>
+         <property name="p2pUploadFilePath" value="${bossCommonClient.p2pUploadFilePath}"></property>
+         <property name="busiBranchNo" value="${bossCommonClient.busiBranchNo}"></property>
+         <property name="BASE64PUBLICKEY" value="${bossCommonClient.BASE64PUBLICKEY}"></property>
+         <property name="BASE64PRIVATEKEY" value="${bossCommonClient.BASE64PRIVATEKEY}"></property>
+    </bean>-->
+</beans>  
+

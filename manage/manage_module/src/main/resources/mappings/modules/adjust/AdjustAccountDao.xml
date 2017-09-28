@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.adjust.dao.AdjustAccountDao">
+    
+	<sql id="adjustAccountColumns">
+		a.adjust_id AS "adjustId",
+		a.serial_no AS "serialNo",
+		a.serial_num AS "serialNum",
+		a.trans_no AS "transNo",
+		a.trial_balance_trans_id AS "trialBalanceTransId",
+		a.status AS "status",
+		a.type AS "type",
+		a.account_mark AS "accountMark",
+		a.creator AS "creator",
+		a.auditor AS "auditor",
+		a.file_path AS "filePath",
+		a.reason AS "reason",
+		a.audit_remark AS "auditRemark",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="adjustAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="AdjustAccount">
+		SELECT 
+			<include refid="adjustAccountColumns"/>
+		FROM adjust_account a
+		<include refid="adjustAccountJoins"/>
+		WHERE a.adjust_id = #{adjustId}
+	</select>
+	
+	<select id="findList" resultType="AdjustAccount">
+		SELECT 
+			<include refid="adjustAccountColumns"/>
+		FROM adjust_account a
+		<include refid="adjustAccountJoins"/>
+		<where>
+			<if test="serialNo != null and serialNo != ''">
+				AND a.serial_no = #{serialNo}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="creator != null and creator != ''">
+				AND a.creator = #{creator}
+			</if>
+			<if test="auditor != null and auditor != ''">
+				AND a.auditor = #{auditor}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdjustAccount">
+		SELECT 
+			<include refid="adjustAccountColumns"/>
+		FROM adjust_account a
+		<include refid="adjustAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="adjustId">
+		INSERT INTO adjust_account(
+			serial_no,
+			serial_num,
+			trans_no,
+			trial_balance_trans_id,
+			status,
+			type,
+			account_mark,
+			creator,
+			auditor,
+			file_path,
+			reason,
+			audit_remark,
+			create_time,
+			update_time
+		) VALUES (
+			#{serialNo},
+			#{serialNum},
+			#{transNo},
+			#{trialBalanceTransId},
+			#{status},
+			#{type},
+			#{accountMark},
+			#{creator},
+			#{auditor},
+			#{filePath},
+			#{reason},
+			#{auditRemark},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE adjust_account SET 	
+			adjust_id = #{adjustId},
+			serial_no = #{serialNo},
+			serial_num = #{serialNum},
+			trans_no = #{transNo},
+			trial_balance_trans_id = #{trialBalanceTransId},
+			status = #{status},
+			type = #{type},
+			account_mark = #{accountMark},
+			creator = #{creator},
+			auditor = #{auditor},
+			file_path = #{filePath},
+			reason = #{reason},
+			audit_remark = #{auditRemark},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE adjust_id = #{adjustId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM adjust_account
+		WHERE adjust_id = #{adjustId}
+	</update>
+	
+	<update id="updateAdjustAccount">
+		UPDATE adjust_account SET 	
+			adjust_id = #{adjustId},
+			serial_no = #{serialNo},
+			serial_num = #{serialNum},
+			trans_no = #{transNo},
+			trial_balance_trans_id = #{trialBalanceTransId},
+			status = #{status},
+			type = #{type},
+			account_mark = #{accountMark},
+			creator = #{creator},
+			auditor = #{auditor},
+			file_path = #{filePath},
+			reason = #{reason},
+			audit_remark = #{auditRemark},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE adjust_id = #{adjustId}
+	</update>
+	
+	<!-- 获取当天最大的流水号 -->
+	<select id="getMaxSerialNo" resultType="java.util.HashMap"  parameterType="java.util.Map" >
+		select max(serial_no) as serialNo from adjust_account
+		where create_time &gt;= #{beginDate} 
+ 	    and create_time &lt;= #{endDate}
+	</select>
+	
+</mapper>

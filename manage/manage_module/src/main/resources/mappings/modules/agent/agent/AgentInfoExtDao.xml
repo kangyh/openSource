@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.agent.AgentInfoDao">
+	<!--根据代理商实体获取代理商信息 begin-->
+	<select id="getNameToAgent" resultType="AgentInfo">
+	SELECT
+	<include refid="agentInfoColumns"/>
+	FROM agent_info a
+	<include refid="agentInfoJoins"/>
+	<where>
+	<if test="id != null and id != ''">
+	AND a.id = #{id}
+	</if>
+	<if test="agentName != null and agentName != ''">
+	AND a.agent_name = #{agentName}
+	</if>
+	</where>
+	</select>
+	<!--根据代理商实体获取代理商信息 end-->
+
+	<update id="updateStatus">
+		UPDATE agent_info SET
+			agent_status = #{agentStatus}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateCondition">
+		UPDATE agent_info SET
+		agent_name = #{agentName},
+		short_name = #{shortName},
+		agent_path = #{agentPath},
+		head_name = #{headName},
+		head_phone = #{headPhone},
+		head_idcard = #{headIdcard},
+		head_idcard_expiry = #{headIdcardExpiry},
+		email = #{email},
+		agent_expiry = #{agentExpiry},
+		legal_name = #{legalName},
+		legal_phone = #{legalPhone},
+		legal_idcard = #{legalIdcard},
+		legal_idcard_expiry = #{legalIdcardExpiry},
+		busi_type = #{busiType},
+		busi_code = #{busiCode},
+		busi_expiry = #{busiExpiry},
+		reg_amount = #{regAmount},
+		org_inst_code = #{orgInstCode},
+		tax_reg_code = #{taxRegCode},
+		addr_province_name = #{addrProvinceName},
+		addr_city_name = #{addrCityName},
+		addr_country_name = #{addrCountryName},
+		addr_detail = #{addrDetail},
+		agent_area_addr = #{agentAreaAddr}
+		<!--
+		bank_account_type = #{bankAccountType},
+		bank_name = #{bankName},
+		bank_province_name = #{bankProvinceName},
+		bank_city_name = #{bankCityName},
+		bank_branch_name = #{bankBranchName},
+		bank_account_name = #{bankAccountName},
+		bank_account_code = #{bankAccountCode}
+		-->
+
+		<if test="idcardFaceImage != null and idcardFaceImage != ''">
+			,idcard_face_image = #{idcardFaceImage}
+		</if>
+
+		<if test="idcardBackImage != null and idcardBackImage != ''">
+			,idcard_back_image = #{idcardBackImage}
+		</if>
+
+		<if test="agreementFile != null and agreementFile != ''">
+			,agreement_file = #{agreementFile}
+		</if>
+
+		<if test="busiImage != null and busiImage != ''">
+			,busi_image = #{busiImage}
+		</if>
+
+		<if test="taxRegImage != null and taxRegImage != ''">
+			,tax_reg_image = #{taxRegImage}
+		</if>
+
+		<if test="orgInstImage != null and orgInstImage != ''">
+			,org_inst_image = #{orgInstImage}
+		</if>
+
+		<if test="otherGenaImage != null and otherGenaImage != ''">
+			,other_gena_image = #{otherGenaImage}
+		</if>
+
+		WHERE id = #{id}
+	</update>
+
+</mapper>

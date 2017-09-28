@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:component-scan base-package="com.heepay.manage.modules.merchant.rpc"></context:component-scan>
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:thrift-client.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="heepayClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="zkserverip" value="${zookeeper.ens.ip}"></property>
+        <property name="open" value="${zookeeper.ens.open}"></property>
+        <property name="address" value="${thrift.ip01}:${thrift.port01}"></property>
+    </bean>
+
+      <bean id="paymentbillapiClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${paymentbillapi.thrift.ens.ip}"></property>
+		 <property name="open" value="${paymentbillapi.zookeeper.ens.open}"></property> 	
+	     <property name="nodename" value="${paymentbillapi.thrift.ens.nodename}"></property>
+	     <property name="zkserverip" value="${paymentbillapi.zookeeper.ens.ip}"></property>
+    </bean>
+    
+    <bean id="gatewayClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${gateway.client.ip}"></property>
+         <property name="open" value="${gateway.client.zookeeper.open}"></property>     
+         <property name="zkserverip" value="${gateway.client.zookeeper.host}"></property>
+    </bean> 
+    <bean id="paymentClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${payment.client.ip}"></property>
+         <property name="open" value="${payment.client.zookeeper.open}"></property>
+         <property name="zkserverip" value="${payment.client.zookeeper.host}"></property>
+    </bean>
+
+    <bean id="riskMerchantInfoClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${riskMerchantInfo.client.ip}"></property>
+         <property name="open" value="${riskMerchantInfo.client.zookeeper.open}"></property> 
+         <property name="zkserverip" value="${riskMerchantInfo.client.zookeeper.host}"></property>
+    </bean> 
+    <!-- 风控反欺诈-->
+    <bean id="PbcPaymentAccountClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${report.client.ip}"></property>
+         <property name="open" value="${report.client.zookeeper.open}"></property> 
+         <property name="zkserverip" value="${report.client.zookeeper.host}"></property>
+    </bean>
+    <bean id="paymentInfo" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${paymentInfo.client.ip}"></property>
+        <property name="open" value="${zookeeper.ens.open}"></property>
+        <property name="zkserverip" value="${zookeeper.ens.ip}"></property>
+    </bean>
+
+     <!-- 资金存管-->
+    <bean id="tpdsAccountClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${tpds.client.ip}"></property>
+         <property name="open" value="${tpds.client.zookeeper.open}"></property>
+         <property name="zkserverip" value="${tpds.client.zookeeper.host}"></property>
+    </bean>
+
+    <bean id="accountClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${account.client.ip}"></property>
+        <property name="open" value="${account.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${account.client.zookeeper.host}"></property>
+    </bean>
+
+    <bean id="agentClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${agent.client.ip}"></property>
+        <property name="open" value="${agent.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${agent.client.zookeeper.host}"></property>
+    </bean>
+
+    <!-- 告警记录 -->
+    <bean id="warnClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${warning.client.ip}"></property>
+        <property name="open" value="${warning.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${warning.client.zookeeper.host}"></property>
+    </bean>
+
+    <!--汇聚财,同步数据-->
+    <bean id="hgmsClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${hgms.client.ip}"></property>
+        <property name="open" value="${hgms.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${hgms.client.zookeeper.host}"></property>
+    </bean>
+
+    <!-- 调账管理 -->
+    <bean id="billingClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${billing.client.ip}"></property>
+        <property name="open" value="${billing.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${billing.client.zookeeper.host}"></property>
+    </bean>
+	
+	<!-- boss报表 -->
+	 <bean id="bossRuleClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${boss.client.ip}"></property>
+        <property name="open" value="${boss.client.zookeeper.open}"></property>
+        <property name="zkserverip" value="${boss.client.zookeeper.host}"></property>
+    </bean>
+    <!--跨境系统thrift服务-->
+    <bean id="cbmsClient" class="com.heepay.rpc.client.ThriftClientProxy">
+        <property name="address" value="${cbms.client.ip}"/>
+        <property name="open" value="${cbms.client.zookeeper.open}"/>
+        <property name="zkserverip" value="${cbms.client.zookeeper.host}"/>
+    </bean>
+</beans>

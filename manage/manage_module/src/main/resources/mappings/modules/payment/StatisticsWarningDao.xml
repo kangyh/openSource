@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.StatisticsWarningDao">
+    
+	<sql id="statisticsWarningColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.status AS "status",
+		a.rate AS "rate",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="statisticsWarningJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsWarning">
+		SELECT 
+			<include refid="statisticsWarningColumns"/>
+		FROM statistics_warning a
+		<include refid="statisticsWarningJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StatisticsWarning">
+		SELECT 
+			<include refid="statisticsWarningColumns"/>
+		FROM statistics_warning a
+		<include refid="statisticsWarningJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="rate != null and rate != ''">
+				AND a.rate = #{rate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsWarning">
+		SELECT 
+			<include refid="statisticsWarningColumns"/>
+		FROM statistics_warning a
+		<include refid="statisticsWarningJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_warning(
+			id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			status,
+			rate,
+			remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{status},
+			#{rate},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_warning SET 	
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			status = #{status},
+			rate = #{rate},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_warning
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

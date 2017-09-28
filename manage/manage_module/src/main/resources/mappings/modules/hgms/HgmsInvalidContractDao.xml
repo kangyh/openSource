@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsInvalidContractDao">
+    
+	<sql id="hgmsInvalidContractColumns">
+		a.id AS "id",
+		a.contract_id AS "contractId",
+		a.merchant_id AS "merchantId",
+		a.superior_id AS "superiorId",
+		a.superior_name AS "superiorName",
+		a.company_name AS "companyName",
+		a.contract_name AS "contractName",
+		a.business_id AS "businessId",
+		a.business_name AS "businessName",
+		a.service_id AS "serviceId",
+		a.service_name AS "serviceName",
+		a.validity_begin_time AS "validityBeginTime",
+		a.validity_end_time AS "validityEndTime",
+		a.contract_file_address AS "contractFileAddress",
+		a.status AS "status",
+		a.rc_audit_status AS "rcAuditStatus",
+		a.rc_audit_time AS "rcAuditTime",
+		a.rc_auditor AS "rcAuditor",
+		a.legal_audit_status AS "legalAuditStatus",
+		a.legal_audit_time AS "legalAuditTime",
+		a.legal_auditor AS "legalAuditor",
+		a.entering_time AS "enteringTime",
+		a.entering_id AS "enteringId",
+		a.op_audit_time AS "opAuditTime",
+		a.op_auditor AS "opAuditor",
+		a.contract_status AS "contractStatus",
+		a.objection AS "objection",
+		a.rule_build_type AS "ruleBuildType",
+		a.coll_rule_id AS "collRuleId",
+		a.coll_rule_status AS "collRuleStatus",
+		a.coll_amount AS "collAmount",
+		a.pay_rule_id AS "payRuleId",
+		a.pay_rule_status AS "payRuleStatus",
+		a.pay_amount AS "payAmount",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3"
+	</sql>
+	
+	<sql id="hgmsInvalidContractJoins">
+	</sql>
+
+	<select id="get" resultType="HgmsInvalidContract">
+		SELECT
+			<include refid="hgmsInvalidContractColumns"/>
+		FROM hgms_invalid_contract a
+		<include refid="hgmsInvalidContractJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="HgmsInvalidContract">
+		SELECT 
+			<include refid="hgmsInvalidContractColumns"/>
+		FROM hgms_invalid_contract a
+		<include refid="hgmsInvalidContractJoins"/>
+		<where>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

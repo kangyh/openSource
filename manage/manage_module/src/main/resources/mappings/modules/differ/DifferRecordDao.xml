@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.differ.dao.DifferRecordDao">
+    
+	<sql id="differRecordColumns">
+		a.differ_id AS "differId",
+		a.payment_id AS "paymentId",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.pay_amount AS "payAmount",
+		a.merchant_fee AS "merchantFee",
+		a.trans_status AS "transStatus",
+		a.trans_type AS "transType",
+		a.pay_type AS "payType",
+		a.product_code AS "productCode",
+		a.trans_create_time AS "transCreateTime",
+		a.trans_pay_time AS "transPayTime",
+		a.trans_success_time AS "transSuccessTime",
+		a.channel_code AS "channelCode",
+		a.bank_serial_no AS "bankSerialNo",
+		a.success_amount AS "successAmount",
+		a.channel_fee AS "channelFee",
+		a.service_fee AS "serviceFee",
+		a.bank_success_time AS "bankSuccessTime",
+		a.differ_type AS "differType",
+		a.differ_status AS "differStatus",
+		a.check_batch AS "checkBatch",
+		a.operator AS "operator",
+		a.operate_source AS "operateSource",
+		a.operate_type AS "operateType",
+		a.operate_time AS "operateTime",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="differRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="DifferRecord">
+		SELECT 
+			<include refid="differRecordColumns"/>
+		FROM differ_record a
+		<include refid="differRecordJoins"/>
+		WHERE a.differ_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DifferRecord">
+		SELECT 
+			<include refid="differRecordColumns"/>
+		FROM differ_record a
+		<include refid="differRecordJoins"/>
+		<where>
+			
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company = #{merchantCompany}
+			</if>
+			<if test="transStatus != null and transStatus != ''">
+				AND a.trans_status = #{transStatus}
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="beginTransPayTime != null and endTransPayTime != null and beginTransPayTime != '' and endTransPayTime != ''">
+				AND a.trans_pay_time BETWEEN #{beginTransPayTime} AND #{endTransPayTime}
+			</if>
+			<if test="bankSerialNo != null and bankSerialNo != ''">
+				AND a.bank_serial_no = #{bankSerialNo}
+			</if>
+			<if test="differType != null and differType != ''">
+				AND a.differ_type = #{differType}
+			</if>
+			<if test="differStatus != null and differStatus != ''">
+				AND a.differ_status = #{differStatus}
+			</if>
+			<if test="operateSource != null and operateSource != ''">
+				AND a.operate_source = #{operateSource}
+			</if>
+			<if test="beginOperateTime != null and endOperateTime != null and beginOperateTime != '' and endOperateTime != ''">
+				AND a.operate_time BETWEEN #{beginOperateTime} AND #{endOperateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DifferRecord">
+		SELECT 
+			<include refid="differRecordColumns"/>
+		FROM differ_record a
+		<include refid="differRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO differ_record(
+			differ_id,
+			payment_id,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			pay_amount,
+			merchant_fee,
+			trans_status,
+			trans_type,
+			pay_type,
+			product_code,
+			trans_create_time,
+			trans_pay_time,
+			trans_success_time,
+			channel_code,
+			bank_serial_no,
+			success_amount,
+			channel_fee,
+			service_fee,
+			bank_success_time,
+			differ_type,
+			differ_status,
+			check_batch,
+			operator,
+			operate_source,
+			operate_type,
+			operate_time,
+			create_time,
+			update_time
+		) VALUES (
+			#{differId},
+			#{paymentId},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{payAmount},
+			#{merchantFee},
+			#{transStatus},
+			#{transType},
+			#{payType},
+			#{productCode},
+			#{transCreateTime},
+			#{transPayTime},
+			#{transSuccessTime},
+			#{channelCode},
+			#{bankSerialNo},
+			#{successAmount},
+			#{channelFee},
+			#{serviceFee},
+			#{bankSuccessTime},
+			#{differType},
+			#{differStatus},
+			#{checkBatch},
+			#{operator},
+			#{operateSource},
+			#{operateType},
+			#{operateTime},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE differ_record SET 	
+			differ_id = #{differId},
+			payment_id = #{paymentId},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			pay_amount = #{payAmount},
+			merchant_fee = #{merchantFee},
+			trans_status = #{transStatus},
+			trans_type = #{transType},
+			pay_type = #{payType},
+			product_code = #{productCode},
+			trans_create_time = #{transCreateTime},
+			trans_pay_time = #{transPayTime},
+			trans_success_time = #{transSuccessTime},
+			channel_code = #{channelCode},
+			bank_serial_no = #{bankSerialNo},
+			success_amount = #{successAmount},
+			channel_fee = #{channelFee},
+			service_fee = #{serviceFee},
+			bank_success_time = #{bankSuccessTime},
+			differ_type = #{differType},
+			differ_status = #{differStatus},
+			check_batch = #{checkBatch},
+			operator = #{operator},
+			operate_source = #{operateSource},
+			operate_type = #{operateType},
+			operate_time = #{operateTime},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM differ_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

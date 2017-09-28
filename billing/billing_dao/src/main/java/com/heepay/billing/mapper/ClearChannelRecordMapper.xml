@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.ClearChannelRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.ClearChannelRecord" >
+    <id column="clearing_id" property="clearingId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="payment_id_old" property="paymentIdOld" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="trans_no_old" property="transNoOld" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="DECIMAL" />
+    <result column="channel_time" property="channelTime" jdbcType="TIMESTAMP" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_no" property="settleNo" jdbcType="VARCHAR" />
+    <result column="settle_time_plan" property="settleTimePlan" jdbcType="TIMESTAMP" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="cost_time" property="costTime" jdbcType="TIMESTAMP" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="cost_way" property="costWay" jdbcType="VARCHAR" />
+    <result column="cost_settle_cyc" property="costSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="check_bath" property="checkBath" jdbcType="VARCHAR" />
+    <result column="check_num" property="checkNum" jdbcType="INTEGER" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="bank_seq" property="bankSeq" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="channel_provider" property="channelProvider" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    clearing_id, channel_code, channel_name, channel_type, pay_time, currency, payment_id, 
+    payment_id_old, trans_no, trans_no_old, success_amount, channel_time, check_time, 
+    settle_time, settle_no, settle_time_plan, settle_cyc, settle_bath, cost_time, cost_amount, 
+    cost_way, cost_settle_cyc, check_status, check_flg, settle_status, finish_time, check_bath, 
+    check_num, trans_type, remark, is_zip, bank_seq, bank_name, bank_code, channel_provider
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.ClearChannelRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clearing_channel_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from clearing_channel_record
+    where clearing_id = #{clearingId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from clearing_channel_record
+    where clearing_id = #{clearingId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.ClearChannelRecordExample" >
+    delete from clearing_channel_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.ClearChannelRecord" >
+    insert into clearing_channel_record (clearing_id, channel_code, channel_name, 
+      channel_type, pay_time, currency, 
+      payment_id, payment_id_old, trans_no, 
+      trans_no_old, success_amount, channel_time, 
+      check_time, settle_time, settle_no, 
+      settle_time_plan, settle_cyc, settle_bath, 
+      cost_time, cost_amount, cost_way, 
+      cost_settle_cyc, check_status, check_flg, 
+      settle_status, finish_time, check_bath, 
+      check_num, trans_type, remark, 
+      is_zip, bank_seq, bank_name, 
+      bank_code, channel_provider)
+    values (#{clearingId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{channelType,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, #{currency,jdbcType=VARCHAR}, 
+      #{paymentId,jdbcType=VARCHAR}, #{paymentIdOld,jdbcType=VARCHAR}, #{transNo,jdbcType=VARCHAR}, 
+      #{transNoOld,jdbcType=VARCHAR}, #{successAmount,jdbcType=DECIMAL}, #{channelTime,jdbcType=TIMESTAMP}, 
+      #{checkTime,jdbcType=TIMESTAMP}, #{settleTime,jdbcType=TIMESTAMP}, #{settleNo,jdbcType=VARCHAR}, 
+      #{settleTimePlan,jdbcType=TIMESTAMP}, #{settleCyc,jdbcType=VARCHAR}, #{settleBath,jdbcType=VARCHAR}, 
+      #{costTime,jdbcType=TIMESTAMP}, #{costAmount,jdbcType=DECIMAL}, #{costWay,jdbcType=VARCHAR}, 
+      #{costSettleCyc,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{checkFlg,jdbcType=VARCHAR}, 
+      #{settleStatus,jdbcType=VARCHAR}, #{finishTime,jdbcType=TIMESTAMP}, #{checkBath,jdbcType=VARCHAR}, 
+      #{checkNum,jdbcType=INTEGER}, #{transType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{isZip,jdbcType=VARCHAR}, #{bankSeq,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankCode,jdbcType=VARCHAR}, #{channelProvider,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.ClearChannelRecord" >
+    insert into clearing_channel_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="clearingId != null" >
+        clearing_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="paymentIdOld != null" >
+        payment_id_old,
+      </if>
+      <if test="transNo != null" >
+        trans_no,
+      </if>
+      <if test="transNoOld != null" >
+        trans_no_old,
+      </if>
+      <if test="successAmount != null" >
+        success_amount,
+      </if>
+      <if test="channelTime != null" >
+        channel_time,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="settleTime != null" >
+        settle_time,
+      </if>
+      <if test="settleNo != null" >
+        settle_no,
+      </if>
+      <if test="settleTimePlan != null" >
+        settle_time_plan,
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc,
+      </if>
+      <if test="settleBath != null" >
+        settle_bath,
+      </if>
+      <if test="costTime != null" >
+        cost_time,
+      </if>
+      <if test="costAmount != null" >
+        cost_amount,
+      </if>
+      <if test="costWay != null" >
+        cost_way,
+      </if>
+      <if test="costSettleCyc != null" >
+        cost_settle_cyc,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="checkFlg != null" >
+        check_flg,
+      </if>
+      <if test="settleStatus != null" >
+        settle_status,
+      </if>
+      <if test="finishTime != null" >
+        finish_time,
+      </if>
+      <if test="checkBath != null" >
+        check_bath,
+      </if>
+      <if test="checkNum != null" >
+        check_num,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isZip != null" >
+        is_zip,
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="clearingId != null" >
+        #{clearingId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentIdOld != null" >
+        #{paymentIdOld,jdbcType=VARCHAR},
+      </if>
+      <if test="transNo != null" >
+        #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="transNoOld != null" >
+        #{transNoOld,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="channelTime != null" >
+        #{channelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleTime != null" >
+        #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleNo != null" >
+        #{settleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="settleTimePlan != null" >
+        #{settleTimePlan,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleCyc != null" >
+        #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="costTime != null" >
+        #{costTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costAmount != null" >
+        #{costAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="costWay != null" >
+        #{costWay,jdbcType=VARCHAR},
+      </if>
+      <if test="costSettleCyc != null" >
+        #{costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFlg != null" >
+        #{checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null" >
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkBath != null" >
+        #{checkBath,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNum != null" >
+        #{checkNum,jdbcType=INTEGER},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelProvider != null" >
+        #{channelProvider,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.ClearChannelRecordExample" resultType="java.lang.Integer" >
+    select count(*) from clearing_channel_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update clearing_channel_record
+    <set >
+      <if test="record.clearingId != null" >
+        clearing_id = #{record.clearingId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelCode != null" >
+        channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelName != null" >
+        channel_name = #{record.channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payTime != null" >
+        pay_time = #{record.payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.currency != null" >
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentId != null" >
+        payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentIdOld != null" >
+        payment_id_old = #{record.paymentIdOld,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transNo != null" >
+        trans_no = #{record.transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transNoOld != null" >
+        trans_no_old = #{record.transNoOld,jdbcType=VARCHAR},
+      </if>
+      <if test="record.successAmount != null" >
+        success_amount = #{record.successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.channelTime != null" >
+        channel_time = #{record.channelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkTime != null" >
+        check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleTime != null" >
+        settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleNo != null" >
+        settle_no = #{record.settleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleTimePlan != null" >
+        settle_time_plan = #{record.settleTimePlan,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleCyc != null" >
+        settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleBath != null" >
+        settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costTime != null" >
+        cost_time = #{record.costTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.costAmount != null" >
+        cost_amount = #{record.costAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.costWay != null" >
+        cost_way = #{record.costWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.costSettleCyc != null" >
+        cost_settle_cyc = #{record.costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkStatus != null" >
+        check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFlg != null" >
+        check_flg = #{record.checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleStatus != null" >
+        settle_status = #{record.settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finishTime != null" >
+        finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkBath != null" >
+        check_bath = #{record.checkBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkNum != null" >
+        check_num = #{record.checkNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.transType != null" >
+        trans_type = #{record.transType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isZip != null" >
+        is_zip = #{record.isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankSeq != null" >
+        bank_seq = #{record.bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankCode != null" >
+        bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelProvider != null" >
+        channel_provider = #{record.channelProvider,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update clearing_channel_record
+    set clearing_id = #{record.clearingId,jdbcType=BIGINT},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      channel_name = #{record.channelName,jdbcType=VARCHAR},
+      channel_type = #{record.channelType,jdbcType=VARCHAR},
+      pay_time = #{record.payTime,jdbcType=TIMESTAMP},
+      currency = #{record.currency,jdbcType=VARCHAR},
+      payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      payment_id_old = #{record.paymentIdOld,jdbcType=VARCHAR},
+      trans_no = #{record.transNo,jdbcType=VARCHAR},
+      trans_no_old = #{record.transNoOld,jdbcType=VARCHAR},
+      success_amount = #{record.successAmount,jdbcType=DECIMAL},
+      channel_time = #{record.channelTime,jdbcType=TIMESTAMP},
+      check_time = #{record.checkTime,jdbcType=TIMESTAMP},
+      settle_time = #{record.settleTime,jdbcType=TIMESTAMP},
+      settle_no = #{record.settleNo,jdbcType=VARCHAR},
+      settle_time_plan = #{record.settleTimePlan,jdbcType=TIMESTAMP},
+      settle_cyc = #{record.settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{record.settleBath,jdbcType=VARCHAR},
+      cost_time = #{record.costTime,jdbcType=TIMESTAMP},
+      cost_amount = #{record.costAmount,jdbcType=DECIMAL},
+      cost_way = #{record.costWay,jdbcType=VARCHAR},
+      cost_settle_cyc = #{record.costSettleCyc,jdbcType=VARCHAR},
+      check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      check_flg = #{record.checkFlg,jdbcType=VARCHAR},
+      settle_status = #{record.settleStatus,jdbcType=VARCHAR},
+      finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+      check_bath = #{record.checkBath,jdbcType=VARCHAR},
+      check_num = #{record.checkNum,jdbcType=INTEGER},
+      trans_type = #{record.transType,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_zip = #{record.isZip,jdbcType=VARCHAR},
+      bank_seq = #{record.bankSeq,jdbcType=VARCHAR},
+      bank_name = #{record.bankName,jdbcType=VARCHAR},
+      bank_code = #{record.bankCode,jdbcType=VARCHAR},
+      channel_provider = #{record.channelProvider,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.ClearChannelRecord" >
+    update clearing_channel_record
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentIdOld != null" >
+        payment_id_old = #{paymentIdOld,jdbcType=VARCHAR},
+      </if>
+      <if test="transNo != null" >
+        trans_no = #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="transNoOld != null" >
+        trans_no_old = #{transNoOld,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        success_amount = #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="channelTime != null" >
+        channel_time = #{channelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleTime != null" >
+        settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleNo != null" >
+        settle_no = #{settleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="settleTimePlan != null" >
+        settle_time_plan = #{settleTimePlan,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleCyc != null" >
+        settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="settleBath != null" >
+        settle_bath = #{settleBath,jdbcType=VARCHAR},
+      </if>
+      <if test="costTime != null" >
+        cost_time = #{costTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costAmount != null" >
+        cost_amount = #{costAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="costWay != null" >
+        cost_way = #{costWay,jdbcType=VARCHAR},
+      </if>
+      <if test="costSettleCyc != null" >
+        cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFlg != null" >
+        check_flg = #{checkFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        settle_status = #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null" >
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkBath != null" >
+        check_bath = #{checkBath,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNum != null" >
+        check_num = #{checkNum,jdbcType=INTEGER},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        is_zip = #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq = #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelProvider != null" >
+        channel_provider = #{channelProvider,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where clearing_id = #{clearingId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.ClearChannelRecord" >
+    update clearing_channel_record
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      currency = #{currency,jdbcType=VARCHAR},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      payment_id_old = #{paymentIdOld,jdbcType=VARCHAR},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      trans_no_old = #{transNoOld,jdbcType=VARCHAR},
+      success_amount = #{successAmount,jdbcType=DECIMAL},
+      channel_time = #{channelTime,jdbcType=TIMESTAMP},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      settle_no = #{settleNo,jdbcType=VARCHAR},
+      settle_time_plan = #{settleTimePlan,jdbcType=TIMESTAMP},
+      settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{settleBath,jdbcType=VARCHAR},
+      cost_time = #{costTime,jdbcType=TIMESTAMP},
+      cost_amount = #{costAmount,jdbcType=DECIMAL},
+      cost_way = #{costWay,jdbcType=VARCHAR},
+      cost_settle_cyc = #{costSettleCyc,jdbcType=VARCHAR},
+      check_status = #{checkStatus,jdbcType=VARCHAR},
+      check_flg = #{checkFlg,jdbcType=VARCHAR},
+      settle_status = #{settleStatus,jdbcType=VARCHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      check_bath = #{checkBath,jdbcType=VARCHAR},
+      check_num = #{checkNum,jdbcType=INTEGER},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_zip = #{isZip,jdbcType=VARCHAR},
+      bank_seq = #{bankSeq,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      channel_provider = #{channelProvider,jdbcType=VARCHAR}
+    where clearing_id = #{clearingId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- billing begin -->
+  <resultMap type="com.heepay.billing.entity.SettleChannelRecordVo" id="ChannelResultMap">
+  	<result column="pay_num" property="payNum" jdbcType="INTEGER" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="cost_amount_all" property="costAmount" jdbcType="DECIMAL" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <!-- <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="cost_time" property="costTime" jdbcType="TIMESTAMP" /> -->
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="cost_settle_cyc" property="costSettleCyc" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 查询自定义数据对象 -->
+  <select id="queryClearChannelRecordId" parameterType="map" resultMap="ChannelResultMap">
+  	   SELECT 
+  		channel_code,  
+  		channel_type,
+  		trans_type,
+  		COUNT(*) pay_num,
+  		SUM(success_amount) total_amount,
+  		SUM(cost_amount) cost_amount_all,
+  		SUBSTRING_INDEX(
+    	SUBSTRING_INDEX(
+      		GROUP_CONCAT(
+        		CONCAT(channel_code, ':', channel_name) 
+        		ORDER BY clearing_id DESC SEPARATOR ','
+      		),
+      		',',
+     		 1
+    		),
+    		':',
+   		 - 1
+  		) channel_name,
+  		'1' settleCyc,
+  		'1' costSettleCyc
+		FROM
+  			clearing_channel_record t 
+		 WHERE t.check_status = #{checkStatus,jdbcType=CHAR} and t.settle_bath is null and t.check_flg=#{checkFlg,jdbcType=CHAR}
+			GROUP BY 
+			     channel_code,
+  				 channel_type,
+  				 trans_type
+	
+  </select>
+  
+  <!-- 对账完成，更新清算数据对账状态 -->
+  <update id="updateClearChannelRecordStatus" parameterType="map">
+  	UPDATE
+		clearing_channel_record
+	SET
+		check_status=#{checkStatus,jdbcType=CHAR},
+		finish_time=#{finishTime,jdbcType=TIMESTAMP},
+		check_time=#{checkTime,jdbcType=TIMESTAMP},
+		check_flg=#{checkFlg,jdbcType=CHAR},
+		channel_time=#{channelTime,jdbcType=TIMESTAMP}
+	WHERE
+		settle_status=#{settleStatus,jdbcType=CHAR}
+		<!-- check_time=#{checkTime,jdbcType=CHAR} -->
+  </update>
+  
+  <select id="queryClearChannelRecordIds" parameterType="map" resultMap="BaseResultMap">
+  	SELECT
+		payment_id,
+		success_amount,
+		trans_type,
+		cost_amount,
+		trans_no,
+		cost_way
+	FROM
+		clearing_channel_record t
+	WHERE 
+		t.check_status=#{checkStatus,jdbcType=CHAR} and  t.channel_code =#{channelCode,jdbcType=CHAR}
+		and t.channel_type =#{channelType,jdbcType=CHAR} and t.settle_bath is null and trans_type=#{transType,jdbcType=CHAR} 
+		and t.check_flg=#{checkFlg,jdbcType=CHAR}
+  </select>
+  
+  <!-- 根据支付单号将对应的批次号设置到清算表中 -->
+  <update id="updateSettleNoToClearChannelRecord" parameterType="map">
+  	UPDATE
+		clearing_channel_record t
+	<set>
+		<if test="settleBath != null" >
+		settle_bath=#{settleBath,jdbcType=CHAR},
+		</if>
+		<if test="settleStatus != null" >
+        settle_status=#{settleStatus,jdbcType=CHAR},
+        </if>
+	</set>
+	WHERE
+		t.check_status=#{checkStatus,jdbcType=CHAR} and  t.channel_code =#{channelCode,jdbcType=CHAR}
+		and t.channel_type =#{channelType,jdbcType=CHAR} and t.settle_bath is null and t.trans_type=#{transType,jdbcType=CHAR} 
+		and t.check_flg=#{checkFlg,jdbcType=CHAR}
+  </update>
+  
+  <!-- 核账完成，修改清算表中完成时间和结算状态 -->
+  <update id="updateClearChannelRecord" parameterType="map">
+  	UPDATE
+		clearing_channel_record
+	SET
+		settle_status=#{settleStatus,jdbcType=CHAR},
+		finish_time=#{finishTime,jdbcType=TIMESTAMP}
+	WHERE
+		settle_bath=#{settleBath,jdbcType=CHAR}
+  </update>
+  
+  <select id="getBankcardAuthListByStatusAndTypeAndMerchantUserIdAndMerchantId" parameterType="map" resultMap="BaseResultMap" >
+   SELECT  auth_id,bankcard_no,merchant_id,authorization_code,bankcard_owner_idcard,bank_name,merchant_order_no,
+    bankcard_owner_mobile, bankcard_owner_name, bankcard_owner_idcard,merchant_user_id
+    FROM bankcard_auth WHERE  status = #{status,jdbcType=CHAR} AND type=#{type,jdbcType=CHAR} 
+    AND merchant_user_id = #{merchantUserId,jdbcType=VARCHAR} AND merchant_id = #{merchantId,jdbcType=VARCHAR}  
+  </select>
+  
+  <!-- 不明的代码 -->
+<!--   <select id="queryClearChant" resultType="com.heepay.billing.entity.SettleMerchanyRecordVo">
+  	SELECT
+		COUNT(*) pay_num,
+	    SUM(request_amount) request_amount,
+		merchant_id,
+		merchant_type,
+		product_code,
+		
+	FROM
+		clearing_channel_record t
+	WHERE 
+		t.product_code=#{productCode,jdbcType=CHAR} and t.settle_cyc =#{settleCyc,jdbcType=CHAR}
+	GROUP BY 
+		product_code,
+		merchant_type,
+		merchant_id
+  </select> -->
+  
+  <update id="updatemerchantStatus" parameterType="map">
+  	UPDATE
+		clearing_merchant_record
+	SET
+		check_status=#{checkStatus,jdbcType=CHAR},
+		finish_time=#{finishTime,jdbcType=CHAR}
+	WHERE
+		check_time=#{checkTime,jdbcType=CHAR}
+  </update>
+  
+  <update id="batchUpdatemerchantStatus" parameterType="map">
+  	UPDATE
+		clearing_merchant_record
+	SET
+		check_status=#{checkStatus,jdbcType=CHAR},
+		finish_time=#{finishTime,jdbcType=CHAR},
+		settle_status=#{settleStatus,jdbcType=CHAR}
+	WHERE
+		check_time=#{checkTime,jdbcType=CHAR}
+  </update>
+  
+  <update id="UpdateChannelStatus" parameterType="map">
+  	UPDATE
+		clearing_channel_record
+	SET
+		check_status=#{checkStatus,jdbcType=CHAR},
+  </update>
+  
+  <update id="UpdateChannelSettleStatus" parameterType="map">
+  	UPDATE
+		clearing_channel_record
+	SET
+		settle_status=#{settleStatus,jdbcType=CHAR},
+  </update>
+  <!-- 通道侧的定时查询w -->
+  <select id="batchClearChannelRecord" parameterType="map" resultType="com.heepay.billing.entity.SettleMerchanyRecordVo">
+  	SELECT
+		COUNT(*) pay_num,
+	    SUM(request_amount) total_amount,
+		channel_code,
+		channel_name,
+		channel_type
+	FROM
+		clearing_channel_record t
+	WHERE 
+		t.channel_type=#{channelType,jdbcType=CHAR} and t.settle_cyc =#{settleCyc,jdbcType=CHAR}
+	GROUP BY 
+		channel_code,
+		channel_type,
+		channel_name
+  </select>
+   <!-- 通道清算表的状态修改w -->
+  <update id="updateChannelByPrimaryKey" parameterType="com.heepay.billing.entity.ClearChannelRecord">
+  	UPDATE
+		clearing_channel_record
+	SET
+		settle_status=#{settleStatus},finish_time=#{finishTime}
+	WHERE 
+		settle_bath=#{settleBath}
+  </update>
+  <!-- 通过支付单号查询通道侧记录 -->
+  <select id="queryClearChannelRecordByPaymentId" resultMap="BaseResultMap" parameterType="map">
+  
+      select 
+       <include refid="Base_Column_List" />
+       from clearing_channel_record t
+       where t.payment_id = #{paymentId}
+  </select>
+  
+  <!-- 查询通道侧数据，最近三天且未对账     -->
+  <select id="queryPayTime"  resultType="com.heepay.billing.entity.ClearChannelRecord" parameterType="map">
+  	select  
+  		<include refid="Base_Column_List" />
+  	  from clearing_channel_record as ccr
+  	  where ccr.check_status= #{checkStatus} 
+  	  and ccr.pay_time &lt; date_sub(now(),interval 3 day) 
+  	  and ccr.channel_code = #{channelCode} 
+  	  and ccr.channel_type = #{channelType}
+  	  and ccr.pay_time &lt; (select MAX(oper_end_time) from settle_channel_log where channel_code = #{channelCode} AND channel_type = #{channelType});   
+  </select>
+  
+  <!-- 通过支付单号，查询通道侧清算记录未对账的记录 -->
+  <select id="queryClearChannelRecordByPaymentIdAndCheckStatus" resultMap="BaseResultMap" parameterType="map">
+      select 
+       <include refid="Base_Column_List" />
+       from clearing_channel_record t
+       <where>
+         <choose>
+           <when test="paymentId != null and paymentId != ''">
+             AND t.payment_id = #{paymentId}
+           </when>
+           <otherwise>
+             AND t.bank_seq = #{bankSeq}
+           </otherwise>
+         </choose>
+        and t.check_status = #{checkStatus}
+       </where>
+  </select>
+  
+  <!-- 根据通道侧清算记录表ID（clearing_id）   更新通道侧清算记录表（clearing_channel_record）：  对账状态、通道对账日期、对账标记、对账批次号,对账次数 -->
+	<update id="updateClearChannelRecordByPrimaryKey" parameterType="map">
+		update clearing_channel_record
+		<set>
+			<if test="checkStatus != null">
+				check_status = #{checkStatus,jdbcType=CHAR},
+			</if>
+			<if test="checkFlg != null">
+				check_flg = #{checkFlg,jdbcType=VARCHAR},
+			</if>
+			<if test="checkBath != null">
+				check_bath = #{checkBath,jdbcType=VARCHAR},
+			</if>
+			<if test="channelTime != null">
+				channel_time = #{channelTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="checkNum != null">
+				check_num = #{checkNum,jdbcType=INTEGER},
+			</if>
+			<if test="costAmount != null">
+				cost_amount = #{costAmount,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where clearing_id = #{clearingId,jdbcType=BIGINT}
+	</update>
+	
+	<select id="queryClearChannelRecordByTranNo"  resultMap="BaseResultMap" parameterType="map">
+  	 select   
+  	   <include refid="Base_Column_List" />
+  	   from clearing_channel_record t
+  	 where t.trans_no = #{tranNo,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateClearChannelRecordByTransNo" parameterType="map">
+	      update clearing_channel_record c
+	         set c.check_status = #{checkStatus}, c.check_flg = #{checkFlg}, c.channel_time = #{channelTime}
+	         where c.trans_no = #{transNo}
+	</update>
+	<!-- 判断是否重复发送的数据wl -->
+	<select id="getBooleanExist" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(*) FROM clearing_channel_record WHERE payment_id=#{paymentId}
+	</select>
+	<!-- 查找应该对账的通道数据，去重 -->
+	<select id="queryChannelRecord"  resultMap="BaseResultMap" parameterType="java.util.Map">
+  	 select   
+  	   DISTINCT channel_code,channel_type,channel_name 
+  	   from clearing_channel_record 
+  	 where settle_time_plan = #{settleTimePlan}
+  </select>
+  
+  <resultMap id="resultMap" type="map" >   
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />   
+  </resultMap>
+  
+  <!-- 查询所有银行流水号为null的记录 -->
+  <select id="queryValIsNull" parameterType="map" resultMap="resultMap">
+  
+    SELECT trans_no, payment_id FROM clearing_channel_record c WHERE c.bank_seq IS NULL or LENGTH(c.bank_seq) =0
+  
+  </select>
+  
+  <!-- 更新历史数据 -->
+  <update id="updateOldRecord" parameterType="map">
+  
+   UPDATE clearing_channel_record  c 
+        SET c.bank_seq = #{bankSerialNo,jdbcType=VARCHAR}, c.bank_name = #{bankName,jdbcType=VARCHAR}, 
+        c.bank_code = #{bankId,jdbcType=VARCHAR}
+       
+       WHERE c.payment_id = #{paymentId, jdbcType=VARCHAR}
+
+  
+  </update>
+  
+  <select id="queryChannelByPaymentIdTransNo" parameterType="map" resultType="java.lang.Integer" >
+    select count(*) from clearing_channel_record t 
+    
+        where t.payment_id = #{paymentId, jdbcType=VARCHAR} and t.trans_no = #{transNo, jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateNumByTransNO" parameterType="java.lang.String">
+  	 UPDATE clearing_channel_record  c 
+        SET c.check_num = '1'
+       WHERE c.trans_no = #{transNo, jdbcType=VARCHAR}
+  </update>
+  
+  
+   <!--手动 查询通道侧数据，最近三天且未对账     -->
+  <select id="queryHandleBill"  resultType="com.heepay.billing.entity.ClearChannelRecord" parameterType="map">
+  	select  
+  		<include refid="Base_Column_List" />
+  	  from clearing_channel_record as ccr
+  	  where ccr.check_status= #{checkStatus} 
+  	  and ccr.pay_time &lt; date_sub(now(),interval 3 day) 
+  	  and ccr.channel_code = #{channelCode} 
+  	  and ccr.channel_type = #{channelType}
+  	  and ccr.check_num = #{checkNum}
+  	  and ccr.pay_time &lt; (select MAX(oper_end_time) from settle_channel_log where channel_code = #{channelCode} AND channel_type = #{channelType});   
+  </select>
+  
+  <select id="querySettleBatch" resultType="java.lang.String" parameterType="java.lang.String">
+  	select distinct settle_bath from clearing_channel_record 
+    
+        where check_bath = #{checkBath, jdbcType=VARCHAR};
+  </select>
+  
+  <select id="querySettleBathMsgBySettleBath" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  		<include refid="Base_Column_List" />
+  	 from 
+  	 	clearing_channel_record as ccr
+  	 where
+  	 	settle_bath = #{settleBath,jdbcType=VARCHAR}
+  	 <if test="start != null" >
+   		<if test="pageSize != null" >
+              LIMIT #{start, jdbcType=BIGINT}, #{pageSize, jdbcType=BIGINT}
+        </if>
+      </if>
+  </select>
+  
+</mapper>

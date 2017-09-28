@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.PayChannelDao">
+    
+	<sql id="payChannelColumns">
+		a.id AS "id",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.bank_name AS "bankName",
+		a.bank_no AS "bankNo",
+		a.channel_partner_name AS "channelPartnerName",
+		a.channel_partner_code AS "channelPartnerCode",
+		a.channel_type_name AS "channelTypeName",
+		a.channel_type_code AS "channelTypeCode",
+		a.merchant_number AS "merchantNumber",
+		a.card_type_name AS "cardTypeName",
+		a.card_type_code AS "cardTypeCode",
+		a.account_type AS "accountType",
+		a.business_type AS "businessType",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_return_tag AS "chargeReturnTag",
+		a.order_settle_period AS "orderSettlePeriod",
+		a.effect_start_time AS "effectStartDate",
+		a.effect_end_time AS "effectEndDate",
+		a.cost_type AS "costType",
+		a.cost_rate AS "costRate",
+		a.cost_count AS "costCount",
+		a.status AS "status",
+		a.contract_time AS "contractDate",
+		a.settle_type AS "settleType",
+		a.settle_period AS "settlePeriod",
+		a.sort AS "sort",
+		a.perlimit_amount AS "perlimitAmount",
+		a.daylimit_amount AS "daylimitAmount",
+		a.monlimit_amount AS "monlimitAmount",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id",
+		a.merchant_subject AS "merchantSubject",
+		a.channel_tag AS "channelTag"
+	</sql>
+	
+	<sql id="payChannelJoins">
+	</sql>
+    
+	<select id="get" resultType="PayChannel">
+		SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+		<include refid="payChannelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	 <!-- 通过银行代码、通道合作方、通道类型、银行卡类型查询 -->
+	<select id="findList" resultType="PayChannel">
+		SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+		<include refid="payChannelJoins"/>
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND channel_partner_code = #{channelPartnerCode,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="status != null and status !=''">
+				AND status = #{status,jdbcType=CHAR}
+			</if>
+			<!--<if test="sort != null and sort !=''">
+				AND sort = #{sort,jdbcType=CHAR}
+			</if>-->
+
+		</trim>
+		<where>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 通道合作方、通道类型、银行卡类型、状态对支付通道查询分组，用于批量修改 -->
+	<select id="findChannelGroupPage" resultType="PayChannel">
+		select channel_partner_code,channel_type_code,card_type_code,charge_deduct_type,charge_return_tag,order_settle_period,cost_type,cost_count,
+		cost_rate,settle_type,settle_period ,status,count(*),GROUP_CONCAT(DISTINCT id) as groupId
+		from route_pay_channel
+		<where>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND channel_partner_code = #{channelPartnerCode,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="status != null and status !=''">
+				AND status = #{status,jdbcType=CHAR}
+			</if>
+		</where>
+		GROUP BY channel_partner_code,channel_type_code,card_type_code,charge_deduct_type,charge_return_tag,order_settle_period,cost_type,cost_count,
+		cost_rate,settle_type,settle_period ,status
+	</select>
+
+	<select id="selectList" resultType="PayChannel">
+	    SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+             <include refid="payChannelJoins"/>
+    </select>
+    <!-- 通过银行代码、通道类型、卡类型、对公对私账户查询 -->
+    <select id="selectSortChannelOwnbak" resultType="PayChannel">
+	    SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+             <include refid="payChannelJoins"/>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType,jdbcType=CHAR}
+			</if>
+		</trim>     
+    </select>
+    <select id="selectSortChannelSpnbak" resultType="PayChannel">
+	    SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+             <include refid="payChannelJoins"/>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType,jdbcType=CHAR}
+			</if>
+		</trim>     
+    </select>
+
+	<select id="findAllList" resultType="PayChannel">
+		SELECT 
+			<include refid="payChannelColumns"/>
+		FROM route_pay_channel a
+		<include refid="payChannelJoins"/>
+		<where>			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 查找通道代码 -->
+	<select id="selectByChannelCode" resultType="PayChannel">
+		SELECT
+		<include refid="payChannelColumns" />
+		FROM route_pay_channel a
+		<include refid="payChannelJoins" />
+		WHERE channel_code = #{channelCode,jdbcType=CHAR}
+	</select>
+
+	<!-- 查找状态为正常且在有效期内的通道 -->
+	<select id="selectChannel" resultType="PayChannel">
+	    select
+		DISTINCT
+		t2.`merchant_id` as "merchantId",
+		t3.`bank_no` as "bankNo",
+		t3.`channel_type_code` as "channelTypeCode",
+		t3.`card_type_code` as "cardTypeCode",
+		t3.`channel_partner_code` as "channelPartnerCode",
+		t3.`sort` as "sort",
+		t3.`cost_type` as "costType",
+		t3.`cost_rate` as "costRate",
+		t3.`cost_count` as "costCount",
+		t3.`channel_code` as "channelCode",
+		t3.`account_type` as "accountType",
+        t3.`business_type` as "businessType"
+		from route_product_detail t1 
+		left join merchant_product_rate t2 on t1.`product_code`= t2.`product_code`
+		left join route_pay_channel t3 on t1.`channel_code` = t3.`channel_code`
+        left join product t4 on t1.`product_code` = t4.`code`
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND t3.`bank_no` = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND t3.`channel_type_code` = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND t3.`card_type_code` = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND t3.`account_type` = #{accountType,jdbcType=CHAR}
+			</if>
+			<if test="businessType != null and businessType !=''">
+				AND t3.`business_type` = #{businessType,jdbcType=CHAR}
+			</if>
+			<if test="merchantId != null and merchantId !=''">
+				AND t2.`merchant_id` = #{merchantId,jdbcType=CHAR}
+			</if>
+			AND t3.`status` = 'ENABLE'
+			AND t4.`status` = 'ENABLE'
+			AND now() BETWEEN effect_start_time AND effect_end_time
+		</trim>
+	</select>
+
+	<!-- 通过查找六个元素银行代码、通道类型、对公对私账户、通道合作方、银行卡类型、付款类型判断该通道确定一条通道 -->
+	<select id="selectByPayChannel" resultType="PayChannel">
+		SELECT
+		<include refid="payChannelColumns" />
+		FROM route_pay_channel a
+		<include refid="payChannelJoins" />
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND channel_partner_code = #{channelPartnerCode,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType,jdbcType=CHAR}
+			</if>
+			<if test="businessType != null and businessType !=''">
+				AND business_type = #{businessType,jdbcType=CHAR}
+			</if>
+		</trim>
+	</select>
+	
+	 <!-- 通过银行代码、通道类型查询 -->
+    <select id="findListByBankNoAndChannelTypeCode" resultType="PayChannel">
+        SELECT 
+            <include refid="payChannelColumns"/>
+        FROM route_pay_channel a
+        <include refid="payChannelJoins"/>
+        <where> 
+            <if test="bankNo != null and bankNo !=''">
+                AND a.bank_no = #{bankNo,jdbcType=CHAR}
+            </if>
+            <if test="channelTypeCode != null and channelTypeCode !=''">
+                AND a.channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+            </if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND a.card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+            AND a.status = 'ENABLE'
+            AND now() BETWEEN a.effect_start_time AND a.effect_end_time
+        </where>
+    </select>
+	
+	<!-- 查找产品已添加的支付通道 -->
+	<select id="selectProductChannel" resultType="PayChannel">
+	    select t1.`channel_name` as "channelName", 
+	    t1.`id` as "id", 
+		t1.`bank_name` as "bankName",
+		t1.`sort` as "sort",
+		t1.`channel_partner_name` as "channelPartnerName",
+		t1.`channel_type_name` as "channelTypeName",
+		t1.`card_type_name` as "cardTypeName",
+		t2.`id` as "productDetailId"
+		from route_pay_channel t1 
+		left join route_product_detail t2 on t1.`channel_code` = t2.`channel_code`
+        AND t2.`product_code` = #{productCode} 
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND t1.`bank_no` = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND t1.`channel_type_code` = #{channelTypeCode}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND t1.`channel_partner_code`  = #{channelPartnerCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND  t1.`card_type_code`  = #{cardTypeCode}
+			</if>
+				AND  t1.`status`  = 'ENABLE'
+		</trim>      
+	</select>  
+	<!-- 查找商户Id的某个产品已添加的支付通道 -->
+	<select id="selectMerchantChannel" resultType="PayChannel">
+	    select t1.`channel_name` as "channelName",
+	    t1.`id` as "id",
+		t1.`bank_name` as "bankName",
+		t1.`sort` as "sort",
+		t1.`channel_partner_name` as "channelPartnerName",
+		t1.`channel_type_name` as "channelTypeName",
+		t1.`card_type_name` as "cardTypeName",
+		t2.`id` as "merchantPayChannelId"
+		from route_pay_channel t1
+		left join merchant_pay_channel t2 on t1.`channel_code` = t2.`channel_code`
+        AND t2.`merchant_id` = #{merchantId}
+		AND t2.`product_code` = #{productCode}
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND t1.`bank_no` = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND t1.`channel_type_code` = #{channelTypeCode}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND t1.`channel_partner_code`  = #{channelPartnerCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND  t1.`card_type_code`  = #{cardTypeCode}
+			</if>
+				AND  t1.`status`  = 'ENABLE'
+		</trim>
+
+	</select>
+
+	<!-- 查找成本类型为按比例最优通道(本行) -->
+	<select id="selectRateList" resultType="PayChannel">
+		select 
+		bank_no as "bankNo",
+		channel_type_code as "channelTypeCode",
+		card_type_code as "cardTypeCode",
+		channel_partner_code  as "channelPartnerCode",
+		sort as "sort",
+        cost_type  as "costType",
+		cost_rate  as "costRate",
+		cost_count  as "costCount",
+		channel_code  as "channelCode",
+		account_type as "accountType",
+        business_type as "businessType"
+		from  route_pay_channel
+		<where>
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType}
+			</if>
+			AND status = 'ENABLE'
+			AND cost_type = 'RATIOD'
+			AND business_type = 'OWNBAK'
+			AND now() BETWEEN effect_start_time AND effect_end_time
+		</where>
+        order by bank_no,channel_type_code,card_type_code,account_type,sort is null, sort,cost_rate
+	</select>  
+	<!-- 查找成本类型为按比数最优通道(本行) -->
+	<select id="selectCountList" resultType="PayChannel">
+		select 
+		bank_no as "bankNo",
+		channel_type_code as "channelTypeCode",
+		card_type_code as "cardTypeCode",
+		channel_partner_code  as "channelPartnerCode",
+		sort as "sort",
+        cost_type  as "costType",
+		cost_rate  as "costRate",
+		cost_count  as "costCount",
+		channel_code  as "channelCode",
+		account_type as "accountType",
+        business_type as "businessType"
+		from  route_pay_channel
+		<where>
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType}
+			</if>
+			AND status = 'ENABLE'
+			AND cost_type = 'COUNTD'
+			AND business_type = 'OWNBAK'
+			AND now() BETWEEN effect_start_time AND effect_end_time
+		</where>
+        order by bank_no,channel_type_code,card_type_code,account_type,sort is null, sort,cost_count
+	</select>
+	
+	<!-- 查找跨行通道(按比例) -->
+	<select id="selectSpnChannel" resultType="PayChannel">
+		select 
+		bank_no as "bankNo",
+		channel_type_code as "channelTypeCode",
+		card_type_code as "cardTypeCode",
+		channel_partner_code  as "channelPartnerCode",
+		sort as "sort",
+        cost_type  as "costType",
+		cost_rate  as "costRate",
+		cost_count  as "costCount",
+		channel_code  as "channelCode",
+		account_type as "accountType",
+        business_type as "businessType"
+		from  route_pay_channel
+		<where>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType}
+			</if>
+			AND status = 'ENABLE'
+			AND business_type = 'SPNBAK'
+			AND cost_type = 'RATIOD'
+			AND now() BETWEEN effect_start_time AND effect_end_time
+		</where>
+        order by channel_type_code,card_type_code,account_type,sort is null, sort,cost_rate
+	</select>
+
+	<!-- 查找跨行通道(按比数) -->
+	<select id="selectSpnChannelCount" resultType="PayChannel">
+		select
+		bank_no as "bankNo",
+		channel_type_code as "channelTypeCode",
+		card_type_code as "cardTypeCode",
+		channel_partner_code  as "channelPartnerCode",
+		sort as "sort",
+		cost_type  as "costType",
+		cost_rate  as "costRate",
+		cost_count  as "costCount",
+		channel_code  as "channelCode",
+		account_type as "accountType",
+		business_type as "businessType"
+		from  route_pay_channel
+		<where>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType}
+			</if>
+			AND status = 'ENABLE'
+			AND business_type = 'SPNBAK'
+			AND cost_type = 'COUNTD'
+			AND now() BETWEEN effect_start_time AND effect_end_time
+		</where>
+		order by channel_type_code,card_type_code,account_type,sort is null, sort,cost_count
+	</select>
+
+	<!-- 查找每种通道类型对应的银行及卡类型 -->
+	<select id="selectChannelType" resultType="PayChannel">
+		select channel_type_code, bank_no,
+		GROUP_CONCAT(DISTINCT card_type_code) as card_type_code
+		from route_pay_channel
+		<where>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			    AND status = 'ENABLE'
+			    AND now() BETWEEN effect_start_time AND effect_end_time
+		</where>
+		GROUP BY channel_type_code,bank_no
+	</select>
+
+	<insert id="insert" parameterType="PayChannel" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO route_pay_channel
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="channelCode != null" >
+				channel_code,
+			</if>
+			<if test="channelName != null" >
+				channel_name,
+			</if>
+			<if test="bankName != null" >
+				bank_name,
+			</if>
+			<if test="bankNo != null" >
+				bank_no,
+			</if>
+			<if test="channelPartnerName != null" >
+				channel_partner_name,
+			</if>
+			<if test="channelPartnerCode != null" >
+				channel_partner_code,
+			</if>
+			<if test="channelTypeName != null" >
+				channel_type_name,
+			</if>
+			<if test="channelTypeCode != null" >
+				channel_type_code,
+			</if>
+			<if test="merchantNumber != null" >
+				merchant_number,
+			</if>
+			<if test="cardTypeName != null" >
+				card_type_name,
+			</if>
+			<if test="cardTypeCode != null" >
+				card_type_code,
+			</if>
+			<if test="accountType != null" >
+				account_type,
+			</if>
+			<if test="businessType != null" >
+				business_type,
+			</if>
+			<if test="chargeDeductType != null" >
+				charge_deduct_type,
+			</if>
+			<if test="chargeReturnTag != null" >
+				charge_return_tag,
+			</if>
+			<if test="orderSettlePeriod != null" >
+				order_settle_period,
+			</if>
+			<if test="effectStartDate != null" >
+				effect_start_time,
+			</if>
+			<if test="effectEndDate != null" >
+				effect_end_time,
+			</if>
+			<if test="costType != null" >
+				cost_type,
+			</if>
+			<if test="costRate != null" >
+				cost_rate,
+			</if>
+			<if test="costCount != null" >
+				cost_count,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="settleType != null" >
+				settle_type,
+			</if>
+			<if test="settlePeriod != null" >
+				settle_period,
+			</if>
+			<if test="sort != null" >
+				sort,
+			</if>
+			<if test="perlimitAmount != null" >
+				perlimit_amount,
+			</if>
+			<if test="daylimitAmount != null" >
+				daylimit_amount,
+			</if>
+			<if test="monlimitAmount != null" >
+				monlimit_amount,
+			</if>
+			<if test="contractDate != null" >
+				contract_time,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+			<if test="merchantSubject != null" >
+				merchant_subject,
+			</if>
+			<if test="channelTag != null" >
+				channel_tag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="channelCode != null" >
+				#{channelCode,jdbcType=CHAR},
+			</if>
+			<if test="channelName != null" >
+				#{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankName != null" >
+				#{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null" >
+				#{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="channelPartnerName != null" >
+				#{channelPartnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelPartnerCode != null" >
+				#{channelPartnerCode,jdbcType=CHAR},
+			</if>
+			<if test="channelTypeName != null" >
+				#{channelTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelTypeCode != null" >
+				#{channelTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="merchantNumber != null" >
+				#{merchantNumber,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeName != null" >
+				#{cardTypeName,jdbcType=CHAR},
+			</if>
+			<if test="cardTypeCode != null" >
+				#{cardTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="accountType != null" >
+				#{accountType,jdbcType=CHAR},
+			</if>
+			<if test="businessType != null" >
+				#{businessType,jdbcType=CHAR},
+			</if>
+			<if test="chargeDeductType != null" >
+				#{chargeDeductType,jdbcType=CHAR},
+			</if>
+			<if test="chargeReturnTag != null" >
+				#{chargeReturnTag,jdbcType=CHAR},
+			</if>
+			<if test="orderSettlePeriod != null" >
+				#{orderSettlePeriod,jdbcType=CHAR},
+			</if>
+			<if test="effectStartDate != null" >
+				#{effectStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="effectEndDate != null" >
+				#{effectEndDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="costType != null" >
+				#{costType,jdbcType=CHAR},
+			</if>
+			<if test="costRate != null" >
+				#{costRate,jdbcType=DECIMAL},
+			</if>
+			<if test="costCount != null" >
+				#{costCount,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="settleType != null" >
+				#{settleType,jdbcType=CHAR},
+			</if>
+			<if test="settlePeriod != null" >
+				#{settlePeriod,jdbcType=CHAR},
+			</if>
+			<if test="sort != null" >
+				#{sort,jdbcType=CHAR},
+			</if>
+			<if test="perlimitAmount != null" >
+				#{perlimitAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="daylimitAmount != null" >
+				#{daylimitAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="monlimitAmount != null" >
+				#{monlimitAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="contractDate != null" >
+				#{contractDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="merchantSubject != null" >
+				#{merchantSubject,jdbcType=INTEGER},
+			</if>
+			<if test="channelTag != null" >
+				#{channelTag,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="PayChannel">
+		UPDATE route_pay_channel
+		<set >
+			<if test="chargeDeductType != null" >
+				charge_deduct_type = #{chargeDeductType,jdbcType=CHAR},
+			</if>
+				charge_return_tag = #{chargeReturnTag,jdbcType=CHAR},
+			<if test="orderSettlePeriod != null" >
+				order_settle_period = #{orderSettlePeriod,jdbcType=CHAR},
+			</if>
+			<if test="effectStartDate != null" >
+				effect_start_time = #{effectStartDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="effectEndDate != null" >
+				effect_end_time = #{effectEndDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="costType != null" >
+				cost_type = #{costType,jdbcType=CHAR},
+			</if>
+			<if test="merchantNumber != null" >
+				merchant_number = #{merchantNumber,jdbcType=CHAR},
+			</if>
+			cost_rate = #{costRate,jdbcType=DECIMAL},
+			cost_count = #{costCount,jdbcType=DECIMAL},
+			<if test="status != null" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="settleType != null" >
+				settle_type = #{settleType,jdbcType=CHAR},
+			</if>
+				settle_period = #{settlePeriod,jdbcType=CHAR},
+			<if test="sort != null" >
+				sort = #{sort,jdbcType=CHAR},
+			</if>
+			<if test="perlimitAmount != null" >
+				perlimit_amount = #{perlimitAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="daylimitAmount != null" >
+				daylimit_amount = #{daylimitAmount,jdbcType=DECIMAL},
+			</if>
+			monlimit_amount = #{monlimitAmount,jdbcType=DECIMAL},
+			<if test="contractDate != null" >
+				contract_time = #{contractDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="merchantSubject != null" >
+				merchant_subject = #{merchantSubject,jdbcType=INTEGER},
+			</if>
+			<if test="channelTag != null" >
+				channel_tag = #{channelTag,jdbcType=INTEGER},
+			</if>
+			update_time =now()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="changeSort">
+		update route_pay_channel set
+		sort = #{sort},
+		update_time =now()
+		WHERE id = #{id}
+	</update>
+	<update id="status" >
+		UPDATE route_pay_channel SET
+		status = #{status},
+		update_user = #{updateBy.id,jdbcType=INTEGER},
+		update_time =now()
+		WHERE id = #{id}
+	</update>
+	<update id="updateChannelCode" >
+		UPDATE route_pay_channel SET
+		channel_code = #{channelCode},
+		channel_name = #{channelName},
+		update_time =now()
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 通过商户代码查找商户通道表中有效的通道 -->
+	<select id="selectByMerchantId" resultType="PayChannel">
+		select
+		<include refid="payChannelColumns"/>
+		from route_pay_channel a
+		left join merchant_pay_channel b on a.`channel_code` = b.`channel_code`
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="bankNo != null and bankNo !=''">
+				AND a.`bank_no` = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND a.`channel_type_code` = #{channelTypeCode}
+			</if>
+			<if test="merchantId != null and merchantId !=''">
+				AND b.`merchant_id`  = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode !=''">
+				AND b.`product_code`  = #{productCode}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND  a.`card_type_code`  = #{cardTypeCode}
+			</if>
+			AND  a.`status`  = 'ENABLE'
+			AND now() BETWEEN a.effect_start_time AND a.effect_end_time
+		</trim>
+	</select>
+
+	<!-- 通过查找六个元素银行代码、通道类型、对公对私账户、通道合作方、银行卡类型、付款类型、商户号、判断该通道确定一条通道 w -->
+	<select id="sumNum" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM route_pay_channel a
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="id != null">
+				AND id != #{id,jdbcType=INTEGER}
+			</if>
+			<if test="bankNo != null and bankNo !=''">
+				AND bank_no = #{bankNo,jdbcType=CHAR}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode !=''">
+				AND channel_partner_code = #{channelPartnerCode,jdbcType=CHAR}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode !=''">
+				AND channel_type_code = #{channelTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="cardTypeCode != null and cardTypeCode !=''">
+				AND card_type_code = #{cardTypeCode,jdbcType=CHAR}
+			</if>
+			<if test="accountType != null and accountType !=''">
+				AND account_type = #{accountType,jdbcType=CHAR}
+			</if>
+			<if test="businessType != null and businessType !=''">
+				AND business_type = #{businessType,jdbcType=CHAR}
+			</if>
+			<if test="merchantNumber != null and merchantNumber !=''">
+				AND merchant_number = #{merchantNumber,jdbcType=CHAR}
+			</if>
+		</trim>
+	</select>
+</mapper>

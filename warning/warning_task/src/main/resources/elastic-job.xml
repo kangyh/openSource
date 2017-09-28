@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+    xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${warning.zookeeper.ens.ip}" namespace="dd-job" overwrite="true" base-sleep-time-milliseconds="3000" max-sleep-time-milliseconds="3000" max-retries="5"/>
+ 	 
+ 	 <!-- 资金存管生成对账文件定时任务-->
+ 	<job:simple id="WarningPrepareJob " class="com.heepay.warning.job.WarningPrepareJob" overwrite="true" registry-center-ref="regCenter" cron="${WarningJob-cron}"   sharding-total-count="1" />
+    <!--通道成功率报警-->
+    <job:simple id="WarningChannelSuccessRateJob " class="com.heepay.warning.job.WarningChannelSuccessRateJob" overwrite="true" registry-center-ref="regCenter" cron="${WarningJob-ChannelOrder-cron}"   sharding-total-count="1" />
+    <!--无订单报警-->
+    <job:simple id="WarningNoOrderJob " class="com.heepay.warning.job.WarningNoOrderJob" overwrite="true" registry-center-ref="regCenter" cron="${WarningJob-NoOrder-cron}"   sharding-total-count="1" />
+    <!--无日志报警-->
+    <job:simple id="WarningNoLog " class="com.heepay.warning.job.WarningNoLog" overwrite="true" registry-center-ref="regCenter" cron="${WarningJob-NoLog-cron}"   sharding-total-count="1" />
+    <!--订单成功率报警-->
+    <job:simple id="WarningOrderSuccessRateJob " class="com.heepay.warning.job.WarningOrderSuccessRateJob" overwrite="true" registry-center-ref="regCenter" cron="${WarningJob-OrderRate-cron}"   sharding-total-count="1" />
+ </beans>
+ 
+ 
+ 
+ 
+ 

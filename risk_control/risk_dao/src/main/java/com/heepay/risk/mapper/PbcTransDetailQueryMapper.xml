@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcTransDetailQueryMapper" >
+  <insert id="insert" parameterType="com.heepay.risk.entity.PbcTransDetailQuery" useGeneratedKeys="true" keyProperty="paymentAccountTransDetailId">
+    insert into pbc_trans_detail_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountTransDetailId != null" >
+        payment_account_trans_detail_id,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+      <if test="inquiryMode != null" >
+        inquiry_mode,
+      </if>
+      <if test="paymentAccountDetailType != null" >
+        subject_type,
+      </if>
+      <if test="transStartTime != null" >
+        start_time,
+      </if>
+      <if test="transEndTime != null" >
+        expire_time,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountTransDetailId != null" >
+        #{paymentAccountTransDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="inquiryMode != null" >
+        #{inquiryMode,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentAccountDetailType != null" >
+        #{paymentAccountDetailType,jdbcType=VARCHAR},
+      </if>
+      <if test="transStartTime != null" >
+        #{transStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transEndTime != null" >
+        #{transEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  </mapper>

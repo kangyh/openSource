@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.tpds.dao.TpdsCustomChargeDao">
+    
+	<sql id="tpdsCustomChargeMsgColumns">
+		mm.business_seq_no AS "businessSeqNo",
+		mm.business_order_no AS "businessOrderNo",
+		mm.r_type AS "raType",
+		mm.entrustflag AS "entrustflag",
+		mm.oder_no AS "oderNo",
+		mm.debit_account_no AS "debitAccountNo",
+		mm.cebit_account_no AS "cebitAccountNo",
+		mm.currency AS "currency",
+		mm.amount AS "amount",
+		mm.other_amounttype AS "otherAmounttype",
+		mm.other_amount AS "otherAmount",
+		mm.pay_type AS "payType",
+		mm.busi_branch_no AS "busiBranchNo",
+		mm.bank_account_no AS "bankAccountNo",
+		mm.sec_bankacc_no AS "secBankaccNo",
+		mm.bank_id AS "bankId",
+		mm.bank_name AS "bankName",
+		mm.card_type AS "cardType",
+		cc.resp_msg AS "note",
+		mm.create_time AS "createTime"
+	</sql>
+
+	<select id="findList" resultType="TpdsCustomCharge">
+        SELECT
+            <include refid="tpdsCustomChargeMsgColumns"/>
+        FROM (SELECT a.business_seq_no, m.resp_msg
+                FROM tpds_custom_charge a
+                LEFT  JOIN tpds_merchant_msg m ON m.business_seq_no = a.business_seq_no
+                <where>
+                    <!-- 业务流水号-->
+                    <if test="businessSeqNo != null and businessSeqNo != ''">
+                        AND a.business_seq_no = #{businessSeqNo}
+                    </if>
+                    <!-- 类型-->
+                    <if test="raType != null and raType != ''">
+                        AND a.r_type = #{raType}
+                    </if>
+                    <!-- 支付方式-->
+                    <if test="payType != null and payType != ''">
+                        AND a.pay_type = #{payType}
+                    </if>
+                    <!-- 创建时间-->
+                    <if test="beginTime != null and endTime != null">
+                        AND a.create_time BETWEEN date_format(#{beginTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endTime},'%Y-%m-%d %H:%i:%s')
+                    </if>
+                    <!-- 返回交易码-->
+                    <if test="resturnCode != null and resturnCode != ''">
+                        <choose>
+                            <when test="resturnCode == 'SUCCESS'">
+                                AND m.resp_code IN ('P2PS000','P2P0000')
+                                AND m.resp_code IS NOT NULL
+                            </when>
+                            <otherwise>
+                                AND (m.resp_code NOT IN ('P2PS000','P2P0000')
+                                OR m.resp_code IS NULL)
+                            </otherwise>
+                        </choose>
+                    </if>
+                    AND a.r_type != 'R08'
+                </where>
+                GROUP BY a.business_seq_no,m.resp_msg) cc
+        LEFT JOIN tpds_custom_charge mm ON mm.business_seq_no = cc.business_seq_no
+        <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY mm.cus_id desc
+			</otherwise>
+		</choose>
+	</select>
+
+
+    <select id="findCountAndSum" resultType="map" parameterType="TpdsCustomCharge">
+        SELECT
+            COUNT(1) AS "totalNum",
+            (CASE WHEN (SUM(CASE WHEN cc.resp_code IN ('P2PS000','P2P0000') THEN 1 ELSE 0 END)) IS NULL THEN 0 ELSE SUM(CASE WHEN cc.resp_code IN ('P2PS000','P2P0000') THEN 1 ELSE 0 END) END) AS "successNum",
+            (CASE WHEN SUM(mm.amount) IS NULL THEN 0 ELSE SUM(mm.amount) END) AS "totalAmount",
+            (CASE WHEN (SUM(CASE WHEN cc.resp_code IN ('P2PS000','P2P0000') THEN mm.amount ELSE 0 END)) IS NULL THEN 0 ELSE SUM(CASE WHEN cc.resp_code IN ('P2PS000','P2P0000') THEN mm.amount ELSE 0 END) END) AS "successAmount"
+        FROM (SELECT a.business_seq_no, m.resp_msg, m.resp_code
+                FROM tpds_custom_charge a
+                LEFT JOIN tpds_merchant_msg m ON m.business_seq_no = a.business_seq_no
+                <where>
+                    <!-- 业务流水号-->
+                    <if test="businessSeqNo != null and businessSeqNo != ''">
+                        AND a.business_seq_no = #{businessSeqNo}
+                    </if>
+                    <!-- 类型-->
+                    <if test="raType != null and raType != ''">
+                        AND a.r_type = #{raType}
+                    </if>
+                    <!-- 支付方式-->
+                    <if test="payType != null and payType != ''">
+                        AND a.pay_type = #{payType}
+                    </if>
+                    <!-- 创建时间-->
+                    <if test="beginTime != null and endTime != null">
+                        AND a.create_time BETWEEN date_format(#{beginTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endTime},'%Y-%m-%d %H:%i:%s')
+                    </if>
+                    <!-- 返回交易码-->
+                    <if test="resturnCode != null and resturnCode != ''">
+                        <choose>
+                            <when test="resturnCode == 'SUCCESS'">
+                                AND m.resp_code IN ('P2PS000','P2P0000')
+                                AND m.resp_code IS NOT NULL
+                            </when>
+                            <otherwise>
+                                AND (m.resp_code NOT IN ('P2PS000','P2P0000')
+                                OR m.resp_code IS NULL)
+                            </otherwise>
+                        </choose>
+                    </if>
+                    AND a.r_type != 'R08'
+                    AND a.pay_type = '01'
+                </where>
+                GROUP BY a.business_seq_no,m.resp_msg, m.resp_code) cc
+        LEFT JOIN tpds_custom_charge mm ON mm.business_seq_no = cc.business_seq_no
+    </select>
+</mapper>

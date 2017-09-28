@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.UserCenterDao">
+    
+	<sql id="userChargeRecordColumns">
+		a.charge_id AS transNo;		// 交易单号
+		a.merchant_id AS  userId;		// 用户id
+		"CHARGE" as transType;		//交易类型
+		a.create_time AS createTime;// 创建时间
+		a.status AS transStatus;		//交易状态
+		a.merchant_login_name AS userLoginName;		//用户登录名
+		a.merchant_company AS userName;		//用户名称
+		a.charge_amount AS transAmount;		// 交易金额
+		a.fee_amount AS feeAmount;		//手续费
+	</sql>
+	
+	<sql id="userWithdrawRecordColumns">
+		a.withdraw_id AS transNo;		// 交易单号
+		a.merchant_id AS  userId;		// 用户id
+		"WZDRAW" as transType;		//交易类型
+		a.create_time AS createTime;// 创建时间
+		a.status AS transStatus;		//交易状态
+		a.merchant_login_name AS userLoginName;		//用户登录名
+		a.merchant_company AS userName;		//用户名称
+		a.withdraw_amount AS transAmount;		// 交易金额
+		a.fee_amount AS feeAmount;		//手续费
+	</sql>
+  
+	
+	<select id="findChargePage" resultType="UserCenterRecord">
+		SELECT 
+			<include refid="userChargeRecordColumns"/>
+		FROM charge_record a
+		<where>
+			<if test="userId != null and userId != ''">
+				AND a.merchant_id = #{userId}
+			</if>
+			<choose>
+				<when test="transStatus == 'PROCES'">
+					AND a.status ="CAGING"
+				</when>
+				<when test="transStatus != null and transStatus != '' and transStatus != 'PROCES'">
+					AND a.status = #{transStatus}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findWithdrawPage" resultType="UserCenterRecord">
+		SELECT 
+			<include refid="userWithdrawRecordColumns"/>
+		FROM withdraw_record a
+		<where>
+			<if test="merchant_id != null and merchant_id != ''">
+				AND a.merchant_id = #{merchant_id}
+			</if>
+			<choose>
+				<when test="status == 'PROCES'">
+					AND a.status ="DRAING"
+				</when>
+				<when test="status != null and status != '' and status != 'PROCES'">
+					AND a.status = #{status}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

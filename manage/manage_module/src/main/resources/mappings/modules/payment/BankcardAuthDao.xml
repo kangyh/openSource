@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BankcardAuthDao">
+    
+	<sql id="bankcardAuthColumns">
+		a.auth_id AS "authId",
+		a.auth_time AS "authTime",
+		a.type AS "type",
+		a.status AS "status",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.open_bank_name AS "openBankName",
+		a.bank_info AS "bankInfo",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_type AS "bankcardType",
+		a.bankcard_expired_date AS "bankcardExpiredDate",
+		a.bankcard_cvv2 AS "bankcardCvv2",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.default_tag AS "defaultTag",
+		a.channel_code AS "channelCode",
+		a.channel_auth AS "channelAuth",
+		a.merchant_user_id AS "merchantUserId",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.authorization_code AS "authorizationCode",
+		a.ext1 AS "ext1",
+		a.ext2 AS "ext2",
+		a.short_card_no AS "shortCardNo",
+		a.short_phnoe_no AS "shortPhnoeNo",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.associate_line_number AS "associateLineNumber",
+		a.protocol_path AS "protocolPath",
+		a.protocol_expire_date AS "protocolExpireDate",
+		a.protocol_max_amount AS "protocolMaxAmount",
+		a.protocol_sum_amount AS "protocolSumAmount"
+	</sql>
+	
+	<sql id="bankcardAuthJoins">
+	</sql>
+    
+	<select id="get" resultType="BankcardAuth">
+		SELECT 
+			<include refid="bankcardAuthColumns"/>
+		FROM bankcard_auth a
+		<include refid="bankcardAuthJoins"/>
+		WHERE a.auth_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BankcardAuth">
+		SELECT 
+			<include refid="bankcardAuthColumns"/>
+		FROM bankcard_auth a
+		<include refid="bankcardAuthJoins"/>
+		<where>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+			<if test="authId != null and authId != ''">
+				AND a.auth_id = #{authId}
+			</if>
+			<if test="beginAuthTime != null and endAuthTime != null and beginAuthTime != '' and endAuthTime != ''">
+				AND a.auth_time BETWEEN #{beginAuthTime} AND #{endAuthTime}
+			</if>
+			<if test="status != null and status != ''">
+				<choose>
+					<when test="status == 'AUTSUC'">
+						AND a.status NOT IN ('PRESGN','REJECT')
+					</when>
+					<otherwise>
+						AND a.status = #{status}
+					</otherwise>
+				</choose>
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantCompany}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantCompany}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantCompany},'%')</if>
+			</if>
+			<if test="bankcardNo != null and bankcardNo != ''">
+				AND a.bankcard_no = #{bankcardNo}
+			</if>
+			<if test="bankcardOwnerMobile != null and bankcardOwnerMobile != ''">
+				AND a.bankcard_owner_mobile = #{bankcardOwnerMobile}
+			</if>
+			<if test="bankcardOwnerIdcard != null and bankcardOwnerIdcard != ''">
+				AND a.bankcard_owner_idcard = #{bankcardOwnerIdcard}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="ext2 != null and ext2 != ''">
+				AND a.ext2 = #{ext2}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="typeList != null">
+				AND a.type in
+				<foreach collection="typeList" index="index" item="item" open="(" separator="," close=")">
+					#{typeList[${index}]}
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BankcardAuth">
+		SELECT 
+			<include refid="bankcardAuthColumns"/>
+		FROM bankcard_auth a
+		<include refid="bankcardAuthJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bankcard_auth(
+			auth_id,
+			auth_time,
+			type,
+			status,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			bank_id,
+			bank_name,
+			open_bank_name,
+			bank_info,
+			bankcard_no,
+			bankcard_type,
+			bankcard_expired_date,
+			bankcard_cvv2,
+			bankcard_owner_mobile,
+			bankcard_owner_name,
+			bankcard_owner_idcard,
+			bankcard_owner_type,
+			default_tag,
+			channel_code,
+			channel_auth,
+			merchant_user_id,
+			merchant_order_no,
+			authorization_code,
+			ext1,
+			ext2,
+			short_card_no,
+			short_phnoe_no,
+			create_time,
+			update_time,
+			associate_line_number,
+			protocol_path,
+			protocol_expire_date,
+			protocol_max_amount,
+			protocol_sum_amount
+		) VALUES (
+			#{authId},
+			#{authTime},
+			#{type},
+			#{status},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{bankId},
+			#{bankName},
+			#{openBankName},
+			#{bankInfo},
+			#{bankcardNo},
+			#{bankcardType},
+			#{bankcardExpiredDate},
+			#{bankcardCvv2},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerName},
+			#{bankcardOwnerIdcard},
+			#{bankcardOwnerType},
+			#{defaultTag},
+			#{channelCode},
+			#{channelAuth},
+			#{merchantUserId},
+			#{merchantOrderNo},
+			#{authorizationCode},
+			#{ext1},
+			#{ext2},
+			#{shortCardNo},
+			#{shortPhnoeNo},
+			#{createTime},
+			#{updateTime},
+			#{associateLineNumber},
+			#{protocolPath},
+			#{protocolExpireDate},
+			#{protocolMaxAmount},
+			#{protocolSumAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bankcard_auth SET 	
+			auth_id = #{authId},
+			auth_time = #{authTime},
+			type = #{type},
+			status = #{status},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			bank_id = #{bankId},
+			bank_name = #{bankName},
+			open_bank_name = #{openBankName},
+			bank_info = #{bankInfo},
+			bankcard_no = #{bankcardNo},
+			bankcard_type = #{bankcardType},
+			bankcard_expired_date = #{bankcardExpiredDate},
+			bankcard_cvv2 = #{bankcardCvv2},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bankcard_owner_type = #{bankcardOwnerType},
+			default_tag = #{defaultTag},
+			channel_code = #{channelCode},
+			channel_auth = #{channelAuth},
+			merchant_user_id = #{merchantUserId},
+			merchant_order_no = #{merchantOrderNo},
+			authorization_code = #{authorizationCode},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			short_card_no = #{shortCardNo},
+			short_phnoe_no = #{shortPhnoeNo},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			associate_line_number = #{associateLineNumber},
+			protocol_path = #{protocolPath},
+			protocol_expire_date = #{protocolExpireDate},
+			protocol_max_amount = #{protocolMaxAmount},
+			protocol_sum_amount = #{protocolSumAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bankcard_auth
+		WHERE auth_id = #{id}
+	</update>
+
+	<select id="getAuthId" resultType="BankcardAuth">
+		SELECT
+		max(a.auth_id) as authId
+		FROM bankcard_auth a
+	</select>
+
+    <update id="entrustedCollectionAuth">
+        update bankcard_auth a
+           set a.status = #{authResult},
+               a.ext1 = #{authDesc},
+               a.ext2 = #{enable},
+               a.auth_time = now()
+         where a.auth_id = #{authId}
+           and a.status = 'PRESGN'
+    </update>
+
+    <update id="setEnable">
+        update bankcard_auth a
+           set a.ext2 = #{enable}
+         where a.auth_id = #{authId}
+           and a.status = 'SUCCES'
+    </update>
+
+    <update id="setLimitAmount">
+        update bankcard_auth a
+           set a.protocol_max_amount = #{maxAmount}
+         where a.auth_id = #{authId}
+    </update>
+	
+</mapper>

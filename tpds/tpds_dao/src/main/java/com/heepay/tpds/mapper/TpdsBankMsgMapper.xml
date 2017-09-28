@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsBankMsgMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsBankMsg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version_id" property="versionId" jdbcType="VARCHAR" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
+    <result column="tx_type" property="txType" jdbcType="VARCHAR" />
+    <result column="tx_name" property="txName" jdbcType="VARCHAR" />
+    <result column="client_sn" property="clientSn" jdbcType="VARCHAR" />
+    <result column="client_date" property="clientDate" jdbcType="TIMESTAMP" />
+    <result column="settle_date" property="settleDate" jdbcType="TIMESTAMP" />
+    <result column="client_time" property="clientTime" jdbcType="TIMESTAMP" />
+    <result column="sign_time" property="signTime" jdbcType="VARCHAR" />
+    <result column="business_seq_no" property="businessSeqNo" jdbcType="VARCHAR" />
+    <result column="service_sn" property="serviceSn" jdbcType="VARCHAR" />
+    <result column="service_date" property="serviceDate" jdbcType="DATE" />
+    <result column="service_time" property="serviceTime" jdbcType="TIME" />
+    <result column="resp_code" property="respCode" jdbcType="VARCHAR" />
+    <result column="resp_msg" property="respMsg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, version_id, merchant_no, bank_no, tx_type, tx_name, client_sn, client_date, settle_date, 
+    client_time, sign_time, business_seq_no, service_sn, service_date, service_time, 
+    resp_code, resp_msg
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsBankMsgExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_bank_msg
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_bank_msg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tpds_bank_msg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsBankMsgExample" >
+    delete from tpds_bank_msg
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsBankMsg" >
+    insert into tpds_bank_msg (id, version_id, merchant_no, 
+      bank_no, tx_type, tx_name, 
+      client_sn, client_date, settle_date, 
+      client_time, sign_time, business_seq_no, 
+      service_sn, service_date, service_time, 
+      resp_code, resp_msg)
+    values (#{id,jdbcType=INTEGER}, #{versionId,jdbcType=VARCHAR}, #{merchantNo,jdbcType=VARCHAR}, 
+      #{bankNo,jdbcType=VARCHAR}, #{txType,jdbcType=VARCHAR}, #{txName,jdbcType=VARCHAR}, 
+      #{clientSn,jdbcType=VARCHAR}, #{clientDate,jdbcType=TIMESTAMP}, #{settleDate,jdbcType=TIMESTAMP}, 
+      #{clientTime,jdbcType=TIMESTAMP}, #{signTime,jdbcType=VARCHAR}, #{businessSeqNo,jdbcType=VARCHAR}, 
+      #{serviceSn,jdbcType=VARCHAR}, #{serviceDate,jdbcType=DATE}, #{serviceTime,jdbcType=TIME}, 
+      #{respCode,jdbcType=VARCHAR}, #{respMsg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsBankMsg" >
+    insert into tpds_bank_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="versionId != null" >
+        version_id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="bankNo != null" >
+        bank_no,
+      </if>
+      <if test="txType != null" >
+        tx_type,
+      </if>
+      <if test="txName != null" >
+        tx_name,
+      </if>
+      <if test="clientSn != null" >
+        client_sn,
+      </if>
+      <if test="clientDate != null" >
+        client_date,
+      </if>
+      <if test="settleDate != null" >
+        settle_date,
+      </if>
+      <if test="clientTime != null" >
+        client_time,
+      </if>
+      <if test="signTime != null" >
+        sign_time,
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no,
+      </if>
+      <if test="serviceSn != null" >
+        service_sn,
+      </if>
+      <if test="serviceDate != null" >
+        service_date,
+      </if>
+      <if test="serviceTime != null" >
+        service_time,
+      </if>
+      <if test="respCode != null" >
+        resp_code,
+      </if>
+      <if test="respMsg != null" >
+        resp_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="versionId != null" >
+        #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNo != null" >
+        #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        #{txType,jdbcType=VARCHAR},
+      </if>
+      <if test="txName != null" >
+        #{txName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientSn != null" >
+        #{clientSn,jdbcType=VARCHAR},
+      </if>
+      <if test="clientDate != null" >
+        #{clientDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleDate != null" >
+        #{settleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientTime != null" >
+        #{clientTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signTime != null" >
+        #{signTime,jdbcType=VARCHAR},
+      </if>
+      <if test="businessSeqNo != null" >
+        #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceSn != null" >
+        #{serviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDate != null" >
+        #{serviceDate,jdbcType=DATE},
+      </if>
+      <if test="serviceTime != null" >
+        #{serviceTime,jdbcType=TIME},
+      </if>
+      <if test="respCode != null" >
+        #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respMsg != null" >
+        #{respMsg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsBankMsgExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_bank_msg
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_bank_msg
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.versionId != null" >
+        version_id = #{record.versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantNo != null" >
+        merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankNo != null" >
+        bank_no = #{record.bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.txType != null" >
+        tx_type = #{record.txType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.txName != null" >
+        tx_name = #{record.txName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clientSn != null" >
+        client_sn = #{record.clientSn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clientDate != null" >
+        client_date = #{record.clientDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.settleDate != null" >
+        settle_date = #{record.settleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.clientTime != null" >
+        client_time = #{record.clientTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.signTime != null" >
+        sign_time = #{record.signTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessSeqNo != null" >
+        business_seq_no = #{record.businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceSn != null" >
+        service_sn = #{record.serviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceDate != null" >
+        service_date = #{record.serviceDate,jdbcType=DATE},
+      </if>
+      <if test="record.serviceTime != null" >
+        service_time = #{record.serviceTime,jdbcType=TIME},
+      </if>
+      <if test="record.respCode != null" >
+        resp_code = #{record.respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.respMsg != null" >
+        resp_msg = #{record.respMsg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_bank_msg
+    set id = #{record.id,jdbcType=INTEGER},
+      version_id = #{record.versionId,jdbcType=VARCHAR},
+      merchant_no = #{record.merchantNo,jdbcType=VARCHAR},
+      bank_no = #{record.bankNo,jdbcType=VARCHAR},
+      tx_type = #{record.txType,jdbcType=VARCHAR},
+      tx_name = #{record.txName,jdbcType=VARCHAR},
+      client_sn = #{record.clientSn,jdbcType=VARCHAR},
+      client_date = #{record.clientDate,jdbcType=TIMESTAMP},
+      settle_date = #{record.settleDate,jdbcType=TIMESTAMP},
+      client_time = #{record.clientTime,jdbcType=TIMESTAMP},
+      sign_time = #{record.signTime,jdbcType=VARCHAR},
+      business_seq_no = #{record.businessSeqNo,jdbcType=VARCHAR},
+      service_sn = #{record.serviceSn,jdbcType=VARCHAR},
+      service_date = #{record.serviceDate,jdbcType=DATE},
+      service_time = #{record.serviceTime,jdbcType=TIME},
+      resp_code = #{record.respCode,jdbcType=VARCHAR},
+      resp_msg = #{record.respMsg,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsBankMsg" >
+    update tpds_bank_msg
+    <set >
+      <if test="versionId != null" >
+        version_id = #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNo != null" >
+        bank_no = #{bankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="txType != null" >
+        tx_type = #{txType,jdbcType=VARCHAR},
+      </if>
+      <if test="txName != null" >
+        tx_name = #{txName,jdbcType=VARCHAR},
+      </if>
+      <if test="clientSn != null" >
+        client_sn = #{clientSn,jdbcType=VARCHAR},
+      </if>
+      <if test="clientDate != null" >
+        client_date = #{clientDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleDate != null" >
+        settle_date = #{settleDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clientTime != null" >
+        client_time = #{clientTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signTime != null" >
+        sign_time = #{signTime,jdbcType=VARCHAR},
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no = #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceSn != null" >
+        service_sn = #{serviceSn,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDate != null" >
+        service_date = #{serviceDate,jdbcType=DATE},
+      </if>
+      <if test="serviceTime != null" >
+        service_time = #{serviceTime,jdbcType=TIME},
+      </if>
+      <if test="respCode != null" >
+        resp_code = #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respMsg != null" >
+        resp_msg = #{respMsg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsBankMsg" >
+    update tpds_bank_msg
+    set version_id = #{versionId,jdbcType=VARCHAR},
+      merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      bank_no = #{bankNo,jdbcType=VARCHAR},
+      tx_type = #{txType,jdbcType=VARCHAR},
+      tx_name = #{txName,jdbcType=VARCHAR},
+      client_sn = #{clientSn,jdbcType=VARCHAR},
+      client_date = #{clientDate,jdbcType=TIMESTAMP},
+      settle_date = #{settleDate,jdbcType=TIMESTAMP},
+      client_time = #{clientTime,jdbcType=TIMESTAMP},
+      sign_time = #{signTime,jdbcType=VARCHAR},
+      business_seq_no = #{businessSeqNo,jdbcType=VARCHAR},
+      service_sn = #{serviceSn,jdbcType=VARCHAR},
+      service_date = #{serviceDate,jdbcType=DATE},
+      service_time = #{serviceTime,jdbcType=TIME},
+      resp_code = #{respCode,jdbcType=VARCHAR},
+      resp_msg = #{respMsg,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

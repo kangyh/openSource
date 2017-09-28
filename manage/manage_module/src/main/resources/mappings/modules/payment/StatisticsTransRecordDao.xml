@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.StatisticsTransRecordDao">
+    
+	<sql id="statisticsTransRecordColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_company AS "merchantCompany",
+		a.trans_type AS "transType",
+		a.product_code AS "productCode",
+		a.pay_type AS "payType",
+		a.total_count AS "totalCount",
+		a.total_amount AS "totalAmount",
+		a.sucess_count AS "sucessCount",
+		a.sucess_amount AS "sucessAmount",
+		a.fee_amount AS "feeAmount",
+		a.fail_count AS "failCount",
+		a.fail_amount AS "failAmount",
+		a.statistics_time AS "statisticsTime",
+		a.statistic_hour AS "statisticHour",
+		a.create_time AS "createTime",
+		a.currency AS "currency",
+		a.remark AS "remark",
+		a.allow_system AS "allowSystem"
+	</sql>
+	
+	<sql id="statisticsTransRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsTransRecord">
+		SELECT 
+			<include refid="statisticsTransRecordColumns"/>
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- <select id="findList" resultType="StatisticsTransRecord">
+		SELECT 
+			<include refid="statisticsTransRecordColumns"/>
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantCompany}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantCompany}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantCompany},'%')</if>
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+		</where>
+			ORDER BY statistics_time DESC
+	</select> -->
+	<select id="findList" resultType="StatisticsTransRecord">
+		SELECT 
+			a.merchant_id AS "merchantId",
+			a.merchant_company AS "merchantCompany",
+			a.trans_type AS "transType",
+			a.product_code AS "productCode",
+			a.pay_type AS "payType",
+			a.allow_system AS "allowSystem",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount)AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+			
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantCompany}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantCompany}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantCompany},'%')</if>
+			</if>
+			<if test="allowSystem != null and allowSystem != ''">
+				AND a.allow_system = #{allowSystem}
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+			
+			AND a.statistic_hour is NULL
+		</where>
+			GROUP BY
+			merchant_id ,merchantCompany ,transType,productCode,payType,allowSystem
+	</select>
+	
+	<select id="findOldList" resultType="StatisticsTransRecord">
+		SELECT 
+		<include refid="statisticsTransRecordColumns"/>
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantCompany != null and merchantCompany != ''">
+				AND a.merchant_company LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantCompany}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantCompany}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantCompany},'%')</if>
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="payType != null and payType != ''">
+				AND a.pay_type = #{payType}
+			</if>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+
+		</where>
+			ORDER BY statistics_time desc ,statistic_hour desc
+	</select>
+	
+	
+ 	<!-- 统计出入金 -->	
+	<select id="findBalanceList" resultType="StatisticsBalanceRecord">
+		  a.statistics_time AS statisticsTime,
+ 
+		  SUM( CASE  WHEN product_code ='CP02' OR product_code ='CP04'  OR product_code ='CP05' OR product_code ='GRTX'
+					THEN
+						sucess_amount
+					ELSE
+						0
+					END
+		  ) as transOutAmount,
+
+		  SUM( CASE  WHEN
+						product_code ='CP02' OR product_code ='CP04'  OR product_code ='CP05' OR product_code ='GRTX'
+		
+					THEN
+						0
+					ELSE
+						sucess_amount
+					END
+		
+		  ) as transInAmount
+		  
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+		</where>
+			GROUP BY
+				statistics_time
+
+			ORDER BY
+				statistics_time ASC
+	</select>
+	
+	<select id="findTransTypeList" resultType="StatisticsTransRecord">
+		SELECT 
+			a.trans_type AS "transType",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+			
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+			
+		</where>
+			GROUP BY
+			transType
+	</select>
+	
+	<select id="findPayTypeList" resultType="StatisticsTransRecord">
+		SELECT 
+			a.pay_type AS "payType",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+			
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+			
+		</where>
+			GROUP BY
+			payType
+	</select>
+	
+	<select id="findProductList" resultType="StatisticsTransRecord">
+		SELECT 
+			a.product_code AS "productCode",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+			
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			<if test="beginStatisticsTime != null and endStatisticsTime != null ">
+				AND a.statistics_time BETWEEN #{beginStatisticsTime} AND #{endStatisticsTime}
+			</if>
+			
+		</where>
+			GROUP BY
+			productCode
+	</select>
+	
+	<select id="findAllList" resultType="StatisticsTransRecord">
+		SELECT 
+			<include refid="statisticsTransRecordColumns"/>
+		FROM statistics_trans_record a
+		<include refid="statisticsTransRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_trans_record(
+			id,
+			merchant_id,
+			merchant_company,
+			trans_type,
+			product_code,
+			pay_type,
+			total_count,
+			total_amount,
+			sucess_count,
+			sucess_amount,
+			fail_count,
+			fail_amount,
+			statistics_time,
+			create_time,
+			currency,
+			remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantCompany},
+			#{transType},
+			#{productCode},
+			#{payType},
+			#{totalCount},
+			#{totalAmount},
+			#{sucessCount},
+			#{sucessAmount},
+			#{failCount},
+			#{failAmount},
+			#{statisticsTime},
+			#{createTime},
+			#{currency},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_trans_record SET 	
+			merchant_id = #{merchantId},
+			merchant_company = #{merchantCompany},
+			trans_type = #{transType},
+			product_code = #{productCode},
+			pay_type = #{payType},
+			total_count = #{totalCount},
+			total_amount = #{totalAmount},
+			sucess_count = #{sucessCount},
+			sucess_amount = #{sucessAmount},
+			fail_count = #{failCount},
+			fail_amount = #{failAmount},
+			statistics_time = #{statisticsTime},
+			create_time = #{createTime},
+			currency = #{currency},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_trans_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

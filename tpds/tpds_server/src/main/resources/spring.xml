@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:task="http://www.springframework.org/schema/task"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		   http://www.springframework.org/schema/tx
+		   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd           
+           http://www.springframework.org/schema/task
+           http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+     
+	<!--spring异步调用，task加Async注解  -->
+ 	<!--使用了component-scan就不需要使用annotation-config了 -->
+	<context:component-scan base-package="com.heepay.*" />
+
+	<tx:annotation-driven transaction-manager="txManager"/>
+	<!-- 默认的注解映射的支持 -->  
+    <!-- <mvc:annotation-driven />   -->
+	<!-- 交易系统公共类 -->
+	<bean id="paymentCommon"  
+        class="com.heepay.tpds.vo.PaymentCommon">  
+        <property name="paymentDepositUrl" value="${payment.deposit.url}" />
+        <property name="paymentDepositQueryUrl" value="${payment.deposit.query.url}" />
+        <property name="paymentB2CChargeUrl" value="${payment.b2cCharge.url}" />
+        <property name="paymentB2CPayUrl" value="${payment.b2cpay.url}" /> 
+        <property name="paymentBankListUrl" value="${payment.bankList.url}" /> 
+        <property name="paymentQuickpayUrl" value="${payment.quickpay.url}" /> 
+        <property name="paymentQuickpayConfirmUrl" value="${payment.quickpayConfirm.url}" /> 
+        <property name="paymentSignqueryUrl" value="${payment.signquery.url}" /> 
+        <property name="paymentTransqueryUrl" value="${payment.transquery.url}" /> 
+    </bean>
+    <!-- 商户与汇付宝签名key -->
+    <bean id = "signkeyCommon" class="com.heepay.tpds.vo.SignkeyCommon">
+    	<property name="jiuctSignkey" value="${jiuct.quick.sign.key}"/>
+    	<property name="jiuctB2CSignkey" value="${jiuct.b2c.sign.key}"/>
+    	<property name="jiuctTransQuery" value="${jiuct.trans.query}"/>
+    	<property name="bank_IV" value="${bank.iv}"/>
+    	<property name="bank_Key" value="${bank.key}"/>
+    	<property name="bank_Signature" value="${bank.signature}"/>
+    	
+    </bean>
+    <!-- 异步通知地址 -->
+    <bean id = "notifyUrlVo" class="com.heepay.tpds.vo.NotifyUrlVo">
+    	<property name="notifyUrl" value="${tpds_notify_url}"/>
+    	<property name="callbackUrl" value="${tpds_callback_url}"/>
+    </bean>
+    <bean id="httpsClient" class="com.heepay.utils.http.WithoutAuthHttpsClient" init-method="init"/>
+	<!-- 加载自定义properties文件 -->
+	  <import resource="tpds-common.xml"/>
+     <import resource="spring-jdbc.xml"/>
+     <import resource="spring-interceptor.xml"/>
+     <import resource="spring-thrift.xml"/>
+     <import resource="spring-aop.xml"/>
+     <import resource="sqlMapConfig.xml"/>
+       <bean id="withdrawClient"  
+        class="com.heepay.tpds.client.WithdrawClient">     
+      </bean>
+</beans>  

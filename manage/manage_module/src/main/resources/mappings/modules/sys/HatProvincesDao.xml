@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.sys.dao.HatProvincesDao">
+    
+	<sql id="hatProvincesColumns">
+		a.id AS "id",
+		a.provinceid AS "provinceid",
+		a.province AS "province",
+		a.wm AS "wm"
+	</sql>
+	
+	<sql id="hatProvincesJoins">
+	</sql>
+	
+	  <select id="selectList" resultType="HatProvinces">
+		select
+			<include refid="hatProvincesColumns" />
+		from hat_province a
+		<include refid="hatProvincesJoins"/>
+  	</select>
+    
+	<select id="get" resultType="HatProvinces">
+		SELECT 
+			<include refid="hatProvincesColumns"/>
+		FROM hat_province a
+		<include refid="hatProvincesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HatProvinces">
+		SELECT 
+			<include refid="hatProvincesColumns"/>
+		FROM hat_province a
+		<include refid="hatProvincesJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HatProvinces">
+		SELECT 
+			<include refid="hatProvincesColumns"/>
+		FROM hat_province a
+		<include refid="hatProvincesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hat_province(
+			id,
+			provinceid,
+			province,
+			wm
+		) VALUES (
+			#{id},
+			#{provinceid},
+			#{province},
+			#{wm}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hat_province SET 	
+			provinceid = #{provinceid},
+			province = #{province},
+			wm = #{wm}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hat_province
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

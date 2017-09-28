@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsOrderformDao">
+
+    <sql id="cbmsOrderformColumns">
+		a.order_id AS "orderId",
+		a.import_batch_number AS "importBatchNumber",
+		a.sent_customs_number AS "sentCustomsNumber",
+		a.custom_sn AS "customSn",
+		a.merchant_no AS "merchantNo",
+		a.bus_enterprise_no AS "busEnterpriseNo",
+		a.bus_enterprise_name AS "busEnterpriseName",
+		a.order_form_no AS "orderFormNo",
+		a.trans_code AS "transCode",
+		a.mode_code AS "modeCode",
+		a.inspection_quarantine_code AS "inspectionQuarantineCode",
+		a.custom_code AS "customCode",
+		a.commodity_name AS "commodityName",
+		a.commodity_count AS "commodityCount",
+		a.commodity_unit AS "commodityUnit",
+		a.good_msg AS "goodMsg",
+		a.is_ref AS "isRef",
+		a.rmb_prices AS "rmbPrices",
+		a.foreign_prices AS "foreignPrices",
+		a.rmb_amount AS "rmbAmount",
+		a.foreign_amount AS "foreignAmount",
+		a.rmb_pay_amount AS "rmbPayAmount",
+		a.charge_amount AS "chargeAmount",
+		a.pay_purpose AS "payPurpose",
+		a.pay_taxes AS "payTaxes",
+		a.freight AS "freight",
+		a.org_pay_enterprise_name AS "orgPayEnterpriseName",
+		a.org_pay_transno AS "orgPayTransno",
+		a.hy_pay_transno AS "hyPayTransno",
+		a.pay_status AS "payStatus",
+		a.pay_name AS "payName",
+		a.sex AS "sex",
+		a.age AS "age",
+		a.pay_time AS "payTime",
+		a.pay_ercertificate_type AS "payErcertificateType",
+		a.pay_ercertificate_no AS "payErcertificateNo",
+		a.currency_id AS "currencyId",
+		a.bank_card_type AS "bankCardType",
+		a.pay_eraccount_no AS "payEraccountNo",
+		a.payer_phone AS "payerPhone",
+		a.file_name AS "fileName",
+		a.confirm_time AS "confirmTime",
+		a.tading_time AS "tadingTime",
+		a.authentication_time AS "authenticationTime",
+		a.declaration_time AS "declarationTime",
+		a.commodity_classify AS "commodityClassify",
+		a.consignee_name AS "consigneeName",
+		a.consignee_phone AS "consigneePhone",
+		a.consignee_address AS "consigneeAddress",
+		a.delivery_type AS "deliveryType",
+		a.way_billno AS "wayBillno",
+		a.logistics_company AS "logisticsCompany",
+		a.created_time AS "createdTime",
+		a.update_time AS "updateTime",
+		a.service_status AS "serviceStatus",
+		a.subscription_status AS "subscriptionStatus",
+		a.sub_trans_mode AS "subTransMode",
+		a.note AS "note",
+		a.post_script AS "postScript",
+		a.identification AS "identification",
+		a.order_status AS "orderStatus",
+		a.audit_status AS "auditStatus",
+		a.audit_fail_reason AS "auditFailReason",
+		a.custom_status AS "customStatus",
+		a.causes_failure AS "causesFailure",
+		a.elec_port_return_number AS "elecPortReturnNumber",
+		a.notea AS "notea",
+		a.noteb AS "noteb",
+		a.notec AS "notec",
+		a.trans_id AS "transId",
+		a.trans_status AS "transStatus",
+		a.declare_type AS "declareType",
+		a.auth_msg AS "authMsg",
+		a.main_custom_code AS "mainCustomCode"
+	</sql>
+
+    <sql id="cbmsOrderformJoins">
+    </sql>
+
+    <select id="get" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        WHERE a.order_id = #{id}
+    </select>
+    <!--根据sentCustomsNumber查询CbmsOrderform对象-->
+    <select id="select" parameterType="java.lang.String" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        WHERE a.sent_customs_number = #{sentCustomsNumber}
+    </select>
+
+    <!--根据importBatchNumber查询CbmsOrderform对象-->
+    <select id="selectimport" parameterType="java.lang.String" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        <include refid="cbmsOrderformJoins"/>
+        WHERE a.import_batch_number = #{importBatchNumber}
+    </select>
+    <!--查询重复记录 查询重复订单中取消状态的订单或者是取消状态的订单-->
+    <select id="queryRepeatOrder" resultType="java.lang.String"
+            parameterType="com.heepay.manage.modules.cbms.entity.CannotImOrderQuery">
+        SELECT
+        a.order_form_no
+        FROM cbms_orderform a
+        WHERE merchant_no = #{merchantNo} AND
+        a.order_form_no in(
+        <foreach collection="idsList" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+        AND a.custom_status='5'
+        GROUP BY a.order_form_no
+    </select>
+
+    <!-- 时间区间查找 -->
+    <select id="findList" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        <include refid="cbmsOrderformJoins"/>
+        <where>
+
+			<if test="declareType != null and declareType != ''">
+				AND a.declare_type = #{declareType}
+			</if>
+            <if test="importBatchNumber != null and importBatchNumber != ''">
+                AND a.import_batch_number = #{importBatchNumber}
+            </if>
+            <if test="sentCustomsNumber != null and sentCustomsNumber != ''">
+                AND a.sent_customs_number = #{sentCustomsNumber}
+            </if>
+            <if test="merchantNo != null and merchantNo != ''">
+                AND a.merchant_no = #{merchantNo}
+            </if>
+            <if test="customCode != null and customCode != ''">
+                AND a.custom_code =#{customCode}
+            </if>
+            <choose>
+                <when test="beginDeclarationTime != null and endDeclarationTime != null ">
+                    AND a.declaration_time BETWEEN #{beginDeclarationTime} AND #{endDeclarationTime}
+                </when>
+                <when test="beginDeclarationTime != null and endDeclarationTime == null">
+                    AND a.declaration_time &gt; #{beginDeclarationTime}
+                </when>
+                <when test="beginDeclarationTime == null and endDeclarationTime != null">
+                    AND a.declaration_time &lt; #{endDeclarationTime}
+                </when>
+            </choose>
+            <if test="customStatus != null and customStatus != ''">
+                AND a.custom_status = #{customStatus}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        <include refid="cbmsOrderformJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO cbms_orderform(
+			order_id,
+			import_batch_number,
+			sent_customs_number,
+			custom_sn,
+			merchant_no,
+			bus_enterprise_no,
+			bus_enterprise_name,
+			order_form_no,
+			trans_code,
+			mode_code,
+			inspection_quarantine_code,
+			custom_code,
+			commodity_name,
+			commodity_count,
+			commodity_unit,
+			good_msg,
+			is_ref,
+			rmb_prices,
+			foreign_prices,
+			rmb_amount,
+			foreign_amount,
+			rmb_pay_amount,
+			charge_amount,
+			pay_purpose,
+			pay_taxes,
+			freight,
+			org_pay_enterprise_name,
+			org_pay_transno,
+			hy_pay_transno,
+			pay_status,
+			pay_name,
+			sex,
+			age,
+			pay_time,
+			pay_ercertificate_type,
+			pay_ercertificate_no,
+			currency_id,
+			bank_card_type,
+			pay_eraccount_no,
+			payer_phone,
+			file_name,
+			confirm_time,
+			tading_time,
+			authentication_time,
+			declaration_time,
+			commodity_classify,
+			consignee_name,
+			consignee_phone,
+			consignee_address,
+			delivery_type,
+			way_billno,
+			logistics_company,
+			created_time,
+			update_time,
+			service_status,
+			subscription_status,
+			sub_trans_mode,
+			note,
+			post_script,
+			identification,
+			order_status,
+			audit_status,
+			audit_fail_reason,
+			custom_status,
+			causes_failure,
+			elec_port_return_number,
+			notea,
+			noteb,
+			notec,
+			trans_id,
+			trans_status
+		) VALUES (
+			#{orderId},
+			#{importBatchNumber},
+			#{sentCustomsNumber},
+			#{customSn},
+			#{merchantNo},
+			#{busEnterpriseNo},
+			#{busEnterpriseName},
+			#{orderFormNo},
+			#{transCode},
+			#{modeCode},
+			#{inspectionQuarantineCode},
+			#{customCode},
+			#{commodityName},
+			#{commodityCount},
+			#{commodityUnit},
+			#{goodMsg},
+			#{isRef},
+			#{rmbPrices},
+			#{foreignPrices},
+			#{rmbAmount},
+			#{foreignAmount},
+			#{rmbPayAmount},
+			#{chargeAmount},
+			#{payPurpose},
+			#{payTaxes},
+			#{freight},
+			#{orgPayEnterpriseName},
+			#{orgPayTransno},
+			#{hyPayTransno},
+			#{payStatus},
+			#{payName},
+			#{sex},
+			#{age},
+			#{payTime},
+			#{payErcertificateType},
+			#{payErcertificateNo},
+			#{currencyId},
+			#{bankCardType},
+			#{payEraccountNo},
+			#{payerPhone},
+			#{fileName},
+			#{confirmTime},
+			#{tadingTime},
+			#{authenticationTime},
+			#{declarationTime},
+			#{commodityClassify},
+			#{consigneeName},
+			#{consigneePhone},
+			#{consigneeAddress},
+			#{deliveryType},
+			#{wayBillno},
+			#{logisticsCompany},
+			#{createdTime},
+			#{updateTime},
+			#{serviceStatus},
+			#{subscriptionStatus},
+			#{subTransMode},
+			#{note},
+			#{postScript},
+			#{identification},
+			#{orderStatus},
+			#{auditStatus},
+			#{auditFailReason},
+			#{customStatus},
+			#{causesFailure},
+			#{elecPortReturnNumber},
+			#{notea},
+			#{noteb},
+			#{notec},
+			#{transId},
+			#{transStatus}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE cbms_orderform SET 	
+			order_id = #{orderId},
+			import_batch_number = #{importBatchNumber},
+			sent_customs_number = #{sentCustomsNumber},
+			custom_sn = #{customSn},
+			merchant_no = #{merchantNo},
+			bus_enterprise_no = #{busEnterpriseNo},
+			bus_enterprise_name = #{busEnterpriseName},
+			order_form_no = #{orderFormNo},
+			trans_code = #{transCode},
+			mode_code = #{modeCode},
+			inspection_quarantine_code = #{inspectionQuarantineCode},
+			custom_code = #{customCode},
+			commodity_name = #{commodityName},
+			commodity_count = #{commodityCount},
+			commodity_unit = #{commodityUnit},
+			good_msg = #{goodMsg},
+			is_ref = #{isRef},
+			rmb_prices = #{rmbPrices},
+			foreign_prices = #{foreignPrices},
+			rmb_amount = #{rmbAmount},
+			foreign_amount = #{foreignAmount},
+			rmb_pay_amount = #{rmbPayAmount},
+			charge_amount = #{chargeAmount},
+			pay_purpose = #{payPurpose},
+			pay_taxes = #{payTaxes},
+			freight = #{freight},
+			org_pay_enterprise_name = #{orgPayEnterpriseName},
+			org_pay_transno = #{orgPayTransno},
+			hy_pay_transno = #{hyPayTransno},
+			pay_status = #{payStatus},
+			pay_name = #{payName},
+			sex = #{sex},
+			age = #{age},
+			pay_time = #{payTime},
+			pay_ercertificate_type = #{payErcertificateType},
+			pay_ercertificate_no = #{payErcertificateNo},
+			currency_id = #{currencyId},
+			bank_card_type = #{bankCardType},
+			pay_eraccount_no = #{payEraccountNo},
+			payer_phone = #{payerPhone},
+			file_name = #{fileName},
+			confirm_time = #{confirmTime},
+			tading_time = #{tadingTime},
+			authentication_time = #{authenticationTime},
+			declaration_time = #{declarationTime},
+			commodity_classify = #{commodityClassify},
+			consignee_name = #{consigneeName},
+			consignee_phone = #{consigneePhone},
+			consignee_address = #{consigneeAddress},
+			delivery_type = #{deliveryType},
+			way_billno = #{wayBillno},
+			logistics_company = #{logisticsCompany},
+			created_time = #{createdTime},
+			update_time = #{updateTime},
+			service_status = #{serviceStatus},
+			subscription_status = #{subscriptionStatus},
+			sub_trans_mode = #{subTransMode},
+			note = #{note},
+			post_script = #{postScript},
+			identification = #{identification},
+			order_status = #{orderStatus},
+			audit_status = #{auditStatus},
+			audit_fail_reason = #{auditFailReason},
+			custom_status = #{customStatus},
+			causes_failure = #{causesFailure},
+			elec_port_return_number = #{elecPortReturnNumber},
+			notea = #{notea},
+			noteb = #{noteb},
+			notec = #{notec},
+			trans_id = #{transId},
+			trans_status = #{transStatus}
+		WHERE order_id = #{orderId}
+	</update>
+
+    <update id="delete">
+		DELETE FROM cbms_orderform
+		WHERE id = #{id}
+	</update>
+    <!--根据sentCustomsNumber查询CbmsOrderform对象-->
+    <select id="findOrderform" parameterType="java.lang.String" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        WHERE a.merchant_no = #{merchantNo}
+    </select>
+
+    <select id="selectIdList" parameterType="java.util.List" resultType="CbmsOrderform">
+        SELECT
+        <include refid="cbmsOrderformColumns"/>
+        FROM cbms_orderform a
+        WHERE a.order_id in(
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item.orderId}
+        </foreach>
+        )
+    </select>
+    <update id="updateList" parameterType="java.util.List">
+        UPDATE cbms_orderform s
+        SET s.sent_customs_number= CASE s.order_id
+        <foreach collection="list" item="item" index="index">
+            WHEN #{item.orderId} THEN #{item.sentCustomsNumber}
+        </foreach>
+        END,
+        s.notea= CASE s.order_id
+        <foreach collection="list" item="item" index="index">
+            WHEN #{item.orderId} THEN #{item.notea}
+        </foreach>
+        END,
+		s.order_status= CASE s.order_id
+		<foreach collection="list" item="item" index="index">
+			WHEN #{item.orderId} THEN #{item.orderStatus}
+		</foreach>
+		END
+        WHERE s.order_id IN (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item.orderId}
+        </foreach>
+        )
+    </update>
+	<update id="updateAuditFailList" parameterType="java.util.List">
+		UPDATE cbms_orderform s
+		SET s.custom_status= CASE s.order_id
+		<foreach collection="list" item="item" index="index">
+			WHEN #{item.orderId} THEN #{item.customStatus}
+		</foreach>
+		END,
+		s.order_status= CASE s.order_id
+		<foreach collection="list" item="item" index="index">
+			WHEN #{item.orderId} THEN #{item.orderStatus}
+		</foreach>
+		END,
+		s.trans_status= CASE s.order_id
+		<foreach collection="list" item="item" index="index">
+			WHEN #{item.orderId} THEN #{item.transStatus}
+		</foreach>
+		END,
+		s.audit_fail_reason= CASE s.order_id
+		<foreach collection="list" item="item" index="index">
+			WHEN #{item.orderId} THEN #{item.auditFailReason}
+		</foreach>
+		END
+		WHERE s.order_id IN (
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item.orderId}
+		</foreach>
+		)
+	</update>
+	<!-- 判断最终状态-->
+    <select id="notAuditedNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+	select count(*) from cbms_orderform s
+	where s.import_batch_number = #{importBatchNumber}  AND s.custom_status  in ('1,2')
+	</select>
+</mapper>

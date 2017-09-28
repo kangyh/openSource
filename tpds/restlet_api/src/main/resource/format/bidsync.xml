@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<reqHeader obj="json">
+		<version type="varchar" value="3" code="1002" req="M">version字段不应超过3位有效字符</version>
+	<merchantCode type="varchar" value="11" code="1002" req="M">merchantCode字段应为11位有效字符</merchantCode>
+	<txnType type="varchar" value="6" code="1002" req="M">txnType字段不应超过6位有效字符</txnType>
+	<clientSn type="varchar" value="50" code="1002" req="M">clientSn字段不应超过50位有效字段</clientSn>
+	<clientDate type="char" value="8" code="1002" req="M">clientDate字段的日期格式为YYYYMMDD</clientDate>
+	<clientTime type="char" value="6" code="1002" req="M">clientTime字段的日期格式为HHmmss</clientTime>
+	<fileName type="varchar" value="255" code="1002" req="O">fileName字段不应超过255位有效字符</fileName>
+	<signTime type="varchar" value="30" code="1002" req="M">signTime字段不应超过30位有效字符</signTime>
+	<signature type="varchar" value="4000" code="1002" req="M">signature字段不应超过4000位有效字符</signature>
+</reqHeader>
+<inBody obj="json">
+	<busiTradeType type="varchar" value="3" code="1002"  req="M">busiTradeType字段超过了3位有效字符</busiTradeType>
+	<businessSeqNo type="varchar" value="64" code="1002" req="M">businessSeqNo字段超过了64位有效字符</businessSeqNo>
+	<objectId type="varchar" value="64" code="1002" req="M">objectId字段超过了64位有效字符</objectId>
+	<objectName type="varchar" value="32" code="1002" req="M">objectName超过了32位有效字符</objectName>
+	<totalAmount type="double" code="1002" req="M">totalAmount字段不是数字类型</totalAmount>
+	<interestRate type="varchar" value="30" code="1002" req="M">interestRate字段超过了30位有效字符</interestRate>
+	<returnType type="char" value="2" code="1002" req="M">returnType字段超过了2位有效字段</returnType>
+	<returnInfoList type="list">
+		<oderNo type="varchar" value="2" code="1002" req="M">oderNo字段超过了2位有效字段</oderNo>
+		<returnNo type="varchar" value="2" code="1002" req="M">returnNo字段超过了2位有效字段</returnNo>
+		<returnDate type="varchar"  value="8" code="1002" req="M">returnDate字段不是日期类型</returnDate>
+	</returnInfoList>
+	<customerId type="varchar" value="64" code="1002" req="M">customerId字段超过了64位有效字段</customerId>
+	<note type="varchar" value="100" code="1002">note字段超过了100位有效字段</note>
+</inBody>
+</root>

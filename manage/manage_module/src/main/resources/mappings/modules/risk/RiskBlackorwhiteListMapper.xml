@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskBlackorwhiteListDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList" >
+    <id column="black_id" property="blackId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteRiskBlackorwhiteList" parameterType="java.lang.Integer" >
+    delete from risk_blackorwhite_list
+    where black_id = #{blackId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteRiskBlackorwhiteCascadeItem" parameterType="java.lang.Integer" >
+    delete from risk_blackorwhite_item_list
+    where black_id = #{blackId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteManyRiskBlackorwhiteList" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList" >
+    delete from risk_blackorwhite_list
+    <where>
+			<!-- 复选框选中的person_report_id -->
+			<if test="blackIds != null and blackIds != ''">
+				AND black_id in
+		        <foreach item="item" index="index" collection="blackIds" open="(" separator="," close=")">  
+				    #{item}
+				</foreach> 
+			</if>
+	</where>
+  </delete>
+  <insert id="insertRiskBlackorwhiteList" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList" >
+    insert into risk_blackorwhite_list ( name, type, 
+      status, product_code, category, 
+      `desc`, create_time, update_time, 
+      create_author, update_author)
+    values (#{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{productCode,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, 
+      #{desc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createAuthor,jdbcType=VARCHAR}, #{updateAuthor,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateRiskBlackorwhiteList" parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList" >
+    update risk_blackorwhite_list a
+      <set >
+      <if test="name != null and name !='' " >
+        a.name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null and type != ''" >
+        a.type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null and status != ''" >
+        a.status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null and productCode != ''" >
+        a.product_code = #{productCode,jdbcType=DECIMAL},
+      </if>
+      <if test="category != null and category != '' " >
+        a.category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null and desc !='' " >
+        a.desc = #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        a.create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        a.update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null and createAuthor != ''" >
+        a.create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAuthor != null and updateAuthor != ''" >
+        a.update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where a.black_id = #{blackId,jdbcType=INTEGER}
+  </update>
+  <select id="getRiskBlackorwhiteListById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select <include refid="RbwColumns"/>
+		FROM risk_blackorwhite_list a 
+    where a.black_id = #{blackId,jdbcType=INTEGER}
+  </select>
+  <sql id="RbwColumns" >
+    a.black_id, a.name, a.type, a.status, a.product_code, a.category, a.desc, a.create_time, a.update_time, 
+    a.create_author, a.update_author 
+  </sql>
+  <sql id="RbwWhere" >
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginCreTime != null and endCreTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 更新时间 -->
+			<if test="beginUpdTime != null and endUpdTime != null">
+				AND a.update_time BETWEEN date_format(#{beginUpdTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endUpdTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 状态 -->
+			<if test="status != null and status != ''">
+				AND a.status = #{status} 
+			</if>
+			<!-- 黑名单名称 -->
+			<if test=" name != null and name != ''">
+				AND a.name LIKE CONCAT(CONCAT('%', #{name}),'%') 
+			</if>
+			<!-- 名单类型 黑白灰 -->
+			<if test=" type !=null and type !='' ">
+			    AND a.type = #{type}
+			</if>
+			<!-- 产品编码 -->
+			<if test=" productCode!=null and productCode!='' ">
+			    AND a.product_code  = #{productCode}
+			</if>
+			<!-- 字段分类 -->
+			<if test=" category!=null and category!='' ">
+			    AND a.category  = #{category}
+			</if>
+			<!--创建人 -->
+			<if test=" createAuthor!=null and createAuthor!='' ">
+			    AND a.create_author LIKE CONCAT(CONCAT('%', #{createAuthor}),'%') 
+			</if>
+			<!--更新人-->
+			<if test=" updateAuthor !=null and updateAuthor !='' ">
+			    AND a.update_author LIKE CONCAT(CONCAT('%', #{updateAuthor}),'%') 
+			</if>
+			<!-- 主键 and blackId != ''-->
+			<if test=" blackId != null ">
+				AND a.black_id  = #{blackId,jdbcType=INTEGER}
+			</if>
+		</where>
+	</sql>
+  <select id="findList" resultMap="BaseResultMap"   parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList">
+		SELECT 
+			<include refid="RbwColumns"/>
+		FROM risk_blackorwhite_list a
+		<include refid="RbwWhere"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY a.black_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.black_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="checkIfRepeatCateAndProd" resultType="java.lang.Integer"   parameterType="com.heepay.manage.modules.risk.entity.RiskBlackorwhiteList">
+		SELECT count(1)
+		FROM risk_blackorwhite_list a
+		where  a.product_code  = #{productCode}
+		AND a.category  = #{category}
+	</select>
+	<select id="checkIfRepeatName" resultType="java.lang.Integer"   parameterType="java.lang.String">
+		SELECT count(1) 
+		FROM risk_blackorwhite_list a
+		where  a.name  = #{name} 
+	</select>
+</mapper>

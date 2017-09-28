@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.contract.dao.SealContractRecordDao">
+    
+	<sql id="sealContractRecordColumns">
+		a.id AS "id",
+		a.seal_contract_id AS "sealContractId",
+		a.seal_contract_name AS "sealContractName",
+		a.electronics_seal_id AS "electronicsSealId",
+		a.seal_aside__id AS "sealAsideId",
+		a.seal_aside_name AS "sealAsideName",
+		a.seal_bside_name AS "sealBsideName",
+		a.sys_resource AS "sysResource",
+		a.seal_product AS "sealProduct",
+		a.contract_effective_time AS "contractEffectiveTime",
+		a.contract_file_name AS "contractFileName",
+		a.contract_url AS "contractUrl",
+		a.seal_time AS "sealTime",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="sealContractRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="SealContractRecord">
+		SELECT 
+			<include refid="sealContractRecordColumns"/>
+		FROM seal_contract_record a
+		<include refid="sealContractRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SealContractRecord">
+		SELECT 
+			<include refid="sealContractRecordColumns"/>
+		FROM seal_contract_record a
+		<include refid="sealContractRecordJoins"/>
+		<where>
+			
+			<if test="sealAsideId != null and sealAsideId != ''">
+				AND a.seal_aside__id = #{sealAsideId}
+			</if>
+			<if test="sealAsideName != null and sealAsideName != ''">
+				AND a.seal_aside_name = #{sealAsideName}
+			</if>
+			<if test="sealBsideName != null and sealBsideName != ''">
+				AND a.seal_bside_name = #{sealBsideName}
+			</if>
+			<if test="sealContractId != null and sealContractId != ''">
+				AND a.seal_contract_id = #{sealContractId}
+			</if>
+			<if test="sealContractName != null and sealContractName != ''">
+				AND a.seal_contract_name = #{sealContractName}
+			</if>
+			<if test="sysResource != null and sysResource != ''">
+				AND a.sys_resource = #{sysResource}
+			</if>
+			<if test="sealProduct != null and sealProduct != ''">
+				AND a.seal_product = #{sealProduct}
+			</if>
+			<if test="sealTime != null and sealTime != ''">
+				AND a.seal_time = #{sealTime}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.seal_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		ORDER BY seal_time DESC
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SealContractRecord">
+		SELECT 
+			<include refid="sealContractRecordColumns"/>
+		FROM seal_contract_record a
+		<include refid="sealContractRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO seal_contract_record(
+			id,
+			seal_contract_id,
+			seal_contract_name,
+			electronics_seal_id,
+			seal_aside__id,
+			seal_aside_name,
+			seal_bside_name,
+			sys_resource,
+			seal_product,
+			contract_effective_time,
+			contract_file_name,
+			contract_url,
+			seal_time,
+			create_time,
+			update_time,
+			remark
+		) VALUES (
+			#{id},
+			#{sealContractId},
+			#{sealContractName},
+			#{electronicsSealId},
+			#{sealAsideId},
+			#{sealAsideName},
+			#{sealBsideName},
+			#{sysResource},
+			#{sealProduct},
+			#{contractEffectiveTime},
+			#{contractFileName},
+			#{contractUrl},
+			#{sealTime},
+			#{createTime},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE seal_contract_record SET 	
+			seal_contract_id = #{sealContractId},
+			seal_contract_name = #{sealContractName},
+			electronics_seal_id = #{electronicsSealId},
+			seal_aside__id = #{sealAsideId},
+			seal_aside_name = #{sealAsideName},
+			seal_bside_name = #{sealBsideName},
+			sys_resource = #{sysResource},
+			seal_product = #{sealProduct},
+			contract_effective_time = #{contractEffectiveTime},
+			contract_file_name = #{contractFileName},
+			contract_url = #{contractUrl},
+			seal_time = #{sealTime},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM seal_contract_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

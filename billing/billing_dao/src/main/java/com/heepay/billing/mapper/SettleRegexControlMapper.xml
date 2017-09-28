@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleRegexControlMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleRegexControl" >
+    <id column="regex_control_id" property="regexControlId" jdbcType="BIGINT" />
+    <result column="rule_id" property="ruleId" jdbcType="BIGINT" />
+    <result column="rule_key" property="ruleKey" jdbcType="TINYINT" />
+    <result column="regex_name" property="regexName" jdbcType="VARCHAR" />
+    <result column="regex_show" property="regexShow" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="rule_type" property="ruleType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    regex_control_id, rule_id, rule_key, regex_name, regex_show, create_time, create_author, 
+    update_time, update_author, rule_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleRegexControlExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_regex_control
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_regex_control
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_regex_control
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleRegexControlExample" >
+    delete from settle_regex_control
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleRegexControl" >
+    insert into settle_regex_control (regex_control_id, rule_id, rule_key, 
+      regex_name, regex_show, create_time, 
+      create_author, update_time, update_author, 
+      rule_type)
+    values (#{regexControlId,jdbcType=BIGINT}, #{ruleId,jdbcType=BIGINT}, #{ruleKey,jdbcType=TINYINT}, 
+      #{regexName,jdbcType=VARCHAR}, #{regexShow,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, 
+      #{ruleType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleRegexControl" >
+    insert into settle_regex_control
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="regexControlId != null" >
+        regex_control_id,
+      </if>
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="ruleKey != null" >
+        rule_key,
+      </if>
+      <if test="regexName != null" >
+        regex_name,
+      </if>
+      <if test="regexShow != null" >
+        regex_show,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+      <if test="ruleType != null" >
+        rule_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="regexControlId != null" >
+        #{regexControlId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleKey != null" >
+        #{ruleKey,jdbcType=TINYINT},
+      </if>
+      <if test="regexName != null" >
+        #{regexName,jdbcType=VARCHAR},
+      </if>
+      <if test="regexShow != null" >
+        #{regexShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null" >
+        #{ruleType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleRegexControlExample" resultType="java.lang.Integer" >
+    select count(*) from settle_regex_control
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_regex_control
+    <set >
+      <if test="record.regexControlId != null" >
+        regex_control_id = #{record.regexControlId,jdbcType=BIGINT},
+      </if>
+      <if test="record.ruleId != null" >
+        rule_id = #{record.ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.ruleKey != null" >
+        rule_key = #{record.ruleKey,jdbcType=TINYINT},
+      </if>
+      <if test="record.regexName != null" >
+        regex_name = #{record.regexName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regexShow != null" >
+        regex_show = #{record.regexShow,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createAuthor != null" >
+        create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAuthor != null" >
+        update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ruleType != null" >
+        rule_type = #{record.ruleType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_regex_control
+    set regex_control_id = #{record.regexControlId,jdbcType=BIGINT},
+      rule_id = #{record.ruleId,jdbcType=BIGINT},
+      rule_key = #{record.ruleKey,jdbcType=TINYINT},
+      regex_name = #{record.regexName,jdbcType=VARCHAR},
+      regex_show = #{record.regexShow,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      rule_type = #{record.ruleType,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleRegexControl" >
+    update settle_regex_control
+    <set >
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleKey != null" >
+        rule_key = #{ruleKey,jdbcType=TINYINT},
+      </if>
+      <if test="regexName != null" >
+        regex_name = #{regexName,jdbcType=VARCHAR},
+      </if>
+      <if test="regexShow != null" >
+        regex_show = #{regexShow,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="ruleType != null" >
+        rule_type = #{ruleType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleRegexControl" >
+    update settle_regex_control
+    set rule_id = #{ruleId,jdbcType=BIGINT},
+      rule_key = #{ruleKey,jdbcType=TINYINT},
+      regex_name = #{regexName,jdbcType=VARCHAR},
+      regex_show = #{regexShow,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR},
+      rule_type = #{ruleType,jdbcType=VARCHAR}
+    where regex_control_id = #{regexControlId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- billing begin -->
+  <!-- 根据ruleId和ruleKey获取正则表达式 -->
+  <select id="queryRegex" parameterType="map" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List"/>
+  	from
+  		settle_regex_control
+  	where
+  		rule_id = #{ruleId,jdbcType=BIGINT} and rule_key = #{ruleKey,jdbcType=TINYINT} and 
+  		rule_type = #{ruleType,jdbcType=VARCHAR}
+  </select>
+</mapper>

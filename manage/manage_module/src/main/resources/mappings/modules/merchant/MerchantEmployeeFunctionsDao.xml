@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantEmployeeFunctionsDao">
+    
+	<sql id="merchantEmployeeFunctionsColumns">
+		a.merchant_id AS "merchantId",
+		a.employee_id AS "employeeId",
+		a.function_id AS "functionId"
+	</sql>
+	
+	<sql id="merchantEmployeeFunctionsJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantEmployeeFunctions">
+		SELECT 
+			<include refid="merchantEmployeeFunctionsColumns"/>
+		FROM merchant_employee_functions a
+		<include refid="merchantEmployeeFunctionsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantEmployeeFunctions">
+		SELECT 
+			<include refid="merchantEmployeeFunctionsColumns"/>
+		FROM merchant_employee_functions a
+		<include refid="merchantEmployeeFunctionsJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="employeeId != null and employeeId != ''">
+				AND a.employee_id = #{employeeId}
+			</if>
+			<if test="functionId != null and functionId != ''">
+				AND a.function_id = #{functionId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantEmployeeFunctions">
+		SELECT 
+			<include refid="merchantEmployeeFunctionsColumns"/>
+		FROM merchant_employee_functions a
+		<include refid="merchantEmployeeFunctionsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_employee_functions(
+			merchant_id,
+			employee_id,
+			function_id
+		) VALUES (
+			#{merchantId},
+			#{employeeId},
+			#{functionId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_employee_functions SET 	
+			merchant_id = #{merchantId},
+			employee_id = #{employeeId},
+			function_id = #{functionId}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteByEmployeeId" parameterType="java.lang.Long">
+		DELETE FROM merchant_employee_functions
+		WHERE employee_id = #{id}
+	</delete>
+
+	<select id="queryPermissionByEmployeeId" parameterType="java.lang.Long" resultType="java.lang.String">
+		SELECT  function_id
+		FROM
+		merchant_employee_functions
+		WHERE employee_id = #{id}
+	</select>
+</mapper>

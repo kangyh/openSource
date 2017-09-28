@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsTemporaryCollectionRecordDetailDao">
+    
+	<sql id="hgmsTemporaryCollectionRecordDetailColumns">
+		a.id AS "id",
+		a.trans_id AS "transId",
+		a.hfb_trans_id AS "hfbTransId",
+		a.source_merchant_id AS "sourceMerchantId",
+		a.dest_merchant_id AS "destMerchantId",
+		a.source_merchant_name AS "sourceMerchantName",
+		a.dest_merchant_name AS "destMerchantName",
+		a.collect_amount AS "collectAmount",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.trans_batch_no AS "transBatchNo",
+		a.trans_way AS "transWay",
+		a.bank_no AS "bankNo",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.province AS "province",
+		a.city AS "city",
+		a.openbank_name AS "openbankName",
+		a.purpose AS "purpose",
+		a.business_type AS "businessType",
+		a.settlement_status AS "settlementStatus",
+		a.trans_status AS "transStatus",
+		a.fee_type AS "feeType",
+		a.fee_amount AS "feeAmount",
+		a.fee_ratio AS "feeRatio",
+		a.request_source AS "requestSource",
+		a.audit_flag AS "auditFlag",
+		a.audit_reason AS "auditReason",
+		a.error_code AS "errorCode",
+		a.error_msg AS "errorMsg",
+		a.bank_name AS "bankName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.record_source AS "recordSource",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+	
+	<sql id="hgmsTemporaryCollectionRecordDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsTemporaryCollectionRecordDetail">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordDetailColumns"/>
+		FROM hgms_temporary_collection_record_detail a
+		<include refid="hgmsTemporaryCollectionRecordDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsTemporaryCollectionRecordDetail">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordDetailColumns"/>
+		FROM hgms_temporary_collection_record_detail a
+		<include refid="hgmsTemporaryCollectionRecordDetailJoins"/>
+		<where>
+			
+			<if test="transId != null and transId != ''">
+				AND a.trans_id = #{transId}
+			</if>
+			<if test="sourceMerchantId != null and sourceMerchantId != ''">
+				AND a.source_merchant_id = #{sourceMerchantId}
+			</if>
+			<if test="transWay != null and transWay != ''">
+				AND a.trans_way = #{transWay}
+			</if>
+			<if test="transBatchNo != null and transBatchNo != ''">
+				AND a.trans_batch_no = #{transBatchNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsTemporaryCollectionRecordDetail">
+		SELECT 
+			<include refid="hgmsTemporaryCollectionRecordDetailColumns"/>
+		FROM hgms_temporary_collection_record_detail a
+		<include refid="hgmsTemporaryCollectionRecordDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_temporary_collection_record_detail(
+			id,
+			trans_id,
+			hfb_trans_id,
+			source_merchant_id,
+			dest_merchant_id,
+			source_merchant_name,
+			dest_merchant_name,
+			collect_amount,
+			create_time,
+			update_time,
+			success_time,
+			success_amount,
+			trans_batch_no,
+			trans_way,
+			bank_no,
+			bankcard_no,
+			bankcard_owner_name,
+			bankcard_owner_type,
+			province,
+			city,
+			openbank_name,
+			purpose,
+			business_type,
+			settlement_status,
+			trans_status,
+			fee_type,
+			fee_amount,
+			fee_ratio,
+			request_source,
+			audit_flag,
+			audit_reason,
+			error_code,
+			error_msg,
+			bank_name,
+			bankcard_owner_idcard,
+			bankcard_owner_mobile,
+			record_source,
+			product_code,
+			product_name,
+			extend4,
+			extend5
+		) VALUES (
+			#{id},
+			#{transId},
+			#{hfbTransId},
+			#{sourceMerchantId},
+			#{destMerchantId},
+			#{sourceMerchantName},
+			#{destMerchantName},
+			#{collectAmount},
+			#{createTime},
+			#{updateTime},
+			#{successTime},
+			#{successAmount},
+			#{transBatchNo},
+			#{transWay},
+			#{bankNo},
+			#{bankcardNo},
+			#{bankcardOwnerName},
+			#{bankcardOwnerType},
+			#{province},
+			#{city},
+			#{openbankName},
+			#{purpose},
+			#{businessType},
+			#{settlementStatus},
+			#{transStatus},
+			#{feeType},
+			#{feeAmount},
+			#{feeRatio},
+			#{requestSource},
+			#{auditFlag},
+			#{auditReason},
+			#{errorCode},
+			#{errorMsg},
+			#{bankName},
+			#{bankcardOwnerIdcard},
+			#{bankcardOwnerMobile},
+			#{recordSource},
+			#{productCode},
+			#{productName},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hgms_temporary_collection_record_detail SET 	
+			trans_id = #{transId},
+			hfb_trans_id = #{hfbTransId},
+			source_merchant_id = #{sourceMerchantId},
+			dest_merchant_id = #{destMerchantId},
+			source_merchant_name = #{sourceMerchantName},
+			dest_merchant_name = #{destMerchantName},
+			collect_amount = #{collectAmount},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			trans_batch_no = #{transBatchNo},
+			trans_way = #{transWay},
+			bank_no = #{bankNo},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_type = #{bankcardOwnerType},
+			province = #{province},
+			city = #{city},
+			openbank_name = #{openbankName},
+			purpose = #{purpose},
+			business_type = #{businessType},
+			settlement_status = #{settlementStatus},
+			trans_status = #{transStatus},
+			fee_type = #{feeType},
+			fee_amount = #{feeAmount},
+			fee_ratio = #{feeRatio},
+			request_source = #{requestSource},
+			audit_flag = #{auditFlag},
+			audit_reason = #{auditReason},
+			error_code = #{errorCode},
+			error_msg = #{errorMsg},
+			bank_name = #{bankName},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			record_source = #{recordSource},
+			product_code = #{productCode},
+			product_name = #{productName},
+			extend4 = #{extend4},
+			extend5 = #{extend5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_temporary_collection_record_detail
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

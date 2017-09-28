@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<reqHeader obj="json">
+	<version type="varchar" value="3" code="1002" req="M">version字段不应超过3位有效字符</version>
+	<merchantCode type="varchar" value="11" code="1002" req="M">merchantCode字段应为11位有效字符</merchantCode>
+	<txnType type="varchar" value="6" code="1002" req="M">txnType字段不应超过6位有效字符</txnType>
+	<clientSn type="varchar" value="50" code="1002" req="M">clientSn字段不应超过50位有效字段</clientSn>
+	<clientDate type="char" value="8" code="1002" req="M">clientDate字段的日期格式为YYYYMMDD</clientDate>
+	<clientTime type="char" value="6" code="1002" req="M">clientTime字段的日期格式为HHmmss</clientTime>
+	<fileName type="varchar" value="255" code="1002" req="O">fileName字段不应超过255位有效字符</fileName>
+	<signTime type="varchar" value="30" code="1002" req="M">signTime字段不应超过30位有效字符</signTime>
+	<signature type="varchar" value="4000" code="1002" req="M">signature字段不应超过4000位有效字符</signature>
+</reqHeader>
+<inBody obj="json">
+	<businessSeqNo type="varchar" value="64" req="M">businessSeqNo字段不应超过64位有效字符</businessSeqNo>
+	<busiTradeType type="varchar" value="64" req="M">busiTradeType字段不应超过64位有效字符</busiTradeType>
+	<entrustflag type="varchar" value="2" req="M">Entrustflag字段不应超过2位有效字符</entrustflag>
+	<accountList type="list">
+		<oderNo type="varchar" value="2" code="1002" req="M">oderNo字段超过了2位有效字段</oderNo>
+		<debitAccountNo type="varchar" value="128" req="O">debitAccountNo字段超过了128位有效字段</debitAccountNo>
+		<cebitAccountNo type="varchar" value="128" req="O">cebitAccountNo字段超过了128位有效字段</cebitAccountNo>
+		<currency type="varchar" value="3" req="M">currency字段超过了3位有效字段</currency>
+		<amount type="double" req="M">amount不是数字类型</amount>
+		<otherAmounttype type="varchar" value="3" req="O">otherAmounttype字段超过了3位有效字段</otherAmounttype>
+		<otherAmount type="double" req="O">otherAmount不是数字类型</otherAmount>
+	</accountList>
+	<objectId type="varchar" value="15" req="O">objectId字段应为64位有效字符</objectId>
+	<note type="varchar" value="100" req="O">note字段应为100位有效字符</note>
+</inBody>
+</root>

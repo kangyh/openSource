@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.QuantGroupPayRecordDao">
+    
+	<sql id="quantGroupPayRecordColumns">
+		a.quant_id AS "quantId",
+		a.merchant_id AS "merchantId",
+		a.phone_no AS "phoneno",
+		a.ext_data AS "extData",
+		a.user_ip AS "userIp",
+		a.order_name AS "orderName",
+		a.order_merchant AS "orderMerchant",
+		a.order_amount AS "orderAmount",
+		a.term AS "term",
+		a.pay_mode AS "payMode",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.repayment_plan_data AS "repaymentPlanData"
+	</sql>
+	
+	<sql id="quantGroupPayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="QuantGroupPayRecord">
+		SELECT 
+			<include refid="quantGroupPayRecordColumns"/>
+		FROM quant_group_pay_record a
+		<include refid="quantGroupPayRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="QuantGroupPayRecord">
+		SELECT 
+			<include refid="quantGroupPayRecordColumns"/>
+		FROM quant_group_pay_record a
+		<include refid="quantGroupPayRecordJoins"/>
+		<where>
+			<if test="quantId != null and quantId != ''">
+				AND a.quant_id = #{quantId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="phoneno != null and phoneno != ''">
+				AND a.phone_no LIKE
+					<if test="dbName == 'oracle'">'%'||#{phoneno}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{phoneno}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{phoneno},'%')</if>
+			</if>
+			<if test="beginOrderAmount != null and endOrderAmount != null and beginOrderAmount != '' and endOrderAmount != ''">
+				AND a.order_amount BETWEEN #{beginOrderAmount} AND #{endOrderAmount}
+			</if>
+			<if test="term != null and term != ''">
+				AND a.term = #{term}
+			</if>
+			<if test="payMode != null and payMode != ''">
+				AND a.pay_mode = #{payMode}
+			</if>
+			<if test="extData != null and extData != ''">
+				AND a.ext_data = #{extData}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType==1">
+					AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+				</if>
+				<if test="groupType==2">
+					AND a.update_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+				</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QuantGroupPayRecord">
+		SELECT 
+			<include refid="quantGroupPayRecordColumns"/>
+		FROM quant_group_pay_record a
+		<include refid="quantGroupPayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO quant_group_pay_record(
+			quant_id,
+			merchant_id,
+			phone_no,
+			ext_data,
+			user_ip,
+			order_name,
+			order_merchant,
+			order_amount,
+			term,
+			pay_mode,
+			create_time,
+			update_time,
+			status
+		) VALUES (
+			#{quantId},
+			#{merchantId},
+			#{phoneno},
+			#{extData},
+			#{userIp},
+			#{orderName},
+			#{orderMerchant},
+			#{orderAmount},
+			#{term},
+			#{payMode},
+			#{createTime},
+			#{updateTime},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE quant_group_pay_record SET 	
+			quant_id = #{quantId},
+			merchant_id = #{merchantId},
+			phone_no = #{phoneno},
+			ext_data = #{extData},
+			user_ip = #{userIp},
+			order_name = #{orderName},
+			order_merchant = #{orderMerchant},
+			order_amount = #{orderAmount},
+			term = #{term},
+			pay_mode = #{payMode},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM quant_group_pay_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.adjust.dao.AdjustAccountDetailDao">
+    
+	<sql id="adjustAccountDetailColumns">
+		a.adjust_detail_id AS "adjustDetailId",
+		a.adjust_id AS "adjustId",
+		a.se_no AS "seNo",
+		a.accountid AS "accountid",
+		a.balance_direction AS "balanceDirection",
+		a.amount AS "amount",
+		a.log_ids AS "logIds",
+		a.remark AS "remark",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="adjustAccountDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="AdjustAccountDetail">
+		SELECT 
+			<include refid="adjustAccountDetailColumns"/>
+		FROM adjust_account_detail a
+		<include refid="adjustAccountDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AdjustAccountDetail">
+		SELECT 
+			<include refid="adjustAccountDetailColumns"/>
+		FROM adjust_account_detail a
+		<include refid="adjustAccountDetailJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AdjustAccountDetail">
+		SELECT 
+			<include refid="adjustAccountDetailColumns"/>
+		FROM adjust_account_detail a
+		<include refid="adjustAccountDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO adjust_account_detail(
+			adjust_detail_id,
+			adjust_id,
+			se_no,
+			accountid,
+			balance_direction,
+			amount,
+			log_ids,
+			remark,
+			create_time,
+			update_time
+		) VALUES (
+			#{adjustDetailId},
+			#{adjustId},
+			#{seNo},
+			#{accountid},
+			#{balanceDirection},
+			#{amount},
+			#{logIds},
+			#{remark},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE adjust_account_detail SET 	
+			adjust_detail_id = #{adjustDetailId},
+			adjust_id = #{adjustId},
+			se_no = #{seNo},
+			accountid = #{accountid},
+			balance_direction = #{balanceDirection},
+			amount = #{amount},
+			log_ids = #{logIds},
+			remark = #{remark},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM adjust_account_detail
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getListByAdjustId" resultType="AdjustAccountDetail" parameterType="java.lang.Long">
+		SELECT 
+			<include refid="adjustAccountDetailColumns"/>
+		FROM adjust_account_detail a
+		WHERE a.adjust_id=#{adjustId}
+	</select>
+	
+</mapper>

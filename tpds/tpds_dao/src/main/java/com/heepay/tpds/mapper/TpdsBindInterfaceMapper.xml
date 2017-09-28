@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsBindInterfaceMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsBindInterface" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="pack_dir" property="packDir" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  
+ 
+  <sql id="Base_Column_List" >
+    id, merchant_no, bank_no, bank_code, bank_name, create_time, update_time, update_user, 
+    pack_dir, status
+  </sql>
+ 
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsBindInterface" >
+    insert into tpds_bind_interface (merchant_no, bank_no, 
+      bank_code, bank_name, create_time, 
+      update_time, update_user, pack_dir, 
+      status)
+    values (#{merchantNo,jdbcType=VARCHAR}, #{bankNo,jdbcType=VARCHAR}, 
+      #{bankCode,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{packDir,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="com.heepay.tpds.entity.TpdsBindInterface" >
+    update tpds_bind_interface
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      bank_no = #{bankNo,jdbcType=VARCHAR},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      pack_dir = #{packDir,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where tpds_bind_id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

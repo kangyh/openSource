@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.risk.dao.RiskProductQuotaMapper">
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskProductQuota">
+    <id column="pro_id" jdbcType="BIGINT" property="proId" />
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="per_item" jdbcType="DECIMAL" property="perItem" />
+    <result column="per_day" jdbcType="DECIMAL" property="perDay" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="per_month" jdbcType="DECIMAL" property="perMonth" />
+    <result column="account_type" jdbcType="VARCHAR" property="accountType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_author" jdbcType="VARCHAR" property="createAuthor" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_author" jdbcType="VARCHAR" property="updateAuthor" />
+    <result column="bankcard_type" jdbcType="VARCHAR" property="bankcardType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pro_id, product_code, product_name, per_item, per_day, status, per_month, account_type, 
+    create_time, create_author, update_time, update_author
+  </sql>
+   <select id="selectByProductCode"  resultType="com.heepay.risk.entity.RiskProductQuota" parameterType="com.heepay.risk.entity.RiskMerchantProductQuota" >
+    select   pro_id, product_code, product_name, per_item, per_day, status, per_month, account_type, 
+    create_time, create_author, update_time, update_author, bankcard_type from risk_product_quota
+    where status = #{status,jdbcType=VARCHAR} and 
+   product_code=#{productCode,jdbcType=VARCHAR} and account_type=#{accountType,jdbcType=VARCHAR} 
+    <choose>
+    <when test="bankcardType != null ">
+       and  bankcard_type=#{bankcardType,jdbcType=VARCHAR} 
+    </when>
+    <otherwise>
+      and bankcard_type  is null
+    </otherwise>
+  </choose> 
+  </select>
+  
+  <select id="selectProductQuotaList"  resultType="com.heepay.risk.entity.RiskProductQuota"  >
+    select   pro_id, product_code, product_name, per_item, per_day, status, per_month, account_type, 
+    create_time, create_author, update_time, update_author, bankcard_type from risk_product_quota
+  </select>
+  
+  <!-- 插入产品限额信息表 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="proId">
+		insert into risk_product_quota (pro_id, product_code, product_name, 
+	      per_item, per_day, status, 
+	      per_month, account_type, bankcard_type, create_time, 
+	      create_author, update_time, update_author)
+	    values (#{proId,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+	      #{perItem,jdbcType=DECIMAL}, #{perDay,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, 
+	      #{perMonth,jdbcType=DECIMAL}, #{accountType,jdbcType=CHAR},#{bankcardType,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+	      #{createAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改产品限额信息表 -->
+	<update id="update">
+		UPDATE risk_product_quota
+		<set>
+			<if test="perItem != null">per_item = #{perItem},</if>
+			<if test="perDay != null">per_day = #{perDay},</if>
+			<if test="perMonth != null">per_month = #{perMonth},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="updateAuthor != null">update_author = #{updateAuthor},</if>
+		</set>
+		WHERE pro_id = #{proId}
+	</update>
+</mapper>

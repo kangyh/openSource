@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.RiskIpbaseMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskIpbase" >
+    <id column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+    <result column="ip_num" property="ipNum" jdbcType="DECIMAL" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from risk_ipbase
+    where ip = #{ip,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.risk.entity.RiskIpbase" >
+    insert into risk_ipbase (ip, country, province, 
+      city, region, remark,province_id)
+    values (#{ip,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR} , #{provinceId,jdbcType=VARCHAR} )
+  </insert>
+  
+  <insert id="insertBatch" parameterType="List" >
+    insert into risk_ipbase (ip, country, province, 
+      city, region, remark,province_id,ip_num)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+	(  #{item.ip,jdbcType=VARCHAR}, #{item.country,jdbcType=VARCHAR}, #{item.province,jdbcType=VARCHAR}, 
+      #{item.city,jdbcType=VARCHAR}, #{item.region,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR} , #{item.provinceId,jdbcType=VARCHAR},
+       INET_ATON(#{item.ipNum,jdbcType=DECIMAL}) )
+	</foreach>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.heepay.risk.entity.RiskIpbase" >
+    update risk_ipbase
+    set country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=VARCHAR}
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select ip, country, province, city, region, remark,province_id,ip_num 
+    from risk_ipbase
+    where ip_num  >= #{ipNum,jdbcType=DECIMAL} order by ip_num limit 1
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select ip, country, province, city, region, remark,province_id
+    from risk_ipbase
+  </select>
+</mapper>

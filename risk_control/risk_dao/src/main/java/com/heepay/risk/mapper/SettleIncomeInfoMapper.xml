@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.SettleIncomeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.SettleIncomeInfo" >
+    <id column="income_id" property="incomeId" jdbcType="BIGINT" />
+    <result column="income_direction" property="incomeDirection" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="modifier" property="modifier" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    income_id, income_direction, business_type, trans_type, product_code, settle_status, 
+    create_time, creator, update_time, modifier, remark, status
+  </sql>
+  
+  <insert id="insert" parameterType="com.heepay.risk.entity.SettleIncomeInfo" >
+    insert into settle_income_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="incomeId != null" >
+        income_id,
+      </if>
+      <if test="incomeDirection != null" >
+        income_direction,
+      </if>
+      <if test="businessType != null" >
+        business_type,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="settleStatus != null" >
+        settle_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="modifier != null" >
+        modifier,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="incomeId != null" >
+        #{incomeId,jdbcType=BIGINT},
+      </if>
+      <if test="incomeDirection != null" >
+        #{incomeDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+ 
+ 
+  <update id="update" parameterType="com.heepay.risk.entity.SettleIncomeInfo" >
+    update settle_income_info
+    <set >
+      <if test="incomeDirection != null" >
+        income_direction = #{incomeDirection,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        business_type = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="settleStatus != null" >
+        settle_status = #{settleStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where income_id = #{incomeId,jdbcType=BIGINT}
+  </update>
+  <select id="getlist" resultType="com.heepay.risk.entity.SettleIncomeInfo">
+  select  income_id, income_direction, business_type, trans_type, product_code, settle_status, 
+    create_time, creator, update_time, modifier, remark, status from settle_income_info where status='Y'
+  </select>
+   <select id="get" parameterType="java.lang.Long" resultType="com.heepay.risk.entity.SettleIncomeInfo">
+  select  income_id, income_direction, business_type, trans_type, product_code, settle_status, 
+    create_time, creator, update_time, modifier, remark, status from settle_income_info where income_id=#{id,jdbcType=BIGINT}
+  </select>
+</mapper>

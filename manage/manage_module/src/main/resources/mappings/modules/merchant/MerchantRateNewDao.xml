@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantRateNewDao">
+    
+	<sql id="merchantRateNewColumns">
+		c.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.business_type AS "businessType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.rule_begin_time AS "ruleBeginTime",
+		a.rule_end_time AS "ruleEndTime",
+		a.settlement_to AS "settlementTo",
+		a.settle_type AS "settleType",
+		a.notify_url AS "notifyUrl",
+        a.back_url AS "backUrl",
+        a.ip_domain AS "ipDomain",
+        a.autograph_type AS "autographType",
+        a.autograph_key AS "autographKey",
+        a.contract_type AS "contractType",
+		c.charge_type AS "chargeType",
+		c.charge_ratio AS "chargeRatio",
+		c.charge_fee AS "chargeFee",
+		c.charge_ratio2 AS "chargeRatio2",
+		c.charge_fee2 AS "chargeFee2",
+		c.charge_ratio3 AS "chargeRatio3",
+		c.charge_fee3 AS "chargeFee3",
+		c.charge_max AS "chargeMax",
+		c.charge_min AS "chargeMin",
+		c.charge_max2 AS "chargeMax2",
+		c.charge_min2 AS "chargeMin2",
+		c.charge_max3 AS "chargeMax3",
+		c.charge_min3 AS "chargeMin3",
+		c.update_user AS "updateBy.id",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		a.status AS "status",
+		a.rate_audit AS "rateAudit",
+		c.create_time AS "createDate",
+		c.max_fee AS "maxFee",
+		c.min_fee AS "minFee",
+		c.bank_no AS "bankNo",
+		c.bank_name AS "bankName",
+		c.bank_card_type AS "bankCardType"
+	</sql>
+	
+	<sql id="merchantRateNewColumns1">
+		c.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.business_type AS "businessType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.rule_begin_time AS "ruleBeginTime",
+		a.rule_end_time AS "ruleEndTime",
+		c.charge_type AS "chargeType",
+		c.charge_ratio AS "chargeRatio",
+		c.charge_fee AS "chargeFee",
+		c.charge_ratio2 AS "chargeRatio2",
+		c.charge_fee2 AS "chargeFee2",
+		c.charge_ratio3 AS "chargeRatio3",
+		c.charge_fee3 AS "chargeFee3",
+		c.charge_max AS "chargeMax",
+		c.charge_min AS "chargeMin",
+		c.charge_max2 AS "chargeMax2",
+		c.charge_min2 AS "chargeMin2",
+		c.charge_max3 AS "chargeMax3",
+		c.charge_min3 AS "chargeMin3",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		a.status AS "status",
+		c.create_time AS "createDate",
+		c.max_fee AS "maxFee",
+		c.min_fee AS "minFee",
+		c.bank_no AS "bankNo",
+		c.bank_name AS "bankName",
+		c.bank_card_type AS "bankCardType"
+	</sql>
+	
+	<sql id="merchantRateNewJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate_bank c 
+		left join merchant_product_rate a
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantRateNewJoins"/>
+		WHERE c.id = #{id}
+	</select>
+	
+	<select id="exist" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_product_rate a
+		left join merchant_rate_bank c
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="id != null and id != ''">
+				AND c.id != #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="existDefault" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_product_rate a
+		left join merchant_rate_bank c
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="id != null and id != ''">
+				AND c.id != #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="existNoId" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate_bank c 
+		left join merchant_product_rate a
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+		</where>
+	</select>
+
+	<select id="existNoIdForCheck" resultType="MerchantRateNew">
+		SELECT
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate_bank_check c
+		left join merchant_product_rate_check a
+		on c.rate_id = a.id
+		left join merchant b
+		on a.merchant_id = b.user_id
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+		</where>
+	</select>
+
+	<select id="existNoBank" resultType="MerchantRateNew">
+		SELECT 
+			a.id AS "id",
+			a.merchant_id AS "merchantId",
+			b.company_name AS "merchantCompanyName",
+			b.email AS "merchantLoginName",
+			a.business_type AS "businessType",
+			a.product_code AS "productCode",
+			a.product_name AS "productName",
+			c.bank_card_type AS "bankCardType",
+			a.rule_begin_time AS "ruleBeginTime",
+			a.rule_end_time AS "ruleEndTime",
+			a.charge_source AS "chargeSource",
+			a.charge_deduct_type AS "chargeDeductType",
+			a.charge_collection_type AS "chargeCollectionType",
+			a.is_refundable AS "isRefundable",
+			a.status AS "status"
+		FROM merchant_product_rate a
+		left join merchant_rate_bank c
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+                AND c.bank_card_type = #{bankCardType}
+            </if>
+			<if test="id != null and id != ''">
+				AND c.id != #{id}
+			</if>
+		</where>
+		limit 1
+	</select>
+
+	<!--查询check的表方法-->
+	<select id="existNoBankCheck" resultType="MerchantRateNew">
+		SELECT
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.business_type AS "businessType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		c.bank_card_type AS "bankCardType",
+		a.rule_begin_time AS "ruleBeginTime",
+		a.rule_end_time AS "ruleEndTime",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		a.status AS "status"
+		FROM merchant_product_rate_check a
+		left join merchant_rate_bank_check c
+		on c.rate_id = a.id
+		left join merchant b
+		on a.merchant_id = b.user_id
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="id != null and id != ''">
+				AND c.id != #{id}
+			</if>
+		</where>
+		limit 1
+	</select>
+	
+	<select id="findListDefault" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns1"/>
+		FROM  merchant_product_rate a
+		left join  merchant_rate_bank c
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id  
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="rateId != null and rateId != ''">
+				AND c.rate_id = #{rateId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="chargeType != null and chargeType != ''">
+				AND c.charge_type = #{chargeType}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND c.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findList" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate_bank c 
+		left join merchant_product_rate a
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id  
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="rateId != null and rateId != ''">
+				AND c.rate_id = #{rateId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="rateAudit != null and rateAudit != ''">
+				AND a.rate_audit = #{rateAudit}
+			</if>
+			<if test="chargeType != null and chargeType != ''">
+				AND c.charge_type = #{chargeType}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND c.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="checkFindList" resultType="MerchantRateNew">
+		SELECT
+		<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate_bank_check c
+		left join merchant_product_rate_check a
+		on c.rate_id = a.id
+		left join merchant b
+		on a.merchant_id = b.user_id
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="rateId != null and rateId != ''">
+				AND c.rate_id = #{rateId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="rateAudit != null and rateAudit != ''">
+				AND a.rate_audit = #{rateAudit}
+			</if>
+			<if test="chargeType != null and chargeType != ''">
+				AND c.charge_type = #{chargeType}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND c.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListMerchant" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_product_rate a
+		left join merchant_rate_bank c
+		on c.rate_id = a.id
+		left join merchant b 
+		on a.merchant_id = b.user_id  
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			<if test="rateId != null and rateId != ''">
+				AND c.rate_id = #{rateId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="chargeType != null and chargeType != ''">
+				AND c.charge_type = #{chargeType}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND c.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantRateNew">
+		SELECT 
+			<include refid="merchantRateNewColumns"/>
+		FROM merchant_rate a
+		<include refid="merchantRateNewJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<update id="delete">
+		DELETE FROM merchant_rate
+		WHERE id = #{id}
+	</update>
+	
+	<update id="status" >
+		UPDATE merchant_rate SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getDefault" resultType="MerchantRateNew">
+		SELECT 
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		c.charge_type AS "chargeType",
+		c.charge_ratio AS "chargeRatio",
+		c.charge_fee AS "chargeFee",
+		c.min_fee AS "minFee",
+		c.max_fee AS "maxFee",
+		c.bank_no AS "bankNo"
+		FROM merchant_rate_bank c 
+		left join merchant_product_rate a
+		on c.rate_id = a.id
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="bankCardType != null and bankCardType != ''">
+				AND c.bank_card_type = #{bankCardType}
+			</if>
+			<if test="bankNo != null and bankNo != ''">
+				AND c.bank_no = #{bankNo}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findMerchantProductAndRate" resultType="MerchantRateNew">
+        SELECT 
+            <include refid="merchantRateNewColumns"/>
+        FROM  merchant_product_rate a
+        left join merchant_rate_bank c
+        on c.rate_id = a.id
+        left join merchant b 
+        on a.merchant_id = b.user_id  
+        <include refid="merchantRateNewJoins"/>
+        WHERE (c.bank_no is null or c.bank_no='ALL' or c.bank_no='')
+        AND a.merchant_id = #{merchantId}
+	</select>
+</mapper>

@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pcac.dao.PcacMerchantReportDao" >
+  <resultMap id="BaseMerchantMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantReport" >
+    <id column="merchant_report_id" property="merchantReportId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="cus_type" property="cusType" jdbcType="VARCHAR" />
+    <result column="cus_nature" property="cusNature" jdbcType="VARCHAR" />
+    <result column="reg_name" property="regName" jdbcType="VARCHAR" />
+    <result column="cus_name" property="cusName" jdbcType="VARCHAR" />
+    <result column="cus_name_en" property="cusNameEn" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="leg_doc_name" property="legDocName" jdbcType="VARCHAR" />
+    <result column="leg_doc_type" property="legDocType" jdbcType="VARCHAR" />
+    <result column="leg_doc_code" property="legDocCode" jdbcType="VARCHAR" />
+    <result column="cus_code" property="cusCode" jdbcType="VARCHAR" />
+    <result column="indu_type" property="induType" jdbcType="VARCHAR" />
+    <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
+    <result column="open_bank" property="openBank" jdbcType="VARCHAR" />
+    <result column="reg_addr_prov" property="regAddrProv" jdbcType="VARCHAR" />
+    <result column="reg_addr_detail" property="regAddrDetail" jdbcType="VARCHAR" />
+    <result column="addr_prov" property="addrProv" jdbcType="VARCHAR" />
+    <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="server_ip" property="serverIp" jdbcType="VARCHAR" />
+    <result column="icp" property="icp" jdbcType="VARCHAR" />
+    <result column="cont_name" property="contName" jdbcType="VARCHAR" />
+    <result column="cont_phone" property="contPhone" jdbcType="VARCHAR" />
+    <result column="cus_email" property="cusEmail" jdbcType="VARCHAR" />
+    <result column="occurarea" property="occurarea" jdbcType="VARCHAR" />
+    <result column="network_type" property="networkType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="risk_status" property="riskStatus" jdbcType="VARCHAR" />
+    <result column="share_holder" property="shareHolder" jdbcType="VARCHAR" />
+    <result column="open_type" property="openType" jdbcType="VARCHAR" />
+    <result column="chage_type" property="chageType" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="VARCHAR" />
+    <result column="expand_type" property="expandType" jdbcType="VARCHAR" />
+    <result column="out_service_name" property="outServiceName" jdbcType="VARCHAR" />
+    <result column="out_service_card_type" property="outServiceCardType" jdbcType="VARCHAR" />
+    <result column="out_service_card_code" property="outServiceCardCode" jdbcType="VARCHAR" />
+    <result column="out_serviceLeg_card_type" property="outServicelegCardType" jdbcType="VARCHAR" />
+    <result column="out_serviceLeg_card_code" property="outServicelegCardCode" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="rep_date" property="repDate" jdbcType="TIMESTAMP" />
+    <result column="rep_type" property="repType" jdbcType="VARCHAR" />
+    <result column="rep_person" property="repPerson" jdbcType="VARCHAR" />
+    <result column="uploader" property="uploader" jdbcType="VARCHAR" />
+    <result column="reviewer" property="reviewer" jdbcType="VARCHAR" />
+    <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+    <result column="review_time" property="reviewTime" jdbcType="TIMESTAMP" />
+    <result column="op_status" property="opStatus" jdbcType="VARCHAR"/>
+    <result column="op_status_note" property="opStatusNote" jdbcType="VARCHAR"/>
+    <result column="filler_time" property="fillerTime" jdbcType="TIMESTAMP"/>
+    <result column="filler" property="filler" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap id="repMerchantMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantRepVo" >
+    <result column="cus_type" property="cusType" jdbcType="VARCHAR" />
+    <result column="cus_nature" property="cusNature" jdbcType="VARCHAR" />
+    <result column="reg_name" property="regName" jdbcType="VARCHAR" />
+    <result column="cus_name" property="cusName" jdbcType="VARCHAR" />
+    <result column="cus_name_en" property="cusNameEn" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="cus_code" property="cusCode" jdbcType="VARCHAR" />
+    <result column="indu_type" property="induType" jdbcType="VARCHAR" />
+    <result column="bank_no" property="bankNo" jdbcType="VARCHAR" />
+    <result column="open_bank" property="openBank" jdbcType="VARCHAR" />
+    <result column="reg_addr_prov" property="regAddrProv" jdbcType="VARCHAR" />
+    <result column="reg_addr_detail" property="regAddrDetail" jdbcType="VARCHAR" />
+    <result column="addr_prov" property="addrProv" jdbcType="VARCHAR" />
+    <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="server_ip" property="serverIp" jdbcType="VARCHAR" />
+    <result column="icp" property="icp" jdbcType="VARCHAR" />
+    <result column="cont_name" property="contName" jdbcType="VARCHAR" />
+    <result column="cont_phone" property="contPhone" jdbcType="VARCHAR" />
+    <result column="cus_email" property="cusEmail" jdbcType="VARCHAR" />
+    <result column="occurarea" property="occurarea" jdbcType="VARCHAR" />
+    <result column="network_type" property="networkType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="risk_status" property="riskStatus" jdbcType="VARCHAR" />
+    <result column="open_type" property="openType" jdbcType="VARCHAR" />
+    <result column="chage_type" property="chageType" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="VARCHAR" />
+    <result column="expand_type" property="expandType" jdbcType="VARCHAR" />
+    <result column="out_service_name" property="outServiceName" jdbcType="VARCHAR" />
+    <result column="out_service_card_type" property="outServiceCardType" jdbcType="VARCHAR" />
+    <result column="out_service_card_code" property="outServiceCardCode" jdbcType="VARCHAR" />
+    <result column="out_serviceLeg_card_type" property="outServiceLegCardType" jdbcType="VARCHAR" />
+    <result column="out_serviceLeg_card_code" property="outServiceLegCardCode" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="VARCHAR" />
+    <result column="rep_date" property="repDate" jdbcType="TIMESTAMP" />
+    <result column="rep_type" property="repType" jdbcType="VARCHAR" />
+    <result column="rep_person" property="repPerson" jdbcType="VARCHAR" />
+    <result column="leg_doc_name" property="legDocName" jdbcType="VARCHAR" />
+    <result column="leg_doc_type" property="legDocType" jdbcType="VARCHAR" />
+    <result column="leg_doc_code" property="legDocCode" jdbcType="VARCHAR" />
+    <result column="share_holder" property="shareHolder" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="repDelMerchantMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantRepVo" >
+    <result column="cus_type" property="cusType" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="cus_code" property="cusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deletePcacMerchantReport" parameterType="java.lang.Long" >
+    delete from pcac_merchant_report
+    where merchant_report_id = #{merchantReportId,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteManyPcacMerchantReport" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport" >
+    delete from pcac_merchant_report
+    <where>
+			<!-- batchNo-->
+			<if test="batchNo != null and batchNo != ''">
+				AND batch_no = #{batchNo,jdbcType=VARCHAR} 
+			</if> 
+			<!-- 复选框选中的merchant_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    #{item}
+				</foreach> 
+			</if>
+	</where>
+  </delete>
+  <insert id="insertMerchantMapReport" parameterType="Map" useGeneratedKeys="true" keyProperty="merchantReportId">
+    insert into pcac_merchant_report ( cus_type, 
+      cus_nature, reg_name, cus_name, 
+      cus_name_en, doc_type, doc_code, 
+      cus_code, indu_type, bank_no, 
+      open_bank, reg_addr_prov, reg_addr_detail, 
+      addr_prov, addr_detail, url, 
+      server_ip, icp, cont_name, 
+      cont_phone, cus_email, occurarea, 
+      network_type, status, start_time, 
+      end_time, risk_status, open_type, 
+      chage_type, account_type, expand_type, 
+      out_service_name, out_service_card_type, out_service_card_code, 
+      out_serviceLeg_card_type, out_serviceLeg_card_code, 
+      org_id, rep_date, rep_type, 
+      rep_person, uploader, reviewer, 
+      upload_time, review_time,op_status,op_status_note,
+      filler_time,filler,leg_doc_name,leg_doc_type,leg_doc_code,share_holder)
+      
+      
+    values ( #{cusType,jdbcType=VARCHAR}, 
+      #{cusNature,jdbcType=VARCHAR}, #{regName,jdbcType=VARCHAR}, #{cusName,jdbcType=VARCHAR}, 
+      #{cusNameEn,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{docCode,jdbcType=VARCHAR}, 
+      #{cusCode,jdbcType=VARCHAR}, #{induType,jdbcType=VARCHAR}, #{bankNo,jdbcType=VARCHAR}, 
+      #{openBank,jdbcType=VARCHAR}, #{regAddrProv,jdbcType=VARCHAR}, #{regAddrDetail,jdbcType=VARCHAR}, 
+      #{addrProv,jdbcType=VARCHAR}, #{addrDetail,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{serverIp,jdbcType=VARCHAR}, #{icp,jdbcType=VARCHAR}, #{contName,jdbcType=VARCHAR}, 
+      #{contPhone,jdbcType=VARCHAR}, #{cusEmail,jdbcType=VARCHAR}, #{occurarea,jdbcType=VARCHAR}, 
+      #{networkType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR}, #{riskStatus,jdbcType=VARCHAR}, #{openType,jdbcType=VARCHAR}, 
+      #{chageType,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR}, #{expandType,jdbcType=VARCHAR}, 
+      #{outServiceName,jdbcType=VARCHAR}, #{outServiceCardType,jdbcType=VARCHAR}, #{outServiceCardCode,jdbcType=VARCHAR}, 
+      #{outServicelegCardType,jdbcType=VARCHAR}, #{outServicelegCardCode,jdbcType=VARCHAR}, 
+      #{orgId,jdbcType=VARCHAR}, #{repDate,jdbcType=DATE}, #{repType,jdbcType=VARCHAR}, 
+      #{repPerson,jdbcType=VARCHAR}, #{uploader,jdbcType=VARCHAR}, #{reviewer,jdbcType=VARCHAR}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{reviewTime,jdbcType=TIMESTAMP}  ,#{opStatus,jdbcType=VARCHAR} ,
+      #{opStatusNote,jdbcType=VARCHAR},#{fillerTime,jdbcType=TIMESTAMP},#{filler,jdbcType=VARCHAR},
+      #{legDocName,jdbcType=VARCHAR},#{legDocType,jdbcType=VARCHAR},#{legDocCode,jdbcType=VARCHAR},
+      #{shareHolder,jdbcType=VARCHAR} 
+      
+       )
+  </insert>
+  <update id="updatePcacMerchantReport" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport" >
+    update pcac_merchant_report
+    <set >
+      <if test="repDate != null" >
+        rep_date = #{repDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repType != null and repType != ''" >
+        rep_type = #{repType,jdbcType=VARCHAR},
+      </if>
+      <if test="repPerson != null and repPerson != ''" >
+        rep_person = #{repPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewer != null and reviewer != ''" >
+        reviewer = #{reviewer,jdbcType=DECIMAL},
+      </if>
+		<if test="reviewTime != null" >
+        review_time = #{reviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="opStatus != null and opStatus != '' " >
+        op_status = #{opStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="opStatusNote != null" >
+        op_status_note = #{opStatusNote,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null and batchNo != ''" >
+        batch_no = #{batchNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <where>
+			<!--merchantReportId -->
+			<if test="merchantReportId != null and merchantReportId != ''">
+				AND merchant_report_id =#{merchantReportId,jdbcType=BIGINT}
+			</if> 
+			<!-- batchNo-->
+			<!-- <if test="batchNo != null and batchNo != ''">
+				AND batch_no = #{batchNo} 
+			</if> --> 
+			<!-- 复选框选中的merchant_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    ${item}
+				</foreach> 
+			</if>
+    </where>
+  </update>
+  <select id="getPcacMerchantReportById" resultMap="BaseMerchantMap" parameterType="java.lang.Long" >
+    select merchant_report_id, batch_no, cus_type, cus_nature, reg_name, cus_name, cus_name_en, 
+    doc_type, doc_code, cus_code, indu_type, bank_no, open_bank, reg_addr_prov, reg_addr_detail, 
+    addr_prov, addr_detail, url, server_ip, icp, cont_name, cont_phone, cus_email, occurarea, 
+    network_type, status, start_time, end_time, risk_status, open_type, chage_type, account_type, 
+    expand_type, out_service_name, out_service_card_type, out_service_card_code, out_serviceLeg_card_type, 
+    out_serviceLeg_card_code, org_id, rep_date, rep_type, rep_person, uploader, reviewer, 
+    upload_time, review_time,op_status,op_status_note,filler_time,filler,
+    leg_doc_name,leg_doc_type,leg_doc_code,share_holder 
+    from pcac_merchant_report
+    where merchant_report_id = #{merchantReportId,jdbcType=BIGINT}
+  </select>
+    <select id="findList" resultMap="BaseMerchantMap"   parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+		SELECT 
+			<include refid="pcacMerchantReportColumns"/>
+		FROM pcac_merchant_report 
+		<include refid="pcacMerchantReportWhere"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY merchant_report_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY merchant_report_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  <select id="findMerchantListGroupByBatch" resultMap="BaseMerchantMap" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+	    select rep_date repDate, rep_person repPerson, count(merchant_report_id)  repNum, op_status_note opStatusNote,batch_no batchNo
+	    from pcac_merchant_report 
+	    <include refid="pcacMerchantReportWhere"/>
+		group by rep_date, rep_person,op_status_note,batch_no order by rep_date desc 
+  </select>
+  
+  
+  <select id="findDeleteListGroupByBatch" resultMap="BaseMerchantMap"  parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+	    select a.rep_date repDate, a.rep_person repPerson, count(a.merchant_report_id)  repNum, b.batch_no batchNo
+	    from pcac_merchant_report a,pcac_merchant_report_delete b 
+	    <include refid="pcacReportDeleteWhere"/>
+		group by a.rep_date, a.rep_person,b.batch_no order by a.rep_date desc 
+  </select>
+  
+  <select id="getReportIdsByDelBatchNo" resultType="java.lang.String" parameterType="java.lang.String" >
+    select merchant_report_id 
+    from pcac_merchant_report a,pcac_merchant_report_delete b
+    where a.merchant_report_id = b.report_id  and b.batch_no = #{batchNo,jdbcType=VARCHAR}
+  </select>
+  <select id="getReportIdsByRepBatchNo" resultType="java.lang.String" parameterType="java.lang.String" >
+    select merchant_report_id 
+    from pcac_merchant_report a 
+    where a.batch_no = #{batchNo,jdbcType=VARCHAR}
+  </select>
+  <select id="findMerchantListExcel" resultType="hashmap" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+  		SELECT 
+		<include refid="pcacMerchantReportExportColumns"/>
+		FROM pcac_merchant_report 
+  		<include refid="pcacMerchantReportWhere"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY merchant_report_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY merchant_report_id DESC 
+			</otherwise>
+		</choose>
+  </select>
+    <select id="findMerchantCheckedListExcel" resultType="hashmap"  parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+  		SELECT 
+		<include refid="pcacMerchantReportExportColumns"/>
+		FROM pcac_merchant_report 
+  		<include refid="pcacMerchantReportWhere"/>
+  		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY merchant_report_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY merchant_report_id DESC
+			</otherwise>
+		</choose>
+  </select>
+  <sql id="pcacMerchantReportColumns">
+		merchant_report_id, batch_no, cus_type, cus_nature, reg_name, cus_name, cus_name_en, 
+    	doc_type, doc_code, cus_code, indu_type, bank_no, open_bank, reg_addr_prov, reg_addr_detail, 
+    	addr_prov, addr_detail, url, server_ip, icp, cont_name, cont_phone, cus_email, occurarea, 
+    	network_type, status, start_time, end_time, risk_status, open_type, chage_type, account_type, 
+    	expand_type, out_service_name, out_service_card_type, out_service_card_code, out_serviceLeg_card_type, 
+    	out_serviceLeg_card_code, org_id, rep_date, rep_type, rep_person, uploader, reviewer, 
+    	upload_time, review_time,op_status,leg_doc_name,leg_doc_type,leg_doc_code,share_holder,op_status_note,filler_time,filler 
+  </sql>
+  <sql id="pcacMerchantReportExportColumns">
+		 cus_type cusType, cus_nature cusNature, reg_name regName, cus_name cusName, cus_name_en cusNameEn, 
+    	doc_type docType, doc_code docCode, cus_code cusCode, indu_type induType, bank_no bankNo, open_bank openBank, reg_addr_prov regAddrProv, reg_addr_detail regAddrDetail, 
+    	addr_prov addrProv, addr_detail addrDetail, url, server_ip serverIp, icp, cont_name contName, cont_phone contPhone, cus_email cusEmail, occurarea, 
+    	network_type networkType, status, start_time startTime, end_time endTime, risk_status riskStatus, open_type openType, chage_type chageType, account_type accountType, 
+    	expand_type expandType, out_service_name outServiceName, out_service_card_type outServiceCardType, out_service_card_code outServiceCardCode, out_serviceLeg_card_type outServicelegCardType, 
+    	out_serviceLeg_card_code outServicelegCardCode, org_id  orgId,DATE_FORMAT(filler_time,"%Y-%m-%d %H:%i:%s") fillerTime,
+    	filler,leg_doc_name legDocName,leg_doc_type legDocType,leg_doc_code legDocCode,share_holder shareHolder 
+	</sql>
+  <sql id="pcacMerchantReportWhere">
+		<where>
+			<!-- 上报时间 -->
+			<if test="beginRepDate != null and endRepDate != null">
+				AND rep_date BETWEEN date_format(#{beginRepDate},'%Y-%m-%d %H:%i:%s') AND date_format(#{endRepDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 审核时间 -->
+			<if test="beginReviewTime != null and endReviewTime != null">
+				AND review_time BETWEEN date_format(#{beginReviewTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endReviewTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 导入时间 -->
+			<if test="beginUploadTime != null and endUploadTime != null">
+				AND upload_time BETWEEN date_format(#{beginUploadTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endUploadTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 填写excel时间 -->
+			<if test="beginFillerTime != null and endFillerTime != null">
+				AND filler_time BETWEEN date_format(#{beginFillerTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endFillerTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 信息状态 -->
+			<if test="opStatus != null and opStatus != ''">
+				AND op_status = #{opStatus} 
+			</if>
+			<!-- 商户代码 -->
+			<if test=" cusCode!= null and cusCode!= ''">
+				AND cus_code= #{cusCode}
+			</if>
+			<!-- 商户姓名 -->
+			<if test=" regName!=null and regName!='' ">
+			    AND reg_name LIKE CONCAT(CONCAT('%', #{regName}),'%') 
+			</if>
+			<!-- 上报人 -->
+			<if test=" repPerson!=null and repPerson!='' ">
+			    AND rep_person LIKE CONCAT(CONCAT('%', #{repPerson}),'%') 
+			</if>
+			<!-- 审核人 -->
+			<if test=" reviewer!=null and reviewer!='' ">
+			    AND reviewer LIKE CONCAT(CONCAT('%', #{reviewer}),'%') 
+			</if>
+			<!-- 导入excel的人员 -->
+			<if test=" uploader!=null and uploader!='' ">
+			    AND uploader LIKE CONCAT(CONCAT('%', #{uploader}),'%') 
+			</if>
+			<!--填写excel的人员 -->
+			<if test=" filler!=null and filler!='' ">
+			    AND filler LIKE CONCAT(CONCAT('%', #{filler}),'%') 
+			</if>
+			<!-- 复选框选中的merchant_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    ${item}
+				</foreach> 
+			</if>
+			<!--填写excel的人员 -->
+			<if test=" batchNo!=null and batchNo!='' ">
+			    AND batch_no = #{batchNo} 
+			</if>
+		</where>
+	</sql>
+	<sql id="pcacReportDeleteWhere">
+		<where>
+			a.merchant_report_id = b.report_id
+			<!-- 上报时间 -->
+			<if test="beginRepDate != null and endRepDate != null">
+				AND a.rep_date BETWEEN date_format(#{beginRepDate},'%Y-%m-%d %H:%i:%s') AND date_format(#{endRepDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 审核时间 -->
+			<if test="beginReviewTime != null and endReviewTime != null">
+				AND a.review_time BETWEEN date_format(#{beginReviewTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endReviewTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 导入时间 -->
+			<if test="beginUploadTime != null and endUploadTime != null">
+				AND a.upload_time BETWEEN date_format(#{beginUploadTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endUploadTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 填写excel时间 -->
+			<if test="beginFillerTime != null and endFillerTime != null">
+				AND a.filler_time BETWEEN date_format(#{beginFillerTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endFillerTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 信息状态 -->
+			<if test="opStatus != null and opStatus != ''">
+				AND a.op_status = #{opStatus} 
+			</if>
+			<!-- 商户代码 -->
+			<if test=" cusCode!= null and cusCode!= ''">
+				AND a.cus_code= #{cusCode}
+			</if>
+			<!-- 商户姓名 -->
+			<if test=" regName!=null and regName!='' ">
+			    AND a.reg_name LIKE CONCAT(CONCAT('%', #{regName}),'%') 
+			</if>
+			<!-- 上报人 -->
+			<if test=" repPerson!=null and repPerson!='' ">
+			    AND a.rep_person LIKE CONCAT(CONCAT('%', #{repPerson}),'%') 
+			</if>
+			<!-- 审核人 -->
+			<if test=" reviewer!=null and reviewer!='' ">
+			    AND a.reviewer LIKE CONCAT(CONCAT('%', #{reviewer}),'%') 
+			</if>
+			<!-- 导入excel的人员 -->
+			<if test=" uploader!=null and uploader!='' ">
+			    AND a.uploader LIKE CONCAT(CONCAT('%', #{uploader}),'%') 
+			</if>
+			<!--填写excel的人员 -->
+			<if test=" filler!=null and filler!='' ">
+			    AND a.filler LIKE CONCAT(CONCAT('%', #{filler}),'%') 
+			</if>
+			<!-- 复选框选中的person_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND a.merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    ${item}
+				</foreach> 
+			</if>
+			<!--填写excel的人员 -->
+			<if test=" batchNo!=null and batchNo!='' ">
+			    AND b.batch_no = #{batchNo} 
+			</if>
+		</where>
+	</sql>
+	
+  <select id="findMerchantRepList" resultMap="repMerchantMap"   parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+		select cus_type, cus_nature, reg_name, cus_name, cus_name_en, 
+    	doc_type, doc_code, cus_code, indu_type, bank_no, open_bank, reg_addr_prov, reg_addr_detail, 
+    	addr_prov, addr_detail, url, server_ip, icp, cont_name, cont_phone, cus_email, occurarea, 
+    	network_type, status, start_time, end_time, risk_status, open_type, chage_type, account_type, 
+    	expand_type, out_service_name, out_service_card_type, out_service_card_code, out_serviceLeg_card_type, 
+    	out_serviceLeg_card_code, org_id, rep_date, rep_type, rep_person,leg_doc_name,leg_doc_type,leg_doc_code,share_holder 
+    	  from pcac_merchant_report 
+		<where>
+			<!--merchantReportId -->
+			<if test="merchantReportId != null and merchantReportId != ''">
+				AND merchant_report_id =#{merchantReportId,jdbcType=BIGINT}
+			</if> 
+			<!-- batchNo-->
+			<!-- <if test="batchNo != null and batchNo != ''">
+				AND batch_no = #{batchNo} 
+			</if> --> 
+			<!-- 复选框选中的merchant_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    ${item}
+				</foreach> 
+			</if>
+	</where>
+	</select>
+  <select id="findMerchantDelRepList" resultMap="repDelMerchantMap"   parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantReport">
+		select cus_type cusType, doc_type docType, doc_code docCode, cus_code cusCode   from pcac_merchant_report 
+		<where>
+			<!--merchantReportId -->
+			<if test="merchantReportId != null and merchantReportId != ''">
+				AND merchant_report_id =#{merchantReportId,jdbcType=BIGINT}
+			</if> 
+			<!-- batchNo-->
+			<if test="batchNo != null and batchNo != ''">
+				AND batch_no = #{batchNo} 
+			</if>
+			<!-- 复选框选中的merchant_report_id -->
+			<if test="reportIds != null and reportIds != ''">
+				AND merchant_report_id in
+		        <foreach item="item" index="index" collection="reportIds" open="(" separator="," close=")">  
+				    ${item}
+				</foreach> 
+			</if>
+	</where>
+	</select>
+  
+  
+  
+</mapper>

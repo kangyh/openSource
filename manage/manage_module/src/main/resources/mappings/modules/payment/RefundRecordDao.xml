@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.RefundRecordDao">
+    
+	<sql id="refundRecordColumns">
+		a.refund_id AS "refundId",
+		a.trans_no AS "transNo",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.merchant_user_name AS "merchantUserName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.refund_detail AS "refundDetail",
+		a.refund_amount AS "refundAmount",
+		a.refund_time AS "refundTime",
+		a.update_time AS "updateTime",
+		a.trans_create_time AS "transCreateTime",
+		a.refund_success_amount AS "refundSuccessAmount",
+		a.refund_success_time AS "refundSuccessTime",
+		a.type AS "type",
+		a.status AS "status",
+		a.refund_from AS "refundFrom",
+		a.notify_url AS "notifyUrl",
+		a.apply_id AS "applyId",
+		a.apply_name AS "applyName",
+		a.process_id AS "processId",
+		a.process_name AS "processName",
+		a.process_time AS "processTime",
+		a.payment_id AS "paymentId",
+		a.origin_payment_id AS "originPaymentId",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.operator AS "operator",
+		a.is_fee_back AS "isFeeBack",
+		a.user_id AS "userId"
+	</sql>
+	
+	<sql id="refundRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="RefundRecord">
+		SELECT 
+			<include refid="refundRecordColumns"/>
+		FROM refund_record a
+		<include refid="refundRecordJoins"/>
+		WHERE a.refund_id = #{refundId}
+	</select>
+	
+	<select id="findList" resultType="RefundRecord">
+		SELECT 
+			<include refid="refundRecordColumns"/>
+		FROM refund_record a
+		<include refid="refundRecordJoins"/>
+		<where>
+				<if test="refundId != null and refundId != ''">
+				AND a.refund_id = #{refundId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.refund_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.refund_success_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="refundFrom != null and refundFrom != ''">
+				AND a.refund_from = #{refundFrom}
+			</if>
+		</where>
+			<if test="sortOrder == 'ASC'">
+	            ORDER BY refundTime ASC
+	        </if>
+	        <if test="sortOrder == 'DESC'">
+	            ORDER BY refundTime DESC
+	        </if>
+	</select>
+	
+	<select id="findAllList" resultType="RefundRecord">
+		SELECT 
+			<include refid="refundRecordColumns"/>
+		FROM refund_record a
+		<include refid="refundRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO refund_record(
+			refund_id,
+			trans_no,
+			merchant_order_no,
+			merchant_user_name,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			account_id,
+			account_name,
+			refund_detail,
+			refund_amount,
+			refund_time,
+			update_time,
+			trans_create_time,
+			refund_success_amount,
+			refund_success_time,
+			type,
+			status,
+			refund_from,
+			notify_url,
+			apply_id,
+			apply_name,
+			process_id,
+			process_name,
+			process_time,
+			payment_id,
+			origin_payment_id,
+			fee_type,
+			fee_ratio,
+			fee_amount,
+			operator,
+			is_fee_back,
+			user_id
+		) VALUES (
+			#{refundId},
+			#{transNo},
+			#{merchantOrderNo},
+			#{merchantUserName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{accountId},
+			#{accountName},
+			#{refundDetail},
+			#{refundAmount},
+			#{refundTime},
+			#{updateTime},
+			#{transCreateTime},
+			#{refundSuccessAmount},
+			#{refundSuccessTime},
+			#{type},
+			#{status},
+			#{refundFrom},
+			#{notifyUrl},
+			#{applyId},
+			#{applyName},
+			#{processId},
+			#{processName},
+			#{processTime},
+			#{paymentId},
+			#{originPaymentId},
+			#{feeType},
+			#{feeRatio},
+			#{feeAmount},
+			#{operator},
+			#{isFeeBack},
+			#{userId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE refund_record SET 	
+			refund_id = #{refundId},
+			trans_no = #{transNo},
+			merchant_order_no = #{merchantOrderNo},
+			merchant_user_name = #{merchantUserName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			refund_detail = #{refundDetail},
+			refund_amount = #{refundAmount},
+			refund_time = #{refundTime},
+			update_time = #{updateTime},
+			trans_create_time = #{transCreateTime},
+			refund_success_amount = #{refundSuccessAmount},
+			refund_success_time = #{refundSuccessTime},
+			type = #{type},
+			status = #{status},
+			refund_from = #{refundFrom},
+			notify_url = #{notifyUrl},
+			apply_id = #{applyId},
+			apply_name = #{applyName},
+			process_id = #{processId},
+			process_name = #{processName},
+			process_time = #{processTime},
+			payment_id = #{paymentId},
+			origin_payment_id = #{originPaymentId},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_amount = #{feeAmount},
+			operator = #{operator},
+			is_fee_back = #{isFeeBack},
+			user_id = #{userId}
+		WHERE refund_id = #{refundId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM refund_record
+		WHERE refund_id = #{refundId}
+	</update>
+	
+	<select id="getRefundId" resultType="RefundRecord">
+		SELECT 
+			max(a.refund_id) as refundId
+		FROM refund_record a
+	</select>
+		<update id="updateRefundRecordRFDING">
+		UPDATE refund_record set
+		status = 'RFDING',
+		update_time =now()
+		WHERE refund_id = #{id}
+	</update>
+
+	<select id="getRefundsForReport" resultType="RefundRecord" parameterType="java.util.Map">
+		select <include refid="refundRecordColumns"/>
+		from refund_record a
+		<where>
+            a.status NOT IN ('PREAUT','REJECT','FAILED')
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+            <if test="merchantCompany != null and merchantCompany != ''">
+                AND a.merchant_company like CONCAT('%',#{merchantCompany},'%')
+            </if>
+            <if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+                AND a.refund_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <!--<if test="merchantFlag != '' and merchantFlag != null">
+                AND EXISTS (select 1 from merchant b where b.user_id = a.merchant_id and b.merchant_flag = #{merchantFlag})
+            </if>-->
+        </where>
+	</select>
+	
+</mapper>

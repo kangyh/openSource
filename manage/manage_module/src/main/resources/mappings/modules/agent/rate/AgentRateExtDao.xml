@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.rate.AgentRateDao">
+	<select id="getAgentRate" resultType="AgentRate">
+		SELECT 
+			<include refid="agentRateColumns"/>
+		FROM agent_rate a
+		<include refid="agentRateJoins"/>
+		WHERE a.agent_id = #{agentId} and a.product_code = #{productCode}
+	</select>
+	
+</mapper>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantRateLogDao">
+    
+	<sql id="merchantRateLogColumns">
+		a.id AS "id",
+		a.rate_id AS "rateId",
+		a.bank_rate_id AS "bankRateId",
+		a.merchant_id AS "merchantId",
+		a.business_type AS "businessType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.rule_begin_time AS "ruleBeginTime",
+		a.rule_end_time AS "ruleEndTime",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		a.status AS "status",
+		a.settle_type AS "settleType",
+		a.settlement_to AS "settlementTo",
+		a.notify_url AS "notifyUrl",
+		a.back_url AS "backUrl",
+		a.ip_domain AS "ipDomain",
+		a.autograph_key AS "autographKey",
+		a.autograph_type AS "autographType",
+		a.bank_no AS "bankNo",
+		a.bank_name AS "bankName",
+		a.bank_card_type AS "bankCardType",
+		a.charge_type AS "chargeType",
+		a.charge_ratio AS "chargeRatio",
+		a.charge_fee AS "chargeFee",
+		a.max_fee AS "maxFee",
+		a.min_fee AS "minFee",
+		a.operation_time AS "operationTime",
+		a.operation_user AS "operationUser",
+		a.operation_type AS "operationType"
+	</sql>
+	
+	<sql id="merchantRateLogJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantRateLog">
+		SELECT 
+			<include refid="merchantRateLogColumns"/>
+		FROM merchant_rate_log a
+		<include refid="merchantRateLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantRateLog">
+		SELECT 
+			<include refid="merchantRateLogColumns"/>
+		FROM merchant_rate_log a
+		<include refid="merchantRateLogJoins"/>
+		<where>
+			<if test="productCode != null and productCode != ''">
+                AND a.product_code = #{productCode}
+            </if>
+            <if test="merchantId != null and merchantId != ''">
+                AND a.merchant_id = #{merchantId}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantRateLog">
+		SELECT 
+			<include refid="merchantRateLogColumns"/>
+		FROM merchant_rate_log a
+		<include refid="merchantRateLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_rate_log(
+			id,
+			rate_id,
+			bank_rate_id,
+			merchant_id,
+			business_type,
+			product_code,
+			product_name,
+			rule_begin_time,
+			rule_end_time,
+			charge_source,
+			charge_deduct_type,
+			charge_collection_type,
+			is_refundable,
+			status,
+			settle_type,
+			settlement_to,
+			notify_url,
+			back_url,
+			ip_domain,
+			autograph_key,
+			autograph_type,
+			bank_no,
+			bank_name,
+			bank_card_type,
+			charge_type,
+			charge_ratio,
+			charge_fee,
+			max_fee,
+			min_fee,
+			operation_time,
+			operation_user,
+			operation_type
+		) VALUES (
+			#{id},
+			#{rateId},
+			#{bankRateId},
+			#{merchantId},
+			#{businessType},
+			#{productCode},
+			#{productName},
+			#{ruleBeginTime},
+			#{ruleEndTime},
+			#{chargeSource},
+			#{chargeDeductType},
+			#{chargeCollectionType},
+			#{isRefundable},
+			#{status},
+			#{settleType},
+			#{settlementTo},
+			#{notifyUrl},
+			#{backUrl},
+			#{ipDomain},
+			#{autographKey},
+			#{autographType},
+			#{bankNo},
+			#{bankName},
+			#{bankCardType},
+			#{chargeType},
+			#{chargeRatio},
+			#{chargeFee},
+			#{maxFee},
+			#{minFee},
+			#{createDate},
+			#{createBy.id},
+			#{operationType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_rate_log SET 	
+			rate_id = #{rateId},
+			bank_rate_id = #{bankRateId},
+			merchant_id = #{merchantId},
+			business_type = #{businessType},
+			product_code = #{productCode},
+			product_name = #{productName},
+			rule_begin_time = #{ruleBeginTime},
+			rule_end_time = #{ruleEndTime},
+			charge_source = #{chargeSource},
+			charge_deduct_type = #{chargeDeductType},
+			charge_collection_type = #{chargeCollectionType},
+			is_refundable = #{isRefundable},
+			status = #{status},
+			settle_type = #{settleType},
+			settlement_to = #{settlementTo},
+			notify_url = #{notifyUrl},
+			back_url = #{backUrl},
+			ip_domain = #{ipDomain},
+			autograph_key = #{autographKey},
+			autograph_type = #{autographType},
+			bank_no = #{bankNo},
+			bank_name = #{bankName},
+			bank_card_type = #{bankCardType},
+			charge_type = #{chargeType},
+			charge_ratio = #{chargeRatio},
+			charge_fee = #{chargeFee},
+			max_fee = #{maxFee},
+			min_fee = #{minFee},
+			operation_time = #{operationTime},
+			operation_user = #{operationUser},
+			operation_type = #{operationType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_rate_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

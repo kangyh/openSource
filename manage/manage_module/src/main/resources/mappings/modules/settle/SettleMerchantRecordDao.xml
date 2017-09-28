@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.settle.dao.SettleMerchantRecordDao">
+    
+    <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="settleMerchantRecordColumns">
+		a.settle_id AS "settleId",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.merchant_type AS "merchantType",
+		a.trans_type AS "transType",
+		a.currency AS "currency",
+		a.pay_num AS "payNum",
+		a.total_amount AS "totalAmount",
+		a.check_time AS "checkTime",
+		a.settle_time AS "settleTime",
+		a.settle_cyc AS "settleCyc",
+		a.settle_bath AS "settleBath",
+		a.settle_amount AS "settleAmount",
+		a.fee_time AS "feeTime",
+		a.total_fee AS "totalFee",
+		<!-- a.fee_way AS "feeWay", -->
+		a.fee_settle_cyc AS "feeSettleCyc",
+		a.check_status AS "checkStatus",
+		a.settle_status AS "settleStatus"
+	</sql>
+	
+	<!-- 
+		修改条件是请同时修改下面的文件导出的查询条件
+		findListToExcel
+	 -->
+	
+	<select id="findList" resultType="SettleMerchantRecord">
+		SELECT 
+			<include refid="settleMerchantRecordColumns"/>
+		FROM settle_merchant_record a
+		<where>
+			<!--商户标记（内部：inside,外部：outsid）-->
+			<if test="merchantFlag != null and merchantFlag != ''">
+				AND a.merchant_id in
+				<foreach item="item" index="index" collection="merchantFlagList" open="(" separator="," close=")">
+					${item}
+				</foreach>
+			</if>
+
+			<!-- 会计日期 -->
+			<if test="beginCheckTime != null">
+				<![CDATA[   and DATE_FORMAT(a.check_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginCheckTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endCheckTime != null">
+				<![CDATA[  and DATE_FORMAT(a.check_time, '%Y-%m-%d') <= DATE_FORMAT(#{endCheckTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 交易类型  -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY settle_id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--金额求和-->
+	<select id="sumNum" resultType="SettleMerchantRecord">
+		SELECT
+			SUM(pay_num) AS "sumPayNum",
+			SUM(total_amount) AS "sumTotalAmount",
+			SUM(settle_amount) AS "sumSettleAmount",
+			SUM(total_fee) AS "sumTotalFee"
+		FROM settle_merchant_record a
+		<where>
+			<!--商户标记（内部：inside,外部：outsid）-->
+			<if test="merchantFlag != null and merchantFlag != ''">
+				AND a.merchant_id in
+				<foreach item="item" index="index" collection="merchantFlagList" open="(" separator="," close=")">
+					${item}
+				</foreach>
+			</if>
+
+			<!-- 会计日期 -->
+			<if test="beginCheckTime != null">
+				<![CDATA[   and DATE_FORMAT(a.check_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginCheckTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endCheckTime != null">
+				<![CDATA[  and DATE_FORMAT(a.check_time, '%Y-%m-%d') <= DATE_FORMAT(#{endCheckTime}, '%Y-%m-%d')    ]]>
+			</if>
+
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+
+			<!-- 交易类型  -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 导出商户侧结算记录文件专用SQL -->
+	<select id="findListToExcel" resultType="hashmap">
+		SELECT 
+			<include refid="settleMerchantRecordColumns"/>
+		FROM settle_merchant_record a
+		<where>
+			<!--商户标记（内部：inside,外部：outsid）-->
+			<if test="merchantFlag != null and merchantFlag != ''">
+				AND a.merchant_id in
+				<foreach item="item" index="index" collection="merchantFlagList" open="(" separator="," close=")">
+					${item}
+				</foreach>
+			</if>
+			<!-- 会计日期 -->
+			<if test="beginCheckTime != null">
+				<![CDATA[   and DATE_FORMAT(a.check_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginCheckTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endCheckTime != null">
+				<![CDATA[  and DATE_FORMAT(a.check_time, '%Y-%m-%d') <= DATE_FORMAT(#{endCheckTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 结算日期 -->
+			<if test="beginSettleTime != null">
+				<![CDATA[   and DATE_FORMAT(a.settle_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginSettleTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endSettleTime != null">
+				<![CDATA[  and DATE_FORMAT(a.settle_time, '%Y-%m-%d') <= DATE_FORMAT(#{endSettleTime}, '%Y-%m-%d')    ]]>
+			</if>
+			
+			<!-- 业务类型  -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+			<!-- 商户编码  -->
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+		</where>
+		ORDER BY a.settle_id desc
+	</select>
+
+	<!--不结算-->
+	<update id="updateEntity" parameterType="SettleMerchantRecord">
+		UPDATE settle_merchant_record
+		<set >
+			<if test="settleStatus != null and settleStatus != ''" >
+				settle_status = #{settleStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where settle_bath = #{settleBath,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getEntityBySettleBath" resultType="com.heepay.manage.modules.settle.entity.rabbit.SettleMerchantRecordRabbit">
+		SELECT
+		<include refid="settleMerchantRecordColumns"/>
+		FROM settle_merchant_record a
+		WHERE a.settle_bath = #{settleBath,jdbcType=VARCHAR}
+	</select>
+</mapper>

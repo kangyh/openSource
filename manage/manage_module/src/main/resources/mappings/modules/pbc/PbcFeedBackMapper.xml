@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcFeedBackDao" >
+  
+  <sql id="includeEntity">
+	  a.feed_back_id, 
+	  a.feed_type, 
+	  a.mode, 
+      a.to_id, 
+      a.tx_code, 
+      a.trans_serial_number, 
+      a.application_id, 
+      a.result, 
+      a.operator_name, 
+      a.operator_phone_number, 
+      a.feed_back_org_name, 
+      a.feed_back_remark, 
+      a.remark, 
+      a.request_event_type, 
+      a.application_time, 
+      a.application_org_code, 
+      a.application_org_name, 
+      a.emergency_level, 
+      a.feedback_limit, 
+      a.status, 
+      a.code, 
+      a.description, 
+      a.risk_time, 
+      a.risk_operator, 
+      a.risk_remark, num, 
+      a.risk_status, 
+      a.fail_remark, 
+      a.param_type, 
+      a.params, 
+      a.report_time, 
+      a.deal_time, 
+      a.feature_codes, 
+      a.abnormal_describe, 
+      a.report_codes
+	</sql>
+	
+	<select id="findList" resultType="PbcFeedBack">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_feed_back a
+		<where>
+			
+			<!-- application_time -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.application_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- risk_time 
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.risk_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if> -->
+			<!--feedType -->
+			<if test="feedType != null and feedType != ''">
+				AND a.feed_type = #{feedType} 
+			</if> 
+			<!--feedBackId -->
+			<if test="feedBackId != null and feedBackId != ''">
+				AND a.feed_back_id = #{feedBackId} 
+			</if> 
+			<!--toId -->
+			<if test="toId != null and toId != ''">
+				AND a.to_id = #{toId} 
+			</if> 
+			<!-- transSerialNumber-->
+			<if test="transSerialNumber != null and transSerialNumber != ''">
+				AND a.trans_serial_number = #{transSerialNumber} 
+			</if> 
+			<!-- applicationId -->
+			<if test="applicationId != null and applicationId != ''">
+				AND a.application_id = #{applicationId} 
+			</if> 
+			<!-- operatorPhoneNumber -->
+			<if test="operatorPhoneNumber != null and operatorPhoneNumber != ''">
+				AND a.operator_phone_number = #{operatorPhoneNumber} 
+			</if> 
+			<!-- applicationOrgCode  -->
+			<if test="applicationOrgCode  != null and applicationOrgCode != ''"> 
+				AND a.plication_org_code = #{applicationOrgCode} 
+			</if> 
+			<!-- code  -->
+			<if test="code  != null and code != ''"> 
+				AND a.code = #{code} 
+			</if> 
+			<!-- riskStatus  -->
+			<if test="riskStatus  != null and riskStatus != ''"> 
+				AND a.risk_status = #{riskStatus} 
+			</if> 
+			<!-- request_event_type -->
+			<if test="requestEventType  != null and requestEventType != ''"> 
+				AND a.request_event_type = #{requestEventType} 
+			</if>
+			<!-- status -->
+			<if test="status  != null and status != ''"> 
+				AND a.status = #{status} 
+			
+			</if>
+			<if test="queryFlg  != null and queryFlg != ''">
+				<!-- 风控审核状态和状态都是失败的或者失败的，未上报的，上报失败的 d-->
+				AND a.risk_status != 'Y' 
+				AND a.status != 'Y'
+				AND a.request_event_type is NOT NULL
+				AND a.feed_type is NULL
+			</if>
+			
+			<if test="xml  != null and xml != ''">
+				<!-- 主动上报，查询出符合的上报类型，并且没有上报成功或者上报失败的审核失败的 L-->
+				AND a.status !=#{xml}
+				AND a.request_event_type is NULL
+				AND a.feed_type is NOT NULL
+			</if>
+			
+			<if test="yes  != null and yes != ''">
+				<!-- 主动上报，查询出符合的上报类型，查询出上报成功的 L-->
+				AND a.status=#{yes}
+				AND a.request_event_type is NULL
+				AND a.feed_type is NOT NULL
+			</if>
+			
+				<!-- 查询上报条件 -->
+			<if test="queryXml  != null and queryXml != ''">
+				AND a.status !=#{queryXml}
+				AND a.request_event_type is NOT NULL
+				AND a.feed_type is NULL
+			</if>
+			<if test="queryYes  != null and queryYes != ''">
+				AND a.status = #{queryYes}
+				AND a.request_event_type is NOT NULL
+				AND a.feed_type is NULL
+			</if>
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY a.feed_back_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.feed_back_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  
+  <insert id="save" parameterType="PbcFeedBack" >
+    insert into pbc_feed_back (feed_back_id, feed_type, mode, 
+      to_id, tx_code, trans_serial_number, 
+      application_id, result, operato_idr_name, 
+      operator_phone_number, feed_back_org_name, feed_back_remark, 
+      remark, request_event_type, application_time, 
+      application_org_code, application_org_name, 
+      emergency_level, feedback_limit, status, 
+      code, description, risk_time, 
+      risk_operator, risk_remark, num, 
+      risk_status, fail_remark, param_type, 
+      params, report_time, deal_time, 
+      feature_codes, abnormal_describe, report_codes
+      )
+    values (#{feedBackId,jdbcType=BIGINT}, #{feedType,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, 
+      #{toId,jdbcType=VARCHAR}, #{txCode,jdbcType=VARCHAR}, #{transSerialNumber,jdbcType=VARCHAR}, 
+      #{applicationId,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, #{operatorName,jdbcType=VARCHAR}, 
+      #{operatorPhoneNumber,jdbcType=VARCHAR}, #{feedBackOrgName,jdbcType=VARCHAR}, #{feedBackRemark,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{requestEventType,jdbcType=VARCHAR}, #{applicationTime,jdbcType=TIMESTAMP}, 
+      #{applicationOrgCode,jdbcType=VARCHAR}, #{applicationOrgName,jdbcType=VARCHAR}, 
+      #{emergencyLevel,jdbcType=VARCHAR}, #{feedbackLimit,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{riskTime,jdbcType=TIMESTAMP}, 
+      #{riskOperator,jdbcType=VARCHAR}, #{riskRemark,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, 
+      #{riskStatus,jdbcType=VARCHAR}, #{failRemark,jdbcType=VARCHAR}, #{paramType,jdbcType=VARCHAR}, 
+      #{params,jdbcType=VARCHAR}, #{reportTime,jdbcType=TIMESTAMP}, #{dealTime,jdbcType=TIMESTAMP}, 
+      #{featureCodes,jdbcType=VARCHAR}, #{abnormalDescribe,jdbcType=VARCHAR}, #{reportCodes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="saveEntity" parameterType="PbcFeedBack" useGeneratedKeys="true" keyProperty="feedBackId">
+     insert into pbc_feed_back
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="feedBackId != null" >
+        feed_back_id,
+      </if>
+      <if test="feedType != null" >
+        feed_type,
+      </if>
+      <if test="mode != null" >
+        mode,
+      </if>
+      <if test="toId != null" >
+       to_id,
+      </if>
+      <if test="txCode != null" >
+        tx_code,
+      </if>
+      <if test="transSerialNumber != null" >
+        trans_serial_number,
+      </if>
+      <if test="applicationId != null" >
+        application_id,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="operatorName != null" >
+        operator_name,
+      </if>
+      <if test="operatorPhoneNumber != null" >
+        operator_phone_number,
+      </if>
+      <if test="feedBackOrgName != null" >
+        feed_back_org_name,
+      </if>
+      <if test="feedBackRemark != null" >
+        feed_back_remark,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="requestEventType != null" >
+        request_event_type,
+      </if>
+      <if test="applicationTime != null" >
+        application_time,
+      </if>
+      <if test="applicationOrgCode != null" >
+        application_org_code,
+      </if>
+      <if test="applicationOrgName != null" >
+        application_org_name,
+      </if>
+      <if test="emergencyLevel != null" >
+        emergency_level,
+      </if>
+      <if test="feedbackLimit != null" >
+        feedback_limit,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="riskTime != null" >
+        risk_time,
+      </if>
+      <if test="riskOperator != null" >
+        risk_operator,
+      </if>
+      <if test="riskRemark != null" >
+        risk_remark,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="riskStatus != null" >
+        risk_status,
+      </if>
+      <if test="failRemark != null" >
+        fail_remark,
+      </if>
+      <if test="paramType != null" >
+        param_type,
+      </if>
+      <if test="params != null" >
+        params,
+      </if>
+      <if test="reportTime != null" >
+        report_time,
+      </if>
+      <if test="dealTime != null" >
+        deal_time,
+      </if>
+      <if test="featureCodes != null" >
+        feature_codes,
+      </if>
+      <if test="abnormalDescribe != null" >
+        abnormal_describe,
+      </if>
+      <if test="reportCodes != null" >
+        report_codes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="feedBackId != null" >
+        #{feedBackId,jdbcType=BIGINT},
+      </if>
+      <if test="feedType != null" >
+        #{feedType,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null" >
+        #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="toId != null" >
+        #{toId,jdbcType=VARCHAR},
+      </if>
+      <if test="txCode != null" >
+        #{txCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transSerialNumber != null" >
+        #{transSerialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationId != null" >
+        #{applicationId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorName != null" >
+        #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorPhoneNumber != null" >
+        #{operatorPhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackOrgName != null" >
+        #{feedBackOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackRemark != null" >
+        #{feedBackRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestEventType != null" >
+        #{requestEventType,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationTime != null" >
+        #{applicationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationOrgCode != null" >
+        #{applicationOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationOrgName != null" >
+        #{applicationOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="emergencyLevel != null" >
+        #{emergencyLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackLimit != null" >
+        #{feedbackLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="riskTime != null" >
+        #{riskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="riskOperator != null" >
+        #{riskOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRemark != null" >
+        #{riskRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="riskStatus != null" >
+        #{riskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="failRemark != null" >
+        #{failRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="paramType != null" >
+        #{paramType,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null" >
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null" >
+        #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealTime != null" >
+        #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="featureCodes != null" >
+        #{featureCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalDescribe != null" >
+        #{abnormalDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="reportCodes != null" >
+        #{reportCodes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+ 
+  <update id="updateEntity" parameterType="PbcFeedBack" >
+    update pbc_feed_back
+    <set >
+      <if test="feedType != null" >
+        feed_type = #{feedType,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null" >
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="toId != null" >
+        to_id = #{toId,jdbcType=VARCHAR},
+      </if>
+      <if test="txCode != null" >
+        tx_code = #{txCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transSerialNumber != null" >
+        trans_serial_number = #{transSerialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationId != null" >
+        application_id = #{applicationId,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorName != null" >
+        operator_name = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorPhoneNumber != null" >
+        operator_phone_number = #{operatorPhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackOrgName != null" >
+        feed_back_org_name = #{feedBackOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackRemark != null" >
+        feed_back_remark = #{feedBackRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="requestEventType != null" >
+        request_event_type = #{requestEventType,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationTime != null" >
+        application_time = #{applicationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationOrgCode != null" >
+        application_org_code = #{applicationOrgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationOrgName != null" >
+        application_org_name = #{applicationOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="emergencyLevel != null" >
+        emergency_level = #{emergencyLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackLimit != null" >
+        feedback_limit = #{feedbackLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="riskTime != null" >
+        risk_time = #{riskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="riskOperator != null" >
+        risk_operator = #{riskOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRemark != null" >
+        risk_remark = #{riskRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="riskStatus != null" >
+        risk_status = #{riskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="failRemark != null" >
+        fail_remark = #{failRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="paramType != null" >
+        param_type = #{paramType,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null" >
+        params = #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="reportTime != null" >
+        report_time = #{reportTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealTime != null" >
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="featureCodes != null" >
+        feature_codes = #{featureCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalDescribe != null" >
+        abnormal_describe = #{abnormalDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="reportCodes != null" >
+        report_codes = #{reportCodes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where feed_back_id = #{feedBackId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <update id="update" parameterType="PbcFeedBack" >
+     update pbc_feed_back
+    set feed_type = #{feedType,jdbcType=VARCHAR},
+      mode = #{mode,jdbcType=VARCHAR},
+      to_id = #{toId,jdbcType=VARCHAR},
+      tx_code = #{txCode,jdbcType=VARCHAR},
+      trans_serial_number = #{transSerialNumber,jdbcType=VARCHAR},
+      application_id = #{applicationId,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      operator_name = #{operatorName,jdbcType=VARCHAR},
+      operator_phone_number = #{operatorPhoneNumber,jdbcType=VARCHAR},
+      feed_back_org_name = #{feedBackOrgName,jdbcType=VARCHAR},
+      feed_back_remark = #{feedBackRemark,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      request_event_type = #{requestEventType,jdbcType=VARCHAR},
+      application_time = #{applicationTime,jdbcType=TIMESTAMP},
+      application_org_code = #{applicationOrgCode,jdbcType=VARCHAR},
+      application_org_name = #{applicationOrgName,jdbcType=VARCHAR},
+      emergency_level = #{emergencyLevel,jdbcType=VARCHAR},
+      feedback_limit = #{feedbackLimit,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      risk_time = #{riskTime,jdbcType=TIMESTAMP},
+      risk_operator = #{riskOperator,jdbcType=VARCHAR},
+      risk_remark = #{riskRemark,jdbcType=VARCHAR},
+      num = #{num,jdbcType=INTEGER},
+      risk_status = #{riskStatus,jdbcType=VARCHAR},
+      fail_remark = #{failRemark,jdbcType=VARCHAR},
+      param_type = #{paramType,jdbcType=VARCHAR},
+      params = #{params,jdbcType=VARCHAR},
+      report_time = #{reportTime,jdbcType=TIMESTAMP},
+      deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      feature_codes = #{featureCodes,jdbcType=VARCHAR},
+      abnormal_describe = #{abnormalDescribe,jdbcType=VARCHAR},
+      report_codes = #{reportCodes,jdbcType=VARCHAR}
+    where feed_back_id = #{feedBackId,jdbcType=BIGINT}
+  </update>
+  <select id="getEntityById" resultType="PbcFeedBack">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_feed_back a
+	WHERE feed_back_id = #{feedBackId}
+  </select>
+  
+  <select id="getEntityByApplicationCode" resultType="PbcFeedBack">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_feed_back a
+	WHERE application_id = #{applicationId}
+  </select>
+  
+  <insert id="insertValue" parameterType="List">
+  	insert into pbc_feed_back (feed_type,mode, to_id, 
+      tx_code, trans_serial_number, application_id, 
+      result, operator_name, operator_phone_number, 
+      feed_back_org_name, feed_back_remark, remark, 
+      request_event_type, application_org_code, 
+      application_time, application_org_name, 
+      emergency_level, feedback_limit, status, 
+      code, return_results, risk_time, 
+      risk_operator, risk_remark, num, 
+      risk_status,fail_remark,param_type,params,report_time,deal_time)
+     VALUES
+     	<foreach collection ="list" item="item" index= "index" separator =",">
+	     (#{item.feedType},#{item.mode}, #{item.toId}, 
+	      #{item.txCode}, #{item.transSerialNumber}, #{item.applicationId}, 
+	      #{item.result}, #{item.operatorName}, #{item.operatorPhoneNumber}, 
+	      #{item.feedBackOrgName}, #{item.feedBackRemark}, #{item.remark}, 
+	      #{item.requestEventType}, #{item.applicationOrgCode}, 
+	      #{item.applicationTime}, #{item.applicationOrgName}, 
+	      #{item.emergencyLevel}, #{item.feedbackLimit}, #{item.status}, 
+	      #{item.code}, #{item.returnResults}, #{item.riskTime}, 
+	      #{item.riskOperator}, #{item.riskRemark}, #{item.num}, 
+	      #{item.riskStatus},#{item.failRemark},#{item.paramType},#{item.params},
+	      #{reportTime,jdbcType=TIMESTAMP},#{dealTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  
+  
+  <select id="findListExcel" resultType="hashmap">
+	SELECT 
+		<include refid="includeEntity"/>
+	FROM pbc_feed_back a
+	<where>
+		
+		<!-- application_time -->
+		<if test="beginOperEndTime != null and endOperEndTime != null">
+			AND a.application_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+		</if>
+		<!-- risk_time 
+		<if test="beginOperEndTime != null and endOperEndTime != null">
+			AND a.risk_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+		</if>
+		-->
+		<!--feedType -->
+		<if test="feedType != null and feedType != ''">
+			AND a.feed_type = #{feedType} 
+		</if> 
+		<!--feedBackId -->
+		<if test="feedBackId != null and feedBackId != ''">
+			AND a.feed_back_id = #{feedBackId} 
+		</if> 
+		<!--toId -->
+		<if test="toId != null and toId != ''">
+			AND a.to_id = #{toId} 
+		</if> 
+		<!-- transSerialNumber-->
+		<if test="transSerialNumber != null and transSerialNumber != ''">
+			AND a.trans_serial_number = #{transSerialNumber} 
+		</if> 
+		<!-- applicationId -->
+		<if test="applicationId != null and applicationId != ''">
+			AND a.application_id = #{applicationId} 
+		</if> 
+		<!-- operatorPhoneNumber -->
+		<if test="operatorPhoneNumber != null and operatorPhoneNumber != ''">
+			AND a.operator_phone_number = #{operatorPhoneNumber} 
+		</if> 
+		<!-- applicationOrgCode  -->
+		<if test="applicationOrgCode  != null and applicationOrgCode != ''"> 
+			AND a.plication_org_code = #{applicationOrgCode} 
+		</if> 
+		<!-- code  -->
+		<if test="code  != null and code != ''"> 
+			AND a.code = #{code} 
+		</if> 
+		<!-- riskStatus  -->
+		<if test="riskStatus  != null and riskStatus != ''"> 
+			AND a.risk_status = #{riskStatus} 
+		</if> 
+		<!-- request_event_type -->
+		<if test="requestEventType  != null and requestEventType != ''"> 
+			AND a.request_event_type = #{requestEventType} 
+		</if>
+		<!-- status -->
+		<if test="status  != null and status != ''"> 
+			AND a.status = #{status} 
+		</if>
+			<!-- 风控审核状态和状态都是失败的或者失败的，未上报的，上报失败的-->
+			AND a.risk_status != 'Y' 
+			AND a.status != 'Y'
+			AND a.request_event_type is NOT NULL
+			AND a.feed_type is NULL
+		</where> 
+		ORDER BY a.feed_back_id DESC
+	</select>
+  
+  	<delete id="deleteData">
+  		DELETE FROM pbc_feed_back WHERE feed_back_id=#{feedBackId};
+  	</delete>
+</mapper>

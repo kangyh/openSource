@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.SubscribeCollectionRecordDetailDao">
+    
+	<sql id="subscribeCollectionRecordDetailColumns">
+		a.collect_detail_id AS "collectDetailId",
+		a.subscribe_id AS "subscribeId",
+		a.merchant_id AS "merchantId",
+		a.merchant_user_id AS "merchantUserId",
+		a.collect_amount AS "collectAmount",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bank_name AS "bankName",
+		a.bank_id AS "bankId",
+		a.auth_code AS "authCode",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.status AS "status",
+		a.product_code AS "productCode",
+		a.trans_type AS "transType",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.fee_amount AS "feeAmount",
+		a.transfer_from AS "transferFrom"
+	</sql>
+	
+	<sql id="subscribeCollectionRecordDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="SubscribeCollectionRecordDetail">
+		SELECT 
+			<include refid="subscribeCollectionRecordDetailColumns"/>
+		FROM subscribe_collection_record_detail a
+		<include refid="subscribeCollectionRecordDetailJoins"/>
+		WHERE a.collect_detail_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SubscribeCollectionRecordDetail">
+		SELECT 
+			<include refid="subscribeCollectionRecordDetailColumns"/>
+		FROM subscribe_collection_record_detail a
+		<include refid="subscribeCollectionRecordDetailJoins"/>
+		<where>
+			
+			<if test="subscribeId != null and subscribeId != ''">
+				AND a.subscribe_id = #{subscribeId}
+			</if>
+			<if test="collectDetailId != null and collectDetailId != ''">
+				AND a.collect_detail_id = #{collectDetailId}
+			</if>
+			<if test="collectDetailId != null and collectDetailId != ''">
+				AND a.collect_detail_id = #{collectDetailId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantUserId != null and merchantUserId != ''">
+				AND a.merchant_user_id = #{merchantUserId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d 00:00:00') AND date_format(#{endCreateTime},'%Y-%m-%d 23:59:59')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SubscribeCollectionRecordDetail">
+		SELECT 
+			<include refid="subscribeCollectionRecordDetailColumns"/>
+		FROM subscribe_collection_record_detail a
+		<include refid="subscribeCollectionRecordDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO subscribe_collection_record_detail(
+			collect_detail_id,
+			subscribe_id,
+			merchant_id,
+			merchant_user_id,
+			collect_amount,
+			create_time,
+			update_time,
+			bankcard_no,
+			bankcard_owner_mobile,
+			bankcard_owner_name,
+			bankcard_owner_idcard,
+			bank_name,
+			bank_id,
+			auth_code,
+			merchant_order_no,
+			status,
+			product_code,
+			trans_type,
+			success_time,
+			success_amount,
+			fee_amount
+		) VALUES (
+			#{collectDetailId},
+			#{subscribeId},
+			#{merchantId},
+			#{merchantUserId},
+			#{collectAmount},
+			#{createTime},
+			#{updateTime},
+			#{bankcardNo},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerName},
+			#{bankcardOwnerIdcard},
+			#{bankName},
+			#{bankId},
+			#{authCode},
+			#{merchantOrderNo},
+			#{status},
+			#{productCode},
+			#{transType},
+			#{successTime},
+			#{successAmount},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE subscribe_collection_record_detail SET 	
+			collect_detail_id = #{collectDetailId},
+			subscribe_id = #{subscribeId},
+			merchant_id = #{merchantId},
+			merchant_user_id = #{merchantUserId},
+			collect_amount = #{collectAmount},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bank_name = #{bankName},
+			bank_id = #{bankId},
+			auth_code = #{authCode},
+			merchant_order_no = #{merchantOrderNo},
+			status = #{status},
+			product_code = #{productCode},
+			trans_type = #{transType},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM subscribe_collection_record_detail
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

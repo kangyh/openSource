@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.MerchantLogDao">
+    
+	<sql id="merchantLogColumns">
+		a.account_id AS "accountId",
+		a.log_id AS "logId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.merchant_type AS "merchantType",
+		a.trans_no AS "transNo",
+		a.settle_id AS "settleId",
+		a.payment_id AS "paymentId",
+		a.pay_num AS "payNum",
+		a.balance_amount_changes AS "balanceAmountChanges",
+		a.balance_amount AS "balanceAmount",
+		a.balance_freezed_amount AS "balanceFreezedAmount",
+		a.balance_available_amount AS "balanceAvailableAmount",
+		a.balance_available_withdraw_amount AS "balanceAvailableWithdrawAmount",
+		a.total_in_amount AS "totalInAmount",
+		a.total_out_amount AS "totalOutAmount",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.description AS "description",
+		a.remark AS "remark",
+		a.account_date AS "accountDate",
+		a.balance_direction AS "balanceDirection",
+		a.type AS "type",
+		a.account_mark AS "accountMark",
+		a.account_explain AS "accountExplain"
+	</sql>
+	
+	<sql id="merchantLogJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantLog">
+		SELECT 
+			<include refid="merchantLogColumns"/>
+		FROM merchant_log a
+		<include refid="merchantLogJoins"/>
+		WHERE a.log_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantLog">
+		SELECT 
+			<include refid="merchantLogColumns"/>
+		FROM merchant_log a
+		<include refid="merchantLogJoins"/>
+		<where>
+			
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="logId != null and logId != ''">
+				AND a.log_id = #{logId}
+			</if>
+			<!--<if test="transNo != null and transNo != ''">-->
+				<!--AND a.trans_no = #{transNo}-->
+			<!--</if>-->
+			<if test="settleId != null and settleId != ''">
+				AND a.settle_id = #{settleId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!--<if test="sourceSearch == 0">-->
+				<!--AND a.settle_id =''-->
+			<!--</if>-->
+			<!--<if test="sourceSearch == 1">-->
+				<!--AND a.settle_id !=''-->
+			<!--</if>-->
+			<!--<if test="sourceSearch == 1">-->
+				<!--<if test="settleId != null and settleId != ''">-->
+					<!--AND a.settle_id = #{settleId}-->
+				<!--</if>-->
+			<!--</if>-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="accountName != null and accountName != ''">
+				AND a.account_name LIKE CONCAT('%',#{accountName},'%')
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name LIKE CONCAT('%',#{merchantName},'%')
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="merchantType != null and merchantType != ''">
+				AND a.merchant_type = #{merchantType}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d 00:00:00') AND date_format(#{endCreateTime},'%Y-%m-%d 23:59:59')
+			</if>
+			<if test="accountCodesHidden != null and accountCodesHidden != ''">
+				AND a.account_id in
+		        <foreach item="item" index="index" collection="merchantIds" open="(" separator="," close=")">  
+				    #{merchantIds[${index}]}
+				</foreach> 
+			</if>
+			<if test="merchantIds != null and merchantIds.size > 0">
+				AND a.merchant_id in
+				<foreach item="merchantId" index="index" collection="merchantIds" open="(" separator="," close=")">
+					#{merchantIds[${index}]}
+				</foreach>
+			</if>
+		</where>
+			
+		<if test="sortOrder == 'ASC'">
+			ORDER BY logId ASC 
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY logId DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantLog">
+		SELECT 
+			<include refid="merchantLogColumns"/>
+		FROM merchant_log a
+		<include refid="merchantLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="checkMerchantLog" resultType="MerchantLog">
+		SELECT
+			<include refid="merchantLogColumns"/>
+		FROM merchant_log a
+		<where>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.type = #{transType}
+			</if>
+			<if test="accountMark != null and accountMark != ''">
+				AND a.account_mark = #{accountMark}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_log(
+			account_id,
+			log_id,
+			account_name,
+			merchant_id,
+			merchant_name,
+			merchant_type,
+			trans_no,
+			settle_id,
+			payment_id,
+			pay_num,
+			balance_amount_changes,
+			balance_amount,
+			balance_freezed_amount,
+			balance_available_amount,
+			balance_available_withdraw_amount,
+			total_in_amount,
+			total_out_amount,
+			create_time,
+			update_time,
+			description,
+			remark,
+			account_date,
+			balance_direction,
+			type
+		) VALUES (
+			#{accountId},
+			#{logId},
+			#{accountName},
+			#{merchantId},
+			#{merchantName},
+			#{merchantType},
+			#{transNo},
+			#{settleId},
+			#{paymentId},
+			#{payNum},
+			#{balanceAmountChanges},
+			#{balanceAmount},
+			#{balanceFreezedAmount},
+			#{balanceAvailableAmount},
+			#{balanceAvailableWithdrawAmount},
+			#{totalInAmount},
+			#{totalOutAmount},
+			#{createTime},
+			#{updateTime},
+			#{description},
+			#{remark},
+			#{accountDate},
+			#{balanceDirection},
+			#{type}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_log SET 	
+			account_id = #{accountId},
+			log_id = #{logId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			merchant_type = #{merchantType},
+			trans_no = #{transNo},
+			settle_id = #{settleId},
+			payment_id = #{paymentId},
+			pay_num = #{payNum},
+			balance_amount_changes = #{balanceAmountChanges},
+			balance_amount = #{balanceAmount},
+			balance_freezed_amount = #{balanceFreezedAmount},
+			balance_available_amount = #{balanceAvailableAmount},
+			balance_available_withdraw_amount = #{balanceAvailableWithdrawAmount},
+			total_in_amount = #{totalInAmount},
+			total_out_amount = #{totalOutAmount},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			description = #{description},
+			remark = #{remark},
+			account_date = #{accountDate},
+			balance_direction = #{balanceDirection},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_log
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getListByLogIds" parameterType="java.util.Map"  resultType="MerchantLog">
+		SELECT 
+			<include refid="merchantLogColumns"/>
+		FROM merchant_log a
+		<where>
+			<if test="logIds != null">
+				AND a.log_id in
+		        <foreach item="item" index="index" collection="logIds" open="(" separator="," close=")">  
+				    #{logIds[${index}]}
+				</foreach> 
+			</if>
+		</where>
+	</select>
+	
+	<select id="getLogId" resultType="MerchantLog">
+		SELECT 
+			max(a.log_id) as logId
+		FROM merchant_log a
+	</select>
+	<select id="getSumList" parameterType="java.util.Map" resultType="com.heepay.manage.modules.payment.entity.MerchantLogSum"> 
+		SELECT type,
+		sum(
+			CASE
+			balance_direction
+			WHEN 'D'
+			THEN balance_amount_changes
+			ELSE 0
+			END
+		)AS leftAmount,
+		sum(
+			CASE
+			balance_direction
+			WHEN 'C'
+			THEN balance_amount_changes
+			ELSE 0
+			END
+		) AS rightAmount
+		FROM merchant_log 
+		WHERE 
+			substring(account_id,5,3) = '200' 
+		<![CDATA[
+			AND create_time >= #{beginCreateTime} 
+			AND create_time <= #{endCreateTime}  
+		]]>
+		group by type
+	</select>	
+</mapper>

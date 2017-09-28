@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.trial.dao.MerchantAccountMonthDailyDao">
+    
+	<sql id="merchantAccountMonthDailyColumns">
+		a.id AS "id",
+		a.account_id AS "accountId",
+		a.merchant_id AS "merchantId",
+		a.out_money AS "outMoney",
+		a.in_money AS "inMoney",
+		a.beginning_balances AS "beginningBalances",
+		a.ending_balances AS "endingBalances",
+		a.account_title AS "accountTitle",
+		a.account_month AS "accountMonth",
+		a.account_date AS "accountDate",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="merchantAccountMonthDailyJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantAccountMonthDaily">
+		SELECT 
+			<include refid="merchantAccountMonthDailyColumns"/>
+		FROM merchant_account_month_daily a
+		<include refid="merchantAccountMonthDailyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantAccountMonthDaily">
+		SELECT 
+			<include refid="merchantAccountMonthDailyColumns"/>
+		FROM merchant_account_month_daily a
+		<include refid="merchantAccountMonthDailyJoins"/>
+		<where>
+			
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id = #{accountId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="accountMonth != null and accountMonth != ''">
+				AND a.account_month = #{accountMonth}
+			</if>
+		</where>
+		ORDER BY account_month DESC
+	</select>
+	
+	<select id="findAllList" resultType="MerchantAccountMonthDaily">
+		SELECT 
+			<include refid="merchantAccountMonthDailyColumns"/>
+		FROM merchant_account_month_daily a
+		<include refid="merchantAccountMonthDailyJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_account_month_daily(
+			id,
+			account_id,
+			merchant_id,
+			out_money,
+			in_money,
+			beginning_balances,
+			ending_balances,
+			account_title,
+			account_month,
+			account_date,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{accountId},
+			#{merchantId},
+			#{outMoney},
+			#{inMoney},
+			#{beginningBalances},
+			#{endingBalances},
+			#{accountTitle},
+			#{accountMonth},
+			#{accountDate},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_account_month_daily SET 	
+			account_id = #{accountId},
+			merchant_id = #{merchantId},
+			out_money = #{outMoney},
+			in_money = #{inMoney},
+			beginning_balances = #{beginningBalances},
+			ending_balances = #{endingBalances},
+			account_title = #{accountTitle},
+			account_month = #{accountMonth},
+			account_date = #{accountDate},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_account_month_daily
+		WHERE id = #{id}
+	</update>
+	<update id="deleteByCreateTime">
+		DELETE FROM merchant_account_month_daily
+		WHERE create_time    &lt; #{createTime}
+	</update>
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO merchant_account_month_daily(
+			account_id,
+			merchant_id,
+			out_money,
+			in_money,
+			beginning_balances,
+			ending_balances,
+			account_title,
+			account_month,
+			account_date,
+			create_time,
+			update_time			
+		) VALUES 	
+    <foreach collection ="list" item ="item" index ="index" separator =",">
+   	 (#{item.accountId},#{item.merchantId},#{item.outMoney}, #{item.inMoney},#{item.beginningBalances}, 
+   	  #{item.endingBalances},#{item.accountTitle},#{item.accountMonth},#{item.accountDate}
+   	  ,#{item.createTime},#{item.updateTime})
+     </foreach>		
+	</insert>
+</mapper>

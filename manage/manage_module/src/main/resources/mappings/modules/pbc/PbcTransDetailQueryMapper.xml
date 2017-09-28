@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcTransDetailQueryDao" >
+  
+  <sql id="includeEntity">
+	  payment_account_trans_detail_id, data_type, 
+      data, inquiry_mode, subject_type, 
+      start_time, expire_time, application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcTransDetailQuery">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_detail_query a
+		<where>
+			
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND trans_start_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 更新时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND trans_end_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- dataType-->
+			<if test="dataType != null and dataType != ''">
+				AND data_type = #{dataType} 
+			</if> 
+			<!--paymentAccountDetailType -->
+			<if test="paymentAccountDetailType != null and paymentAccountDetailType != ''">
+				AND payment_account_detail_type = #{paymentAccountDetailType} 
+			</if> 
+			<!-- applicationCode -->
+			<if test="applicationCode != null and applicationCode != ''">
+				AND application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY payment_account_trans_detail_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY payment_account_trans_detail_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  <insert id="save" parameterType="PbcTransDetailQuery" >
+    insert into pbc_trans_detail_query (payment_account_trans_detail_id, data_type, 
+      data, inquiry_mode, subject_type, 
+      start_time, expire_time, application_code
+      )
+    values (#{paymentAccountTransDetailId,jdbcType=BIGINT}, #{dataType,jdbcType=VARCHAR}, 
+      #{data,jdbcType=VARCHAR}, #{inquiryMode,jdbcType=VARCHAR}, #{subjectType,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{applicationCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="saveEntity" parameterType="PbcTransDetailQuery" useGeneratedKeys="true" keyProperty="paymentAccountTransDetailId">
+    insert into pbc_trans_detail_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountTransDetailId != null" >
+        payment_account_trans_detail_id,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+      <if test="inquiryMode != null" >
+        inquiry_mode,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="expireTime != null" >
+        expire_time,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountTransDetailId != null" >
+        #{paymentAccountTransDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="inquiryMode != null" >
+        #{inquiryMode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="PbcTransDetailQuery" >
+    update pbc_trans_detail_query
+    <set >
+      <if test="dataType != null" >
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        data = #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="inquiryMode != null" >
+        inquiry_mode = #{inquiryMode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        subject_type = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where payment_account_trans_detail_id = #{paymentAccountTransDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="update" parameterType="PbcTransDetailQuery" >
+    update pbc_trans_detail_query
+    set data_type = #{dataType,jdbcType=VARCHAR},
+      data = #{data,jdbcType=VARCHAR},
+      inquiry_mode = #{inquiryMode,jdbcType=VARCHAR},
+      subject_type = #{subjectType,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where payment_account_trans_detail_id = #{paymentAccountTransDetailId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getEntityById" resultType="PbcTransDetailQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_detail_query a
+	WHERE payment_account_trans_detail_id = #{paymentAccountTransDetailId}
+  </select>
+  
+  <select id="getQueryInfoId" resultType="PbcTransDetailQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_detail_query a
+	WHERE application_code = #{applicationCode}
+  </select>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.profit.AgentProfitDao">
+    
+	<sql id="agentProfitColumns">
+		a.id AS "id",
+		a.profit_date as "profitDate",
+		b.agent_name AS "agentName",
+		a.agent_id AS "agentId",
+		b.agent_code AS "agentCode",
+		a.merchant_num as "merchantNum",
+		a.settle_begin_date AS "settleBeginDate",
+		a.settle_end_date AS "settleEndDate",
+		a.trans_total_count AS "transTotalCount",
+		a.trans_total_amount AS "transTotalAmount",
+		a.fee_total_amount AS "feeTotalAmount",
+		a.profit_total_amount AS "profitTotalAmount",
+		a.apply_amount AS "applyAmount",
+		a.recv_amount AS "recvAmount",
+		a.avai_apply_amount AS "avaiApplyAmount",
+		a.remark AS "remark",
+		a.pay_status AS "payStatus"
+	</sql>
+	
+	<sql id="agentProfitJoins">
+		left JOIN agent_info b ON a.agent_id = b.id
+	</sql>
+    
+	<select id="get" resultType="AgentProfit">
+		SELECT 
+			<include refid="agentProfitColumns"/>
+		FROM agent_profit a
+		<include refid="agentProfitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AgentProfit">
+		SELECT 
+			<include refid="agentProfitColumns"/>
+		FROM agent_profit a
+		<include refid="agentProfitJoins"/>
+		<where>
+			<if test="agentCode != null and agentCode != ''">
+				AND b.agent_code like
+				<if test="dbName == 'oracle'">'%'||#{agentCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCode},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND b.agent_name like
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND a.settle_begin_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND a.settle_end_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="profitDate != null and profitDate != ''">
+				AND a.profit_date = #{profitDate}
+			</if>
+			<if test="profitDateBegin != null and profitDateEnd != null and profitDateBegin != '' and profitDateEnd != ''">
+				AND a.profit_date BETWEEN #{profitDateBegin} AND #{profitDateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findListTotal" resultType="AgentProfit">
+		SELECT
+		  	a.profit_date as "profitDate",
+			a.pay_status as "payStatus",
+			sum(a.trans_total_count) as "transTotalCount",
+			sum(a.merchant_num) as "merchantNum",
+			sum(a.trans_total_amount) as "transTotalAmount",
+			sum(a.fee_total_amount) as "feeTotalAmount",
+			count(a.agent_id) as "agentId",
+			sum(a.profit_total_amount) AS "profitTotalAmount"
+		FROM agent_profit a
+		<where>
+			<if test="profitDateBegin != null and profitDateEnd != null and profitDateBegin != '' and profitDateEnd != ''">
+				AND a.profit_date BETWEEN #{profitDateBegin} AND #{profitDateEnd}
+			</if>
+		</where>
+		GROUP BY a.profit_date,a.pay_status
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AgentProfit">
+		SELECT 
+			<include refid="agentProfitColumns"/>
+		FROM agent_profit a
+		<include refid="agentProfitJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO agent_profit(
+			agent_id,
+			settle_begin_date,
+			settle_end_date,
+			trans_total_count,
+			trans_total_amount,
+			profit_total_amount,
+			apply_amount,
+			recv_amount,
+			avai_apply_amount,
+			remark
+		) VALUES (
+			#{agentId},
+			#{settleBeginDate},
+			#{settleEndDate},
+			#{transTotalCount},
+			#{transTotalAmount},
+			#{profitTotalAmount},
+			#{applyAmount},
+			#{recvAmount},
+			#{avaiApplyAmount},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE agent_profit SET 	
+			settle_begin_date = #{settleBeginDate},
+			settle_end_date = #{settleEndDate},
+			trans_total_count = #{transTotalCount},
+			trans_total_amount = #{transTotalAmount},
+			profit_total_amount = #{profitTotalAmount},
+			apply_amount = #{applyAmount},
+			recv_amount = #{recvAmount},
+			avai_apply_amount = #{avaiApplyAmount},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updatePayStatus">
+		UPDATE agent_profit SET
+		pay_status = 'PAYSUC'
+		WHERE profit_date = #{profitDate}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM agent_profit
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

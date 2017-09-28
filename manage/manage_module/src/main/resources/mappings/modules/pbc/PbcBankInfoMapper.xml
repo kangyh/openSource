@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcBankInfoDao" >
+  
+  <sql id="includeEntity">
+	  a.pbc_id, 
+      a.bank_id, 
+      a.bank_name, 
+      a.bank_account, 
+      a.card_type, 
+      a.card_validation, 
+      a.card_expiry_date, 
+      a.card_info, 
+      a.application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcBankInfo">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_bank_info a
+		<where>
+			<!-- bankId -->
+			<if test="bankId != null and bankId != ''">
+				AND a.bank_id = #{bankId} 
+			</if> 
+			<!-- bankAccount  -->
+			<if test="bankAccount  != null and bankAccount != ''"> 
+				AND a.bank_account = #{bankAccount} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND a.application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY pbc_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY pbc_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  
+  <insert id="save" parameterType="PbcBankInfo" >
+   insert into pbc_bank_info (pbc_id,bank_id, bank_name, 
+      bank_account, card_type, card_validation, 
+      card_expiry_date, card_info, application_code
+      )
+    values (#{pbcId,jdbcType=BIGINT},#{bankId,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankAccount,jdbcType=VARCHAR}, #{cardType,jdbcType=VARCHAR}, #{cardValidation,jdbcType=VARCHAR}, 
+      #{cardExpiryDate,jdbcType=VARCHAR}, #{cardInfo,jdbcType=VARCHAR}, #{applicationCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
+  <delete id="delete" parameterType="PbcBankInfo" >
+	  delete from pbc_bank_info
+	  where 1=1
+	  <choose>
+	  	<when test="pbcId != null and pbcId != ''">
+	  		AND pbc_id = #{pbcId,jdbcType=BIGINT}
+	  	</when>
+	  	<otherwise>
+	  		AND application_code = #{applicationCode,jdbcType=VARCHAR}
+	  	</otherwise>
+	  </choose>
+  </delete>
+  
+  <insert id="saveEntity" parameterType="PbcBankInfo" useGeneratedKeys="true" keyProperty="pbcId">
+    insert into pbc_bank_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        pbc_id,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankAccount != null" >
+        bank_account,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardValidation != null" >
+        card_validation,
+      </if>
+      <if test="cardExpiryDate != null" >
+        card_expiry_date,
+      </if>
+      <if test="cardInfo != null" >
+        card_info,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        #{pbcId,jdbcType=BIGINT},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValidation != null" >
+        #{cardValidation,jdbcType=VARCHAR},
+      </if>
+      <if test="cardExpiryDate != null" >
+        #{cardExpiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="cardInfo != null" >
+        #{cardInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="PbcBankInfo" >
+    update pbc_bank_info
+    <set >
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        bank_account = #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValidation != null" >
+        card_validation = #{cardValidation,jdbcType=VARCHAR},
+      </if>
+      <if test="cardExpiryDate != null" >
+        card_expiry_date = #{cardExpiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="cardInfo != null" >
+        card_info = #{cardInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcBankInfo" >
+     update pbc_bank_info
+    set bank_id = #{bankId,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_account = #{bankAccount,jdbcType=VARCHAR},
+      card_type = #{cardType,jdbcType=VARCHAR},
+      card_validation = #{cardValidation,jdbcType=VARCHAR},
+      card_expiry_date = #{cardExpiryDate,jdbcType=VARCHAR},
+      card_info = #{cardInfo,jdbcType=VARCHAR},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getEntityById" resultType="PbcBankInfo">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_bank_info a
+	WHERE pbc_id = #{pbcId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcBankInfo">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_bank_info a
+	WHERE application_code = #{applicationCode}
+  </select>
+  
+  <insert id="insertValue" parameterType="List">
+  		insert into pbc_bank_info (pbc_id, bank_id, bank_name, 
+      bank_account, card_type, card_validation, 
+      card_expiry_date, card_info, application_code
+      )
+    values 
+    	<foreach collection="list" item="item" index="index" separator=",">
+     (#{item.pbcId}, #{item.bankId}, #{item.bankName}, 
+      #{item.bankAccount}, #{item.cardType}, #{item.cardValidation}, 
+      #{item.cardExpiryDate}, #{item.cardInfo}, #{item.applicationCode}
+      )
+    </foreach>
+  </insert>
+  
+  <insert id="saveMap"  parameterType="Map">
+	 insert into pbc_bank_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankAccount != null" >
+        bank_account,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardValidation != null" >
+        card_validation,
+      </if>
+      <if test="cardExpiryDate != null" >
+        card_expiry_date,
+      </if>
+      <if test="cardInfo != null" >
+        card_info,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null" >
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="cardValidation != null" >
+        #{cardValidation,jdbcType=VARCHAR},
+      </if>
+      <if test="cardExpiryDate != null" >
+        #{cardExpiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="cardInfo != null" >
+        #{cardInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getListByMerchantNumber" resultType="PbcBankInfo">
+  		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_bank_info a
+		WHERE a.merchant_number = #{merchantNumber}
+  </select>
+</mapper>

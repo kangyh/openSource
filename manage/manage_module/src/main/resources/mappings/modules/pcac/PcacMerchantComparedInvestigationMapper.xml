@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pcac.dao.PcacMerchantComparedInvestigationDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigation" >
+    <id column="investigation_id" property="investigationId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pcac_merchant_compared_investigation
+    where investigation_id = #{investigationId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigation" >
+    insert into pcac_merchant_compared_investigation (investigation_id, batch_no, code, 
+      name, legal_name, create_time
+      )
+    values (#{investigationId,jdbcType=BIGINT}, #{batchNo,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.pcac.entity.PcacMerchantComparedInvestigation" >
+    update pcac_merchant_compared_investigation
+    set batch_no = #{batchNo,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where investigation_id = #{investigationId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select investigation_id, batch_no, code, name, legal_name, create_time
+    from pcac_merchant_compared_investigation
+    where investigation_id = #{investigationId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select investigation_id, batch_no, code, name, legal_name, create_time
+    from pcac_merchant_compared_investigation
+  </select>
+  
+   <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="PcacMerchantComparedInvestigationColumns">
+		a.investigation_id AS "investigationId",
+		a.batch_no AS "bachNo",
+		a.code AS "code",
+		a.name AS "name",
+		a.legal_name AS "legalName",
+		a.create_time AS "createTime"
+	</sql>
+	
+  <!-- 分页 -->
+  	<select id="findList" resultType="PcacMerchantComparedInvestigation">
+		SELECT 
+			investigation_id, batch_no, code, 
+             name, legal_name, create_time
+		FROM pcac_merchant_compared_investigation a
+		<where>
+			<!-- 日期 -->
+			<if test="name != null and name != ''">
+			      AND a.name = #{name} 
+			</if>
+			
+			<!-- 日期 -->
+			<if test="beginCheckTime != null and endCheckTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCheckTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCheckTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<if test="batchNo != null and batchNo != ''">
+				AND a.batch_no = #{batchNo} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY investigation_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY investigation_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出通道侧清算记录文件专用SQL -->
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="PcacMerchantComparedInvestigationColumns"/>
+		FROM pcac_merchant_compared_investigation a
+		<where>
+		<!-- 日期 -->
+			<if test="name != null and name != ''">
+			      AND a.name = #{name} 
+			</if>
+			
+			<!-- 通道对账日期 -->
+			<if test="beginCheckTime != null">
+				<![CDATA[   and DATE_FORMAT(a.create_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginCheckTime}, '%Y-%m-%d')   ]]>
+			</if>
+			<if test="endCheckTime != null">
+				<![CDATA[  and DATE_FORMAT(a.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{endCheckTime}, '%Y-%m-%d')    ]]>
+			</if>
+		</where>
+		ORDER BY investigation_id desc
+	</select>
+</mapper>

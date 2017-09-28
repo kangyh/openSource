@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.heepay.billing.dao.SettleChannelLogMapper" >
+<resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleChannelLog" >
+    <id column="log_id" property="logId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="check_bath_no" property="checkBathNo" jdbcType="VARCHAR" />
+    <result column="oper_begin_time" property="operBeginTime" jdbcType="TIMESTAMP" />
+    <result column="oper_end_time" property="operEndTime" jdbcType="TIMESTAMP" />
+    <result column="in_record_num" property="inRecordNum" jdbcType="BIGINT" />
+    <result column="in_total_amount" property="inTotalAmount" jdbcType="DECIMAL" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_file_name" property="checkFileName" jdbcType="VARCHAR" />
+    <result column="out_record_num" property="outRecordNum" jdbcType="BIGINT" />
+    <result column="out_total_amount" property="outTotalAmount" jdbcType="DECIMAL" />
+    <result column="record_num" property="recordNum" jdbcType="BIGINT" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="error_record_num" property="errorRecordNum" jdbcType="BIGINT" />
+    <result column="error_total_amount" property="errorTotalAmount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="check_file_where" property="checkFileWhere" jdbcType="VARCHAR" />
+    <result column="check_file_from" property="checkFileFrom" jdbcType="VARCHAR" />
+    <result column="rule_type" property="ruleType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    log_id, channel_code, channel_type, check_bath_no, oper_begin_time, oper_end_time, 
+    in_record_num, in_total_amount, check_status, check_file_name, out_record_num, out_total_amount, 
+    record_num, total_amount, error_record_num, error_total_amount, remark, check_file_where, 
+    check_file_from,rule_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleChannelLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_channel_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_channel_log
+    where log_id = #{logId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_channel_log
+    where log_id = #{logId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleChannelLogExample" >
+    delete from settle_channel_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleChannelLog" >
+    insert into settle_channel_log (log_id, channel_code, channel_type, 
+      check_bath_no, oper_begin_time, oper_end_time, 
+      in_record_num, in_total_amount, check_status, 
+      check_file_name, out_record_num, out_total_amount, 
+      record_num, total_amount, error_record_num, 
+      error_total_amount, remark, check_file_where, 
+      check_file_from,rule_type)
+    values (#{logId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, 
+      #{checkBathNo,jdbcType=VARCHAR}, #{operBeginTime,jdbcType=TIMESTAMP}, #{operEndTime,jdbcType=TIMESTAMP}, 
+      #{inRecordNum,jdbcType=BIGINT}, #{inTotalAmount,jdbcType=DECIMAL}, #{checkStatus,jdbcType=VARCHAR}, 
+      #{checkFileName,jdbcType=VARCHAR}, #{outRecordNum,jdbcType=BIGINT}, #{outTotalAmount,jdbcType=DECIMAL}, 
+      #{recordNum,jdbcType=BIGINT}, #{totalAmount,jdbcType=DECIMAL}, #{errorRecordNum,jdbcType=BIGINT}, 
+      #{errorTotalAmount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{checkFileWhere,jdbcType=VARCHAR}, 
+      #{checkFileFrom,jdbcType=VARCHAR}, #{ruleType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleChannelLog" >
+    insert into settle_channel_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no,
+      </if>
+      <if test="operBeginTime != null" >
+        oper_begin_time,
+      </if>
+      <if test="operEndTime != null" >
+        oper_end_time,
+      </if>
+      <if test="inRecordNum != null" >
+        in_record_num,
+      </if>
+      <if test="inTotalAmount != null" >
+        in_total_amount,
+      </if>
+      <if test="checkStatus != null" >
+        check_status,
+      </if>
+      <if test="checkFileName != null" >
+        check_file_name,
+      </if>
+      <if test="outRecordNum != null" >
+        out_record_num,
+      </if>
+      <if test="outTotalAmount != null" >
+        out_total_amount,
+      </if>
+      <if test="recordNum != null" >
+        record_num,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+      <if test="errorRecordNum != null" >
+        error_record_num,
+      </if>
+      <if test="errorTotalAmount != null" >
+        error_total_amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="checkFileWhere != null" >
+        check_file_where,
+      </if>
+      <if test="checkFileFrom != null" >
+        check_file_from,
+      </if>
+       <if test="ruleType != null" >
+        rule_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="checkBathNo != null" >
+        #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operBeginTime != null" >
+        #{operBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operEndTime != null" >
+        #{operEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inRecordNum != null" >
+        #{inRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="inTotalAmount != null" >
+        #{inTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkStatus != null" >
+        #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileName != null" >
+        #{checkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="outRecordNum != null" >
+        #{outRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="outTotalAmount != null" >
+        #{outTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="recordNum != null" >
+        #{recordNum,jdbcType=BIGINT},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="errorRecordNum != null" >
+        #{errorRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="errorTotalAmount != null" >
+        #{errorTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileWhere != null" >
+        #{checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileFrom != null" >
+        #{checkFileFrom,jdbcType=VARCHAR},
+      </if>
+       <if test="ruleType != null" >
+        #{ruleType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleChannelLogExample" resultType="java.lang.Integer" >
+    select count(*) from settle_channel_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_channel_log
+    <set >
+      <if test="record.logId != null" >
+        log_id = #{record.logId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelCode != null" >
+        channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkBathNo != null" >
+        check_bath_no = #{record.checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operBeginTime != null" >
+        oper_begin_time = #{record.operBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.operEndTime != null" >
+        oper_end_time = #{record.operEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.inRecordNum != null" >
+        in_record_num = #{record.inRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.inTotalAmount != null" >
+        in_total_amount = #{record.inTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.checkStatus != null" >
+        check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFileName != null" >
+        check_file_name = #{record.checkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outRecordNum != null" >
+        out_record_num = #{record.outRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.outTotalAmount != null" >
+        out_total_amount = #{record.outTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recordNum != null" >
+        record_num = #{record.recordNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.totalAmount != null" >
+        total_amount = #{record.totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.errorRecordNum != null" >
+        error_record_num = #{record.errorRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="record.errorTotalAmount != null" >
+        error_total_amount = #{record.errorTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFileWhere != null" >
+        check_file_where = #{record.checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkFileFrom != null" >
+        check_file_from = #{record.checkFileFrom,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_channel_log
+    set log_id = #{record.logId,jdbcType=BIGINT},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      channel_type = #{record.channelType,jdbcType=VARCHAR},
+      check_bath_no = #{record.checkBathNo,jdbcType=VARCHAR},
+      oper_begin_time = #{record.operBeginTime,jdbcType=TIMESTAMP},
+      oper_end_time = #{record.operEndTime,jdbcType=TIMESTAMP},
+      in_record_num = #{record.inRecordNum,jdbcType=BIGINT},
+      in_total_amount = #{record.inTotalAmount,jdbcType=DECIMAL},
+      check_status = #{record.checkStatus,jdbcType=VARCHAR},
+      check_file_name = #{record.checkFileName,jdbcType=VARCHAR},
+      out_record_num = #{record.outRecordNum,jdbcType=BIGINT},
+      out_total_amount = #{record.outTotalAmount,jdbcType=DECIMAL},
+      record_num = #{record.recordNum,jdbcType=BIGINT},
+      total_amount = #{record.totalAmount,jdbcType=DECIMAL},
+      error_record_num = #{record.errorRecordNum,jdbcType=BIGINT},
+      error_total_amount = #{record.errorTotalAmount,jdbcType=DECIMAL},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      check_file_where = #{record.checkFileWhere,jdbcType=VARCHAR},
+      check_file_from = #{record.checkFileFrom,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleChannelLog" >
+    update settle_channel_log
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no = #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operBeginTime != null" >
+        oper_begin_time = #{operBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operEndTime != null" >
+        oper_end_time = #{operEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inRecordNum != null" >
+        in_record_num = #{inRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="inTotalAmount != null" >
+        in_total_amount = #{inTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileName != null" >
+        check_file_name = #{checkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="outRecordNum != null" >
+        out_record_num = #{outRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="outTotalAmount != null" >
+        out_total_amount = #{outTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="recordNum != null" >
+        record_num = #{recordNum,jdbcType=BIGINT},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="errorRecordNum != null" >
+        error_record_num = #{errorRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="errorTotalAmount != null" >
+        error_total_amount = #{errorTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileWhere != null" >
+        check_file_where = #{checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileFrom != null" >
+        check_file_from = #{checkFileFrom,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleChannelLog" >
+    update settle_channel_log
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      check_bath_no = #{checkBathNo,jdbcType=VARCHAR},
+      oper_begin_time = #{operBeginTime,jdbcType=TIMESTAMP},
+      oper_end_time = #{operEndTime,jdbcType=TIMESTAMP},
+      in_record_num = #{inRecordNum,jdbcType=BIGINT},
+      in_total_amount = #{inTotalAmount,jdbcType=DECIMAL},
+      check_status = #{checkStatus,jdbcType=VARCHAR},
+      check_file_name = #{checkFileName,jdbcType=VARCHAR},
+      out_record_num = #{outRecordNum,jdbcType=BIGINT},
+      out_total_amount = #{outTotalAmount,jdbcType=DECIMAL},
+      record_num = #{recordNum,jdbcType=BIGINT},
+      total_amount = #{totalAmount,jdbcType=DECIMAL},
+      error_record_num = #{errorRecordNum,jdbcType=BIGINT},
+      error_total_amount = #{errorTotalAmount,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      check_file_where = #{checkFileWhere,jdbcType=VARCHAR},
+      check_file_from = #{checkFileFrom,jdbcType=VARCHAR}
+    where log_id = #{logId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据对账状态查询对账日志表中对账批次号 -->
+  <select id="findSettleChannelLogCheckBathByCheckStatus" parameterType="map" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_channel_log 
+    <where>
+    	AND check_status = #{checkStatus,jdbcType=VARCHAR}
+    	AND check_bath_no = #{checkBathNo,jdbcType=VARCHAR}
+    </where>
+  </select>
+  
+  <!-- 根据对账的结果更新对账日志表 -->
+  <update id="updateSettleChannelLog" parameterType="map" >
+    update settle_channel_log
+    <set>
+      <if test="operEndTime != null" >
+        oper_end_time = #{operEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordNum != null" >
+        record_num = #{recordNum,jdbcType=BIGINT},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=VARCHAR},
+      </if>      
+      <if test="inRecordNum != null" >
+        in_record_num = #{inRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="outRecordNum != null" >
+        out_record_num = #{outRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="inTotalAmount != null" >
+        in_total_amount = #{inTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="outTotalAmount != null" >
+        out_total_amount = #{outTotalAmount,jdbcType=DECIMAL},
+      </if>		
+      <if test="errorRecordNum != null" >
+        error_record_num = #{errorRecordNum,jdbcType=BIGINT},
+      </if>
+      <if test="errorTotalAmount != null" >
+        error_total_amount = #{errorTotalAmount,jdbcType=DECIMAL},
+      </if>	
+    </set>
+    where check_bath_no = #{checkBathNo,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByCheckBathNo" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    	<include refid="Base_Column_List" /> 
+        from settle_channel_log 
+    		WHERE 
+    	 check_bath_no = #{checkBathNo,jdbcType=VARCHAR}
+    
+  </select>
+  
+  <select id="fingSettleChannelLog" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    	<include refid="Base_Column_List" /> 
+        from settle_channel_log 
+    		WHERE 
+    	 check_file_name = #{file,jdbcType=VARCHAR}
+    
+  </select>
+ 
+  <select id="selectListEntity" resultType="com.heepay.billing.entity.SettleChannelLog" parameterType="com.heepay.billing.entity.SettleChannelLog">
+  	SELECT 
+  		a.log_id AS "logId",
+		a.channel_code AS "channelCode",
+		a.channel_type AS "channelType",
+		a.check_bath_no AS "checkBathNo",
+		a.oper_begin_time AS "operBeginTime",
+		a.oper_end_time AS "operEndTime",
+		a.record_num AS "recordNum",
+		a.total_amount AS "totalAmount",
+		a.check_status AS "checkStatus",
+		a.check_file_name AS "checkFileName"
+	FROM  settle_channel_log a WHERE a.check_status=#{checkStatus}
+  </select>
+  
+  <!-- 查询对账日志，判断是否有符合条件的对账文件 -->
+  <select id="querySettleChannelLog" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    	<include refid="Base_Column_List" /> 
+    from 
+    	settle_channel_log 
+   	WHERE 
+    	channel_code = #{channelCode,jdbcType=VARCHAR} and channel_type=#{channelType,jdbcType=VARCHAR} 
+    	and check_bath_no=#{checkBathNo,jdbcType=VARCHAR} and check_status=#{checkStatus,jdbcType=VARCHAR}
+  </select>
+  
+   
+	 <!-- @方法说明：通过对账状态，查询对账日志 -->
+	 <!-- @author xuangang -->	 
+  <select id="querySettleChannelLogByCheckStatus" parameterType="map" resultMap="BaseResultMap">
+     select 
+    	<include refid="Base_Column_List" /> 
+     from 
+    	settle_channel_log 
+   	 WHERE check_status=#{checkStatus,jdbcType=VARCHAR}
+  </select>
+  
+  	<!-- 查找通道数据，条件code,type,operbegintime -->
+  	<select id="selectByCodeAndType" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    	<include refid="Base_Column_List" /> 
+    from 
+    	settle_channel_log 
+   	WHERE 
+    	channel_code = #{channelCode,jdbcType=VARCHAR} and channel_type=#{channelType,jdbcType=VARCHAR} 
+    	and oper_begin_time &gt; #{operBeginTime,jdbcType=VARCHAR} and oper_begin_time &lt; now();
+  </select>
+  
+  
+  	<!-- 查找通道数据，条件状态,operbegintime -->
+  	<select id="selectByCheckStatus" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    	<include refid="Base_Column_List" /> 
+    from 
+    	settle_channel_log 
+   	WHERE 
+    	check_status = #{checkStatus,jdbcType=VARCHAR} 
+    	and oper_begin_time &gt; #{operBeginTime,jdbcType=VARCHAR} and oper_begin_time &lt; now();
+  </select>
+  
+  <!-- 查找通道数据，条件状态,operbegintime -->
+  	<select id="selectByOperBeginTime" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    	<include refid="Base_Column_List" /> 
+    from 
+    	settle_channel_log 
+   	WHERE 
+    	oper_begin_time &gt; #{operBeginTime,jdbcType=VARCHAR} and oper_begin_time &lt; now();
+  </select>
+</mapper>
+
+
+
+

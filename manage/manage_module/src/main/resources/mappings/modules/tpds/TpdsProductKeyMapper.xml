@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.tpds.dao.TpdsProductKeyDao" >
+    <sql id="includeEntity" >
+    key_id, 
+    merchant_no, 
+    product_code, 
+    product_name, 
+    sign_key, 
+    trans_type,
+    create_operator, 
+    create_time, 
+    update_operator, 
+    update_time
+  </sql>
+  <select id="findList" resultType="TpdsProductKey">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM tpds_product_key
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				<!-- AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s') -->
+				<![CDATA[   and DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s')>=  DATE_FORMAT(#{beginOperEndTime}, '%Y-%m-%d %H:%i:%s')   ]]>
+				<![CDATA[  and DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endOperEndTime}, '%Y-%m-%d %H:%i:%s')    ]]>
+			</if>
+			
+			<!-- 商户编码-->
+			<if test="merchantNo != null and merchantNo != ''">
+				AND merchant_no = #{merchantNo} 
+			</if> 
+			
+			<!-- 交易类型 -->
+			<if test="transType != null and transType != ''">
+				AND trans_type = #{transType} 
+			</if> 
+			
+			<!-- 产品名称-->
+			<if test="productCode != null and productCode != ''">
+				AND product_code = #{productCode} 
+			</if>
+			
+		</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY key_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY key_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getEntityById" resultType="TpdsProductKey" parameterType="java.lang.Integer">
+  	select 
+    <include refid="includeEntity" />
+    from tpds_product_key
+    WHERE key_id = #{keyId}
+  </select>
+  
+   <insert id="saveEntity" parameterType="TpdsProductKey" >
+    insert into tpds_product_key
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+       <if test="keyId != null" >
+        key_id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="signKey != null" >
+        sign_key,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="createOperator != null" >
+        create_operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateOperator != null" >
+        update_operator,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     <if test="keyId != null" >
+        #{keyId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="signKey != null" >
+        #{signKey,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperator != null" >
+        #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="TpdsProductKey" >
+    update tpds_product_key
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="signKey != null" >
+        sign_key = #{signKey,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperator != null" >
+        create_operator = #{createOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperator != null" >
+        update_operator = #{updateOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where key_id = #{keyId,jdbcType=INTEGER}
+     </update>
+     
+</mapper>

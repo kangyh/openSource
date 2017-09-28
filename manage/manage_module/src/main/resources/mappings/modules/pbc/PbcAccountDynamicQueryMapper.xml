@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcAccountDynamicQueryDao" >
+  
+    <sql id="includeEntity">
+	  a.account_dynamic_id, 
+	  a.data_type, 
+	  a.account_number, 
+      a.subject_type, 
+      a.id_type, 
+      a.id_number, 
+      a.start_time, 
+      a.expire_time, 
+      a.application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcAccountDynamicQuery">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic_query a
+		<where>
+			
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.start_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 更新时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.end_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!--accountNumber -->
+			<if test="accountNumber != null and accountNumber != ''">
+				AND a.account_number = #{accountNumber} 
+			</if> 
+			<!-- subjectType-->
+			<if test="subjectType != null and subjectType != ''">
+				AND a.subject_type = #{subjectType} 
+			</if> 
+			<!-- idNumber -->
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber} 
+			</if> 
+			<!-- idNumber -->
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND a.application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY account_dynamic_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY account_dynamic_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <insert id="save" parameterType="PbcAccountDynamicQuery" >
+    insert into pbc_account_dynamic_query (account_dynamic_id, data_type, account_number, 
+      subject_type, id_type, id_number, 
+      start_time, expire_time, application_code
+      )
+    values (#{accountDynamicId,jdbcType=BIGINT}, #{dataType,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{subjectType,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR}, #{idNumber,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{applicationCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="saveEntity" parameterType="PbcAccountDynamicQuery" useGeneratedKeys="true" keyProperty="accountDynamicId">
+    insert into pbc_account_dynamic_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        account_dynamic_id,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="idType != null" >
+        id_type,
+      </if>
+      <if test="idNumber != null" >
+        id_number,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="expireTime != null" >
+        expire_time,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        #{accountDynamicId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+ 
+
+  
+  <update id="updateEntity" parameterType="PbcAccountDynamicQuery" >
+    update pbc_account_dynamic_query
+    <set >
+      <if test="dataType != null" >
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        subject_type = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        id_type = #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="idNumber != null" >
+        id_number = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where account_dynamic_id = #{accountDynamicId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <update id="update" parameterType="PbcAccountDynamicQuery" >
+    update pbc_account_dynamic_query
+    set data_type = #{dataType,jdbcType=VARCHAR},
+      account_number = #{accountNumber,jdbcType=VARCHAR},
+      subject_type = #{subjectType,jdbcType=VARCHAR},
+      id_type = #{idType,jdbcType=VARCHAR},
+      id_number = #{idNumber,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where account_dynamic_id = #{accountDynamicId,jdbcType=BIGINT}
+  </update>
+  <select id="getEntityById" resultType="PbcAccountDynamicQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic_query a
+	WHERE account_dynamic_id = #{accountDynamicId}
+  </select>
+  
+  <select id="getQueryInfoId" resultType="PbcAccountDynamicQuery">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic_query a
+	WHERE application_code = #{applicationCode}
+  </select>
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskChannelOrderConversionRatioDao">
+    
+	<sql id="riskChannelOrderConversionRatioColumns">
+		a.id AS "id",
+		a.channel_partner_code AS "channelPartnerCode",
+		a.channel_partner_name AS "channelPartnerName",
+		a.channel_success_order AS "channelSuccessOrder",
+		a.channel_total_order AS "channelTotalOrder",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.create_time AS "createTime",
+		a.sucess_ratio AS "sucessRatio",
+		a.channel_type_code AS "channelTypeCode",
+		a.channel_type_name AS "channelTypeName",
+		a.host AS "host"
+	</sql>
+	
+	<sql id="riskChannelOrderConversionRatioJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskChannelOrderConversionRatio">
+		SELECT 
+			<include refid="riskChannelOrderConversionRatioColumns"/>
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskChannelOrderConversionRatio">
+		SELECT 
+			<include refid="riskChannelOrderConversionRatioColumns"/>
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		<where>
+			1=1
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND a.channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND a.channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findInTimeList" resultType="RiskChannelOrderConversionRatio">
+		SELECT
+		DATE_FORMAT(create_time,"%H") as channelPartnerCode,
+		sum(a.channel_success_order)/sum(a.channel_total_order) AS "sucessRatio"
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.channel_success_order != 0 AND a.channel_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND a.channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND a.channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%H")
+	</select>
+
+	<select id="findListByDay" resultType="RiskChannelOrderConversionRatio">
+		SELECT
+		DATE_FORMAT(create_time,"%Y-%m-%d") as channelPartnerCode,
+		sum(a.channel_success_order)/sum(a.channel_total_order) AS "sucessRatio"
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.channel_success_order != 0 AND a.channel_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND a.channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND a.channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%Y-%m-%d")
+	</select>
+
+	<select id="findListByMonth" resultType="RiskChannelOrderConversionRatio">
+		SELECT
+		DATE_FORMAT(create_time,"%Y-%m-%d") as channelPartnerCode,
+		sum(a.channel_success_order)/sum(a.channel_total_order) AS "sucessRatio"
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.channel_success_order != 0 AND a.channel_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND a.channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND a.channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%Y-%m-%d")
+	</select>
+
+	<select id="findAllList" resultType="RiskChannelOrderConversionRatio">
+		SELECT 
+			<include refid="riskChannelOrderConversionRatioColumns"/>
+		FROM risk_channel_order_conversion_ratio a
+		<include refid="riskChannelOrderConversionRatioJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_channel_order_conversion_ratio(
+			id,
+			channel_partner_code,
+			channel_partner_name,
+			channel_success_order,
+			channel_total_order,
+			begin_time,
+			end_time,
+			create_time,
+			sucess_ratio,
+			channel_type_code,
+			channel_type_name,
+			host
+		) VALUES (
+			#{id},
+			#{channelPartnerCode},
+			#{channelPartnerName},
+			#{channelSuccessOrder},
+			#{channelTotalOrder},
+			#{beginTime},
+			#{endTime},
+			#{createTime},
+			#{sucessRatio},
+			#{channelTypeCode},
+			#{channelTypeName},
+			#{host}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_channel_order_conversion_ratio SET 	
+			channel_partner_code = #{channelPartnerCode},
+			channel_partner_name = #{channelPartnerName},
+			channel_success_order = #{channelSuccessOrder},
+			channel_total_order = #{channelTotalOrder},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			create_time = #{createTime},
+			sucess_ratio = #{sucessRatio},
+			channel_type_code = #{channelTypeCode},
+			channel_type_name = #{channelTypeName},
+			host = #{host}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_channel_order_conversion_ratio
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

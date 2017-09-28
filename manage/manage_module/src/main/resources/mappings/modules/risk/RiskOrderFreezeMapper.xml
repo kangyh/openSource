@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskOrderFreezeDao">
+
+	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="includeEntity">
+		a.freeze_id AS "freezeId",
+		a.freeze_no AS "freezeNo",
+		a.freeze_type AS "freezeType",
+		a.defreeze_no AS "defreezeNo",
+		a.order_no AS "orderNo",
+		a.trans_no AS "transNo",
+		a.trans_amount AS "transAmount",
+		a.freeze_remark AS "freezeRemark",
+		a.fail_reason AS "failReason",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.merchant_code AS "merchantCode",
+		a.merchant_name AS "merchantName",
+		a.trans_type AS "transType",
+		a.trans_status AS "transStatus",
+		a.update_author AS "updateAuthor"
+	</sql>
+
+
+	<select id="findList" resultType="RiskOrderFreeze">
+		SELECT
+		<include refid="includeEntity" />
+		FROM risk_order_freeze a
+		<where>
+			<!-- merchantCode -->
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode} 
+			</if> 
+			<!-- merchantCode -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo} 
+			</if> 
+			<!--  transType -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType} 
+			</if> 
+			
+			<!-- defreeze_no 解冻编号 -->
+			<if test="defreezeNo != null and defreezeNo != ''">
+				AND a.defreeze_no = #{defreezeNo} 
+			</if> 
+			
+			<!-- freeze_no  -->
+			<if test="freezeType  != null and freezeType != ''"> 
+				AND a.freeze_type = #{freezeType} 
+			</if> 
+			
+			<!-- freeze_remark 冻结/解冻原因 -->
+			<if test="freezeRemark  != null and freezeRemark != ''"> 
+				AND a.freeze_remark = #{freezeRemark} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="status  != null and status != ''"> 
+				AND a.status = #{status} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY freeze_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY freeze_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 添加商户订单冻结 -->
+	<insert id="saveEntity" parameterType="RiskOrderFreeze">
+		INSERT INTO risk_order_freeze(merchant_code,trans_no,trans_amount,freeze_remark,create_author,create_time,freeze_no,status,merchant_name)
+			VALUES(#{merchantCode},#{transNo},#{transAmount},#{freezeRemark},#{createAuthor},#{createTime},#{freezeNo},#{status},#{merchantName})
+	</insert>
+	
+	<update id="updateEntity">
+		UPDATE 
+		  risk_order_freeze 
+		SET
+		  STATUS = #{status},freeze_type=#{freezeType},update_time=#{updateTime} where freeze_id=#{freezeId} 
+	</update>
+	
+	<select id="getEntityById" resultType="RiskOrderFreeze">
+		SELECT
+		<include refid="includeEntity" />
+		FROM risk_order_freeze a
+		WHERE freeze_id=#{freezeId}
+	</select>
+	
+	<update id="updateEntityToJd" parameterType="RiskOrderFreeze">
+		UPDATE 
+ 		 risk_order_freeze 
+		SET  STATUS = #{status},freeze_type=#{freezeType},
+		     defreeze_no=#{defreezeNo},
+		     status=#{status},update_time=#{updateTime},update_author=#{updateAuthor},
+		     trans_status=#{transStatus} 
+		 WHERE freeze_id=#{freezeId} 
+	</update>
+	
+	<update id="updateOrder" parameterType="RiskOrderFreeze">
+		UPDATE 
+ 		 risk_order_freeze 
+		SET  trans_amount = #{transAmount},freeze_remark=#{freezeRemark}
+		 WHERE freeze_id=#{freezeId} 
+	</update>
+</mapper>

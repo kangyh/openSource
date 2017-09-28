@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.share.dao.ShareAccountRecordDetailDao">
+    
+	<sql id="shareAccountRecordDetailColumns">
+		a.share_detail_id AS "shareDetailId",
+		a.share_id AS "shareId",
+		a.master_merchant_id AS "masterMerchantId",
+		a.slaver_merchant_id AS "slaverMerchantId",
+		a.share_amount AS "shareAmount",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.operator AS "operator",
+		a.slaver_merchant_login_name AS "slaverMerchantLoginName",
+		a.slaver_merchant_company AS "slaverMerchantCompany",
+		a.master_merchant_login_name AS "masterMerchantLoginName",
+		a.master_merchant_company AS "masterMerchantCompany",
+		a.trans_no AS "transNo",
+		a.trans_create_time AS "transCreateTime"
+	</sql>
+	
+	<sql id="shareAccountRecordDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="ShareAccountRecordDetail">
+		SELECT 
+			<include refid="shareAccountRecordDetailColumns"/>
+		FROM share_account_record_detail a
+		<include refid="shareAccountRecordDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ShareAccountRecordDetail">
+		SELECT 
+			<include refid="shareAccountRecordDetailColumns"/>
+		FROM share_account_record_detail a
+		<include refid="shareAccountRecordDetailJoins"/>
+		<where>
+			
+			<if test="shareId != null and shareId != ''">
+				AND a.share_id = #{shareId}
+			</if>
+			<if test="masterMerchantId != null and masterMerchantId != ''">
+				AND a.master_merchant_id = #{masterMerchantId}
+			</if>
+			<if test="slaverMerchantId != null and slaverMerchantId != ''">
+				AND a.slaver_merchant_id = #{slaverMerchantId}
+			</if>
+			<if test="shareAmount != null and shareAmount != ''">
+				AND a.share_amount = #{shareAmount}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="operator != null and operator != ''">
+				AND a.operator = #{operator}
+			</if>
+			<if test="slaverMerchantLoginName != null and slaverMerchantLoginName != ''">
+				AND a.slaver_merchant_login_name = #{slaverMerchantLoginName}
+			</if>
+			<if test="slaverMerchantCompany != null and slaverMerchantCompany != ''">
+				AND a.slaver_merchant_company = #{slaverMerchantCompany}
+			</if>
+			<if test="masterMerchantLoginName != null and masterMerchantLoginName != ''">
+				AND a.master_merchant_login_name = #{masterMerchantLoginName}
+			</if>
+			<if test="masterMerchantCompany != null and masterMerchantCompany != ''">
+				AND a.master_merchant_company = #{masterMerchantCompany}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="transCreateTime != null and transCreateTime != ''">
+				AND a.trans_create_time = #{transCreateTime}
+			</if>
+			
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+		</where>
+		ORDER BY  a.create_time desc
+	</select>
+	
+	<select id="findAllList" resultType="ShareAccountRecordDetail">
+		SELECT 
+			<include refid="shareAccountRecordDetailColumns"/>
+		FROM share_account_record_detail a
+		<include refid="shareAccountRecordDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getShareAccountRecordDetailListByShareId" resultType="ShareAccountRecordDetail">
+		SELECT 
+			<include refid="shareAccountRecordDetailColumns"/>
+		FROM share_account_record_detail a 
+		WHERE a.share_id = #{shareId} ORDER BY a.share_detail_id desc 
+		
+	</select>
+	
+</mapper>

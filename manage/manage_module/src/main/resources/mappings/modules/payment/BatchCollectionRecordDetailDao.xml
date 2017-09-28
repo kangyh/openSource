@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BatchCollectionRecordDetailDao">
+    
+	<sql id="batchCollectionRecordDetailColumns">
+		a.collect_id AS "collectId",
+		a.merchant_id AS "merchantId",
+		a.merchant_user_id AS "merchantUserId",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.collect_amount AS "collectAmount",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bank_name AS "bankName",
+		a.bank_id AS "bankId",
+		a.merchant_batch_no AS "merchantBatchNo",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.status AS "status",
+		a.success_time AS "successTime",
+		a.success_amount AS "successAmount",
+		a.fee_amount AS "feeAmount"
+	</sql>
+	
+	<sql id="batchCollectionRecordDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="BatchCollectionRecordDetail">
+		SELECT 
+			<include refid="batchCollectionRecordDetailColumns"/>
+		FROM batch_collection_record_detail a
+		<include refid="batchCollectionRecordDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BatchCollectionRecordDetail">
+		SELECT 
+			<include refid="batchCollectionRecordDetailColumns"/>
+		FROM batch_collection_record_detail a
+		<include refid="batchCollectionRecordDetailJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantUserId != null and merchantUserId != ''">
+				AND a.merchant_user_id = #{merchantUserId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+			<if test="bankcardOwnerMobile != null and bankcardOwnerMobile != ''">
+				AND a.bankcard_owner_mobile = #{bankcardOwnerMobile}
+			</if>
+			<if test="bankcardOwnerName != null and bankcardOwnerName != ''">
+				AND a.bankcard_owner_name = #{bankcardOwnerName}
+			</if>
+			<if test="bankcardOwnerIdcard != null and bankcardOwnerIdcard != ''">
+				AND a.bankcard_owner_idcard = #{bankcardOwnerIdcard}
+			</if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+        ORDER BY create_time desc
+	</select>
+	
+	<select id="findAllList" resultType="BatchCollectionRecordDetail">
+		SELECT 
+			<include refid="batchCollectionRecordDetailColumns"/>
+		FROM batch_collection_record_detail a
+		<include refid="batchCollectionRecordDetailJoins"/>
+		<where>
+			<if test="merchantId != null">
+				AND merchant_id=#{merchantId}
+			</if>
+			<if test="merchantUserId != null">
+				AND merchant_user_id=#{merchantUserId}
+			</if>
+			<if test="merchantBatchNo != null">
+				AND merchant_batch_no=#{merchantBatchNo}
+			</if>
+			<if test="merchantOrderNo != null">
+				AND merchant_order_no=#{merchantOrderNo}
+			</if>					
+		</where>		
+        ORDER BY create_time desc
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO batch_collection_record_detail(
+			collect_id,
+			merchant_id,
+			merchant_user_id,
+			create_time,
+			update_time,
+			collect_amount,
+			bankcard_no,
+			bankcard_owner_mobile,
+			bankcard_owner_name,
+			bankcard_owner_idcard,
+			bank_name,
+			bank_id,
+			merchant_batch_no,
+			merchant_order_no,
+			status,
+			success_time,
+			success_amount,
+			fee_amount
+		) VALUES (
+			#{collectId},
+			#{merchantId},
+			#{merchantUserId},
+			#{createTime},
+			#{updateTime},
+			#{collectAmount},
+			#{bankcardNo},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerName},
+			#{bankcardOwnerIdcard},
+			#{bankName},
+			#{bankId},
+			#{merchantBatchNo},
+			#{merchantOrderNo},
+			#{status},
+			#{successTime},
+			#{successAmount},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE batch_collection_record_detail SET 	
+			collect_id = #{collectId},
+			merchant_id = #{merchantId},
+			merchant_user_id = #{merchantUserId},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			collect_amount = #{collectAmount},
+			bankcard_no = #{bankcardNo},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bank_name = #{bankName},
+			bank_id = #{bankId},
+			merchant_batch_no = #{merchantBatchNo},
+			merchant_order_no = #{merchantOrderNo},
+			status = #{status},
+			success_time = #{successTime},
+			success_amount = #{successAmount},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM batch_collection_record_detail
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

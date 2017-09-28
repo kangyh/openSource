@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BilldiffOrderbakDao">
+    
+	<sql id="billdiffOrderbakColumns">
+		a.bak_id AS "bakId",
+		a.payment_id AS "paymentId",
+		a.trans_no AS "transNo",
+		a.content AS "content",
+		a.table_name AS "tableName",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="billdiffOrderbakJoins">
+	</sql>
+    
+	<select id="get" resultType="BilldiffOrderbak">
+		SELECT 
+			<include refid="billdiffOrderbakColumns"/>
+		FROM billdiff_orderbak a
+		<include refid="billdiffOrderbakJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BilldiffOrderbak">
+		SELECT 
+			<include refid="billdiffOrderbakColumns"/>
+		FROM billdiff_orderbak a
+		<include refid="billdiffOrderbakJoins"/>
+		<where>
+			
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+		</where>
+		
+				ORDER BY a.create_time desc 
+		
+	</select>
+	
+	<select id="findAllList" resultType="BilldiffOrderbak">
+		SELECT 
+			<include refid="billdiffOrderbakColumns"/>
+		FROM billdiff_orderbak a
+		<include refid="billdiffOrderbakJoins"/>
+		<where>
+			
+		</where>		
+			ORDER BY a.create_time desc 
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO billdiff_orderbak(
+			payment_id,
+			trans_no,
+			content,
+			create_time,
+			table_name
+		) VALUES (
+			#{paymentId},
+			#{transNo},
+			#{content},
+			#{createTime},
+			#{tableName}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE billdiff_orderbak SET 	
+			bak_id = #{bakId},
+			payment_id = #{paymentId},
+			trans_no = #{transNo},
+			content = #{content},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM billdiff_orderbak
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

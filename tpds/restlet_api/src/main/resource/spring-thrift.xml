@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    
+	<bean id="tpdsClient" class="com.heepay.rpc.client.ThriftClientProxy">
+         <property name="address" value="${tpdsthrift.ens.ip}"></property>
+		 <property name="open" value="${tpdszookeeper.ens.open}"></property> 	
+	     <property name="nodename" value="${tpdsthrift.ens.nodename}"></property>
+	     <property name="zkserverip" value="${tpdszookeeper.ens.ip}"></property>
+    </bean>
+    <bean id="serverBankInfo" class="com.heepay.tpds.vo.ServerBankInfo">    	 
+    	 <property name="bankHostPasswordModifyUrl" value="${tpdsCommonClient.bankHostPasswordModify}"></property>
+    	 <property name="bankHostPasswordResettingUrl" value="${tpdsCommonClient.bankHostPasswordResetting}"></property> 
+    	 <property name="bankHostPasswordSettingUrl" value="${tpdsCommonClient.bankHostPasswordSetting}"></property> 
+    	 <property name="bankHostPasswordVerifyUrl" value="${tpdsCommonClient.bankHostPasswordVerify}"></property> 
+    	 <property name="backURL" value="${tpdsCommonClient.backURL}"></property>
+		 <property name="signPublicKey" value="${tpdsCommonClient.signPublicKey}"></property>
+		 <property name="signPrivateKey" value="${tpdsCommonClient.signPrivateKey}"></property>
+    </bean>
+        <!-- 商户与汇付宝签名key -->
+    <bean id = "signkeyCommon" class="com.heepay.tpds.vo.SignkeyCommon">
+    	<property name="jiuctSignkey" value="${jiuct.quick.sign.key}"/>
+    	<property name="jiuctB2CSignkey" value="${jiuct.b2c.sign.key}"/>
+    	<property name="jiuctTransQuery" value="${jiuct.trans.query}"/>
+    	<property name="bank_IV" value="${bank.iv}"/>
+    	<property name="bank_Key" value="${bank.key}"/>
+    	<property name="bank_Signature" value="${bank.signature}"/>
+    	
+    </bean>
+</beans>  

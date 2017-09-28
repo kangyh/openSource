@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsCountrysettingDao">
+    
+	<sql id="cbmsCountrysettingColumns">
+		a.country_id AS "countryId",
+		a.currency_id AS "currencyId",
+		a.country_no AS "countryNo",
+		a.iso_e AS "isoE",
+		a.country_name AS "countryName",
+		a.inputuser_id AS "inputuserId",
+		a.created_time AS "createdTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="cbmsCountrysettingJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsCountrysetting">
+		SELECT 
+			<include refid="cbmsCountrysettingColumns"/>
+		FROM cbms_countrysetting a
+		<include refid="cbmsCountrysettingJoins"/>
+		WHERE a.country_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CbmsCountrysetting">
+		SELECT 
+			<include refid="cbmsCountrysettingColumns"/>
+		FROM cbms_countrysetting a
+		<include refid="cbmsCountrysettingJoins"/>
+		<where>
+			
+			<if test="countryId != null and countryId != ''">
+				AND a.country_id = #{countryId}
+			</if>
+			<if test="currencyId != null and currencyId != ''">
+				AND a.currency_id = #{currencyId}
+			</if>
+			<if test="countryNo != null and countryNo != ''">
+				AND a.country_no = #{countryNo}
+			</if>
+			<if test="isoE != null and isoE != ''">
+				AND a.iso_e = #{isoE}
+			</if>
+			<if test="countryName != null and countryName != ''">
+				AND a.country_name = #{countryName}
+			</if>
+			<if test="inputuserId != null and inputuserId != ''">
+				AND a.inputuser_id = #{inputuserId}
+			</if>
+			<if test="createdTime != null and createdTime != ''">
+				AND a.created_time = #{createdTime}
+			</if>
+			<if test="updateUserId != null and updateUserId != ''">
+				AND a.update_user_id = #{updateUserId}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				AND a.update_time = #{updateTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CbmsCountrysetting">
+		SELECT 
+			<include refid="cbmsCountrysettingColumns"/>
+		FROM cbms_countrysetting a
+		<include refid="cbmsCountrysettingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_countrysetting(
+			country_id,
+			currency_id,
+			country_no,
+			iso_e,
+			country_name,
+			inputuser_id,
+			created_time,
+			update_user_id,
+			update_time,
+			status
+		) VALUES (
+			#{countryId},
+			#{currencyId},
+			#{countryNo},
+			#{isoE},
+			#{countryName},
+			#{inputuserId},
+			#{createdTime},
+			#{updateUserId},
+			#{updateTime},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_countrysetting SET 	
+			country_id = #{countryId},
+			currency_id = #{currencyId},
+			country_no = #{countryNo},
+			iso_e = #{isoE},
+			country_name = #{countryName},
+			inputuser_id = #{inputuserId},
+			created_time = #{createdTime},
+			update_user_id = #{updateUserId},
+			update_time = #{updateTime},
+			status = #{status}
+		WHERE country_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_countrysetting
+		WHERE country_id = #{id}
+	</update>
+
+    <!-- 根据CountryName 获取 CbmsCountrysetting对象 -->
+	<select id="getCbmsCountrysettingByCountryName"  resultType="CbmsCountrysetting">
+		SELECT
+		<include refid="cbmsCountrysettingColumns"/>
+		FROM cbms_countrysetting a
+		<include refid="cbmsCountrysettingJoins"/>
+		<where>
+		a.country_name = #{countryName}
+		</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.risk.dao.RiskInternalMonitorMerchantDao">
+    
+	<sql id="riskInternalMonitorMerchantColumns">
+		internal_merchant_id AS internalMerchantId,
+		merchant_id AS merchantId,
+		merchant_name AS merchantName,
+		product_code AS productCode,
+		product_name AS productName,
+		begin_time AS beginTime,
+		end_time AS endTime,
+		frequency AS frequency,
+		threshold AS threshold,
+		operator AS operator,
+		create_time AS createTime,
+		change_rate AS changeRate
+	</sql>
+	<insert id="insert"  parameterType="com.heepay.risk.entity.RiskInternalMonitorMerchant" >
+		INSERT INTO risk_internal_monitor_merchant(
+			merchant_id,
+			merchant_name,
+			product_code,
+			product_name,
+			begin_time,
+			end_time,
+			frequency,
+			threshold,
+			operator,
+			create_time,
+			change_rate
+		) VALUES (
+			#{merchantId},
+			#{merchantName},
+			#{productCode},
+			#{productName},
+			#{beginTime},
+			#{endTime},
+			#{frequency},
+			#{threshold},
+			#{operator},
+			#{createTime},
+			#{changeRate}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.heepay.risk.entity.RiskInternalMonitorMerchant" >
+		UPDATE risk_internal_monitor_merchant SET 	
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			product_code = #{productCode},
+			product_name = #{productName},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			frequency = #{frequency},
+			threshold = #{threshold},
+			operator = #{operator},
+			create_time = #{createTime},
+			change_rate=#{changeRate}
+		WHERE internal_merchant_id = #{internalMerchantId}
+	</update>
+	
+	<update id="delete"   parameterType="java.lang.String" >
+		DELETE FROM risk_internal_monitor_merchant
+		WHERE internal_merchant_id = #{internalMerchantId}
+	</update>
+	<select id="selectByPrimary" parameterType="java.lang.Integer" resultType="com.heepay.risk.entity.RiskInternalMonitorMerchant">
+		select
+		<include refid="riskInternalMonitorMerchantColumns"/>  FROM risk_internal_monitor_merchant
+		where internal_merchant_id=#{internalMerchantId}
+	</select>
+	<select id="selectByCondition" resultType="com.heepay.risk.entity.RiskInternalMonitorMerchant">
+		SELECT 
+			<include refid="riskInternalMonitorMerchantColumns"/>
+		FROM risk_internal_monitor_merchant a 
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND merchant_id = #{merchantId}
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND merchant_name = #{merchantName}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND product_code = #{productCode}
+			</if>
+			<if test="productName != null and productName != ''">
+				AND product_name = #{productName}
+			</if>
+			<if test="frequency != null and frequency != ''">
+				AND frequency = #{frequency}
+			</if>
+			<if test="threshold != null and threshold != ''">
+				AND threshold = #{threshold}
+			</if>
+			<if test="changeRate != null and changeRate != ''">
+				AND change_rate = #{changeRate}
+			</if>
+		</where>
+
+	</select>
+</mapper>

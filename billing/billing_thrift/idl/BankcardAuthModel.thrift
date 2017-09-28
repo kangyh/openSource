@@ -1,0 +1,32 @@
+namespace java com.heepay.rpc.payment.model
+
+struct BankcardAuthModel {
+    1: i64 authId;
+    2: string authTime;
+    3: string type;
+    4: string status;
+    5: string transNo;
+    6: i64 merchantId;
+    7: string merchantLoginName;
+    8: string merchantCompany;
+    9: i32 bankId;
+    10: string bankName;
+    11: string bankcardNo;
+    12: string bankcardType;
+    13: string bankcardExpiredDate;
+    14: string bankcardCvv2;
+    15: string bankcardOwnerMobile;
+    16: string bankcardOwnerName;
+    17: string bankcardOwnerIdcard;
+    18: byte bankcardOwnerType;
+    19: i32 channelCode;
+    20: string channelAuth;
+    21: string merchantUserId;
+    22: string merchantOrderNo;
+    23: string authorizationCode;
+    24: string ext1;
+    25: string ext2;
+    26: string shortCardno;
+    27: string openBankName;
+    28: i32 defaultTag;
+}

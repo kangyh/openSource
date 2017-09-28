@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsSynDataTaskRecordDao">
+    
+	<sql id="hgmsSynDataTaskRecordColumns">
+		a.id AS "id",
+		a.task_name AS "taskName",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.success_time AS "successTime",
+		a.check_begin_date AS "checkBeginDate",
+		a.check_end_date AS "checkEndDate",
+		a.file_rule AS "fileRule",
+		a.trans_type AS "transType",
+		a.trans_way AS "transWay",
+		a.status AS "status",
+		a.operator AS "operator",
+		a.error_record AS "errorRecord",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3",
+		a.extend4 AS "extend4",
+		a.extend5 AS "extend5"
+	</sql>
+	
+	<sql id="hgmsSynDataTaskRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsSynDataTaskRecord">
+		SELECT 
+			<include refid="hgmsSynDataTaskRecordColumns"/>
+		FROM hgms_syn_data_task_record a
+		<include refid="hgmsSynDataTaskRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsSynDataTaskRecord">
+		SELECT 
+			<include refid="hgmsSynDataTaskRecordColumns"/>
+		FROM hgms_syn_data_task_record a
+		<include refid="hgmsSynDataTaskRecordJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+            <choose>
+                <when test="beginCreateTime != null and endCreateTime != null ">
+                    AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+                </when>
+                <when test="beginCreateTime != null and endCreateTime == null">
+                    AND a.create_time &gt; #{beginCreateTime}
+                </when>
+                <when test="beginCreateTime == null and endCreateTime != null">
+                    AND a.create_time &lt; #{endCreateTime}
+                </when>
+            </choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsSynDataTaskRecord">
+		SELECT 
+			<include refid="hgmsSynDataTaskRecordColumns"/>
+		FROM hgms_syn_data_task_record a
+		<include refid="hgmsSynDataTaskRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_syn_data_task_record(
+			id,
+			task_name,
+			create_time,
+			update_time,
+			success_time,
+			check_begin_date,
+			check_end_date,
+			file_rule,
+			trans_type,
+			trans_way,
+			status,
+			operator,
+			error_record,
+			extend1,
+			extend2,
+			extend3,
+			extend4,
+			extend5
+		) VALUES (
+			#{id},
+			#{taskName},
+			#{createTime},
+			#{updateTime},
+			#{successTime},
+			#{checkBeginDate},
+			#{checkEndDate},
+			#{fileRule},
+			#{transType},
+			#{transWay},
+			#{status},
+			#{operator},
+			#{errorRecord},
+			#{extend1},
+			#{extend2},
+			#{extend3},
+			#{extend4},
+			#{extend5}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hgms_syn_data_task_record SET 	
+			task_name = #{taskName},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			success_time = #{successTime},
+			check_begin_date = #{checkBeginDate},
+			check_end_date = #{checkEndDate},
+			file_rule = #{fileRule},
+			trans_type = #{transType},
+			trans_way = #{transWay},
+			status = #{status},
+			operator = #{operator},
+			error_record = #{errorRecord},
+			extend1 = #{extend1},
+			extend2 = #{extend2},
+			extend3 = #{extend3},
+			extend4 = #{extend4},
+			extend5 = #{extend5}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_syn_data_task_record
+		WHERE id = #{id}
+	</update>
+
+	<select id="checkYesterDayTaskStatus" resultType="HgmsSynDataTaskRecord">
+		SELECT
+		<include refid="hgmsSynDataTaskRecordColumns"/>
+		FROM hgms_syn_data_task_record a
+		<include refid="hgmsSynDataTaskRecordJoins"/>
+
+		<where>
+			<if test="checkBeginDate != null">
+				AND a.check_begin_date = #{checkBeginDate}
+			</if>
+			<if test="checkEndDate != null">
+				AND a.check_end_date = #{checkEndDate}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <!-- 控制台打印 -->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n"/>
+        </Console>
+        <!-- 按天每天备份一个日志 -->
+        <RollingFile name="WarningTaskInfo" fileName="${warningCommonClient.logPath}/warn_task_info.log" filePattern="${warningCommonClient.logPath}/warn_task_info_%d{yyyy-MM-dd}_%i.log.gz">
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+            <Policies>
+                <!-- 按天分割 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <!-- 超过500M增加一个 -->
+                <SizeBasedTriggeringPolicy size="500M" />
+            </Policies>
+            <!-- 最多备份10个 -->
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+        <RollingFile name="WarningTaskError" fileName="${warningCommonClient.logPath}/warn_task_error.log" filePattern="${warningCommonClient.logPath}/warn_task_error_%d{yyyy-MM-dd}_%i.log.gz">
+            <PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
+            <Policies>
+                <!-- 按天分割 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <!-- 超过500M增加一个 -->
+                <SizeBasedTriggeringPolicy size="500M" />
+            </Policies>
+            <!-- 最多备份10个 -->
+            <DefaultRolloverStrategy max="10" />
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="WarningTaskInfo"/>
+            <AppenderRef ref="WarningTaskError"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/rabbit 
+http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
+	<context:component-scan base-package="com.heepay.queue.consume" />
+	
+ 	<bean id="consumePayResultsImpl" class="com.heepay.queue.consume.ConsumePayResultsImpl"/>
+    <bean id="consumeChargeResultsImpl" class="com.heepay.queue.consume.ConsumePayResultsImpl"/>
+    <bean id="consumeBatchCollectionResultsImpl" class="com.heepay.queue.consume.ConsumeBatchCollectionResultsImpl"/>
+    <bean id="consumeBatchPayResultsImpl" class="com.heepay.queue.consume.ConsumeBatchPayResultsImpl"/>
+    <bean id="consumeRefundResultsImpl" class="com.heepay.queue.consume.ConsumeRefundResultsImpl"/>	
+	<bean id="consumeWithdrawResultsImpl" class="com.heepay.queue.consume.ConsumeWithdrawResultsImpl"/>	
+		
+	<!-- 连接服务配置  channel-cache-size="25" -->
+   	<rabbit:connection-factory id="connectionFactory" addresses="${addresses}" username="${username}" password="${password}" />
+   	
+	<!-- Admin object for creation of queues -->
+	<rabbit:admin connection-factory="connectionFactory"  />
+	
+ 	<!--<rabbit:queue id="sms" durable="true" auto-delete="false" exclusive="false" name="sms"/>-->
+   	
+   	<!-- billing begin -->
+   	<rabbit:queue id="hyBillingClearMerchantQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingClearMerchantQueue"/>
+   	<rabbit:queue id="hyBillingClearChannelQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingClearChannelQueue"/>
+   	<rabbit:queue id="hyBillingChannelResultQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingChannelResultQueue"/>
+   	<!--  -->
+   	<rabbit:queue id="hyBillingMerchantResultQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingMerchantResultQueue"/>
+   	
+   	<!-- 商户、通道侧监听账务系统返回结果 -->
+   	<rabbit:queue id="hyBillingSettleMerchantRecordResponseQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleMerchantRecordResponseQueue"/>
+   	
+   	 <!-- 配置线程池 -->
+	<bean id ="taskExecutor"  class ="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+	    <!-- 线程池维护线程的最少数量 -->
+		<property name ="corePoolSize" value ="${ThreadPool.corePoolSize}" />
+	    <!-- 线程池维护线程所允许的空闲时间 -->
+		<property name ="keepAliveSeconds" value ="${ThreadPool.keepAliveSeconds}" />
+	    <!-- 线程池维护线程的最大数量 -->
+		<property name ="maxPoolSize" value ="${ThreadPool.maxPoolSize}" />
+	    <!-- 线程池所使用的缓冲队列 -->
+		<property name ="queueCapacity" value ="${ThreadPool.queueCapacity}" />
+	</bean>   	
+   
+    
+    <!-- 消息监听器 -->  
+   
+    <!-- billing begin -->
+    <bean id="mqClearMerchantConsumeMessageListener" class="com.heepay.queue.consume.MqClearMerchantConsumeMain"/>
+    <bean id="mqClearChannelConsumeMessageListener" class="com.heepay.queue.consume.MqClearChannelConsumeMain"/>
+    <bean id="mqChannelResultMessageListener" class="com.heepay.queue.consume.MqChannelResultconsumeMain"/>
+    
+    <bean id="mqMerchantResultMessageListener" class="com.heepay.queue.consume.MqMerchantResultconsumeMain"/>
+    
+    <bean id="hyBillingSettleMerchantRecordResponseQueueListener" class="com.heepay.queue.consume.MqClearMerchantResultMain"/>
+    
+    <!--<bean id="consumerMessageListener2" class="com.test.rabbit.customer.DemoCustomerMessage"/>-->
+
+	<!-- queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象-->
+    <rabbit:listener-container connection-factory="connectionFactory" acknowledge="auto" task-executor="taskExecutor" max-concurrency="1" prefetch="4">
+      
+        <rabbit:listener queues="hyBillingSettleMerchantRecordResponseQueue" ref="hyBillingSettleMerchantRecordResponseQueueListener"/>
+        <rabbit:listener queues="hyBillingClearMerchantQueue" ref="mqClearMerchantConsumeMessageListener"/>
+        <rabbit:listener queues="hyBillingClearChannelQueue" ref="mqClearChannelConsumeMessageListener"/>
+        <rabbit:listener queues="hyBillingChannelResultQueue" ref="mqChannelResultMessageListener"/>
+        
+        <rabbit:listener queues="hyBillingMerchantResultQueue" ref="mqMerchantResultMessageListener"/>        
+
+    </rabbit:listener-container>
+
+  
+</beans>

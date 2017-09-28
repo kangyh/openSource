@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.monitor.java.dao.MonitorMachineDao" >
+
+  <sql id="includeEntity" >
+    machine_id, 
+    machine_code, 
+    machine_name, 
+    is_db, 
+    machine_group_id, 
+    inner_ip, 
+    outer_ip, 
+    create_time, 
+    create_author, 
+    update_author, 
+    update_time, 
+    access_ip, 
+    access_type, 
+    user_name, 
+    password, 
+    port, 
+    folder, 
+    suffix, 
+    status, 
+    system_of
+  </sql>
+  
+ 
+  
+  <select id="findList" resultType="MonitorMachine">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM monitor_machine
+		<where>
+			<!-- 创建时间 
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>-->
+			<if test="outerIp != null and outerIp != ''">
+				AND outer_ip = #{outerIp} 
+			</if> 
+			
+			<if test="accessIp != null and accessIp != ''">
+				AND access_ip = #{accessIp} 
+			</if> 
+			
+			<if test="folder != null and folder != ''">
+				AND folder = #{folder} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY machine_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY machine_id DESC
+			</otherwise>
+		</choose>
+	</select>
+   <select id="getEntityById" resultType="MonitorMachine">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM monitor_machine a
+	WHERE machine_id = #{machineId}
+  </select>
+  <select id="getAll" resultType="MonitorMachine">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM monitor_machine a
+  </select>
+  
+  <delete id="deleteEntity">
+    delete from monitor_machine
+     where machine_id = #{machineId,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="save" parameterType="MonitorMachine" >
+     insert into monitor_machine (machine_id, machine_code, machine_name, 
+      is_db, machine_group_id, inner_ip, 
+      outer_ip, access_ip, access_type, 
+      user_name, password, port, 
+      folder, suffix, status, 
+      system_of, create_author, create_time, 
+      update_time, update_author)
+    values (#{machineId,jdbcType=INTEGER}, #{machineCode,jdbcType=VARCHAR}, #{machineName,jdbcType=VARCHAR}, 
+      #{isDb,jdbcType=INTEGER}, #{machineGroupId,jdbcType=INTEGER}, #{innerIp,jdbcType=VARCHAR}, 
+      #{outerIp,jdbcType=VARCHAR}, #{accessIp,jdbcType=VARCHAR}, #{accessType,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER}, 
+      #{folder,jdbcType=VARCHAR}, #{suffix,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{systemOf,jdbcType=VARCHAR}, #{createAuthor,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <insert id="saveEntity" parameterType="MonitorMachine" >
+   insert into monitor_machine
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="machineId != null" >
+        machine_id,
+      </if>
+      <if test="machineCode != null" >
+        machine_code,
+      </if>
+      <if test="machineName != null" >
+        machine_name,
+      </if>
+      <if test="isDb != null" >
+        is_db,
+      </if>
+      <if test="machineGroupId != null" >
+        machine_group_id,
+      </if>
+      <if test="innerIp != null" >
+        inner_ip,
+      </if>
+      <if test="outerIp != null" >
+        outer_ip,
+      </if>
+      <if test="accessIp != null" >
+        access_ip,
+      </if>
+      <if test="accessType != null" >
+        access_type,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="port != null" >
+        port,
+      </if>
+      <if test="folder != null" >
+        folder,
+      </if>
+      <if test="suffix != null" >
+        suffix,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="systemOf != null" >
+        system_of,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="machineId != null" >
+        #{machineId,jdbcType=INTEGER},
+      </if>
+      <if test="machineCode != null" >
+        #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="machineName != null" >
+        #{machineName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDb != null" >
+        #{isDb,jdbcType=INTEGER},
+      </if>
+      <if test="machineGroupId != null" >
+        #{machineGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="innerIp != null" >
+        #{innerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="outerIp != null" >
+        #{outerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessIp != null" >
+        #{accessIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessType != null" >
+        #{accessType,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        #{folder,jdbcType=VARCHAR},
+      </if>
+      <if test="suffix != null" >
+        #{suffix,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="systemOf != null" >
+        #{systemOf,jdbcType=VARCHAR},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+ 
+  <update id="updateEntity" parameterType="MonitorMachine" >
+    update monitor_machine
+    <set >
+      <if test="machineCode != null" >
+        machine_code = #{machineCode,jdbcType=VARCHAR},
+      </if>
+      <if test="machineName != null" >
+        machine_name = #{machineName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDb != null" >
+        is_db = #{isDb,jdbcType=INTEGER},
+      </if>
+      <if test="machineGroupId != null" >
+        machine_group_id = #{machineGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="innerIp != null" >
+        inner_ip = #{innerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="outerIp != null" >
+        outer_ip = #{outerIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessIp != null" >
+        access_ip = #{accessIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessType != null" >
+        access_type = #{accessType,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        folder = #{folder,jdbcType=VARCHAR},
+      </if>
+      <if test="suffix != null" >
+        suffix = #{suffix,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="systemOf != null" >
+        system_of = #{systemOf,jdbcType=VARCHAR},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where machine_id = #{machineId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="update" parameterType="MonitorMachine" >
+     update monitor_machine
+    set machine_code = #{machineCode,jdbcType=VARCHAR},
+      machine_name = #{machineName,jdbcType=VARCHAR},
+      is_db = #{isDb,jdbcType=INTEGER},
+      machine_group_id = #{machineGroupId,jdbcType=INTEGER},
+      inner_ip = #{innerIp,jdbcType=VARCHAR},
+      outer_ip = #{outerIp,jdbcType=VARCHAR},
+      access_ip = #{accessIp,jdbcType=VARCHAR},
+      access_type = #{accessType,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
+      folder = #{folder,jdbcType=VARCHAR},
+      suffix = #{suffix,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      system_of = #{systemOf,jdbcType=VARCHAR},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR}
+    where machine_id = #{machineId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getEntity" resultType="MonitorMachine">
+	  SELECT 
+			<include refid="includeEntity"/>
+		FROM monitor_machine
+	  where machine_id = #{machineId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getEntityByMachineGroupId" resultType="int">
+  	SELECT COUNT(1) FROM monitor_machine WHERE machine_group_id=#{machineGroupId}
+  </select>
+</mapper>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskMerchantOrderConversionRatioDao">
+    
+	<sql id="riskMerchantOrderConversionRatioColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_sucess_order AS "merchantSucessOrder",
+		a.merchant_total_order AS "merchantTotalOrder",
+		a.begin_time AS "beginTime",
+		a.end_time AS "endTime",
+		a.create_time AS "createTime",
+		a.sucess_ratio AS "sucessRatio",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.host AS "host"
+	</sql>
+	
+	<sql id="riskMerchantOrderConversionRatioJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskMerchantOrderConversionRatio">
+		SELECT 
+			<include refid="riskMerchantOrderConversionRatioColumns"/>
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskMerchantOrderConversionRatio">
+		SELECT 
+			<include refid="riskMerchantOrderConversionRatioColumns"/>
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		<where>
+			1=1
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findInTimeList" resultType="RiskMerchantOrderConversionRatio">
+		SELECT
+			DATE_FORMAT(create_time,"%H") as merchantId,
+			sum(a.merchant_sucess_order)/sum(a.merchant_total_order) AS "sucessRatio"
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.merchant_sucess_order != 0 AND a.merchant_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%H")
+	</select>
+
+	<select id="findListByDay" resultType="RiskMerchantOrderConversionRatio">
+		SELECT
+		DATE_FORMAT(create_time,"%Y-%m-%d") as merchantId,
+		sum(a.merchant_sucess_order)/sum(a.merchant_total_order) AS "sucessRatio"
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.merchant_sucess_order != 0 AND a.merchant_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%Y-%m-%d")
+	</select>
+
+	<select id="findListByMonth" resultType="RiskMerchantOrderConversionRatio">
+		SELECT
+			DATE_FORMAT(create_time,"%Y-%m-%d") as merchantId,
+			sum(a.merchant_sucess_order)/sum(a.merchant_total_order) AS "sucessRatio"
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		<where>
+			1 = 1 AND a.merchant_sucess_order != 0 AND a.merchant_total_order != 0
+			<if test="beginStatisticTime != null and endStatisticTime != null and beginStatisticTime != '' and endStatisticTime != ''">
+				AND DATE_FORMAT(a.create_time,"%Y-%m-%d") BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="host != null and host != ''">
+				AND a.host = #{host}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		group by DATE_FORMAT(a.create_time,"%Y-%m-%d")
+	</select>
+	
+	<select id="findAllList" resultType="RiskMerchantOrderConversionRatio">
+		SELECT 
+			<include refid="riskMerchantOrderConversionRatioColumns"/>
+		FROM risk_merchant_order_conversion_ratio a
+		<include refid="riskMerchantOrderConversionRatioJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_merchant_order_conversion_ratio(
+			id,
+			merchant_id,
+			merchant_sucess_order,
+			merchant_total_order,
+			begin_time,
+			end_time,
+			create_time,
+			sucess_ratio,
+			product_code,
+			product_name,
+			host
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantSucessOrder},
+			#{merchantTotalOrder},
+			#{beginTime},
+			#{endTime},
+			#{createTime},
+			#{sucessRatio},
+			#{productCode},
+			#{productName},
+			#{host}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_merchant_order_conversion_ratio SET 	
+			merchant_id = #{merchantId},
+			merchant_sucess_order = #{merchantSucessOrder},
+			merchant_total_order = #{merchantTotalOrder},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			create_time = #{createTime},
+			sucess_ratio = #{sucessRatio},
+			product_code = #{productCode},
+			product_name = #{productName},
+			host = #{host}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_merchant_order_conversion_ratio
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

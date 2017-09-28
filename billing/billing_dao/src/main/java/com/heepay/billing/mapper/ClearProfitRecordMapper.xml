@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.ClearProfitRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.ClearProfitRecord" >
+    <id column="profit_id" property="profitId" jdbcType="BIGINT" />
+    <result column="share_detail_id" property="shareDetailId" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="profit_amount" property="profitAmount" jdbcType="DECIMAL" />
+    <result column="profit_amount_plan" property="profitAmountPlan" jdbcType="DECIMAL" />
+    <result column="profit_fee" property="profitFee" jdbcType="DECIMAL" />
+    <result column="fee_way" property="feeWay" jdbcType="VARCHAR" />
+    <result column="profit_bath" property="profitBath" jdbcType="VARCHAR" />
+    <result column="profit_time" property="profitTime" jdbcType="TIMESTAMP" />
+    <result column="profit_status" property="profitStatus" jdbcType="VARCHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="share_id" property="shareId" jdbcType="VARCHAR" />
+    <result column="merchant_order_no" property="merchantOrderNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    profit_id, share_detail_id, merchant_id, trans_no, profit_amount, profit_amount_plan, 
+    profit_fee, fee_way, profit_bath, profit_time, profit_status, trans_type, share_id, 
+    merchant_order_no
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.ClearProfitRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clearing_profit_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from clearing_profit_record
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from clearing_profit_record
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.ClearProfitRecordExample" >
+    delete from clearing_profit_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.ClearProfitRecord" >
+    insert into clearing_profit_record (profit_id, share_detail_id, merchant_id, 
+      trans_no, profit_amount, profit_amount_plan, 
+      profit_fee, fee_way, profit_bath, 
+      profit_time, profit_status, trans_type, 
+      share_id, merchant_order_no)
+    values (#{profitId,jdbcType=BIGINT}, #{shareDetailId,jdbcType=VARCHAR}, #{merchantId,jdbcType=INTEGER}, 
+      #{transNo,jdbcType=VARCHAR}, #{profitAmount,jdbcType=DECIMAL}, #{profitAmountPlan,jdbcType=DECIMAL}, 
+      #{profitFee,jdbcType=DECIMAL}, #{feeWay,jdbcType=VARCHAR}, #{profitBath,jdbcType=VARCHAR}, 
+      #{profitTime,jdbcType=TIMESTAMP}, #{profitStatus,jdbcType=VARCHAR}, #{transType,jdbcType=VARCHAR}, 
+      #{shareId,jdbcType=VARCHAR}, #{merchantOrderNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.ClearProfitRecord" >
+    insert into clearing_profit_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="profitId != null" >
+        profit_id,
+      </if>
+      <if test="shareDetailId != null" >
+        share_detail_id,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="transNo != null" >
+        trans_no,
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount,
+      </if>
+      <if test="profitAmountPlan != null" >
+        profit_amount_plan,
+      </if>
+      <if test="profitFee != null" >
+        profit_fee,
+      </if>
+      <if test="feeWay != null" >
+        fee_way,
+      </if>
+      <if test="profitBath != null" >
+        profit_bath,
+      </if>
+      <if test="profitTime != null" >
+        profit_time,
+      </if>
+      <if test="profitStatus != null" >
+        profit_status,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="shareId != null" >
+        share_id,
+      </if>
+      <if test="merchantOrderNo != null" >
+        merchant_order_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="profitId != null" >
+        #{profitId,jdbcType=BIGINT},
+      </if>
+      <if test="shareDetailId != null" >
+        #{shareDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="transNo != null" >
+        #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="profitAmount != null" >
+        #{profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="profitAmountPlan != null" >
+        #{profitAmountPlan,jdbcType=DECIMAL},
+      </if>
+      <if test="profitFee != null" >
+        #{profitFee,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWay != null" >
+        #{feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="profitBath != null" >
+        #{profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="profitTime != null" >
+        #{profitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="profitStatus != null" >
+        #{profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="shareId != null" >
+        #{shareId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantOrderNo != null" >
+        #{merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.ClearProfitRecordExample" resultType="java.lang.Integer" >
+    select count(*) from clearing_profit_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update clearing_profit_record
+    <set >
+      <if test="record.profitId != null" >
+        profit_id = #{record.profitId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shareDetailId != null" >
+        share_detail_id = #{record.shareDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantId != null" >
+        merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="record.transNo != null" >
+        trans_no = #{record.transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitAmount != null" >
+        profit_amount = #{record.profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.profitAmountPlan != null" >
+        profit_amount_plan = #{record.profitAmountPlan,jdbcType=DECIMAL},
+      </if>
+      <if test="record.profitFee != null" >
+        profit_fee = #{record.profitFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.feeWay != null" >
+        fee_way = #{record.feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitBath != null" >
+        profit_bath = #{record.profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profitTime != null" >
+        profit_time = #{record.profitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.profitStatus != null" >
+        profit_status = #{record.profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transType != null" >
+        trans_type = #{record.transType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shareId != null" >
+        share_id = #{record.shareId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.merchantOrderNo != null" >
+        merchant_order_no = #{record.merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update clearing_profit_record
+    set profit_id = #{record.profitId,jdbcType=BIGINT},
+      share_detail_id = #{record.shareDetailId,jdbcType=VARCHAR},
+      merchant_id = #{record.merchantId,jdbcType=INTEGER},
+      trans_no = #{record.transNo,jdbcType=VARCHAR},
+      profit_amount = #{record.profitAmount,jdbcType=DECIMAL},
+      profit_amount_plan = #{record.profitAmountPlan,jdbcType=DECIMAL},
+      profit_fee = #{record.profitFee,jdbcType=DECIMAL},
+      fee_way = #{record.feeWay,jdbcType=VARCHAR},
+      profit_bath = #{record.profitBath,jdbcType=VARCHAR},
+      profit_time = #{record.profitTime,jdbcType=TIMESTAMP},
+      profit_status = #{record.profitStatus,jdbcType=VARCHAR},
+      trans_type = #{record.transType,jdbcType=VARCHAR},
+      share_id = #{record.shareId,jdbcType=VARCHAR},
+      merchant_order_no = #{record.merchantOrderNo,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.ClearProfitRecord" >
+    update clearing_profit_record
+    <set >
+      <if test="shareDetailId != null" >
+        share_detail_id = #{shareDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null" >
+        merchant_id = #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="transNo != null" >
+        trans_no = #{transNo,jdbcType=VARCHAR},
+      </if>
+      <if test="profitAmount != null" >
+        profit_amount = #{profitAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="profitAmountPlan != null" >
+        profit_amount_plan = #{profitAmountPlan,jdbcType=DECIMAL},
+      </if>
+      <if test="profitFee != null" >
+        profit_fee = #{profitFee,jdbcType=DECIMAL},
+      </if>
+      <if test="feeWay != null" >
+        fee_way = #{feeWay,jdbcType=VARCHAR},
+      </if>
+      <if test="profitBath != null" >
+        profit_bath = #{profitBath,jdbcType=VARCHAR},
+      </if>
+      <if test="profitTime != null" >
+        profit_time = #{profitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="profitStatus != null" >
+        profit_status = #{profitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=VARCHAR},
+      </if>
+      <if test="shareId != null" >
+        share_id = #{shareId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantOrderNo != null" >
+        merchant_order_no = #{merchantOrderNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.ClearProfitRecord" >
+    update clearing_profit_record
+    set share_detail_id = #{shareDetailId,jdbcType=VARCHAR},
+      merchant_id = #{merchantId,jdbcType=INTEGER},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      profit_amount = #{profitAmount,jdbcType=DECIMAL},
+      profit_amount_plan = #{profitAmountPlan,jdbcType=DECIMAL},
+      profit_fee = #{profitFee,jdbcType=DECIMAL},
+      fee_way = #{feeWay,jdbcType=VARCHAR},
+      profit_bath = #{profitBath,jdbcType=VARCHAR},
+      profit_time = #{profitTime,jdbcType=TIMESTAMP},
+      profit_status = #{profitStatus,jdbcType=VARCHAR},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      share_id = #{shareId,jdbcType=VARCHAR},
+      merchant_order_no = #{merchantOrderNo,jdbcType=VARCHAR}
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 分润明细入库 -->
+  <insert id="insertClearProfitRecord" parameterType="com.heepay.billing.entity.ClearProfitRecord" >
+    insert into clearing_profit_record (profit_id, share_detail_id, merchant_id, 
+      trans_no, profit_amount, profit_amount_plan, 
+      profit_fee, fee_way, profit_bath, 
+      profit_time, profit_status, trans_type, 
+      share_id)
+    values (#{profitId,jdbcType=BIGINT}, #{shareDetailId,jdbcType=VARCHAR}, #{merchantId,jdbcType=INTEGER}, 
+      #{transNo,jdbcType=VARCHAR}, #{profitAmount,jdbcType=DECIMAL}, #{profitAmountPlan,jdbcType=DECIMAL}, 
+      #{profitFee,jdbcType=DECIMAL}, #{feeWay,jdbcType=VARCHAR}, #{profitBath,jdbcType=VARCHAR}, 
+      #{profitTime,jdbcType=TIMESTAMP}, #{profitStatus,jdbcType=VARCHAR}, #{transType,jdbcType=VARCHAR}, 
+      #{shareId,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 根据交易订单号查询分润明细 -->
+  <select id="queryByTransNo" resultMap="BaseResultMap" parameterType="map" >
+    
+    SELECT     
+     		 <include refid="Base_Column_List" />
+	       
+       FROM clearing_profit_record cpr
+         WHERE     cpr.trans_no = #{transNo,jdbcType=VARCHAR}
+               and cpr.profit_status = #{profitStatus,jdbcType=VARCHAR}
+               and cpr.profit_bath = #{profitBath,jdbcType=VARCHAR}
+  
+  </select>
+  
+  <!-- 分润明细结算后，更新 -->
+  <update id="updateAfterSettleByTransNo" parameterType="map">
+       update clearing_profit_record cpr 
+              set cpr.profit_bath = #{profitBath,jdbcType=VARCHAR}, 
+               cpr.profit_time = #{profitTime,jdbcType=TIMESTAMP},
+                  cpr.profit_status = #{settleProfitStatus,jdbcType=VARCHAR}                                                     
+              where cpr.trans_no = #{transNo,jdbcType=VARCHAR}  
+                    and cpr.profit_status = #{profitStatus,jdbcType=VARCHAR}    
+  </update>
+  <!-- 判断是否重复发送的数据wl -->
+  <select id="getBooleanExist" resultType="int">
+		SELECT COUNT(*) FROM clearing_profit_record WHERE share_detail_id= #{shareDetailId}
+	</select>
+</mapper>

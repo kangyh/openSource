@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleBillRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleBillRecord" >
+    <id column="bill_detail_id" property="billDetailId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="save_time" property="saveTime" jdbcType="TIMESTAMP" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="channle_no" property="channleNo" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="DECIMAL" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="bill_status" property="billStatus" jdbcType="VARCHAR" />
+    <result column="check_bath_no" property="checkBathNo" jdbcType="VARCHAR" />
+    <result column="promotion_amount" property="promotionAmount" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="fee_service" property="feeService" jdbcType="DECIMAL" />
+    <result column="field1" property="field1" jdbcType="VARCHAR" />
+    <result column="field2" property="field2" jdbcType="VARCHAR" />
+    <result column="field3" property="field3" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    bill_detail_id, channel_code, channel_type, save_time, payment_id, channle_no, success_amount, 
+    fee, bill_status, check_bath_no, promotion_amount, remark, is_zip, fee_service, field1, 
+    field2, field3
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleBillRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_bill_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_bill_record
+    where bill_detail_id = #{billDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_bill_record
+    where bill_detail_id = #{billDetailId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleBillRecordExample" >
+    delete from settle_bill_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleBillRecord" >
+    insert into settle_bill_record (bill_detail_id, channel_code, channel_type, 
+      save_time, payment_id, channle_no, 
+      success_amount, fee, bill_status, 
+      check_bath_no, promotion_amount, remark, 
+      is_zip, fee_service, field1, 
+      field2, field3)
+    values (#{billDetailId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, 
+      #{saveTime,jdbcType=TIMESTAMP}, #{paymentId,jdbcType=VARCHAR}, #{channleNo,jdbcType=VARCHAR}, 
+      #{successAmount,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{billStatus,jdbcType=VARCHAR}, 
+      #{checkBathNo,jdbcType=VARCHAR}, #{promotionAmount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{isZip,jdbcType=VARCHAR}, #{feeService,jdbcType=DECIMAL}, #{field1,jdbcType=VARCHAR}, 
+      #{field2,jdbcType=VARCHAR}, #{field3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleBillRecord" >
+    insert into settle_bill_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billDetailId != null" >
+        bill_detail_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="saveTime != null" >
+        save_time,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="channleNo != null" >
+        channle_no,
+      </if>
+      <if test="successAmount != null" >
+        success_amount,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="billStatus != null" >
+        bill_status,
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no,
+      </if>
+      <if test="promotionAmount != null" >
+        promotion_amount,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isZip != null" >
+        is_zip,
+      </if>
+      <if test="feeService != null" >
+        fee_service,
+      </if>
+      <if test="field1 != null" >
+        field1,
+      </if>
+      <if test="field2 != null" >
+        field2,
+      </if>
+      <if test="field3 != null" >
+        field3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billDetailId != null" >
+        #{billDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="saveTime != null" >
+        #{saveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="channleNo != null" >
+        #{channleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="billStatus != null" >
+        #{billStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkBathNo != null" >
+        #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionAmount != null" >
+        #{promotionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        #{feeService,jdbcType=DECIMAL},
+      </if>
+      <if test="field1 != null" >
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        #{field3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleBillRecordExample" resultType="java.lang.Integer" >
+    select count(*) from settle_bill_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_bill_record
+    <set >
+      <if test="record.billDetailId != null" >
+        bill_detail_id = #{record.billDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelCode != null" >
+        channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.saveTime != null" >
+        save_time = #{record.saveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.paymentId != null" >
+        payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channleNo != null" >
+        channle_no = #{record.channleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.successAmount != null" >
+        success_amount = #{record.successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fee != null" >
+        fee = #{record.fee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.billStatus != null" >
+        bill_status = #{record.billStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkBathNo != null" >
+        check_bath_no = #{record.checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.promotionAmount != null" >
+        promotion_amount = #{record.promotionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isZip != null" >
+        is_zip = #{record.isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feeService != null" >
+        fee_service = #{record.feeService,jdbcType=DECIMAL},
+      </if>
+      <if test="record.field1 != null" >
+        field1 = #{record.field1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field2 != null" >
+        field2 = #{record.field2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field3 != null" >
+        field3 = #{record.field3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_bill_record
+    set bill_detail_id = #{record.billDetailId,jdbcType=BIGINT},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      channel_type = #{record.channelType,jdbcType=VARCHAR},
+      save_time = #{record.saveTime,jdbcType=TIMESTAMP},
+      payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      channle_no = #{record.channleNo,jdbcType=VARCHAR},
+      success_amount = #{record.successAmount,jdbcType=DECIMAL},
+      fee = #{record.fee,jdbcType=DECIMAL},
+      bill_status = #{record.billStatus,jdbcType=VARCHAR},
+      check_bath_no = #{record.checkBathNo,jdbcType=VARCHAR},
+      promotion_amount = #{record.promotionAmount,jdbcType=DECIMAL},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_zip = #{record.isZip,jdbcType=VARCHAR},
+      fee_service = #{record.feeService,jdbcType=DECIMAL},
+      field1 = #{record.field1,jdbcType=VARCHAR},
+      field2 = #{record.field2,jdbcType=VARCHAR},
+      field3 = #{record.field3,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleBillRecord" >
+    update settle_bill_record
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="saveTime != null" >
+        save_time = #{saveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="channleNo != null" >
+        channle_no = #{channleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        success_amount = #{successAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="billStatus != null" >
+        bill_status = #{billStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkBathNo != null" >
+        check_bath_no = #{checkBathNo,jdbcType=VARCHAR},
+      </if>
+      <if test="promotionAmount != null" >
+        promotion_amount = #{promotionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isZip != null" >
+        is_zip = #{isZip,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        fee_service = #{feeService,jdbcType=DECIMAL},
+      </if>
+      <if test="field1 != null" >
+        field1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        field2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        field3 = #{field3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where check_bath_no = #{record.checkBathNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleBillRecord" >
+    update settle_bill_record
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      save_time = #{saveTime,jdbcType=TIMESTAMP},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      channle_no = #{channleNo,jdbcType=VARCHAR},
+      success_amount = #{successAmount,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      bill_status = #{billStatus,jdbcType=VARCHAR},
+      check_bath_no = #{checkBathNo,jdbcType=VARCHAR},
+      promotion_amount = #{promotionAmount,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_zip = #{isZip,jdbcType=VARCHAR},
+      fee_service = #{feeService,jdbcType=DECIMAL},
+      field1 = #{field1,jdbcType=VARCHAR},
+      field2 = #{field2,jdbcType=VARCHAR},
+      field3 = #{field3,jdbcType=VARCHAR}
+    where bill_detail_id = #{billDetailId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 更新账单明细表（settle_bill_record）：账单状态  变为已处理  -->
+  <update id="updateSettleBillRecordByPrimaryKey" parameterType="map" >
+    update settle_bill_record
+    <set >
+      <if test="billStatus != null" >
+        bill_status = #{billStatus,jdbcType=CHAR},
+      </if>
+    </set>
+    where bill_detail_id = #{billDetailId,jdbcType=BIGINT}
+  </update>
+  <!-- 根据上游流水号查询对账明细 -->
+  <select id="queryBillRecordDetailByBatchNo" parameterType="map" resultMap="BaseResultMap" >
+      select   
+    	<include refid="Base_Column_List" />
+    from settle_bill_record t
+    where t.check_bath_no = #{checkBathNo}
+    and t.bill_status = #{billStatus}
+  </select>
+  
+  <select id="selectByPaymentId" parameterType="map" resultMap="BaseResultMap"  >
+      select  
+        <include refid="Base_Column_List" />
+        from settle_bill_record t
+    where  t.payment_id = #{paymentId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByChannelNo" parameterType="map" resultMap="BaseResultMap">
+  	select  
+        <include refid="Base_Column_List" />
+        from settle_bill_record t
+    where  t.channle_no = #{channleNo,jdbcType=VARCHAR}
+  </select>
+      
+    
+</mapper>

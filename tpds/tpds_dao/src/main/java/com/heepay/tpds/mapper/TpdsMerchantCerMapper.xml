@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsMerchantCerMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsMerchantCer" >
+    <id column="tpds_merchant_cer_id" property="id" jdbcType="INTEGER" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="pub_key" property="pubKey" jdbcType="VARCHAR" />
+    <result column="pri_key" property="priKey" jdbcType="VARCHAR" />
+    <result column="cer_path" property="cerPath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tpds_merchant_cer_id, merchant_no, pub_key, pri_key, cer_path, create_time, update_time, update_user, 
+    note
+  </sql>
+  
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsMerchantCer" >
+    insert into tpds_merchant_cer (merchant_no, pub_key, 
+      pri_key, cer_path, create_time, 
+      update_time, update_user, note
+      )
+    values (#{merchantNo,jdbcType=VARCHAR}, #{pubKey,jdbcType=VARCHAR}, 
+      #{priKey,jdbcType=VARCHAR}, #{cerPath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
+      )
+  </insert> 
+  <update id="update" parameterType="com.heepay.tpds.entity.TpdsMerchantCer" >
+    update tpds_merchant_cer
+    set merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      pub_key = #{pubKey,jdbcType=VARCHAR},
+      pri_key = #{priKey,jdbcType=VARCHAR},
+      cer_path = #{cerPath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where tpds_merchant_cer_id = #{tpdsMerchantCerId,jdbcType=INTEGER}
+  </update>
+    <delete id="deleteByMerchantNo" parameterType="java.lang.String" >
+    delete from tpds_merchant_cer
+    where merchant_no = #{merchantNo,jdbcType=VARCHAR}
+  </delete>
+  <select id="selectTpdsMerchantCerByMerchantNo" parameterType="map" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from
+  		tpds_merchant_cer
+  	where
+  		merchant_no = #{merchantNo,jdbcType=VARCHAR}
+  </select>
+   <select id="getlist" resultType="com.heepay.tpds.entity.TpdsMerchantCer">
+  select   tpds_merchant_cer_id, merchant_no, pub_key, pri_key, cer_path, create_time, update_time, update_user, 
+    note from tpds_merchant_cer 
+  </select>
+</mapper>

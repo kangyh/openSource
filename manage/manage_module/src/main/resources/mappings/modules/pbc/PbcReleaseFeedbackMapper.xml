@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcReleaseFeedbackDao" >
+  
+<sql id="includeEntity">
+	  release_feedback_id, result, case_number, 
+      application_time, account_number, feedback_remark, 
+      application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcReleaseFeedback">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_release_feedback a
+		<where>
+			<!-- caseNumber-->
+			<if test="caseNumber != null and caseNumber != ''">
+				AND case_number = #{caseNumber} 
+			</if>  
+			<!-- accountNumber  -->
+			<if test="accountNumber  != null and accountNumber != ''"> 
+				AND account_number = #{accountNumber} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY release_feedback_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY release_feedback_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  <insert id="save" parameterType="PbcReleaseFeedback" >
+     insert into pbc_release_feedback (release_feedback_id, result, case_number, 
+      application_time, account_number, feedback_remark, 
+      application_code)
+    values (#{releaseFeedbackId,jdbcType=BIGINT}, #{result,jdbcType=VARCHAR}, #{caseNumber,jdbcType=VARCHAR}, 
+      #{applicationTime,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, #{feedbackRemark,jdbcType=VARCHAR}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="saveMap" parameterType="Map" >
+     insert into pbc_release_feedback (result, case_number, 
+      application_time, account_number, feedback_remark, 
+      application_code)
+    values (#{result,jdbcType=VARCHAR}, #{caseNumber,jdbcType=VARCHAR}, 
+      #{applicationTime,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, #{feedbackRemark,jdbcType=VARCHAR}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="saveEntity" parameterType="PbcReleaseFeedback" useGeneratedKeys="true" keyProperty="releaseFeedbackId">
+    insert into pbc_release_feedback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="releaseFeedbackId != null" >
+        release_feedback_id,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="caseNumber != null" >
+        case_number,
+      </if>
+      <if test="applicationTime != null" >
+        application_time,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="feedbackRemark != null" >
+        feedback_remark,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="releaseFeedbackId != null" >
+        #{releaseFeedbackId,jdbcType=BIGINT},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationTime != null" >
+        #{applicationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackRemark != null" >
+        #{feedbackRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+
+  
+  <update id="updateEntity" parameterType="PbcReleaseFeedback" >
+    update pbc_release_feedback
+    <set >
+      <if test="result != null" >
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        case_number = #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationTime != null" >
+        application_time = #{applicationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackRemark != null" >
+        feedback_remark = #{feedbackRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where release_feedback_id = #{releaseFeedbackId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcReleaseFeedback" >
+    update pbc_release_feedback
+    set result = #{result,jdbcType=VARCHAR},
+      case_number = #{caseNumber,jdbcType=VARCHAR},
+      application_time = #{applicationTime,jdbcType=VARCHAR},
+      account_number = #{accountNumber,jdbcType=VARCHAR},
+      feedback_remark = #{feedbackRemark,jdbcType=VARCHAR},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where release_feedback_id = #{releaseFeedbackId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getEntityById" resultType="PbcReleaseFeedback">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_release_feedback a
+	WHERE release_feedback_id = #{releaseFeedbackId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcReleaseFeedback">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_release_feedback a
+	WHERE application_code = #{applicationCode}
+  </select>
+</mapper>

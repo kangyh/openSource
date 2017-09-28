@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.BatchPayRecordDao">
+    
+	<sql id="batchPayRecordColumns">
+		a.batch_id AS "batchId",
+		a.merchant_batch_no AS "merchantBatchNo",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.total_amount AS "totalAmount",
+		a.total_num AS "totalNum",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.success_total_amount AS "successTotalAmount",
+		a.success_total_num AS "successTotalNum",
+		a.transfer_from AS "transferFrom",
+		a.bank_order_id AS "bankOrderId",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.intoaccount_time AS "intoaccountTime"
+	</sql>
+	
+	<sql id="batchPayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="BatchPayRecord">
+		SELECT 
+			<include refid="batchPayRecordColumns"/>
+		FROM batch_pay_record a
+		<include refid="batchPayRecordJoins"/>
+		WHERE a.batch_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BatchPayRecord">
+		SELECT 
+			<include refid="batchPayRecordColumns"/>
+		FROM batch_pay_record a
+		<include refid="batchPayRecordJoins"/>
+		<where>
+			
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="bankOrderId != null and bankOrderId != ''">
+				AND a.bank_order_id = #{bankOrderId}
+			</if>
+			<if test="batchId != null and batchId != ''">
+				AND a.batch_id = #{batchId}
+			</if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="status == 'R1'">
+                AND a.status in('PROCES','PENDNG')
+            </if>
+            <if test="status != 'R1'">
+                AND a.status in('PROCES','FINISH','PENDNG')
+            </if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY createTime ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY createTime DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getPreAuthList" resultType="BatchPayRecord">
+		select <include refid="batchPayRecordColumns" />
+		  from batch_pay_record a
+		<where>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="batchId != null and batchId != ''">
+				AND a.batch_id = #{batchId}
+			</if>
+			<if test="merchantBatchNo != null and merchantBatchNo != ''">
+				AND a.merchant_batch_no = #{merchantBatchNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+
+			and a.status = 'PROCES'
+			and exists
+			(select 1 from batch_pay_record_detail b
+			  where b.batch_id = a.batch_id
+			    and b.status = 'PREAUD'
+			    and b.exception_status = 'NORMAL')
+
+			<if test="sortOrder == 'ASC'">
+				ORDER BY createTime ASC
+			</if>
+			<if test="sortOrder == 'DESC'">
+				ORDER BY createTime DESC
+			</if>
+
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="BatchPayRecord">
+		SELECT 
+			<include refid="batchPayRecordColumns"/>
+		FROM batch_pay_record a
+		<include refid="batchPayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO batch_pay_record(
+			batch_id,
+			merchant_batch_no,
+			account_id,
+			account_name,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			total_amount,
+			total_num,
+			create_time,
+			update_time,
+			status,
+			success_total_amount,
+			success_total_num,
+			transfer_from,
+			bank_order_id,
+			fee_type,
+			fee_ratio,
+			fee_amount
+		) VALUES (
+			#{batchId},
+			#{merchantBatchNo},
+			#{accountId},
+			#{accountName},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{totalAmount},
+			#{totalNum},
+			#{createTime},
+			#{updateTime},
+			#{status},
+			#{successTotalAmount},
+			#{successTotalNum},
+			#{transferFrom},
+			#{bankOrderId},
+			#{feeType},
+			#{feeRatio},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE batch_pay_record SET 	
+			batch_id = #{batchId},
+			merchant_batch_no = #{merchantBatchNo},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			total_amount = #{totalAmount},
+			total_num = #{totalNum},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			status = #{status},
+			success_total_amount = #{successTotalAmount},
+			success_total_num = #{successTotalNum},
+			transfer_from = #{transferFrom},
+			bank_order_id = #{bankOrderId},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM batch_pay_record
+		WHERE id = #{id}
+	</update>
+	<update id="audit">
+		UPDATE batch_pay_record set
+		status = #{status}
+		WHERE batch_id = #{batchId}
+	</update>
+</mapper>

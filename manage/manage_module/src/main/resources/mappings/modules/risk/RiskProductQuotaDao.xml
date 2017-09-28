@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskProductQuotaDao" >
+
+ 	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="riskProductQuotaColumns">
+		a.pro_id AS "proId",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.per_item AS "perItem",
+		a.per_day AS "perDay",
+		a.status AS "status",
+		a.per_month AS "perMonth",
+		a.account_type AS "accountType",
+		a.bankcard_type AS "bankcardType",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor"
+	</sql>
+	
+	<!-- 
+		查询list
+	 -->
+	<select id="findList" resultType="RiskProductQuota">
+		SELECT 
+			<include refid="riskProductQuotaColumns"/>
+		FROM risk_product_quota a
+		<where>
+			<!-- 主键 -->
+			<if test="proId != null and proId != ''">
+				AND a.pro_id = #{proId}
+			</if>
+			<!-- 产品名称 -->
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<!-- 账户类型 -->
+			<if test="accountType != null and accountType != ''">
+				AND a.account_type = #{accountType}
+			</if>
+			<!-- 银行类型 -->
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY pro_id desc
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 根据主键查询类型明细信息 -->
+	<select id="get" resultType="RiskProductQuota">
+		SELECT
+			<include refid="riskProductQuotaColumns"/>
+		FROM risk_product_quota a
+		WHERE a.pro_id = #{proId}
+	</select>
+	
+	<!-- 插入产品限额信息表 -->
+	<insert id="insert">
+		insert into risk_product_quota (pro_id, product_code, product_name, 
+	      per_item, per_day, status, 
+	      per_month, account_type, bankcard_type, create_time, 
+	      create_author, update_time, update_author)
+	    values (#{proId,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+	      #{perItem,jdbcType=DECIMAL}, #{perDay,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, 
+	      #{perMonth,jdbcType=DECIMAL}, #{accountType,jdbcType=CHAR},#{bankcardType,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+	      #{createAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR})
+	</insert>
+	<!-- 修改产品限额信息表 -->
+	<update id="update">
+		UPDATE risk_product_quota
+		<set>
+			<if test="perItem != null">per_item = #{perItem},</if>
+			<if test="perDay != null">per_day = #{perDay},</if>
+			<if test="perMonth != null">per_month = #{perMonth},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="updateAuthor != null">update_author = #{updateAuthor},</if>
+		</set>
+		WHERE pro_id = #{proId}
+	</update>
+	
+	<!-- 验证是否存在相同产品和银行卡持卡人类型 -->
+	<select id="findByRiskProductQuotaExist" resultType="int">
+		SELECT 
+			count(1)
+		FROM risk_product_quota a
+		WHERE a.product_code = #{productCode}
+		and a.account_type = #{accountType}
+		<if test='bankcardType != null and bankcardType != ""'>
+			and a.bankcard_type = #{bankcardType}
+		</if>
+		<if test='proId != null and proId != ""'>
+			AND a.pro_id != #{proId}
+		</if>
+	</select>
+</mapper>

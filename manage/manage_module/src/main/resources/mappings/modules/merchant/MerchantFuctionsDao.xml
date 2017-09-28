@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantFuctionsDao">
+    
+	<sql id="merchantFuctionsColumns">
+		a.id AS "id",
+		a.function_code AS "functionCode",
+		a.function_name AS "functionName",
+		a.function_url AS "functionUrl",
+		a.function_status AS "functionStatus",
+		a.parent_function_code AS "parentFunctionCode"
+	</sql>
+	
+	<sql id="merchantFuctionsJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantFuctions">
+		SELECT 
+			<include refid="merchantFuctionsColumns"/>
+		FROM merchant_fuctions a
+		<include refid="merchantFuctionsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantFuctions">
+		SELECT 
+			<include refid="merchantFuctionsColumns"/>
+		FROM merchant_fuctions a
+		<include refid="merchantFuctionsJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="functionCode != null and functionCode != ''">
+				AND a.function_code = #{functionCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantFuctions">
+		SELECT 
+			<include refid="merchantFuctionsColumns"/>
+		FROM merchant_fuctions a
+		<include refid="merchantFuctionsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_fuctions(
+			id,
+			function_code,
+			function_name,
+			function_url,
+			function_status,
+			parent_function_code
+		) VALUES (
+			#{id},
+			#{functionCode},
+			#{functionName},
+			#{functionUrl},
+			#{functionStatus},
+			#{parentFunctionCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_fuctions SET 	
+			function_code = #{functionCode},
+			function_name = #{functionName},
+			function_url = #{functionUrl},
+			function_status = #{functionStatus},
+			parent_function_code = #{parentFunctionCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_fuctions
+		WHERE id = #{id}
+	</update>
+
+	<select id="queryPermissionCodeById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT function_code
+		FROM merchant_fuctions
+		WHERE id = #{id}
+	</select>
+
+</mapper>

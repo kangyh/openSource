@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsValidContractDao">
+    
+	<sql id="hgmsValidContractColumns">
+		a.contract_id AS "contractId",
+		a.merchant_id AS "merchantId",
+		a.superior_id AS "superiorId",
+		a.superior_name AS "superiorName",
+		a.company_name AS "companyName",
+		a.contract_name AS "contractName",
+		a.business_id AS "businessId",
+		a.business_name AS "businessName",
+		a.service_id AS "serviceId",
+		a.service_name AS "serviceName",
+		a.validity_begin_time AS "validityBeginTime",
+		a.validity_end_time AS "validityEndTime",
+		a.contract_file_address AS "contractFileAddress",
+		a.status AS "status",
+		a.rc_audit_status AS "rcAuditStatus",
+		a.rc_audit_time AS "rcAuditTime",
+		a.rc_auditor AS "rcAuditor",
+		a.legal_audit_status AS "legalAuditStatus",
+		a.legal_audit_time AS "legalAuditTime",
+		a.legal_auditor AS "legalAuditor",
+		a.entering_time AS "enteringTime",
+		a.entering_id AS "enteringId",
+		a.op_audit_time AS "opAuditTime",
+		a.op_auditor AS "opAuditor",
+		a.contract_status AS "contractStatus",
+		a.objection AS "objection",
+		a.rule_build_type AS "ruleBuildType",
+		a.coll_rule_id AS "collRuleId",
+		a.coll_rule_status AS "collRuleStatus",
+		a.coll_amount AS "collAmount",
+		a.pay_rule_id AS "payRuleId",
+		a.pay_rule_status AS "payRuleStatus",
+		a.pay_amount AS "payAmount",
+		a.extend1 AS "extend1",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3"
+	</sql>
+	
+	<sql id="hgmsValidContractJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsValidContract">
+		SELECT 
+			<include refid="hgmsValidContractColumns"/>
+		FROM hgms_valid_contract a
+		<include refid="hgmsValidContractJoins"/>
+		WHERE a.contract_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsValidContract">
+		SELECT 
+			<include refid="hgmsValidContractColumns"/>
+		FROM hgms_valid_contract a
+		<include refid="hgmsValidContractJoins"/>
+		<where>
+			
+			<if test="contractId != null and contractId != ''">
+				AND a.contract_id = #{contractId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="superiorId != null and superiorId != ''">
+				AND a.superior_id = #{superiorId}
+			</if>
+			<if test="contractName != null and contractName != ''">
+				AND a.contract_name = #{contractName}
+			</if>
+			<if test="contractStatus != null and contractStatus != ''">
+				AND a.contract_status = #{contractStatus}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+            <if test="legalAuditStatus != null and legalAuditStatus != ''" >
+                AND a.legal_audit_status = #{legalAuditStatus}
+            </if>
+            <choose>
+                <when test="validityBeginTime != null">
+                    AND a.validity_begin_time &gt; #{validityBeginTime}
+                </when>
+                <when test="validityEndTime != null">
+                    AND a.validity_end_time &lt; #{validityEndTime}
+                </when>
+            </choose>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsValidContract">
+		SELECT 
+			<include refid="hgmsValidContractColumns"/>
+		FROM hgms_valid_contract a
+		<include refid="hgmsValidContractJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO hgms_valid_contract(
+			contract_id,
+			merchant_id,
+			superior_id,
+			superior_name,
+			company_name,
+			contract_name,
+			business_id,
+			business_name,
+			service_id,
+			service_name,
+			validity_begin_time,
+			validity_end_time,
+			contract_file_address,
+			status,
+			rc_audit_status,
+			rc_audit_time,
+			rc_auditor,
+			legal_audit_status,
+			legal_audit_time,
+			legal_auditor,
+			entering_time,
+			entering_id,
+			op_audit_time,
+			op_auditor,
+			contract_status,
+			objection,
+			rule_build_type,
+			coll_rule_id,
+			coll_rule_status,
+			coll_amount,
+			pay_rule_id,
+			pay_rule_status,
+			pay_amount,
+			extend1,
+			extend2,
+			extend3
+		) VALUES (
+			#{contractId},
+			#{merchantId},
+			#{superiorId},
+			#{superiorName},
+			#{companyName},
+			#{contractName},
+			#{businessId},
+			#{businessName},
+			#{serviceId},
+			#{serviceName},
+			#{validityBeginTime},
+			#{validityEndTime},
+			#{contractFileAddress},
+			#{status},
+			#{rcAuditStatus},
+			#{rcAuditTime},
+			#{rcAuditor},
+			#{legalAuditStatus},
+			#{legalAuditTime},
+			#{legalAuditor},
+			#{enteringTime},
+			#{enteringId},
+			#{opAuditTime},
+			#{opAuditor},
+			#{contractStatus},
+			#{objection},
+			#{ruleBuildType},
+			#{collRuleId},
+			#{collRuleStatus},
+			#{collAmount},
+			#{payRuleId},
+			#{payRuleStatus},
+			#{payAmount},
+			#{extend1},
+			#{extend2},
+			#{extend3}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE hgms_valid_contract
+		<set>
+			<if test="merchantId != null and merchantId != ''" >
+				merchant_id = #{merchantId,jdbcType=VARCHAR},
+			</if>
+			<if test="superiorId != null and superiorId != ''" >
+				superior_id = #{superiorId,jdbcType=VARCHAR},
+			</if>
+			<if test="superiorName != null and superiorName != ''" >
+				superior_name = #{superiorName,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null and companyName != ''" >
+				company_name = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="contractName != null and contractName != ''" >
+				contract_name = #{contractName,jdbcType=VARCHAR},
+			</if>
+			<if test="businessId != null and businessId != ''" >
+				business_id = #{businessId,jdbcType=BIGINT},
+			</if>
+			<if test="businessName != null and businessName != ''" >
+				business_name = #{businessName,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceId != null and serviceId != ''" >
+				service_id = #{serviceId,jdbcType=BIGINT},
+			</if>
+			<if test="serviceName != null and serviceName != ''" >
+				service_name = #{serviceName,jdbcType=VARCHAR},
+			</if>
+			<if test="validityBeginTime != null" >
+				validity_begin_time = #{validityBeginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validityEndTime != null" >
+				validity_end_time = #{validityEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="contractFileAddress != null and contractFileAddress != ''" >
+				contract_file_address = #{contractFileAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status != ''" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="rcAuditStatus != null and rcAuditStatus != ''" >
+				rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+			</if>
+			<if test="rcAuditTime != null" >
+				rc_audit_time = #{rcAuditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rcAuditor != null and rcAuditor != ''" >
+				rc_auditor = #{rcAuditor,jdbcType=SMALLINT},
+			</if>
+			<if test="legalAuditStatus != null and legalAuditStatus != ''" >
+				legal_audit_status = #{legalAuditStatus,jdbcType=CHAR},
+			</if>
+			<if test="legalAuditTime != null" >
+				legal_audit_time = #{legalAuditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="legalAuditor != null and legalAuditor != ''" >
+				legal_auditor = #{legalAuditor,jdbcType=SMALLINT},
+			</if>
+			<if test="enteringTime != null" >
+				entering_time = #{enteringTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enteringId != null and enteringId != ''" >
+				entering_id = #{enteringId,jdbcType=SMALLINT},
+			</if>
+			<if test="opAuditTime != null" >
+				op_audit_time = #{opAuditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="opAuditor != null and opAuditor != ''" >
+				op_auditor = #{opAuditor,jdbcType=SMALLINT},
+			</if>
+			<if test="contractStatus != null and contractStatus != ''" >
+				contract_status = #{contractStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="objection != null and objection != ''" >
+				objection = #{objection,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleBuildType != null and ruleBuildType != ''">
+				rule_build_type = #{ruleBuildType,jdbcType=CHAR},
+			</if>
+			<if test="collRuleId != null and collRuleId != ''">
+				coll_rule_id = #{collRuleId,jdbcType=VARCHAR},
+			</if>
+			<if test="collRuleStatus != null and collRuleStatus != ''">
+				coll_rule_status = #{collRuleStatus,jdbcType=CHAR},
+			</if>
+			<if test="collAmount != null and collAmount != ''">
+				coll_amount = #{collAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="payRuleId != null and payRuleId != ''">
+				pay_rule_id = #{payRuleId,jdbcType=VARCHAR},
+			</if>
+			<if test="payRuleStatus != null and payRuleStatus != ''">
+				pay_rule_status = #{payRuleStatus,jdbcType=CHAR},
+			</if>
+			<if test="payAmount != null and payAmount != ''">
+				pay_amount = #{payAmount,jdbcType=DECIMAL},
+			</if>
+			<if test="extend1 != null and extend1 != ''" >
+				extend1 = #{extend1,jdbcType=VARCHAR},
+			</if>
+			<if test="extend2 != null and extend2 != ''" >
+				extend2 = #{extend2,jdbcType=VARCHAR},
+			</if>
+			<if test="extend3 != null and extend3 != ''" >
+				extend3 = #{extend3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE contract_id = #{contractId}
+	</update>
+
+	<update id="updateBusiName" parameterType="com.heepay.manage.modules.hgms.entity.HgmsBusiness">
+		UPDATE hgms_valid_contract
+		<set>
+			<if test="businessName != null and businessName != ''" >
+				business_name = #{businessName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE business_id = #{businessId}
+	</update>
+
+	<update id="updateServiceName" parameterType="com.heepay.manage.modules.hgms.entity.HgmsServiceItem">
+		UPDATE hgms_valid_contract
+		<set>
+            <if test="serviceName != null and serviceName != ''" >
+                service_name = #{serviceName,jdbcType=VARCHAR},
+            </if>
+		</set>
+		WHERE service_id = #{serviceId}
+	</update>
+
+    <!-- 合约的法务审核 -->
+	<update id="legalAudit">
+		UPDATE hgms_valid_contract
+		<set>
+			<if test="rcAuditStatus != null and rcAuditStatus != ''" >
+				rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+			</if>
+			<if test="legalAuditStatus != null and legalAuditStatus != ''" >
+				legal_audit_status = #{legalAuditStatus,jdbcType=CHAR},
+			</if>
+			<if test="legalAuditTime != null" >
+				legal_audit_time = #{legalAuditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="legalAuditor != null and legalAuditor != ''" >
+				legal_auditor = #{legalAuditor,jdbcType=SMALLINT},
+			</if>
+			<if test="objection != null and objection != ''" >
+				objection = #{objection,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE contract_id = #{contractId}
+	</update>
+
+    <!-- 合约的法务审核修改 -->
+	<update id="legalUpdate">
+		UPDATE hgms_valid_contract
+		<set>
+            <if test="businessId != null and businessId != ''" >
+                business_id = #{businessId,jdbcType=BIGINT},
+            </if>
+            <if test="businessName != null and businessName != ''" >
+                business_name = #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceId != null and serviceId != ''" >
+                service_id = #{serviceId,jdbcType=BIGINT},
+            </if>
+            <if test="serviceName != null and serviceName != ''" >
+                service_name = #{serviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="validityBeginTime != null" >
+                validity_begin_time = #{validityBeginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validityEndTime != null" >
+                validity_end_time = #{validityEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contractName != null and contractName != ''" >
+                contract_name = #{contractName,jdbcType=VARCHAR},
+            </if>
+            <if test="contractFileAddress != null and contractFileAddress != ''" >
+                contract_file_address = #{contractFileAddress,jdbcType=VARCHAR},
+            </if>
+			<if test="legalAuditStatus != null and legalAuditStatus != ''" >
+				legal_audit_status = #{legalAuditStatus,jdbcType=CHAR},
+			</if>
+            <if test="opAuditTime != null" >
+                op_audit_time = #{opAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="opAuditor != null and opAuditor != ''" >
+                op_auditor = #{opAuditor,jdbcType=SMALLINT},
+            </if>
+		</set>
+		WHERE contract_id = #{contractId}
+	</update>
+
+    <!-- 合约的风控审核 -->
+	<update id="rcAudit">
+		UPDATE hgms_valid_contract
+		<set>
+			<if test="status != null and status != ''" >
+                status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="rcAuditStatus != null and rcAuditStatus != ''" >
+				rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+			</if>
+			<if test="rcAuditTime != null" >
+				rc_audit_time = #{rcAuditTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="rcAuditor != null and rcAuditor != ''" >
+				rc_auditor = #{rcAuditor,jdbcType=SMALLINT},
+			</if>
+			<if test="objection != null" >
+				objection = #{objection,jdbcType=VARCHAR},
+			</if>
+			<if test="contractStatus != null and contractStatus != ''" >
+				contract_status = #{contractStatus,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE contract_id = #{contractId}
+	</update>
+
+    <!-- 合约的风控审核修改 -->
+	<update id="rcUpdate">
+		UPDATE hgms_valid_contract
+		<set>
+            <if test="businessId != null and businessId != ''" >
+                business_id = #{businessId,jdbcType=BIGINT},
+            </if>
+            <if test="businessName != null and businessName != ''" >
+                business_name = #{businessName,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceId != null and serviceId != ''" >
+                service_id = #{serviceId,jdbcType=BIGINT},
+            </if>
+            <if test="serviceName != null and serviceName != ''" >
+                service_name = #{serviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="validityBeginTime != null" >
+                validity_begin_time = #{validityBeginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validityEndTime != null" >
+                validity_end_time = #{validityEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contractName != null and contractName != ''" >
+                contract_name = #{contractName,jdbcType=VARCHAR},
+            </if>
+            <if test="contractFileAddress != null and contractFileAddress != ''" >
+                contract_file_address = #{contractFileAddress,jdbcType=VARCHAR},
+            </if>
+			<if test="rcAuditStatus != null and rcAuditStatus != ''" >
+				rc_audit_status = #{rcAuditStatus,jdbcType=CHAR},
+			</if>
+            <if test="opAuditTime != null" >
+                op_audit_time = #{opAuditTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="opAuditor != null and opAuditor != ''" >
+                op_auditor = #{opAuditor,jdbcType=SMALLINT},
+            </if>
+		</set>
+		WHERE contract_id = #{contractId}
+	</update>
+
+
+	<!-- 启用和禁用 -->
+	<update id="status">
+		UPDATE hgms_valid_contract SET
+		contract_status = #{contractStatus}
+		WHERE contract_id = #{contractId}
+	</update>
+	
+</mapper>

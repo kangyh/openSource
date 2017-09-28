@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.SettleDifferRecordMapper" >
+   <resultMap id="BaseResultMap" type="com.heepay.boss.entity.SettleDifferRecord" >
+    <id column="differ_id" property="differId" jdbcType="BIGINT" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="DECIMAL" />
+    <result column="request_amount" property="requestAmount" jdbcType="DECIMAL" />
+    <result column="check_bath_no" property="checkBathNo" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="channle_no" property="channleNo" jdbcType="VARCHAR" />
+    <result column="differ_type" property="differType" jdbcType="VARCHAR" />
+    <result column="handle_result" property="handleResult" jdbcType="VARCHAR" />
+    <result column="handle_message" property="handleMessage" jdbcType="VARCHAR" />
+    <result column="error_date" property="errorDate" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="operation_date" property="operationDate" jdbcType="TIMESTAMP" />
+    <result column="fee_amount" property="feeAmount" jdbcType="DECIMAL" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="settle_amount_plan" property="settleAmountPlan" jdbcType="DECIMAL" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="trans_status" property="transStatus" jdbcType="VARCHAR" />
+    <result column="is_bill" property="isBill" jdbcType="VARCHAR" />
+    <result column="is_profit" property="isProfit" jdbcType="VARCHAR" />
+    <result column="merchant_order_no" property="merchantOrderNo" jdbcType="VARCHAR" />
+    <result column="success_time" property="successTime" jdbcType="TIMESTAMP" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="busi_time" property="busiTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+    <result column="agent_code" property="agentCode" jdbcType="BIGINT" />
+    <result column="fee_way" property="feeWay" jdbcType="VARCHAR" />
+    <result column="bankcard_type" property="bankcardType" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="bank_seq" property="bankSeq" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="channel_provider" property="channelProvider" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    differ_id, merchant_id, payment_id, trans_no, channel_code, channel_name, success_amount, 
+    request_amount, check_bath_no, settle_bath, channel_type, product_code, product_name, 
+    channle_no, differ_type, handle_result, handle_message, error_date, update_author, 
+    operation_date, fee_amount, cost_amount, settle_amount_plan, trans_type, trans_status, 
+    is_bill, is_profit, merchant_order_no, success_time, pay_time, busi_time, remark, 
+    is_zip, agent_name, agent_code, fee_way, bankcard_type, merchant_name, bank_seq, 
+    bank_name, bank_code, channel_provider, pay_type, account_no
+  </sql>
+  
+  <select id="queryForBigData" resultType="com.heepay.boss.entity.SettleDifferRecord">
+	SELECT
+	<include refid="Base_Column_List" />
+	FROM
+	settle_differ_record;
+	</select>
+	
+	<select id="selectByTransNo" resultType="com.heepay.boss.entity.SettleDifferRecord" parameterType="java.lang.String">
+		select 
+		<include refid="Base_Column_List" />
+		FROM
+		settle_differ_record where trans_no=#{transNo,jdbcType=VARCHAR} limit 1;
+	</select>
+</mapper>

@@ -1,0 +1,17 @@
+jedis.pool.maxTotal=1000
+jedis.pool.maxIdle=50
+jedis.pool.maxWait=100
+jedis.pool.timeout=1000
+jedis.pool.password=
+jedis.pool.testOnBorrow=true
+jedis.pool.testOnReturn=true
+jedis.pool.server.host=192.168.162.70
+jedis.pool.server.port=6379
+<<<<<<< HEAD
+=======
+
+>>>>>>> 16a6b4e2ba84a0e74d25e466d140bb026cb46d98
+jedis.cluster.master1=redis1.hypay.com
+jedis.cluster.master2=redis2.hypay.com
+jedis.cluster.master3=redis3.hypay.com
+jedis.cluster.master.port=6379

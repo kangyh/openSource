@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.enterprises.dao.EnterprisesCertificationDao">
+    
+	<sql id="enterprisesCertificationColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.ent_name AS "entName",
+		a.ent_reg_no AS "entRegNo",
+		a.rep_name AS "repName",
+		a.rep_id_no AS "repIdNo",
+		a.result AS "result",
+		a.message AS "message",
+		a.channel_no AS "channelNo",
+		a.request_amount AS "requestAmount",
+		a.fee_amount AS "feeAmount",
+		a.ent_name_match AS "entNameMatch",
+		a.ent_reg_no_match AS "entRegNoMatch",
+		a.rep_name_match AS "repNameMatch",
+		a.rep_id_no_match AS "repIdNoMatch",
+		a.channel_code AS "channelCode",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="enterprisesCertificationJoins">
+	</sql>
+    
+	<select id="get" resultType="EnterprisesCertification">
+		SELECT 
+			<include refid="enterprisesCertificationColumns"/>
+		FROM enterprises_certification a
+		<include refid="enterprisesCertificationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="EnterprisesCertification">
+		SELECT 
+			<include refid="enterprisesCertificationColumns"/>
+		FROM enterprises_certification a
+		<include refid="enterprisesCertificationJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				<if test="groupType == 1">
+					AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+				<if test="groupType == 2">
+					AND a.update_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+				</if>
+			</if>
+		</where>
+		ORDER BY create_time DESC
+	</select>
+	
+	<select id="findAllList" resultType="EnterprisesCertification">
+		SELECT 
+			<include refid="enterprisesCertificationColumns"/>
+		FROM enterprises_certification a
+		<include refid="enterprisesCertificationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO enterprises_certification(
+			id,
+			merchant_id,
+			ent_name,
+			ent_reg_no,
+			rep_name,
+			rep_id_no,
+			result,
+			message,
+			channel_no,
+			request_amount,
+			fee_amount,
+			ent_name_match,
+			ent_reg_no_match,
+			rep_name_match,
+			rep_id_no_match,
+			channel_code,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{entName},
+			#{entRegNo},
+			#{repName},
+			#{repIdNo},
+			#{result},
+			#{message},
+			#{channelNo},
+			#{requestAmount},
+			#{feeAmount},
+			#{entNameMatch},
+			#{entRegNoMatch},
+			#{repNameMatch},
+			#{repIdNoMatch},
+			#{channelCode},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE enterprises_certification SET 	
+			id = #{id},
+			merchant_id = #{merchantId},
+			ent_name = #{entName},
+			ent_reg_no = #{entRegNo},
+			rep_name = #{repName},
+			rep_id_no = #{repIdNo},
+			result = #{result},
+			message = #{message},
+			channel_no = #{channelNo},
+			request_amount = #{requestAmount},
+			fee_amount = #{feeAmount},
+			ent_name_match = #{entNameMatch},
+			ent_reg_no_match = #{entRegNoMatch},
+			rep_name_match = #{repNameMatch},
+			rep_id_no_match = #{repIdNoMatch},
+			channel_code = #{channelCode},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM enterprises_certification
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

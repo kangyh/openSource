@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.StatisticsChannelRecordDao">
+    
+	<sql id="statisticsChannelRecordColumns">
+		a.id AS "id",
+		a.channel_code AS "channelCode",
+		a.channel_partners AS "channelPartners",
+		a.bank_name AS "bankName",
+		a.channel_partners_name AS "channelPartnersName",
+		a.channel_type AS "channelType",
+		a.bank_code AS "bankCode",
+		a.bank_type AS "bankType",
+		a.total_count AS "totalCount",
+		a.total_amount AS "totalAmount",
+		a.sucess_count AS "sucessCount",
+		a.channel_type_name AS "channelTypeName",
+		a.sucess_amount AS "sucessAmount",
+		a.fee_amount AS "feeAmount",
+		a.fail_count AS "failCount",
+		a.fail_amount AS "failAmount",
+		a.statistic_time AS "statisticTime",
+		a.statistic_hour AS "statisticHour",
+		a.create_time AS "createTime",
+		a.currency AS "currency",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="statisticsChannelRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="StatisticsChannelRecord">
+		SELECT 
+			<include refid="statisticsChannelRecordColumns"/>
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StatisticsChannelRecord">
+		SELECT
+		    a.channel_code AS "channelCode", 
+			a.channel_partners AS "channelPartners",
+			a.bank_name AS "bankName",
+			a.bank_type AS "bankType",
+			a.channel_partners_name AS "channelPartnersName",
+			a.channel_type AS "channelType",
+			a.bank_code AS "bankCode",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			a.channel_type_name AS "channelTypeName",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="bankType != null and bankType != ''">
+				AND a.bank_type = #{bankType}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="statisticTime != null">
+				AND a.statistic_time = #{statisticTime} AND a.sucess_count > 0
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			AND a.statistic_hour is NULL
+		</where>
+			GROUP BY 
+				channel_code,bank_code,channel_type,channel_partners,channel_partners_name,bank_name,channel_type_name,bank_type
+	</select>
+	
+	<select id="findOldList" resultType="StatisticsChannelRecord">
+		SELECT 
+			<include refid="statisticsChannelRecordColumns"/>
+		FROM statistics_channel_record a
+		  <include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="statisticTime != null">
+				AND a.statistic_time = #{statisticTime} AND a.sucess_count > 0
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+		</where>
+			ORDER BY 
+				statistic_time desc,statistic_hour desc
+	</select>
+	
+	
+		<select id="findInTimeList" resultType="StatisticsChannelRecord">
+		SELECT
+			a.statistic_hour AS "statisticHour",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="statisticTime != null">
+				AND a.statistic_time = #{statisticTime} AND a.sucess_count > 0
+			</if>
+				AND a.statistic_hour &gt;=0
+		</where>
+			GROUP BY 
+				statistic_hour
+	</select>
+	<select id="findTotalList" resultType="StatisticsChannelRecord">
+		SELECT
+			a.statistic_time AS "statisticTime",
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="statisticTime != null">
+				AND a.statistic_time = #{statisticTime} AND a.sucess_count > 0
+			</if>
+		</where>
+			GROUP BY 
+				statistic_time
+	</select>
+	<select id="findweekList" resultType="StatisticsChannelRecord">
+		SELECT
+			SUM(a.total_count) AS "totalCount",
+			SUM(a.total_amount) AS "totalAmount",
+			SUM(a.sucess_count) AS "sucessCount",
+			SUM(a.sucess_amount) AS "sucessAmount",
+			SUM(a.fee_amount) AS "feeAmount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.fail_amount) AS "failAmount"
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+			<if test="statisticTime != null">
+				AND a.statistic_time = #{statisticTime} AND a.sucess_count > 0
+			</if>
+		</where>
+	</select>
+	
+<!-- 	<select id="findList" resultType="StatisticsChannelRecord">
+		SELECT 
+			<include refid="statisticsChannelRecordColumns"/>
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+			<if test="channelPartners != null and channelPartners != ''">
+				AND a.channel_partners = #{channelPartners}
+			</if>
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<if test="bankCode != null and bankCode != ''">
+				AND a.bank_code = #{bankCode}
+			</if>
+			<if test="beginStatisticTime != null and endStatisticTime != null ">
+				AND a.statistic_time BETWEEN #{beginStatisticTime} AND #{endStatisticTime}
+			</if>
+		</where>
+			ORDER BY statistic_time DESC
+	</select> -->
+	
+	<select id="findAllList" resultType="StatisticsChannelRecord">
+		SELECT 
+			<include refid="statisticsChannelRecordColumns"/>
+		FROM statistics_channel_record a
+		<include refid="statisticsChannelRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO statistics_channel_record(
+			id,
+			channel_code,
+			channel_partners,
+			bank_name,
+			channel_partners_name,
+			channel_type,
+			bank_code,
+			total_count,
+			total_amount,
+			sucess_count,
+			channel_type_name,
+			sucess_amount,
+			fail_count,
+			fail_amount,
+			statistic_time,
+			create_time,
+			currency,
+			remark
+		) VALUES (
+			#{id},
+			#{channelCode},
+			#{channelPartners},
+			#{bankName},
+			#{channelPartnersName},
+			#{channelType},
+			#{bankCode},
+			#{totalCount},
+			#{totalAmount},
+			#{sucessCount},
+			#{channelTypeName},
+			#{sucessAmount},
+			#{failCount},
+			#{failAmount},
+			#{statisticTime},
+			#{createTime},
+			#{currency},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE statistics_channel_record SET 	
+			channel_code = #{channelCode},
+			channel_partners = #{channelPartners},
+			bank_name = #{bankName},
+			channel_partners_name = #{channelPartnersName},
+			channel_type = #{channelType},
+			bank_code = #{bankCode},
+			total_count = #{totalCount},
+			total_amount = #{totalAmount},
+			sucess_count = #{sucessCount},
+			channel_type_name = #{channelTypeName},
+			sucess_amount = #{sucessAmount},
+			fail_count = #{failCount},
+			fail_amount = #{failAmount},
+			statistic_time = #{statisticTime},
+			create_time = #{createTime},
+			currency = #{currency},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM statistics_channel_record
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getGatewaySelect" resultType="java.util.Map">
+		SELECT distinct channel_code as channelCode, 
+		       channel_partners_name as channelName,
+		       bank_code as bankCode,
+		       bank_name as bankName,
+		       channel_partners as channelPartners 
+		FROM statistics_channel_record
+		WHERE channel_partners is not null
+	</select>
+	
+	<select id="getByChannelCode" parameterType="java.lang.String" resultType="StatisticsChannelRecord">
+		SELECT <include refid="statisticsChannelRecordColumns"/>
+		FROM statistics_channel_record a
+		WHERE a.channel_code = #{channelCode}
+		LIMIT 1
+	</select>
+	
+</mapper>

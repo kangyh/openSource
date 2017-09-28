@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.settle.dao.SettleDicTypeDao">
+    
+    <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="settleDicTypeColumns">
+		a.type_id AS "typeId",
+		a.code AS "code",
+		a.text AS "text",
+		a.status AS "status",
+		a.create_operator AS "createOperator",
+		a.create_time AS "createTime",
+		a.update_operator AS "updateOperator",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<!-- 查询类型表List -->
+	<select id="findList" resultType="SettleDicType">
+		SELECT 
+			<include refid="settleDicTypeColumns"/>
+		FROM settle_dic_type a
+		<where>
+			<!-- ID-->
+			<if test="typeId != null and typeId != ''">
+				AND a.type_id = #{typeId}
+			</if>
+			<!-- 编码-->
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<!-- 状态-->
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 插入类型表信息 -->
+	<insert id="insert">
+		INSERT INTO settle_dic_type(
+			code, 
+			text, 
+			status,
+			create_operator,
+			update_operator,
+			update_time
+		) VALUES (
+			#{code}, 
+			#{text}, 
+			#{status},
+			#{createOperator},
+			#{updateOperator,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<!-- 根据主键获取信息 -->
+	<select id="get" resultType="SettleDicType">
+		SELECT
+			<include refid="settleDicTypeColumns"/>
+		FROM settle_dic_type a
+		WHERE a.type_id = #{typeId}
+	</select>
+	
+	<!-- 去重查询类型表的编码和名称 -->
+	<select id="findDistinctType" resultType="SettleDicType">
+		SELECT DISTINCT
+			a.code AS "code",
+			a.text AS "text"
+		FROM settle_dic_type a
+	</select>
+	
+	<!-- 去重查询编码和名称用于条件查询 -->
+	<select id="findDistinctTypeIdType" resultType="SettleDicType">
+		SELECT DISTINCT
+			a.type_id AS "typeId",
+			a.text AS "text"
+		FROM settle_dic_type a
+		<if test='flg != null and flg == "list"'>
+			WHERE a.type_id in (SELECT DISTINCT(i.type_id) FROM settle_dic_item i)
+		</if>
+	</select>
+	
+	<!--  修改/更新类型表   -->
+	<update id="update">
+		UPDATE settle_dic_type
+		<set>
+			<if test="text != null">code = #{code},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateOperator != null">update_operator = #{updateOperator},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+		</set>
+		WHERE type_id = #{typeId}
+	</update>
+	
+	<!-- 根据编码和名称查询类型表中是否存在相同的数据 -->
+	<select id="findCodeTextBySettleDicTypeExist" resultType="int">
+		SELECT
+			count(1)
+		FROM settle_dic_type a
+		WHERE a.code = #{code}
+		AND a.text = #{text}
+		<if test='typeId != null and typeId != ""'>
+			AND a.type_id != #{typeId}
+		</if>
+	</select>
+</mapper>

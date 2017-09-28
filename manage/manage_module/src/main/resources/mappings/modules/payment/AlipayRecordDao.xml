@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.AlipayRecordDao">
+    
+	<sql id="alipayRecordColumns">
+		a.alipay_id AS "alipayId",
+		a.merchant_id AS "merchantId",
+		a.out_trade_no AS "outTradeNo",
+		a.version AS "version",
+		a.scene AS "scene",
+		a.auth_code AS "authCode",
+		a.product_code AS "productCode",
+		a.type AS "type",
+		a.status AS "status",
+		a.subject AS "subject",
+		a.body AS "body",
+		a.goods_detail AS "goodsDetail",
+		a.buyer_id AS "buyerId",
+		a.buyer_logon_id AS "buyerLogonId",
+		a.seller_id AS "sellerId",
+		a.total_amount AS "totalAmount",
+		a.discountable_amount AS "discountableAmount",
+		a.undiscountable_amount AS "undiscountableAmount",
+		a.success_amount AS "successAmount",
+		a.fee_amount AS "feeAmount",
+		a.fee_type AS "feeType",
+		a.operator_id AS "operatorId",
+		a.store_id AS "storeId",
+		a.terminal_id AS "terminalId",
+		a.alipay_store_id AS "alipayStoreId",
+		a.extend_params AS "extendParams",
+		a.timeout_express AS "timeoutExpress",
+		a.royalty_info AS "royaltyInfo",
+		a.sub_merchant AS "subMerchant",
+		a.auth_no AS "authNo",
+		a.ext_user_info AS "extUserInfo",
+		a.create_time AS "createTime",
+		a.request_time AS "requestTime",
+		a.update_time AS "updateTime",
+		a.sucess_time AS "sucessTime",
+		a.currency AS "currency",
+		a.settle_cyc AS "settleCyc",
+		a.notify_url AS "notifyUrl",
+		a.return_url AS "returnUrl",
+		a.user_ip AS "userIp"
+	</sql>
+	
+	<sql id="alipayRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="AlipayRecord">
+		SELECT 
+			<include refid="alipayRecordColumns"/>
+		FROM alipay_record a
+		<include refid="alipayRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AlipayRecord">
+		SELECT 
+			<include refid="alipayRecordColumns"/>
+		FROM alipay_record a
+		<include refid="alipayRecordJoins"/>
+		<where>
+			
+			<if test="alipayId != null and alipayId != ''">
+				AND a.alipay_id = #{alipayId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="outTradeNo != null and outTradeNo != ''">
+				AND a.out_trade_no = #{outTradeNo}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AlipayRecord">
+		SELECT 
+			<include refid="alipayRecordColumns"/>
+		FROM alipay_record a
+		<include refid="alipayRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO alipay_record(
+			alipay_id,
+			merchant_id,
+			out_trade_no,
+			version,
+			scene,
+			auth_code,
+			product_code,
+			type,
+			status,
+			subject,
+			body,
+			goods_detail,
+			buyer_id,
+			buyer_logon_id,
+			seller_id,
+			total_amount,
+			discountable_amount,
+			undiscountable_amount,
+			success_amount,
+			fee_amount,
+			fee_type,
+			operator_id,
+			store_id,
+			terminal_id,
+			alipay_store_id,
+			extend_params,
+			timeout_express,
+			royalty_info,
+			sub_merchant,
+			auth_no,
+			ext_user_info,
+			create_time,
+			request_time,
+			update_time,
+			sucess_time,
+			currency,
+			settle_cyc,
+			notify_url,
+			return_url,
+			user_ip
+		) VALUES (
+			#{alipayId},
+			#{merchantId},
+			#{outTradeNo},
+			#{version},
+			#{scene},
+			#{authCode},
+			#{productCode},
+			#{type},
+			#{status},
+			#{subject},
+			#{body},
+			#{goodsDetail},
+			#{buyerId},
+			#{buyerLogonId},
+			#{sellerId},
+			#{totalAmount},
+			#{discountableAmount},
+			#{undiscountableAmount},
+			#{successAmount},
+			#{feeAmount},
+			#{feeType},
+			#{operatorId},
+			#{storeId},
+			#{terminalId},
+			#{alipayStoreId},
+			#{extendParams},
+			#{timeoutExpress},
+			#{royaltyInfo},
+			#{subMerchant},
+			#{authNo},
+			#{extUserInfo},
+			#{createTime},
+			#{requestTime},
+			#{updateTime},
+			#{sucessTime},
+			#{currency},
+			#{settleCyc},
+			#{notifyUrl},
+			#{returnUrl},
+			#{userIp}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE alipay_record SET 	
+			alipay_id = #{alipayId},
+			merchant_id = #{merchantId},
+			out_trade_no = #{outTradeNo},
+			version = #{version},
+			scene = #{scene},
+			auth_code = #{authCode},
+			product_code = #{productCode},
+			type = #{type},
+			status = #{status},
+			subject = #{subject},
+			body = #{body},
+			goods_detail = #{goodsDetail},
+			buyer_id = #{buyerId},
+			buyer_logon_id = #{buyerLogonId},
+			seller_id = #{sellerId},
+			total_amount = #{totalAmount},
+			discountable_amount = #{discountableAmount},
+			undiscountable_amount = #{undiscountableAmount},
+			success_amount = #{successAmount},
+			fee_amount = #{feeAmount},
+			fee_type = #{feeType},
+			operator_id = #{operatorId},
+			store_id = #{storeId},
+			terminal_id = #{terminalId},
+			alipay_store_id = #{alipayStoreId},
+			extend_params = #{extendParams},
+			timeout_express = #{timeoutExpress},
+			royalty_info = #{royaltyInfo},
+			sub_merchant = #{subMerchant},
+			auth_no = #{authNo},
+			ext_user_info = #{extUserInfo},
+			create_time = #{createTime},
+			request_time = #{requestTime},
+			update_time = #{updateTime},
+			sucess_time = #{sucessTime},
+			currency = #{currency},
+			settle_cyc = #{settleCyc},
+			notify_url = #{notifyUrl},
+			return_url = #{returnUrl},
+			user_ip = #{userIp}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM alipay_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

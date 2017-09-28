@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.NormProductDao">
+    
+	<sql id="normProductColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.product_code AS "productCode",
+		a.open_up_fee AS "openUpFee",
+		a.technology_fee AS "technologyFee",
+		a.cash_deposit AS "cashDeposit",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.bank_card_type AS "bankCardType",
+		a.charge_type AS "chargeType",
+		a.charge_ratio AS "chargeRatio",
+		a.charge_fee AS "chargeFee",
+		a.max_fee AS "maxFee",
+		a.min_fee AS "minFee",
+		a.is_refundable AS "isRefundable",
+		a.settle_type AS "settleType",
+		a.settlement_to AS "settlementTo",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="normProductJoins">
+	</sql>
+    
+	<select id="get" resultType="NormProduct">
+		SELECT 
+			<include refid="normProductColumns"/>
+		FROM norm_product a
+		<include refid="normProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="count" resultType="Integer">
+		SELECT
+		    count(1)
+		FROM norm_product
+	</select>
+
+	<select id="selectExist" resultType="NormProduct">
+		SELECT
+		<include refid="normProductColumns"/>
+		FROM norm_product a
+		<include refid="normProductJoins"/>
+		<where>
+			AND a.product_code = #{productCode}
+			<if test="bankCardType != null and bankCardType != ''">
+				AND a.bank_card_type = #{bankCardType}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id != #{id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByNormProductCode" resultType="NormProduct">
+		SELECT
+		<include refid="normProductColumns"/>
+		FROM norm_product a
+		<include refid="normProductJoins"/>
+		WHERE a.code = #{code}
+	</select>
+
+	<select id="findList" resultType="NormProduct">
+		SELECT 
+			<include refid="normProductColumns"/>
+		FROM norm_product a
+		<include refid="normProductJoins"/>
+		<where>
+			
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NormProduct">
+		SELECT 
+			<include refid="normProductColumns"/>
+		FROM norm_product a
+		<include refid="normProductJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO norm_product(
+			id,
+			code,
+			product_code,
+			open_up_fee,
+			technology_fee,
+			cash_deposit,
+			charge_source,
+			charge_deduct_type,
+			charge_collection_type,
+			bank_card_type,
+			charge_type,
+			charge_ratio,
+			charge_fee,
+			max_fee,
+			min_fee,
+			is_refundable,
+			settle_type,
+			settlement_to,
+			status
+		) VALUES (
+			#{id},
+			#{code},
+			#{productCode},
+			#{openUpFee},
+			#{technologyFee},
+			#{cashDeposit},
+			#{chargeSource},
+			#{chargeDeductType},
+			#{chargeCollectionType},
+			#{bankCardType},
+			#{chargeType},
+			#{chargeRatio},
+			#{chargeFee},
+			#{maxFee},
+			#{minFee},
+			#{isRefundable},
+			#{settleType},
+			#{settlementTo},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE norm_product SET 	
+			code = #{code},
+			product_code = #{productCode},
+			open_up_fee = #{openUpFee},
+			technology_fee = #{technologyFee},
+			cash_deposit = #{cashDeposit},
+			charge_source = #{chargeSource},
+			charge_deduct_type = #{chargeDeductType},
+			charge_collection_type = #{chargeCollectionType},
+			bank_card_type = #{bankCardType},
+			charge_type = #{chargeType},
+			charge_ratio = #{chargeRatio},
+			charge_fee = #{chargeFee},
+			max_fee = #{maxFee},
+			min_fee = #{minFee},
+			is_refundable = #{isRefundable},
+			settle_type = #{settleType},
+			settlement_to = #{settlementTo},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM norm_product
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

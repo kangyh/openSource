@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsCustomChargeMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsCustomCharge" >
+    <id column="cus_id" property="cusId" jdbcType="BIGINT" />
+    <result column="business_seq_no" property="businessSeqNo" jdbcType="VARCHAR" />
+    <result column="business_order_no" property="businessOrderNo" jdbcType="VARCHAR" />
+    <result column="r_type" property="rType" jdbcType="CHAR" />
+    <result column="entrustflag" property="entrustflag" jdbcType="CHAR" />
+    <result column="oder_no" property="oderNo" jdbcType="CHAR" />
+    <result column="debit_account_no" property="debitAccountNo" jdbcType="VARCHAR" />
+    <result column="cebit_account_no" property="cebitAccountNo" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="CHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="other_amounttype" property="otherAmounttype" jdbcType="CHAR" />
+    <result column="other_amount" property="otherAmount" jdbcType="DECIMAL" />
+    <result column="pay_type" property="payType" jdbcType="CHAR" />
+    <result column="busi_branch_no" property="busiBranchNo" jdbcType="VARCHAR" />
+    <result column="bank_account_no" property="bankAccountNo" jdbcType="VARCHAR" />
+    <result column="sec_bankacc_no" property="secBankaccNo" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="card_type" property="cardType" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    cus_id, business_seq_no, business_order_no, r_type, entrustflag, oder_no, debit_account_no,
+    cebit_account_no, currency, amount, other_amounttype, other_amount, pay_type, busi_branch_no,
+    bank_account_no, sec_bankacc_no, bank_id, bank_name, card_type, note, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsCustomChargeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_custom_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tpds_custom_charge
+    where cus_id = #{cusId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tpds_custom_charge
+    where cus_id = #{cusId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsCustomChargeExample" >
+    delete from tpds_custom_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsCustomCharge" >
+    insert into tpds_custom_charge (cus_id, business_seq_no, business_order_no,
+    r_type, entrustflag, oder_no,
+    debit_account_no, cebit_account_no, currency,
+    amount, other_amounttype, other_amount,
+    pay_type, busi_branch_no, bank_account_no,
+    sec_bankacc_no, bank_id, bank_name,
+    card_type, note)
+    values (#{cusId,jdbcType=BIGINT}, #{businessSeqNo,jdbcType=VARCHAR}, #{businessOrderNo,jdbcType=VARCHAR},
+    #{rType,jdbcType=CHAR}, #{entrustflag,jdbcType=CHAR}, #{oderNo,jdbcType=CHAR},
+    #{debitAccountNo,jdbcType=VARCHAR}, #{cebitAccountNo,jdbcType=VARCHAR}, #{currency,jdbcType=CHAR},
+    #{amount,jdbcType=DECIMAL}, #{otherAmounttype,jdbcType=CHAR}, #{otherAmount,jdbcType=DECIMAL},
+    #{payType,jdbcType=CHAR}, #{busiBranchNo,jdbcType=VARCHAR}, #{bankAccountNo,jdbcType=VARCHAR},
+    #{secBankaccNo,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},
+    #{cardType,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsCustomCharge" >
+    insert into tpds_custom_charge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cusId != null" >
+        cus_id,
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no,
+      </if>
+      <if test="businessOrderNo != null" >
+        business_order_no,
+      </if>
+      <if test="rType != null" >
+        r_type,
+      </if>
+      <if test="entrustflag != null" >
+        entrustflag,
+      </if>
+      <if test="oderNo != null" >
+        oder_no,
+      </if>
+      <if test="debitAccountNo != null" >
+        debit_account_no,
+      </if>
+      <if test="cebitAccountNo != null" >
+        cebit_account_no,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="otherAmounttype != null" >
+        other_amounttype,
+      </if>
+      <if test="otherAmount != null" >
+        other_amount,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="busiBranchNo != null" >
+        busi_branch_no,
+      </if>
+      <if test="bankAccountNo != null" >
+        bank_account_no,
+      </if>
+      <if test="secBankaccNo != null" >
+        sec_bankacc_no,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cusId != null" >
+        #{cusId,jdbcType=BIGINT},
+      </if>
+      <if test="businessSeqNo != null" >
+        #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessOrderNo != null" >
+        #{businessOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rType != null" >
+        #{rType,jdbcType=CHAR},
+      </if>
+      <if test="entrustflag != null" >
+        #{entrustflag,jdbcType=CHAR},
+      </if>
+      <if test="oderNo != null" >
+        #{oderNo,jdbcType=CHAR},
+      </if>
+      <if test="debitAccountNo != null" >
+        #{debitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cebitAccountNo != null" >
+        #{cebitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=CHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="otherAmounttype != null" >
+        #{otherAmounttype,jdbcType=CHAR},
+      </if>
+      <if test="otherAmount != null" >
+        #{otherAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=CHAR},
+      </if>
+      <if test="busiBranchNo != null" >
+        #{busiBranchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountNo != null" >
+        #{bankAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="secBankaccNo != null" >
+        #{secBankaccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsCustomChargeExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_custom_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_custom_charge
+    <set >
+      <if test="record.cusId != null" >
+        cus_id = #{record.cusId,jdbcType=BIGINT},
+      </if>
+      <if test="record.businessSeqNo != null" >
+        business_seq_no = #{record.businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessOrderNo != null" >
+        business_order_no = #{record.businessOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rType != null" >
+        r_type = #{record.rType,jdbcType=CHAR},
+      </if>
+      <if test="record.entrustflag != null" >
+        entrustflag = #{record.entrustflag,jdbcType=CHAR},
+      </if>
+      <if test="record.oderNo != null" >
+        oder_no = #{record.oderNo,jdbcType=CHAR},
+      </if>
+      <if test="record.debitAccountNo != null" >
+        debit_account_no = #{record.debitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cebitAccountNo != null" >
+        cebit_account_no = #{record.cebitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currency != null" >
+        currency = #{record.currency,jdbcType=CHAR},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.otherAmounttype != null" >
+        other_amounttype = #{record.otherAmounttype,jdbcType=CHAR},
+      </if>
+      <if test="record.otherAmount != null" >
+        other_amount = #{record.otherAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.payType != null" >
+        pay_type = #{record.payType,jdbcType=CHAR},
+      </if>
+      <if test="record.busiBranchNo != null" >
+        busi_branch_no = #{record.busiBranchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankAccountNo != null" >
+        bank_account_no = #{record.bankAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secBankaccNo != null" >
+        sec_bankacc_no = #{record.secBankaccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankId != null" >
+        bank_id = #{record.bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardType != null" >
+        card_type = #{record.cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.note != null" >
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_custom_charge
+    set cus_id = #{record.cusId,jdbcType=BIGINT},
+    business_seq_no = #{record.businessSeqNo,jdbcType=VARCHAR},
+    business_order_no = #{record.businessOrderNo,jdbcType=VARCHAR},
+    r_type = #{record.rType,jdbcType=CHAR},
+    entrustflag = #{record.entrustflag,jdbcType=CHAR},
+    oder_no = #{record.oderNo,jdbcType=CHAR},
+    debit_account_no = #{record.debitAccountNo,jdbcType=VARCHAR},
+    cebit_account_no = #{record.cebitAccountNo,jdbcType=VARCHAR},
+    currency = #{record.currency,jdbcType=CHAR},
+    amount = #{record.amount,jdbcType=DECIMAL},
+    other_amounttype = #{record.otherAmounttype,jdbcType=CHAR},
+    other_amount = #{record.otherAmount,jdbcType=DECIMAL},
+    pay_type = #{record.payType,jdbcType=CHAR},
+    busi_branch_no = #{record.busiBranchNo,jdbcType=VARCHAR},
+    bank_account_no = #{record.bankAccountNo,jdbcType=VARCHAR},
+    sec_bankacc_no = #{record.secBankaccNo,jdbcType=VARCHAR},
+    bank_id = #{record.bankId,jdbcType=VARCHAR},
+    bank_name = #{record.bankName,jdbcType=VARCHAR},
+    card_type = #{record.cardType,jdbcType=VARCHAR},
+    note = #{record.note,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsCustomCharge" >
+    update tpds_custom_charge
+    <set >
+      <if test="businessSeqNo != null" >
+        business_seq_no = #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessOrderNo != null" >
+        business_order_no = #{businessOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rType != null" >
+        r_type = #{rType,jdbcType=CHAR},
+      </if>
+      <if test="entrustflag != null" >
+        entrustflag = #{entrustflag,jdbcType=CHAR},
+      </if>
+      <if test="oderNo != null" >
+        oder_no = #{oderNo,jdbcType=CHAR},
+      </if>
+      <if test="debitAccountNo != null" >
+        debit_account_no = #{debitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cebitAccountNo != null" >
+        cebit_account_no = #{cebitAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=CHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="otherAmounttype != null" >
+        other_amounttype = #{otherAmounttype,jdbcType=CHAR},
+      </if>
+      <if test="otherAmount != null" >
+        other_amount = #{otherAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=CHAR},
+      </if>
+      <if test="busiBranchNo != null" >
+        busi_branch_no = #{busiBranchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountNo != null" >
+        bank_account_no = #{bankAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="secBankaccNo != null" >
+        sec_bankacc_no = #{secBankaccNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where cus_id = #{cusId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsCustomCharge" >
+    update tpds_custom_charge
+    set business_seq_no = #{businessSeqNo,jdbcType=VARCHAR},
+    business_order_no = #{businessOrderNo,jdbcType=VARCHAR},
+    r_type = #{rType,jdbcType=CHAR},
+    entrustflag = #{entrustflag,jdbcType=CHAR},
+    oder_no = #{oderNo,jdbcType=CHAR},
+    debit_account_no = #{debitAccountNo,jdbcType=VARCHAR},
+    cebit_account_no = #{cebitAccountNo,jdbcType=VARCHAR},
+    currency = #{currency,jdbcType=CHAR},
+    amount = #{amount,jdbcType=DECIMAL},
+    other_amounttype = #{otherAmounttype,jdbcType=CHAR},
+    other_amount = #{otherAmount,jdbcType=DECIMAL},
+    pay_type = #{payType,jdbcType=CHAR},
+    busi_branch_no = #{busiBranchNo,jdbcType=VARCHAR},
+    bank_account_no = #{bankAccountNo,jdbcType=VARCHAR},
+    sec_bankacc_no = #{secBankaccNo,jdbcType=VARCHAR},
+    bank_id = #{bankId,jdbcType=VARCHAR},
+    bank_name = #{bankName,jdbcType=VARCHAR},
+    card_type = #{cardType,jdbcType=VARCHAR},
+    note = #{note,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP}
+    where cus_id = #{cusId,jdbcType=BIGINT}
+  </update>
+
+  <!-- 查询客户充值记录-->
+  <select id="selectByBusinessOrderNo" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+      tpds_custom_charge  where business_order_no = #{businessOrderNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByBusinessSeqNo" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+      tpds_custom_charge  where business_seq_no = #{businessSeqNo,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.ProductTrxTypeDao">
+    
+	<sql id="productTrxTypeColumns">
+		a.id AS "id",
+		a.code AS "code",
+		a.name AS "name",
+		a.business_type AS "businessType"
+	</sql>
+	
+	<sql id="productTrxTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="ProductTrxType">
+		SELECT 
+			<include refid="productTrxTypeColumns"/>
+		FROM product_trx_type a
+		<include refid="productTrxTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByCode" resultType="ProductTrxType">
+		SELECT
+		<include refid="productTrxTypeColumns"/>
+		FROM product_trx_type a
+		<include refid="productTrxTypeJoins"/>
+		WHERE a.code = #{code}
+	</select>
+	
+	<select id="selectList" resultType="ProductTrxType">
+        SELECT 
+            <include refid="productTrxTypeColumns"/>
+        FROM product_trx_type a
+    </select>
+
+	<select id="selectListByBusinessType" resultType="ProductTrxType">
+		SELECT
+		<include refid="productTrxTypeColumns"/>
+		FROM product_trx_type a
+		WHERE a.business_type = #{businessType}
+	</select>
+	
+	<select id="findList" resultType="ProductTrxType">
+		SELECT 
+			<include refid="productTrxTypeColumns"/>
+		FROM product_trx_type a
+		<include refid="productTrxTypeJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProductTrxType">
+		SELECT 
+			<include refid="productTrxTypeColumns"/>
+		FROM product_trx_type a
+		<include refid="productTrxTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO product_trx_type(
+			id,
+			code,
+			name
+		) VALUES (
+			#{id},
+			#{code},
+			#{name}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE product_trx_type SET 	
+			code = #{code},
+			name = #{name}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM product_trx_type
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

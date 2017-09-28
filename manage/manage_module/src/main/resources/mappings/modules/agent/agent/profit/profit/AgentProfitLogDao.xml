@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.profit.dao.profit.AgentProfitLogDao">
+    
+	<sql id="agentProfitLogColumns">
+		a.id AS "id",
+		a.agent_profit_id AS "agentProfitId",
+		a.apply_time AS "applyTime",
+		a.agent_user_id AS "agentUserId",
+		a.invoices AS "invoices",
+		a.express AS "express",
+		a.apply_remark AS "applyRemark",
+		a.status AS "status",
+		a.remark AS "remark",
+		a.agent_id AS "agentId",
+		a.profit_amount AS "profitAmount",
+		a.inichk_user_id AS "inichkUserId",
+		a.rechek_user_id AS "rechekUserId",
+		b.settle_begin_date AS "settleBeginDate",
+		b.settle_end_date AS "settleEndDate",
+		d.agent_code AS "agentCode",
+		d.agent_name AS "agentName",
+		a.update_time AS "updateDate"
+	</sql>
+	
+	<sql id="agentProfitLogJoins">
+		left JOIN  agent_profit b on a.agent_profit_id=b.id
+		left JOIN  agent_user e on a.agent_user_id=e.id
+		left JOIN  agent_info d on e.agent_id=d.id
+	</sql>
+    
+	<select id="get" resultType="AgentProfitLog">
+		SELECT 
+			<include refid="agentProfitLogColumns"/>
+		FROM agent_profit_log a
+		<include refid="agentProfitLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="AgentProfitLog">
+		SELECT 
+			<include refid="agentProfitLogColumns"/>
+		FROM agent_profit_log a
+		<include refid="agentProfitLogJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="agentProfitId != null and agentProfitId != ''">
+				AND a.agent_profit_id like
+				<if test="dbName == 'oracle'">'%'||#{agentProfitId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentProfitId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentProfitId},'%')</if>
+			</if>
+			<if test="applyTime != null and applyTime != ''">
+				AND a.apply_time = #{applyTime}
+			</if>
+			<if test="agentUserId != null and agentUserId != ''">
+				AND a.agent_user_id like
+				<if test="dbName == 'oracle'">'%'||#{agentUserId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentUserId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentUserId},'%')</if>
+			</if>
+			<if test="express != null and express != ''">
+				AND a.express LIKE
+				<if test="dbName == 'oracle'">'%'||#{express}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{express}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{express},'%')</if>
+			</if>
+			<if test="invoices != null and invoices != ''">
+				AND a.invoices LIKE
+				<if test="dbName == 'oracle'">'%'||#{invoices}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{invoices}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{invoices},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND b.settle_begin_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND b.settle_end_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="profitBeginAmount != null and profitEndAmount != null and profitBeginAmount != '' and profitEndAmount != ''">
+				AND a.profit_amount BETWEEN #{profitBeginAmount} AND #{profitEndAmount}
+			</if>
+			<if test="agentCode != null and agentCode != ''">
+				AND d.agent_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCode},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND d.agent_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findVerifyList" resultType="AgentProfitLog">
+		SELECT
+		<include refid="agentProfitLogColumns"/>
+		FROM agent_profit_log a
+		<include refid="agentProfitLogJoins"/>
+		<where>
+
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="agentProfitId != null and agentProfitId != ''">
+				AND a.agent_profit_id like
+				<if test="dbName == 'oracle'">'%'||#{agentProfitId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentProfitId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentProfitId},'%')</if>
+			</if>
+			<if test="applyTime != null and applyTime != ''">
+				AND a.apply_time = #{applyTime}
+			</if>
+			<if test="agentUserId != null and agentUserId != ''">
+				AND a.agent_user_id like
+				<if test="dbName == 'oracle'">'%'||#{agentUserId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentUserId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentUserId},'%')</if>
+			</if>
+			<if test="express != null and express != ''">
+				AND a.express LIKE
+				<if test="dbName == 'oracle'">'%'||#{express}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{express}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{express},'%')</if>
+			</if>
+			<if test="invoices != null and invoices != ''">
+				AND a.invoices LIKE
+				<if test="dbName == 'oracle'">'%'||#{invoices}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{invoices}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{invoices},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND b.settle_begin_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="settleBeginDate != null and settleEndDate != null and settleBeginDate != '' and settleEndDate != ''">
+				AND b.settle_end_date BETWEEN #{settleBeginDate} AND #{settleEndDate}
+			</if>
+			<if test="profitBeginAmount != null and profitEndAmount != null and profitBeginAmount != '' and profitEndAmount != ''">
+				AND a.profit_amount BETWEEN #{profitBeginAmount} AND #{profitEndAmount}
+			</if>
+			<if test="agentCode != null and agentCode != ''">
+				AND d.agent_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCode},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND d.agent_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.apply_time DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AgentProfitLog">
+		SELECT 
+			<include refid="agentProfitLogColumns"/>
+		FROM agent_profit_log a
+		<include refid="agentProfitLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO agent_profit_log(
+			id,
+			agent_profit_id,
+			apply_time,
+			agent_user_id,
+			invoices,
+			express,
+			apply_remark,
+			status,
+			remark,
+			agent_id,
+			profit_amount
+		) VALUES (
+			#{id},
+			#{agentProfitId},
+			#{applyTime},
+			#{agentUserId},
+			#{invoices},
+			#{express},
+			#{applyRemark},
+			#{status},
+			#{remark},
+			#{agentId},
+			#{profitAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE agent_profit_log SET 	
+			agent_profit_id = #{agentProfitId},
+			apply_time = #{applyTime},
+			agent_user_id = #{agentUserId},
+			invoices = #{invoices},
+			express = #{express},
+			apply_remark = #{applyRemark},
+			status = #{status},
+			remark = #{remark},
+			profit_amount = #{profitAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM agent_profit_log
+		WHERE id = #{id}
+	</update>
+
+	<update id="changeStatus">
+		update agent_profit_log SET
+		status = #{status},
+		remark = #{remark},
+		inichk_user_id = #{inichkUserId},
+		rechek_user_id = #{rechekUserId}
+		WHERE id = #{id}
+	</update>
+</mapper>

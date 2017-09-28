@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.ProductNetGroupDao">
+    
+	<sql id="ProductNetGroupColumns">
+		a.id AS "id",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.net_group AS "netGroup",
+		a.create_user AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_user AS "updateBy.id",
+		a.update_time AS "updateDate"
+	</sql>
+	
+	<sql id="ProductNetGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="ProductNetGroup">
+		SELECT 
+			<include refid="ProductNetGroupColumns"/>
+		FROM product_net_group a
+		<include refid="ProductNetGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByCodeExist" resultType="ProductNetGroup">
+		SELECT
+		<include refid="ProductNetGroupColumns"/>
+		FROM product_net_group a
+		<include refid="ProductNetGroupJoins"/>
+		<where>
+			AND a.product_code = #{productCode}
+			<if test="id != null and id != ''">
+				AND a.id != #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectList" resultType="ProductNetGroup">
+        SELECT 
+            <include refid="ProductNetGroupColumns"/>
+        FROM product_net_group a
+    </select>
+
+
+	<select id="findList" resultType="ProductNetGroup">
+		SELECT 
+			<include refid="ProductNetGroupColumns"/>
+		FROM product_net_group a
+		<include refid="ProductNetGroupJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ProductNetGroup">
+		SELECT 
+			<include refid="ProductNetGroupColumns"/>
+		FROM product_net_group a
+		<include refid="ProductNetGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO product_net_group(
+			id,
+			product_code,
+			product_name,
+			net_group,
+			create_user,
+			create_time,
+			update_user,
+			update_time
+		) VALUES (
+			#{id},
+			#{productCode},
+			#{productName},
+			#{netGroup},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE product_net_group SET 	
+			product_code = #{productCode},
+			product_name = #{productName},
+			net_group = #{netGroup},
+			create_user = #{createBy.id},
+			create_time = #{createDate},
+			update_user = #{updateBy.id},
+			update_time = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM product_net_group
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

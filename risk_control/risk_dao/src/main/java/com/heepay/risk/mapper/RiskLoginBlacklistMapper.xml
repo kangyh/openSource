@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.RiskLoginBlacklistMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskLoginBlacklist" >
+    <id column="black_id" property="blackId" jdbcType="INTEGER" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="buzi_code" property="buziCode" jdbcType="VARCHAR" />
+    <result column="owner_name" property="ownerName" jdbcType="VARCHAR" />
+    <result column="owner_id" property="ownerId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_login_blacklist
+    where black_id = #{blackId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.risk.entity.RiskLoginBlacklist" >
+    insert into risk_login_blacklist (black_id, company_name, buzi_code, 
+      owner_name, owner_id, create_time
+      )
+    values (#{blackId,jdbcType=INTEGER}, #{companyName,jdbcType=VARCHAR}, #{buziCode,jdbcType=VARCHAR}, 
+      #{ownerName,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.risk.entity.RiskLoginBlacklist" >
+    update risk_login_blacklist
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      buzi_code = #{buziCode,jdbcType=VARCHAR},
+      owner_name = #{ownerName,jdbcType=VARCHAR},
+      owner_id = #{ownerId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where black_id = #{blackId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select black_id, company_name, buzi_code, owner_name, owner_id, create_time
+    from risk_login_blacklist
+    where black_id = #{blackId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select black_id, company_name, buzi_code, owner_name, owner_id, create_time
+    from risk_login_blacklist
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer"  parameterType="com.heepay.risk.entity.RiskLoginBlacklist" >
+    select count(black_id)  
+    from risk_login_blacklist 
+    where company_name = #{companyName} and buzi_code = #{buziCode} and owner_id = #{ownerId}
+  </select>
+  <!-- 更新 -->
+   <!-- 更新 -->
+  <update id="update" parameterType="com.heepay.risk.entity.RiskLoginBlacklist" >
+    update risk_login_blacklist
+    <set >
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="buziCode != null" >
+        buzi_code = #{buziCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerName != null" >
+        owner_name = #{ownerName,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=VARCHAR},
+      </if>
+       <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+      where black_id = #{blackId,jdbcType=INTEGER}
+  </update>
+</mapper>

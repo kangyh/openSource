@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.WithdrawRecordDao">
+    
+	<sql id="withdrawRecordColumns">
+		a.withdraw_id AS "withdrawId",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.withdraw_amount AS "withdrawAmount",
+		a.status AS "status",
+		a.auth_id AS "authId",
+		a.request_ip AS "requestIp",
+		a.success_time AS "successTime",
+		a.process_id AS "processId",
+		a.process_name AS "processName",
+		a.process_time AS "processTime",
+		a.process_desc AS "processDesc",
+		a.payment_id AS "paymentId",
+-- 		a.withdraw_fee_amount AS "withdrawFeeAmount",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.bankcard_no AS "bankcardNo",
+		a.type AS "type",
+		a.fee_type AS "feeType",
+		a.fee_ratio AS "feeRatio",
+		a.fee_amount AS "feeAmount",
+		a.intoaccount_time AS "intoaccountTime",
+		a.open_bank_name AS "openBankName",
+		a.remark AS "remark",
+		a.user_id AS "userId",
+		a.audit_person AS "auditPerson",
+		a.audit_time AS "auditTime",
+		a.audit_desc AS "auditDesc",
+		a.gateway_msg AS "gatewayMsg"
+	</sql>
+	
+	<sql id="withdrawRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="WithdrawRecord">
+		SELECT 
+			<include refid="withdrawRecordColumns"/>
+		FROM withdraw_record a
+		<include refid="withdrawRecordJoins"/>
+		WHERE a.withdraw_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WithdrawRecord">
+		SELECT 
+			<include refid="withdrawRecordColumns"/>
+		FROM withdraw_record a
+		<include refid="withdrawRecordJoins"/>
+		<where>
+			<if test="withdrawId != null and withdrawId != ''">
+				AND a.withdraw_id = #{withdrawId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+            <if test="merchantCompany != null and merchantCompany != ''">
+                AND a.merchant_company = #{merchantCompany}
+            </if>
+            <if test="paymentId != null and paymentId != ''">
+                AND a.payment_id = #{paymentId}
+            </if>
+			<!--<if test="status == '1'">-->
+				<!--AND a.status = 'AUDING' OR a.status = 'AUDREJ'-->
+			<!--</if>-->
+
+			<!--<if test="status != null and status != '' and status != '1'">-->
+				<!--AND a.status = #{status}-->
+			<!--</if>-->
+			<choose>
+				<!--查询状态为"审核中"的数据in ( 'AUDING')-->
+				<when test="status == 'R1'">
+					AND a.status ="AUDING"
+				</when>
+				<when test="status != null and status != '' and status != 'R1'">
+					AND a.status = #{status}
+				</when>
+				<otherwise>
+				</otherwise>
+			</choose>
+
+
+
+			<if test="authId != null and authId != ''">
+				AND a.auth_id = #{authId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+			<if test="sortOrder == 'ASC'">
+	            ORDER BY createTime ASC
+	        </if>
+	        <if test="sortOrder == 'DESC'">
+	            ORDER BY createTime DESC
+	        </if>
+	</select>
+	
+	<select id="findAllList" resultType="WithdrawRecord">
+		SELECT 
+			<include refid="withdrawRecordColumns"/>
+		FROM withdraw_record a
+		<include refid="withdrawRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO withdraw_record(
+			withdraw_id,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			account_id,
+			account_name,
+			create_time,
+			update_time,
+			withdraw_amount,
+			status,
+			auth_id,
+			request_ip,
+			success_time,
+			process_id,
+			process_name,
+			process_time,
+			process_desc,
+			payment_id,
+-- 			withdraw_fee_amount,
+			bankcard_owner_name,
+			bankcard_owner_mobile,
+			bankcard_owner_idcard,
+			bankcard_owner_type,
+			bankcard_no,
+			type,
+			fee_type,
+			fee_ratio,
+			fee_amount,
+			audit_person,
+			audit_time
+		) VALUES (
+			#{withdrawId},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{accountId},
+			#{accountName},
+			#{createTime},
+			#{updateTime},
+			#{withdrawAmount},
+			#{status},
+			#{authId},
+			#{requestIp},
+			#{successTime},
+			#{processId},
+			#{processName},
+			#{processTime},
+			#{processDesc},
+			#{paymentId},
+-- 			#{withdrawFeeAmount},
+			#{bankcardOwnerName},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerIdcard},
+			#{bankcardOwnerType},
+			#{bankcardNo},
+			#{type},
+			#{feeType},
+			#{feeRatio},
+			#{feeAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE withdraw_record SET 	
+			withdraw_id = #{withdrawId},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			account_id = #{accountId},
+			account_name = #{accountName},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			withdraw_amount = #{withdrawAmount},
+			status = #{status},
+			auth_id = #{authId},
+			request_ip = #{requestIp},
+			success_time = #{successTime},
+			process_id = #{processId},
+			process_name = #{processName},
+			process_time = #{processTime},
+			process_desc = #{processDesc},
+			payment_id = #{paymentId},
+-- 			withdraw_fee_amount = #{withdrawFeeAmount},
+			bankcard_owner_name = #{bankcardOwnerName},
+			bankcard_owner_mobile = #{bankcardOwnerMobile},
+			bankcard_owner_idcard = #{bankcardOwnerIdcard},
+			bankcard_owner_type = #{bankcardOwnerType},
+			bankcard_no = #{bankcardNo},
+			type = #{type},
+			fee_type = #{feeType},
+			fee_ratio = #{feeRatio},
+			fee_amount = #{feeAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM withdraw_record
+		WHERE id = #{id}
+	</update>
+	
+	<update id="auditCtrl">
+		UPDATE withdraw_record set
+		status = #{status},
+		audit_person = #{auditPerson},
+		audit_time = #{auditTime},
+		audit_desc = #{auditDesc}
+		WHERE withdraw_id = #{id}
+	</update>
+	
+	<update id="updateWithdrawDRAING">
+		UPDATE withdraw_record set
+		status = 'DRAING',
+		update_time =now()
+		WHERE withdraw_id = #{id}
+	</update>
+	<select id="getWithdrawId" resultType="WithdrawRecord">
+		SELECT 
+			max(a.withdraw_id) as withdrawId
+		FROM withdraw_record a
+	</select>
+</mapper>

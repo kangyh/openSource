@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantAutographInfoDao">
+    
+	<sql id="merchantAutographInfoColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.merchant_sign_no AS "merchantSignNo",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.notify_url AS "notifyUrl",
+		a.back_url AS "backUrl",
+		a.autograph_type AS "autographType",
+		a.autograph_key AS "autographKey",
+		a.allow_interface_type AS "allowInterfaceType",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.remark AS "remark",
+		a.status AS "status",
+		a.create_time AS "createDate"
+	</sql>
+	
+	<sql id="merchantAutographInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantAutographInfo">
+		SELECT 
+			<include refid="merchantAutographInfoColumns"/>
+		FROM merchant_autograph_info a 
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantAutographInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="exist" resultType="MerchantAutographInfo">
+		SELECT 
+			<include refid="merchantAutographInfoColumns"/>
+		FROM merchant_autograph_info a 
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantAutographInfoJoins"/>
+		WHERE a.merchant_id = #{merchantId}
+		AND a.product_code = #{productCode}
+	</select>
+	
+	<select id="findList" resultType="MerchantAutographInfo">
+		SELECT 
+			<include refid="merchantAutographInfoColumns"/>
+		FROM merchant_autograph_info a 
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantAutographInfoJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email LIKE 
+					<if test="dbName == 'oracle'">'%'||#{merchantLoginName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{merchantLoginName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{merchantLoginName},'%')</if>
+			</if>
+			<if test="merchantCompanyName != null and merchantCompanyName != ''">
+				AND b.company_name = #{merchantCompanyName}
+			</if>
+			<if test="merchantSignNo != null and merchantSignNo != ''">
+				AND a.merchant_sign_no = #{merchantSignNo}
+			</if>
+			<if test="startTime != null ">
+				AND a.start_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null ">
+				AND a.end_time &lt;= #{endTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantAutographInfo">
+		SELECT 
+			<include refid="merchantAutographInfoColumns"/>
+		FROM merchant_autograph_info a 
+		left join merchant b 
+		on a.merchant_id = b.user_id 
+		<include refid="merchantAutographInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" >
+    insert into merchant_autograph_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="merchantSignNo != null" >
+        merchant_sign_no,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="notifyUrl != null" >
+        notify_url,
+      </if>
+      <if test="backUrl != null" >
+        back_url,
+      </if>
+      <if test="autographType != null" >
+        autograph_type,
+      </if>
+      <if test="autographKey != null" >
+        autograph_key,
+      </if>
+      <if test="allowInterfaceType != null" >
+        allow_interface_type,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantSignNo != null" >
+        #{merchantSignNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null" >
+        #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="backUrl != null" >
+        #{backUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="autographType != null" >
+        #{autographType,jdbcType=CHAR},
+      </if>
+      <if test="autographKey != null" >
+        #{autographKey,jdbcType=VARCHAR},
+      </if>
+      <if test="allowInterfaceType != null" >
+        #{allowInterfaceType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="update" >
+    update merchant_autograph_info
+    <set >
+      <if test="merchantId != null" >
+        merchant_id = #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="merchantSignNo != null" >
+        merchant_sign_no = #{merchantSignNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null" >
+        notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="backUrl != null" >
+        back_url = #{backUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="autographType != null" >
+        autograph_type = #{autographType,jdbcType=CHAR},
+      </if>
+      <if test="autographKey != null" >
+        autograph_key = #{autographKey,jdbcType=VARCHAR},
+      </if>
+      <if test="allowInterfaceType != null" >
+        allow_interface_type = #{allowInterfaceType,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_time = #{createDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	
+	<update id="delete">
+		DELETE FROM merchant_autograph_info
+		WHERE id = #{id}
+	</update>
+	
+	<update id="status" >
+		UPDATE merchant_autograph_info SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="resetKey" >
+		UPDATE merchant_autograph_info SET
+		autograph_key = #{autographKey}
+		WHERE merchant_id = #{merchantId}
+		AND product_code = #{productCode}
+	</update>
+</mapper>

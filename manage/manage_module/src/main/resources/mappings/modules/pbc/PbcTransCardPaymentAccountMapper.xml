@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcTransCardPaymentAccountDao" >
+  
+  <sql id="includeEntity">
+	  a.trans_card_payment_id, 
+	  a.online_pay_company_type, 
+      a.transaction_type, 
+      a.payment_type, 
+      a.currency, 
+      a.transfer_amount, 
+      a.trans_in_bank_id, 
+      a.trans_in_bank_name, 
+      a.trans_in_card_number, 
+      a.trans_in_account_number, 
+      a.pos_identity, 
+      a.merchant_number, 
+      a.trans_out_bank_id, 
+      a.trans_out_bank_name, 
+      a.trans_out_card_number, 
+      a.trans_out_account_number, 
+      a.transaction_device_type, 
+      a.transaction_ip, 
+      a.transaction_mac, 
+      a.transaction_device_code, 
+      a.transaction_longitude, 
+      a.transaction_latitude, 
+      a.bank_transaction_serial, 
+      a.application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcTransCardPaymentAccount">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_card_payment_account a
+		<where>
+			
+			<!--transBankId -->
+			<if test="transInBankId != null and transInBankId != ''">
+				AND a.trans_in_bank_id = #{transInBankId} 
+			</if> 
+			<!-- transOutCardNumber-->
+			<if test="transOutCardNumber != null and transOutCardNumber != ''">
+				AND a.trans_out_card_number = #{transOutCardNumber} 
+			</if> 
+			<!-- transAccountNumber -->
+			<if test="transInAccountNumber != null and transInAccountNumber != ''">
+				AND a.trans_in_account_number = #{transInAccountNumber} 
+			</if> 
+			<!-- applicationCode -->
+			<if test="applicationCode != null and applicationCode != ''">
+				AND a.application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY a.trans_card_payment_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.trans_card_payment_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  <insert id="saveMap" parameterType="Map" >
+    insert into pbc_trans_card_payment_account (online_pay_company_type, 
+      transaction_type, payment_type, currency, 
+      transfer_amount, trans_in_bank_id, trans_in_bank_name, 
+      trans_in_card_number, trans_in_account_number, 
+      pos_identity, merchant_number, trans_out_bank_id, 
+      trans_out_bank_name, trans_out_card_number, trans_out_account_number, 
+      transaction_device_type, transaction_ip, transaction_mac, 
+      transaction_device_code, transaction_longitude, 
+      transaction_latitude, bank_transaction_serial, 
+      application_code)
+    values (#{onlinePayCompanyType,jdbcType=VARCHAR}, 
+      #{transactionType,jdbcType=VARCHAR}, #{paymentType,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
+      #{transferAmount,jdbcType=DECIMAL}, #{transInBankId,jdbcType=VARCHAR}, #{transInBankName,jdbcType=VARCHAR}, 
+      #{transInCardNumber,jdbcType=VARCHAR}, #{transInAccountNumber,jdbcType=VARCHAR}, 
+      #{posIdentity,jdbcType=VARCHAR}, #{merchantNumber,jdbcType=VARCHAR}, #{transOutBankId,jdbcType=VARCHAR}, 
+      #{transOutBankName,jdbcType=VARCHAR}, #{transOutCardNumber,jdbcType=VARCHAR}, #{transOutAccountNumber,jdbcType=VARCHAR}, 
+      #{transactionDeviceType,jdbcType=VARCHAR}, #{transactionIp,jdbcType=VARCHAR}, #{transactionMac,jdbcType=VARCHAR}, 
+      #{transactionDeviceCode,jdbcType=VARCHAR}, #{transactionLongitude,jdbcType=DECIMAL}, 
+      #{transactionLatitude,jdbcType=DECIMAL}, #{bankTransactionSerial,jdbcType=VARCHAR}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <delete id="delete" parameterType="PbcTransCardPaymentAccount" >
+	  delete from pbc_trans_card_payment_account
+	  where trans_card_payment_id = #{transCardPaymentId,jdbcType=BIGINT}
+  </delete>
+  
+  
+ <insert id="saveEntity" parameterType="PbcTransCardPaymentAccount" useGeneratedKeys="true" keyProperty="transCardPaymentId">
+    insert into pbc_trans_card_payment_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="transCardPaymentId != null" >
+        trans_card_payment_id,
+      </if>
+      <if test="onlinePayCompanyType != null" >
+        online_pay_company_type,
+      </if>
+      <if test="transactionType != null" >
+        transaction_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="transferAmount != null" >
+        transfer_amount,
+      </if>
+      <if test="transInBankId != null" >
+        trans_in_bank_id,
+      </if>
+      <if test="transInBankName != null" >
+        trans_in_bank_name,
+      </if>
+      <if test="transInCardNumber != null" >
+        trans_in_card_number,
+      </if>
+      <if test="transInAccountNumber != null" >
+        trans_in_account_number,
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity,
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number,
+      </if>
+      <if test="transOutBankId != null" >
+        trans_out_bank_id,
+      </if>
+      <if test="transOutBankName != null" >
+        trans_out_bank_name,
+      </if>
+      <if test="transOutCardNumber != null" >
+        trans_out_card_number,
+      </if>
+      <if test="transOutAccountNumber != null" >
+        trans_out_account_number,
+      </if>
+      <if test="transactionDeviceType != null" >
+        transaction_device_type,
+      </if>
+      <if test="transactionIp != null" >
+        transaction_ip,
+      </if>
+      <if test="transactionMac != null" >
+        transaction_mac,
+      </if>
+      <if test="transactionDeviceCode != null" >
+        transaction_device_code,
+      </if>
+      <if test="transactionLongitude != null" >
+        transaction_longitude,
+      </if>
+      <if test="transactionLatitude != null" >
+        transaction_latitude,
+      </if>
+      <if test="bankTransactionSerial != null" >
+        bank_transaction_serial,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="transCardPaymentId != null" >
+        #{transCardPaymentId,jdbcType=BIGINT},
+      </if>
+      <if test="onlinePayCompanyType != null" >
+        #{onlinePayCompanyType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionType != null" >
+        #{transactionType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="transferAmount != null" >
+        #{transferAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transInBankId != null" >
+        #{transInBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transInBankName != null" >
+        #{transInBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transInCardNumber != null" >
+        #{transInCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transInAccountNumber != null" >
+        #{transInAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankId != null" >
+        #{transOutBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankName != null" >
+        #{transOutBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutCardNumber != null" >
+        #{transOutCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutAccountNumber != null" >
+        #{transOutAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceType != null" >
+        #{transactionDeviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionIp != null" >
+        #{transactionIp,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionMac != null" >
+        #{transactionMac,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceCode != null" >
+        #{transactionDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionLongitude != null" >
+        #{transactionLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionLatitude != null" >
+        #{transactionLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTransactionSerial != null" >
+        #{bankTransactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+
+  <update id="updateEntity" parameterType="PbcTransCardPaymentAccount" >
+    update pbc_trans_card_payment_account
+    <set >
+      <if test="onlinePayCompanyType != null" >
+        online_pay_company_type = #{onlinePayCompanyType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionType != null" >
+        transaction_type = #{transactionType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        payment_type = #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="transferAmount != null" >
+        transfer_amount = #{transferAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transInBankId != null" >
+        trans_in_bank_id = #{transInBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transInBankName != null" >
+        trans_in_bank_name = #{transInBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transInCardNumber != null" >
+        trans_in_card_number = #{transInCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transInAccountNumber != null" >
+        trans_in_account_number = #{transInAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity = #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankId != null" >
+        trans_out_bank_id = #{transOutBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankName != null" >
+        trans_out_bank_name = #{transOutBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutCardNumber != null" >
+        trans_out_card_number = #{transOutCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutAccountNumber != null" >
+        trans_out_account_number = #{transOutAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceType != null" >
+        transaction_device_type = #{transactionDeviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionIp != null" >
+        transaction_ip = #{transactionIp,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionMac != null" >
+        transaction_mac = #{transactionMac,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceCode != null" >
+        transaction_device_code = #{transactionDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionLongitude != null" >
+        transaction_longitude = #{transactionLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionLatitude != null" >
+        transaction_latitude = #{transactionLatitude,jdbcType=DECIMAL},
+      </if>
+      <if test="bankTransactionSerial != null" >
+        bank_transaction_serial = #{bankTransactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trans_card_payment_id = #{transCardPaymentId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcTransCardPaymentAccount" >
+    update pbc_trans_card_payment_account
+    set online_pay_company_type = #{onlinePayCompanyType,jdbcType=VARCHAR},
+      transaction_type = #{transactionType,jdbcType=VARCHAR},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      transfer_amount = #{transferAmount,jdbcType=DECIMAL},
+      trans_in_bank_id = #{transInBankId,jdbcType=VARCHAR},
+      trans_in_bank_name = #{transInBankName,jdbcType=VARCHAR},
+      trans_in_card_number = #{transInCardNumber,jdbcType=VARCHAR},
+      trans_in_account_number = #{transInAccountNumber,jdbcType=VARCHAR},
+      pos_identity = #{posIdentity,jdbcType=VARCHAR},
+      merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+      trans_out_bank_id = #{transOutBankId,jdbcType=VARCHAR},
+      trans_out_bank_name = #{transOutBankName,jdbcType=VARCHAR},
+      trans_out_card_number = #{transOutCardNumber,jdbcType=VARCHAR},
+      trans_out_account_number = #{transOutAccountNumber,jdbcType=VARCHAR},
+      transaction_device_type = #{transactionDeviceType,jdbcType=VARCHAR},
+      transaction_ip = #{transactionIp,jdbcType=VARCHAR},
+      transaction_mac = #{transactionMac,jdbcType=VARCHAR},
+      transaction_device_code = #{transactionDeviceCode,jdbcType=VARCHAR},
+      transaction_longitude = #{transactionLongitude,jdbcType=DECIMAL},
+      transaction_latitude = #{transactionLatitude,jdbcType=DECIMAL},
+      bank_transaction_serial = #{bankTransactionSerial,jdbcType=VARCHAR},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where trans_card_payment_id = #{transCardPaymentId,jdbcType=BIGINT}
+  </update>
+  <select id="getEntityById" resultType="PbcTransCardPaymentAccount">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_card_payment_account a
+	WHERE trans_card_payment_id = #{transCardPaymentId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcTransCardPaymentAccount">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_trans_card_payment_account a
+	WHERE application_code = #{applicationCode}
+  </select>
+</mapper>

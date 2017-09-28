@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskOrderUnfreezeDao" >
+  
+  <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="includeEntity">
+		r.freeze_no AS "freezeNo",
+		r.unfreeze_no AS "unfreezeNo",
+		r.status AS "status",
+		r.update_author AS "updateAuthor",
+		r.unfreeze_remark AS "unfreezeRemark",
+		r.update_time AS "updateTime",
+		a.freeze_id AS "freezeId",
+		a.freeze_type AS "freezeType",
+		a.defreeze_no AS "defreezeNo",
+		a.order_no AS "orderNo",
+		a.trans_no AS "transNo",
+		a.trans_amount AS "transAmount",
+		a.freeze_remark AS "freezeRemark",
+		a.fail_reason AS "failReason",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.merchant_code AS "merchantCode",
+		a.merchant_name AS "merchantName",
+		a.trans_type AS "transType",
+		a.trans_status AS "transStatus"
+	</sql>
+
+
+	<select id="findList" resultType="RiskOrderUnfreeze">
+		SELECT
+		<include refid="includeEntity" />
+		FROM  risk_order_unfreeze r
+		LEFT JOIN risk_order_freeze a
+		ON a.freeze_no=r.freeze_no
+		<where>
+			<!-- merchantCode -->
+			<if test="merchantCode != null and merchantCode != ''">
+				AND a.merchant_code = #{merchantCode} 
+			</if> 
+			<!-- merchantCode -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo} 
+			</if> 
+			<!--  transType -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType} 
+			</if> 
+			
+			<!-- defreeze_no 解冻编号 -->
+			<if test="defreezeNo != null and defreezeNo != ''">
+				AND a.defreeze_no = #{defreezeNo} 
+			</if> 
+			
+			<!-- freeze_no  -->
+			<if test="freezeType  != null and freezeType != ''"> 
+				AND a.freeze_type = #{freezeType} 
+			</if> 
+			
+			<!-- freeze_remark 冻结/解冻原因 -->
+			<if test="freezeRemark  != null and freezeRemark != ''"> 
+				AND a.freeze_remark = #{freezeRemark} 
+			</if> 
+			
+			<!-- status 冻结/解冻状态 0:待审核 1：已冻结 2：已解冻 3：冻结失败 4：解冻失败 -->
+			<if test="status  != null and status != ''"> 
+				AND a.status = #{status} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY r.update_time DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY r.update_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" parameterType="RiskOrderUnfreeze">
+		INSERT INTO risk_order_unfreeze(freeze_no,unfreeze_no,status,update_author,unfreeze_remark,update_time)
+ 			VALUES(#{freezeNo},#{unfreezeNo},#{status},#{updateAuthor},#{unfreezeRemark},#{updateTime})
+	</insert>
+</mapper>

@@ -1,0 +1,6 @@
+缓存相关：
+crm_memberCard_+主键id 会员卡
+crm_memberCard_cardType_+hotelInfoId 餐馆每个卡类型会员数，map形式保存到缓存里
+crm_memberCardType_+主键id 卡类型
+crm_user2Hotel_hotelinfoId_+hotelInfoId user和hotel对应关系
+crm_disCount__hotelinfoId_+hotelInfoId 餐馆折扣方案，需要消息队列通知修改

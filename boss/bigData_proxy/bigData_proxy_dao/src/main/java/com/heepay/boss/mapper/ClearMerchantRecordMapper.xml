@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.boss.dao.ClearMerchantRecordMapper" >
+ <resultMap id="BaseResultMap" type="com.heepay.boss.entity.ClearMerchantRecord" >
+    <id column="clearing_id" property="clearingId" jdbcType="BIGINT" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="trans_no_old" property="transNoOld" jdbcType="VARCHAR" />
+    <result column="request_amount" property="requestAmount" jdbcType="DECIMAL" />
+    <result column="success_time" property="successTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_no" property="settleNo" jdbcType="VARCHAR" />
+    <result column="settle_time_plan" property="settleTimePlan" jdbcType="TIMESTAMP" />
+    <result column="settle_amount_plan" property="settleAmountPlan" jdbcType="DECIMAL" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="fee_time" property="feeTime" jdbcType="TIMESTAMP" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="fee_way" property="feeWay" jdbcType="VARCHAR" />
+    <result column="fee_settle_cyc" property="feeSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="VARCHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="check_bath" property="checkBath" jdbcType="VARCHAR" />
+    <result column="check_num" property="checkNum" jdbcType="INTEGER" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="is_profit" property="isProfit" jdbcType="VARCHAR" />
+    <result column="merchant_order_no" property="merchantOrderNo" jdbcType="VARCHAR" />
+    <result column="busi_time" property="busiTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_zip" property="isZip" jdbcType="VARCHAR" />
+    <result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+    <result column="agent_code" property="agentCode" jdbcType="BIGINT" />
+    <result column="bankcard_type" property="bankcardType" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    clearing_id, merchant_id, merchant_type, product_code, currency, trans_no, trans_no_old, 
+    request_amount, success_time, settle_time, settle_no, settle_time_plan, settle_amount_plan, 
+    settle_cyc, settle_bath, fee_time, fee, fee_way, fee_settle_cyc, check_status, check_flg, 
+    settle_status, finish_time, check_bath, check_num, trans_type, is_profit, merchant_order_no, 
+    busi_time, remark, is_zip, agent_name, agent_code, bankcard_type, product_name, merchant_name, 
+    pay_type, create_time, account_no, pay_time
+  </sql>
+
+    <select id="queryForBigData" resultType="com.heepay.boss.entity.ClearMerchantRecord" parameterType="map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		clearing_merchant_record
+		where success_time BETWEEN date_format(#{startTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endTime},'%Y-%m-%d 23:59:59')
+    </select>
+</mapper>

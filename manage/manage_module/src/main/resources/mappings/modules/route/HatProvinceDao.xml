@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.HatProvinceDao">
+    
+	<sql id="hatProvinceColumns">
+		a.id AS "id",
+		a.provinceId AS "provinceId",
+		a.province AS "province",
+		a.wm AS "wm"
+	</sql>
+	
+	<sql id="hatProvinceJoins">
+	</sql>
+    
+	
+	<select id="findList" resultType="HatProvince">
+		SELECT 
+			<include refid="hatProvinceColumns"/>
+		FROM hat_province a
+		<include refid="hatProvinceJoins"/>
+		
+	</select>
+	
+	
+	
+</mapper>

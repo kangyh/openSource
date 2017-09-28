@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcMeasureInfoDao" >
+  
+  <sql id="includeEntity">
+	  pbc_id,
+      freeze_serial, 
+      payment_account_number, 
+      measure_type, 
+      measure_start_time, 
+      measure_end_time, 
+      measure_dept_name, 
+      currency, 
+      measure_balance, 
+      remark, 
+      application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcMeasureInfo">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_measure_info
+		<where>
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY pbc_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY pbc_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <insert id="saveMap" parameterType="Map" >
+    insert into pbc_measure_info (freeze_serial, payment_account_number, measure_type, 
+      measure_start_time, measure_end_time, measure_dept_name, 
+      currency, measure_balance, remark, 
+      application_code)
+    values (#{freezeSerial,jdbcType=VARCHAR}, #{paymentAccountNumber,jdbcType=VARCHAR}, 
+      #{measureType,jdbcType=VARCHAR}, 
+      #{measureStartTime,jdbcType=TIMESTAMP}, #{measureEndTime,jdbcType=TIMESTAMP}, #{measureDeptName,jdbcType=VARCHAR}, 
+      #{currency,jdbcType=VARCHAR}, #{measureBalance,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <delete id="delete" parameterType="PbcMeasureInfo" >
+	  delete from pbc_measure_info
+	  where 1=1
+	  <choose>
+	  	<when test="pbcId != null and pbcId != ''">
+	  		AND pbc_id = #{pbcId,jdbcType=BIGINT}
+	  	</when>
+	  	<otherwise>
+	  		AND application_code = #{applicationCode,jdbcType=VARCHAR}
+	  	</otherwise>
+	  </choose>
+  </delete>
+  
+  <insert id="saveEntity" parameterType="PbcMeasureInfo" useGeneratedKeys="true" keyProperty="pbcId">
+     insert into pbc_measure_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        pbc_id,
+      </if>
+      <if test="freezeSerial != null" >
+        freeze_serial,
+      </if>
+      <if test="paymentAccountNumber != null" >
+        payment_account_number,
+      </if>
+      <if test="measureType != null" >
+        measure_type,
+      </if>
+      <if test="measureStartTime != null" >
+        measure_start_time,
+      </if>
+      <if test="measureEndTime != null" >
+        measure_end_time,
+      </if>
+      <if test="measureDeptName != null" >
+        measure_dept_name,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="measureBalance != null" >
+        measure_balance,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pbcId != null" >
+        #{pbcId,jdbcType=BIGINT},
+      </if>
+      <if test="freezeSerial != null" >
+        #{freezeSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentAccountNumber != null" >
+        #{paymentAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="measureType != null" >
+        #{measureType,jdbcType=VARCHAR},
+      </if>
+      <if test="measureStartTime != null" >
+        #{measureStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureEndTime != null" >
+        #{measureEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureDeptName != null" >
+        #{measureDeptName,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="measureBalance != null" >
+        #{measureBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="PbcMeasureInfo" >
+    update pbc_measure_info
+    <set >
+      <if test="freezeSerial != null" >
+        freeze_serial = #{freezeSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentAccountNumber != null" >
+        payment_account_number = #{paymentAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="measureType != null" >
+        measure_type = #{measureType,jdbcType=VARCHAR},
+      </if>
+      <if test="measureStartTime != null" >
+        measure_start_time = #{measureStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureEndTime != null" >
+        measure_end_time = #{measureEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="measureDeptName != null" >
+        measure_dept_name = #{measureDeptName,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="measureBalance != null" >
+        measure_balance = #{measureBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcMeasureInfo" >
+    update pbc_measure_info
+	    set freeze_serial = #{freezeSerial,jdbcType=VARCHAR},
+	      payment_account_number = #{paymentAccountNumber,jdbcType=VARCHAR},
+	      measure_type = #{measureType,jdbcType=VARCHAR},
+	      measure_start_time = #{measureStartTime,jdbcType=TIMESTAMP},
+	      measure_end_time = #{measureEndTime,jdbcType=TIMESTAMP},
+	      measure_dept_name = #{measureDeptName,jdbcType=VARCHAR},
+	      currency = #{currency,jdbcType=VARCHAR},
+	      measure_balance = #{measureBalance,jdbcType=DECIMAL},
+	      remark = #{remark,jdbcType=VARCHAR},
+	      application_code = #{applicationCode,jdbcType=VARCHAR}
+	    where pbc_id = #{pbcId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getEntityById" resultType="PbcMeasureInfo">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_measure_info a
+	WHERE pbc_id = #{pbcId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcMeasureInfo">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_measure_info a
+	WHERE application_code = #{applicationCode}
+  </select>
+  
+  <insert id="insertValue" parameterType="List">
+  	 insert into pbc_measure_info (pbc_id, freeze_serial, account_number, measure_type, 
+      measure_start_time, measure_end_time, measure_dept_name, 
+      currency, measure_balance, remark, 
+      application_code)
+     VALUES
+  		<foreach collection="list" item="item" index="index" separator=",">
+	  	(#{item.pbcId}, #{item.freezeSerial}, #{item.accountNumber}, #{item.measureType}, 
+	      #{item.measureStartTime}, #{item.measureEndTime}, #{item.measureDeptName}, 
+	      #{item.currency}, #{item.measureBalance}, #{item.remark}, 
+	      #{item.applicationCode})
+		</foreach>
+  </insert>
+  
+  <select id="getListByfeatureCode" resultType="PbcMeasureInfo">
+  		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_measure_info a
+		WHERE application_code=#{applicationCode}
+  </select>
+  
+  <insert id="saveEntityToMap" parameterType="Map">
+  	insert into pbc_measure_info (pbc_id, freeze_serial, payment_account_number, measure_type, 
+      measure_start_time, measure_end_time, measure_dept_name, 
+      currency, measure_balance, remark, 
+      application_code)
+    values (#{pbcId,jdbcType=BIGINT}, #{freezeSerial,jdbcType=VARCHAR}, #{paymentAccountNumber,jdbcType=VARCHAR}, #{measureType,jdbcType=VARCHAR}, 
+      #{measureStartTime,jdbcType=TIMESTAMP}, #{measureEndTime,jdbcType=TIMESTAMP}, #{measureDeptName,jdbcType=VARCHAR}, 
+      #{currency,jdbcType=VARCHAR}, #{measureBalance,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+</mapper>

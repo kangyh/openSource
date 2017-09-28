@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.agentmerchant.AgentMerchantDao">
+    
+	<sql id="agentMerchantColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.id AS "agentId",
+		a.agent_code AS "agentCode",
+		b.agent_name AS "agentName",
+		b.agent_level AS "agentLevel",
+		b.short_name AS "agentShortName",
+		a.merchant_name AS "merchantName",
+		a.short_name AS "shortName",
+		a.head_name AS "headName",
+		a.head_phone AS "headPhone",
+		a.head_idcard AS "headIdcard",
+		a.head_idcard_expiry AS "headIdcardExpiry",
+		a.email AS "email",
+		a.merchant_expiry AS "merchantExpiry",
+		a.merchant_type AS "merchantType",
+		a.legal_name AS "legalName",
+		a.legal_phone AS "legalPhone",
+		a.legal_idcard AS "legalIdcard",
+		a.legal_idcard_expiry AS "legalIdcardExpiry",
+		a.busi_type AS "busiType",
+		a.busi_code AS "busiCode",
+		a.busi_expiry AS "busiExpiry",
+		a.reg_amount AS "regAmount",
+		a.org_inst_code AS "orgInstCode",
+		a.tax_reg_code AS "taxRegCode",
+		a.addr_province_code AS "addrProvinceCode",
+		a.addr_province_name AS "addrProvinceName",
+		a.addr_city_code AS "addrCityCode",
+		a.addr_city_name AS "addrCityName",
+		a.addr_country_code AS "addrCountryCode",
+		a.addr_country_name AS "addrCountryName",
+		a.addr_detail AS "addrDetail",
+		a.bank_account_type AS "bankAccountType",
+		a.bank_code AS "bankCode",
+		a.bank_name AS "bankName",
+		a.bank_province_code AS "bankProvinceCode",
+		a.bank_province_name AS "bankProvinceName",
+		a.bank_city_code AS "bankCityCode",
+		a.bank_city_name AS "bankCityName",
+		a.bank_branch_code AS "bankBranchCode",
+		a.bank_branch_name AS "bankBranchName",
+		a.bank_account_name AS "bankAccountName",
+		a.bank_account_code AS "bankAccountCode",
+		a.idcard_face_image AS "idcardFaceImage",
+		a.idcard_back_image AS "idcardBackImage",
+		a.agreement_file AS "agreementFile",
+		a.busi_image AS "busiImage",
+		a.tax_reg_image AS "taxRegImage",
+		a.org_inst_image AS "orgInstImage",
+		a.other_gena_image AS "otherGenaImage",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.agent_merchant_status AS "agentMerchantStatus"
+	</sql>
+	
+	<sql id="agentMerchantJoins">
+ 		left JOIN agent_info b ON  a.agent_id=b.id
+	</sql>
+    
+	<select id="get" resultType="AgentMerchant">
+		SELECT 
+			<include refid="agentMerchantColumns"/>
+		FROM agent_merchant a
+		<include refid="agentMerchantJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AgentMerchant">
+		SELECT 
+			<include refid="agentMerchantColumns"/>
+		FROM agent_merchant a
+		<include refid="agentMerchantJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id like
+				<if test="dbName == 'oracle'">'%'||#{merchantId}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantId}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantId},'%')</if>
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name like
+				<if test="dbName == 'oracle'">'%'||#{merchantName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantName},'%')</if>
+			</if>
+			<if test="agentCode != null and agentCode != ''">
+				AND b.agent_code like
+				<if test="dbName == 'oracle'">'%'||#{agentCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCode},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND b.agent_name like
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+			<if test="headName != null and headName != ''">
+				AND a.head_name like
+				<if test="dbName == 'oracle'">'%'||#{headName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{headName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{headName},'%')</if>
+			</if>
+			<if test="headPhone != null and headPhone != ''">
+				AND a.head_phone like
+				<if test="dbName == 'oracle'">'%'||#{headPhone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{headPhone}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{headPhone},'%')</if>
+			</if>
+			<if test="legalName != null and legalName != ''">
+				AND a.legal_name like
+				<if test="dbName == 'oracle'">'%'||#{legalName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{legalName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{legalName},'%')</if>
+			</if>
+			<if test="legalPhone != null and legalPhone != ''">
+				AND a.legal_phone like
+				<if test="dbName == 'oracle'">'%'||#{legalPhone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{legalPhone}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{legalPhone},'%')</if>
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			<if test="agentMerchantStatus != null and agentMerchantStatus != ''">
+				AND a.agent_merchant_status = #{agentMerchantStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AgentMerchant">
+		SELECT 
+			<include refid="agentMerchantColumns"/>
+		FROM agent_merchant a
+		<include refid="agentMerchantJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO agent_merchant(
+			id,
+			merchant_id,
+			agent_id,
+			agent_code,
+			merchant_name,
+			short_name,
+			head_name,
+			head_phone,
+			head_idcard,
+			head_idcard_expiry,
+			email,
+			merchant_expiry,
+			merchant_type,
+			legal_name,
+			legal_phone,
+			legal_idcard,
+			legal_idcard_expiry,
+			busi_type,
+			busi_code,
+			busi_expiry,
+			reg_amount,
+			org_inst_code,
+			tax_reg_code,
+			addr_province_code,
+			addr_province_name,
+			addr_city_code,
+			addr_city_name,
+			addr_country_code,
+			addr_country_name,
+			addr_detail,
+			bank_account_type,
+			bank_code,
+			bank_name,
+			bank_province_code,
+			bank_province_name,
+			bank_city_code,
+			bank_city_name,
+			bank_branch_code,
+			bank_branch_name,
+			bank_account_name,
+			bank_account_code,
+			idcard_face_image,
+			idcard_back_image,
+			agreement_file,
+			busi_image,
+			tax_reg_image,
+			org_inst_image,
+			other_gena_image,
+			create_time,
+			update_time,
+			agent_merchant_status
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{agentId},
+			#{agentCode},
+			#{merchantName},
+			#{shortName},
+			#{headName},
+			#{headPhone},
+			#{headIdcard},
+			#{headIdcardExpiry},
+			#{email},
+			#{merchantExpiry},
+			#{merchantType},
+			#{legalName},
+			#{legalPhone},
+			#{legalIdcard},
+			#{legalIdcardExpiry},
+			#{busiType},
+			#{busiCode},
+			#{busiExpiry},
+			#{regAmount},
+			#{orgInstCode},
+			#{taxRegCode},
+			#{addrProvinceCode},
+			#{addrProvinceName},
+			#{addrCityCode},
+			#{addrCityName},
+			#{addrCountryCode},
+			#{addrCountryName},
+			#{addrDetail},
+			#{bankAccountType},
+			#{bankCode},
+			#{bankName},
+			#{bankProvinceCode},
+			#{bankProvinceName},
+			#{bankCityCode},
+			#{bankCityName},
+			#{bankBranchCode},
+			#{bankBranchName},
+			#{bankAccountName},
+			#{bankAccountCode},
+			#{idcardFaceImage},
+			#{idcardBackImage},
+			#{agreementFile},
+			#{busiImage},
+			#{taxRegImage},
+			#{orgInstImage},
+			#{otherGenaImage},
+			#{createTime},
+			#{updateTime},
+			#{agentMerchantStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE agent_merchant SET 	
+			merchant_id = #{merchantId},
+			agent_id = #{agentId},
+			agent_code = #{agentCode},
+			merchant_name = #{merchantName},
+			short_name = #{shortName},
+			head_name = #{headName},
+			head_phone = #{headPhone},
+			head_idcard = #{headIdcard},
+			head_idcard_expiry = #{headIdcardExpiry},
+			email = #{email},
+			merchant_expiry = #{merchantExpiry},
+			merchant_type = #{merchantType},
+			legal_name = #{legalName},
+			legal_phone = #{legalPhone},
+			legal_idcard = #{legalIdcard},
+			legal_idcard_expiry = #{legalIdcardExpiry},
+			busi_type = #{busiType},
+			busi_code = #{busiCode},
+			busi_expiry = #{busiExpiry},
+			reg_amount = #{regAmount},
+			org_inst_code = #{orgInstCode},
+			tax_reg_code = #{taxRegCode},
+			addr_province_code = #{addrProvinceCode},
+			addr_province_name = #{addrProvinceName},
+			addr_city_code = #{addrCityCode},
+			addr_city_name = #{addrCityName},
+			addr_country_code = #{addrCountryCode},
+			addr_country_name = #{addrCountryName},
+			addr_detail = #{addrDetail},
+			bank_account_type = #{bankAccountType},
+			bank_code = #{bankCode},
+			bank_name = #{bankName},
+			bank_province_code = #{bankProvinceCode},
+			bank_province_name = #{bankProvinceName},
+			bank_city_code = #{bankCityCode},
+			bank_city_name = #{bankCityName},
+			bank_branch_code = #{bankBranchCode},
+			bank_branch_name = #{bankBranchName},
+			bank_account_name = #{bankAccountName},
+			bank_account_code = #{bankAccountCode},
+			idcard_face_image = #{idcardFaceImage},
+			idcard_back_image = #{idcardBackImage},
+			agreement_file = #{agreementFile},
+			busi_image = #{busiImage},
+			tax_reg_image = #{taxRegImage},
+			org_inst_image = #{orgInstImage},
+			other_gena_image = #{otherGenaImage},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			agent_merchant_status = #{agentMerchantStatus}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM agent_merchant
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

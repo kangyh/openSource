@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantBankCardDao">
+    
+	<sql id="merchantBankCardColumns">
+		a.auth_id AS "id",
+		a.merchant_id AS "merchantId",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.bankcard_no AS "bankNo",
+		a.open_bank_name AS "openBankName",
+		a.bankcard_owner_name AS "openName",
+		a.status AS "status",
+		a.associate_line_number AS "associateLineNumber",
+		a.create_time AS "createDate",
+		a.type AS "bankCardAuthType"
+	</sql>
+	
+	<sql id="merchantBankCardJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantBankCard">
+		SELECT 
+			<include refid="merchantBankCardColumns"/>
+		FROM bankcard_auth a
+		<include refid="merchantBankCardJoins"/>
+		WHERE a.auth_id = #{id}
+	</select>
+	
+	<select id="getMerchant" resultType="MerchantBankCard">
+		SELECT 
+			<include refid="merchantBankCardColumns"/>
+		FROM bankcard_auth a
+		<include refid="merchantBankCardJoins"/>
+		WHERE a.merchant_id = #{merchantId}
+		AND a.type = 'REALCA'
+	</select>
+	
+	<!-- 查询银行卡w -->
+	<select id="findPageList" resultType="MerchantBankCard">
+		SELECT 
+			<include refid="merchantBankCardColumns"/>
+		FROM bankcard_auth a
+		
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id =#{merchantId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findList" resultType="MerchantBankCard">
+		SELECT 
+			<include refid="merchantBankCardColumns"/>
+		FROM bankcard_auth a
+		<include refid="merchantBankCardJoins"/>
+		<where>
+			AND a.status = 'SUCCES'
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantBankCard">
+		SELECT 
+			<include refid="merchantBankCardColumns"/>
+		FROM bankcard_auth a
+		<include refid="merchantBankCardJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<update id="status">
+		UPDATE bankcard_auth SET 	
+			status = #{status}
+		WHERE auth_id = #{id}
+	</update>
+	
+	<update id="updateBankNo">
+		UPDATE bankcard_auth SET 	
+			bankcard_no = #{bankNo}
+		WHERE merchant_id = #{merchantId}
+		AND type = 'REALCA'
+	</update>
+	
+	<update id="statusCard">
+		UPDATE bankcard_auth SET 	
+			status = #{status}
+		WHERE merchant_id = #{merchantId}
+		AND type = 'REALCA'
+	</update>
+	
+	<update id="delete">
+		DELETE FROM bankcard_auth
+		WHERE auth_id = #{id}
+	</update>
+
+	<!-- 资金归集商户同步银行卡信息 -->
+    <insert id="synchronizeBankCard" parameterType="MerchantBankCard" >
+        insert into bankcard_auth
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">
+                auth_id,
+            </if>
+            <if test="bankCardAuthType != null">
+                type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="countyCode != null">
+                merchant_login_name,
+            </if>
+            <if test="bankNo != null">
+                bank_id,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="openBankName != null">
+                open_bank_name,
+            </if>
+            <if test="bankId != null">
+                bankcard_no,
+            </if>
+            <if test="cardTypeCode != null">
+                bankcard_type,
+            </if>
+            <if test="countyName != null">
+                bankcard_owner_mobile,
+            </if>
+            <if test="recAccName != null">
+                bankcard_owner_name,
+            </if>
+            <if test="openName != null">
+                bankcard_owner_idcard,
+            </if>
+            <if test="openBankCode != null">
+                bankcard_owner_type,
+            </if>
+            <if test="associateLineNumber != null">
+                associate_line_number,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">
+                #{provinceCode,jdbcType=BIGINT},
+            </if>
+            <if test="bankCardAuthType != null">
+                #{bankCardAuthType,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId},
+            </if>
+            <if test="countyCode != null">
+                #{countyCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bankNo != null">
+                #{bankNo,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null">
+                #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="openBankName != null">
+                #{openBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankId != null">
+                #{bankId,jdbcType=VARCHAR},
+            </if>
+            <if test="cardTypeCode != null">
+                #{cardTypeCode,jdbcType=CHAR},
+            </if>
+            <if test="countyName != null">
+                #{countyName,jdbcType=VARCHAR},
+            </if>
+            <if test="recAccName != null">
+                #{recAccName,jdbcType=VARCHAR},
+            </if>
+            <if test="openName != null">
+                #{openName,jdbcType=VARCHAR},
+            </if>
+            <if test="openBankCode != null">
+                #{openBankCode,jdbcType=TINYINT},
+            </if>
+            <if test="associateLineNumber != null">
+                #{associateLineNumber,jdbcType=CHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+	
+</mapper>

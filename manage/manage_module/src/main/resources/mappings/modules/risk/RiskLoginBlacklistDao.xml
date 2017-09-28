@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskLoginBlacklistDao">
+    
+	<sql id="riskLoginBlacklistColumns">
+		a.black_id AS "blackId",
+		a.company_name AS "companyName",
+		a.buzi_code AS "buziCode",
+		a.owner_name AS "ownerName",
+		a.owner_id AS "ownerId",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="riskLoginBlacklistJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskLoginBlacklist">
+		SELECT 
+			<include refid="riskLoginBlacklistColumns"/>
+		FROM risk_login_blacklist a
+		<include refid="riskLoginBlacklistJoins"/>
+		WHERE a.black_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskLoginBlacklist">
+		SELECT 
+			<include refid="riskLoginBlacklistColumns"/>
+		FROM risk_login_blacklist a
+		<include refid="riskLoginBlacklistJoins"/>
+		<where>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 公司名称  -->
+			<if test="companyName != null and companyName != ''">
+				AND a.company_name = #{companyName}
+			</if>
+			<!-- 营业执照编号  -->
+			<if test="buziCode != null and buziCode != ''">
+				AND a.buzi_code = #{buziCode}
+			</if>
+			<!-- 法定代表人  -->
+			<if test="ownerName != null and ownerName != ''">
+				AND a.owner_name = #{ownerName}
+			</if>
+			<!-- 法定代表人身份证号  -->
+			<if test="ownerId != null and ownerId != ''">
+				AND a.owner_id = #{ownerId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskLoginBlacklist">
+		SELECT 
+			<include refid="riskLoginBlacklistColumns"/>
+		FROM risk_login_blacklist a
+		<include refid="riskLoginBlacklistJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_login_blacklist(
+			black_id,
+			company_name,
+			buzi_code,
+			owner_name,
+			owner_id,
+			create_time
+		) VALUES (
+			#{blackId},
+			#{companyName},
+			#{buziCode},
+			#{ownerName},
+			#{ownerId},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_login_blacklist SET 	
+			black_id = #{blackId},
+			company_name = #{companyName},
+			buzi_code = #{buziCode},
+			owner_name = #{ownerName},
+			owner_id = #{ownerId},
+			create_time = #{createTime}
+		WHERE black_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_login_blacklist
+		WHERE black_id = #{id}
+	</update>
+	
+</mapper>

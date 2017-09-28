@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsMerchantEmployeeFunctionsDao">
+    
+	<sql id="hgmsMerchantEmployeeFunctionsColumns">
+		a.merchant_id AS "merchantId",
+		a.employee_id AS "employeeId",
+		a.function_id AS "functionId"
+	</sql>
+	
+	<sql id="hgmsMerchantEmployeeFunctionsJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsMerchantEmployeeFunctions">
+		SELECT 
+			<include refid="hgmsMerchantEmployeeFunctionsColumns"/>
+		FROM hgms_merchant_employee_functions a
+		<include refid="hgmsMerchantEmployeeFunctionsJoins"/>
+		WHERE a.merchant_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HgmsMerchantEmployeeFunctions">
+		SELECT 
+			<include refid="hgmsMerchantEmployeeFunctionsColumns"/>
+		FROM hgms_merchant_employee_functions a
+		<include refid="hgmsMerchantEmployeeFunctionsJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="employeeId != null and employeeId != ''">
+				AND a.employee_id = #{employeeId}
+			</if>
+			<if test="functionId != null and functionId != ''">
+				AND a.function_id = #{functionId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsMerchantEmployeeFunctions">
+		SELECT 
+			<include refid="hgmsMerchantEmployeeFunctionsColumns"/>
+		FROM hgms_merchant_employee_functions a
+		<include refid="hgmsMerchantEmployeeFunctionsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hgms_merchant_employee_functions(
+			merchant_id,
+			employee_id,
+			function_id
+		) VALUES (
+			#{merchantId},
+			#{employeeId},
+			#{functionId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hgms_merchant_employee_functions SET 	
+			merchant_id = #{merchantId},
+			employee_id = #{employeeId},
+			function_id = #{functionId}
+		WHERE employee_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_merchant_employee_functions
+		WHERE employee_id = #{id}
+	</update>
+
+    <delete id="deleteByEmployeeId" parameterType="java.lang.Long">
+        DELETE FROM hgms_merchant_employee_functions
+        WHERE employee_id = #{id}
+    </delete>
+	<select id="queryPermissionByEmployeeId" parameterType="java.lang.Long" resultType="java.lang.String">
+		SELECT  function_id
+		FROM
+		hgms_merchant_employee_functions
+		WHERE employee_id = #{id}
+	</select>
+</mapper>

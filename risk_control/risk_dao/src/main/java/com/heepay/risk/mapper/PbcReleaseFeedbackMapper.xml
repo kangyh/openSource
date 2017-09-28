@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcReleaseFeedbackMapper" >
+<select id="selectEntity" parameterType="com.heepay.risk.entity.PbcReleaseFeedback"  resultType="java.lang.String">
+select release_feedback_id from pbc_release_feedback 
+where  case_number= #{caseNumber,jdbcType=VARCHAR} and 
+account_number= #{accountNumber,jdbcType=VARCHAR}  and application_code= #{applicationCode,jdbcType=VARCHAR} 
+</select>
+<insert id="insert"  parameterType="com.heepay.risk.entity.PbcReleaseFeedback" useGeneratedKeys="true" keyProperty="releaseFeedbackId">
+    insert into pbc_release_feedback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="releaseFeedbackId != null" >
+        release_feedback_id,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="caseNumber != null" >
+        case_number,
+      </if>
+      <if test="applicationTime != null" >
+        application_time,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="feedbackRemark != null" >
+        feedback_remark,
+      </if>
+      <if test="feedBackId != null" >
+        feed_back_id,
+      </if>
+      <if test="applicationCode != null" >       
+          application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="releaseFeedbackId != null" >
+        #{releaseFeedbackId,jdbcType=BIGINT},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null" >
+        #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationTime != null" >
+        #{applicationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackRemark != null" >
+        #{feedbackRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="feedBackId != null" >
+        #{feedBackId,jdbcType=BIGINT},
+      </if>
+       <if test="applicationCode != null" >       
+          #{applicationCode,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+</mapper>

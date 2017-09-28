@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.RiskMerchantOrderConversionRatioMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskMerchantOrderConversionRatio" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="merchant_sucess_order" property="merchantSucessOrder" jdbcType="INTEGER" />
+    <result column="merchant_total_order" property="merchantTotalOrder" jdbcType="INTEGER" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="sucess_ratio" property="sucessRatio" jdbcType="INTEGER" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="host" property="host" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, merchant_id, merchant_sucess_order, merchant_total_order, begin_time, end_time, 
+    create_time, sucess_ratio, product_code, product_name, host
+  </sql>
+
+  <insert id="insert" parameterType="com.heepay.risk.entity.RiskMerchantOrderConversionRatio" >
+    insert into risk_merchant_order_conversion_ratio
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="merchantSucessOrder != null" >
+        merchant_sucess_order,
+      </if>
+      <if test="merchantTotalOrder != null" >
+        merchant_total_order,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="sucessRatio != null" >
+        sucess_ratio,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="host != null" >
+        host,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantSucessOrder != null" >
+        #{merchantSucessOrder,jdbcType=INTEGER},
+      </if>
+      <if test="merchantTotalOrder != null" >
+        #{merchantTotalOrder,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sucessRatio != null" >
+        #{sucessRatio,jdbcType=INTEGER},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null" >
+        #{host,jdbcType=VARCHAR},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.BlackorwhiteItemListMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.BlackorwhiteItemList" >
+    <id column="black_item_id" property="blackItemId" jdbcType="INTEGER" />
+    <result column="black_id" property="blackId" jdbcType="INTEGER" />
+    <result column="black_item_value" property="blackItemValue" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_autor" property="createAutor" jdbcType="VARCHAR" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    black_item_id, black_id, black_item_value, status, create_time, update_time, create_autor, 
+    update_author
+  </sql>
+  <select id="getlist" resultType="com.heepay.risk.entity.BlackorwhiteItemList" >
+  select black_item_id, black_id, black_item_value, status, create_time, update_time, create_author, 
+    update_author from risk_blackorwhite_item_list where status='ENABLE'
+  </select>
+   <select id="get" parameterType="java.lang.Integer" resultType="com.heepay.risk.entity.BlackorwhiteItemList"  >
+  select black_item_id, black_id, black_item_value, status, create_time, update_time, create_author, 
+    update_author from risk_blackorwhite_item_list where black_item_id=#{blackItemId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByBlackId" parameterType="com.heepay.risk.entity.BlackorwhiteItemList" resultType="com.heepay.risk.entity.BlackorwhiteItemList">
+  select  black_item_id, black_id, black_item_value, status, create_time, update_time, create_author, 
+    update_author from risk_blackorwhite_item_list 
+   where black_id= #{blackId,jdbcType=INTEGER}
+  </select>
+  <update id="delete" parameterType="com.heepay.risk.entity.BlackorwhiteItemList">
+  update risk_blackorwhite_item_list set status='DISABLE' where black_item_id= #{blackItemId,jdbcType=INTEGER}
+  </update>
+   <update id="deleteByBlackId" parameterType="com.heepay.risk.entity.BlackorwhiteItemList">
+  update risk_blackorwhite_item_list set status='DISABLE' where black_id = #{blackId,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.heepay.risk.entity.BlackorwhiteItemList" useGeneratedKeys="true" keyProperty="blackItemId" >
+    insert into risk_blackorwhite_item_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="blackId != null" >
+        black_id,
+      </if>
+      <if test="blackItemValue != null" >
+        black_item_value,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="blackId != null" >
+        #{blackId,jdbcType=INTEGER},
+      </if>
+      <if test="blackItemValue != null" >
+        #{blackItemValue,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.heepay.risk.entity.BlackorwhiteItemList" >
+    update risk_blackorwhite_item_list
+    <set >
+      <if test="blackId != null" >
+        black_id = #{blackId,jdbcType=INTEGER},
+      </if>
+      <if test="blackItemValue != null" >
+        black_item_value = #{blackItemValue,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where black_item_id = #{blackItemId,jdbcType=INTEGER}
+  </update>
+</mapper>

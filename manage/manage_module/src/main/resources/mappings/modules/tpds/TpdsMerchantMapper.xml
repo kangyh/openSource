@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.tpds.dao.TpdsMerchantDao" >
+
+
+
+<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+  <sql id="includeEntity" >
+    merchant_id, 
+    login_name, 
+    merchant_no, 
+    email, 
+    contry_name, 
+    type, 
+    certificate_type, 
+    company_name, 
+    province_code, 
+    province_name, 
+    city_code, 
+    city_name, 
+    county_code, 
+    county_name, 
+    business_address, 
+    website, 
+    business_license_no, 
+    business_license_end_time, 
+    organization_code, 
+    tax_registration_certificate_no, 
+    business_scope, 
+    llegalperson, 
+    legal_idcard, 
+    legal_certificate_end_time, 
+    contactor, 
+    contactor_idcard_no, 
+    contactor_certificate_end_time, 
+    contactor_phone, 
+    supplier_name, 
+    enterprise_name, 
+    electricity_url, 
+    individual_user, 
+    contry_code, 
+    merchant_pos_code, 
+    company_phone, 
+    legal_mobile, 
+    charge_type, 
+    ipc_no, 
+    permits_accounts, 
+    legal_certificate_front, 
+    legal_certificate_back, 
+    tax_registration_certificate, 
+    organization_code_certificate, 
+    business_license_file, 
+    create_time, 
+    create_author, 
+    update_time, 
+    update_author, 
+    trademark_regis_photo_address
+  </sql>
+  
+  <select id="findList" resultType="TpdsMerchant">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM tpds_merchant
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			<!-- 商户编码-->
+			<if test="merchantNo != null and merchantNo != ''">
+				AND merchant_no = #{merchantNo} 
+			</if> 
+			
+			<!-- 商户公司名称 -->
+			<if test="companyName != null and companyName != ''">
+				AND company_name = #{companyName} 
+			</if> 
+			
+		</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY merchant_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY merchant_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  
+  <select id="selectEntity" resultType="TpdsMerchant" parameterType="TpdsMerchant" >
+    select 
+    <include refid="includeEntity" />
+    from tpds_merchant
+    <where>
+      <if test="merchantId != null" >
+        AND merchant_id = #{merchantId}
+      </if>
+      <if test="loginName != null" >
+        AND login_name = #{loginName}
+      </if>
+      <if test="merchantNo != null" >
+        AND merchant_no = #{merchantNo}
+      </if>
+      <if test="email != null" >
+        AND email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="contryName != null" >
+        AND contry_name = #{contryName,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        AND type = #{type,jdbcType=CHAR}
+      </if>
+      <if test="certificateType != null" >
+        AND certificate_type = #{certificateType,jdbcType=CHAR}
+      </if>
+      <if test="companyName != null" >
+        AND company_name = #{companyName,jdbcType=VARCHAR}
+      </if>
+      <if test="provinceCode != null" >
+        AND province_code = #{provinceCode,jdbcType=CHAR}
+      </if>
+      <if test="provinceName != null" >
+        AND province_name = #{provinceName,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null" >
+        AND city_code = #{cityCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cityName != null" >
+        AND city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="countyCode != null" >
+        AND county_code = #{countyCode,jdbcType=CHAR}
+      </if>
+      <if test="countyName != null" >
+        AND county_name = #{countyName,jdbcType=VARCHAR}
+      </if>
+      <if test="businessAddress != null" >
+        AND business_address = #{businessAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="website != null" >
+        AND website = #{website,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLicenseNo != null" >
+        AND business_license_no = #{businessLicenseNo,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLicenseEndTime != null" >
+        AND business_license_end_time = #{businessLicenseEndTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="organizationCode != null" >
+        AND organization_code = #{organizationCode,jdbcType=VARCHAR}
+      </if>
+      <if test="taxRegistrationCertificateNo != null" >
+        AND tax_registration_certificate_no = #{taxRegistrationCertificateNo,jdbcType=VARCHAR}
+      </if>
+      <if test="businessScope != null" >
+        AND business_scope = #{businessScope,jdbcType=VARCHAR},
+      </if>
+      <if test="llegalperson != null" >
+        AND llegalperson = #{llegalperson,jdbcType=VARCHAR}
+      </if>
+      <if test="legalIdcard != null" >
+        AND legal_idcard = #{legalIdcard,jdbcType=VARCHAR}
+      </if>
+      <if test="legalCertificateEndTime != null" >
+        AND legal_certificate_end_time = #{legalCertificateEndTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="contactor != null" >
+        AND contactor = #{contactor,jdbcType=VARCHAR}
+      </if>
+      <if test="contactorIdcardNo != null" >
+        AND contactor_idcard_no = #{contactorIdcardNo,jdbcType=VARCHAR}
+      </if>
+      <if test="contactorCertificateEndTime != null" >
+        AND contactor_certificate_end_time = #{contactorCertificateEndTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="contactorPhone != null" >
+        AND contactor_phone = #{contactorPhone,jdbcType=VARCHAR}
+      </if>
+      <if test="supplierName != null" >
+        AND supplier_name = #{supplierName,jdbcType=VARCHAR}
+      </if>
+      <if test="enterpriseName != null" >
+        AND enterprise_name = #{enterpriseName,jdbcType=VARCHAR}
+      </if>
+      <if test="electricityUrl != null" >
+        AND electricity_url = #{electricityUrl,jdbcType=VARCHAR}
+      </if>
+      <if test="individualUser != null" >
+        AND individual_user = #{individualUser,jdbcType=VARCHAR}
+      </if>
+      <if test="contryCode != null" >
+        AND contry_code = #{contryCode,jdbcType=VARCHAR}
+      </if>
+      <if test="merchantPosCode != null" >
+        AND merchant_pos_code = #{merchantPosCode,jdbcType=CHAR}
+      </if>
+      <if test="companyPhone != null" >
+        AND company_phone = #{companyPhone,jdbcType=VARCHAR}
+      </if>
+      <if test="legalMobile != null" >
+        AND legal_mobile = #{legalMobile,jdbcType=VARCHAR}
+      </if>
+      <if test="chargeType != null" >
+        AND charge_type = #{chargeType,jdbcType=TINYINT}
+      </if>
+      <if test="ipcNo != null" >
+        AND ipc_no = #{ipcNo,jdbcType=VARCHAR}
+      </if>
+      <if test="permitsAccounts != null" >
+        AND permits_accounts = #{permitsAccounts,jdbcType=VARCHAR}
+      </if>
+      <if test="legalCertificateFront != null" >
+        AND legal_certificate_front = #{legalCertificateFront,jdbcType=VARCHAR}
+      </if>
+      <if test="legalCertificateBack != null" >
+        AND legal_certificate_back = #{legalCertificateBack,jdbcType=VARCHAR}
+      </if>
+      <if test="taxRegistrationCertificate != null" >
+        AND tax_registration_certificate = #{taxRegistrationCertificate,jdbcType=VARCHAR}
+      </if>
+      <if test="organizationCodeCertificate != null" >
+        AND organization_code_certificate = #{organizationCodeCertificate,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLicenseFile != null" >
+        AND business_license_file = #{businessLicenseFile,jdbcType=VARCHAR}
+      </if>
+      <if test="trademarkRegisPhotoAddress != null" >
+        AND trademark_regis_photo_address = #{trademarkRegisPhotoAddress}
+      </if>
+      
+      <if test="createTime != null" >
+        AND create_time = #createTime}
+      </if>
+      <if test="createAuthor != null" >
+        AND create_author = #{createAuthor}
+      </if>
+      <if test="updateTime != null" >
+        AND update_time = #{updateTime}
+      </if>
+      <if test="updateAuthor != null" >
+        AND update_author = #{updateAuthor}
+      </if>
+	</where> 
+  </select>
+  
+  
+  <delete id="deleteEntity" parameterType="java.lang.Integer" >
+    delete from tpds_merchant
+    where merchant_id = #{merchantId,jdbcType=INTEGER}
+  </delete>
+  
+
+  
+  <insert id="save" parameterType="TpdsMerchant" >
+    insert into tpds_merchant (merchant_id,login_name, merchant_no, email, 
+      contry_name, type, certificate_type, 
+      company_name, province_code, province_name, 
+      city_code, city_name, county_code, 
+      county_name, business_address, website, 
+      business_license_no, business_license_end_time, 
+      organization_code, tax_registration_certificate_no, 
+      business_scope, llegalperson, legal_idcard, 
+      legal_certificate_end_time, contactor, contactor_idcard_no, 
+      contactor_certificate_end_time, contactor_phone, 
+      supplier_name, enterprise_name, electricity_url, 
+      individual_user, contry_code, merchant_pos_code, 
+      company_phone, legal_mobile, charge_type, 
+      ipc_no, permits_accounts, legal_certificate_front, 
+      legal_certificate_back, tax_registration_certificate, 
+      organization_code_certificate, business_license_file,
+      create_time,create_author,update_time,update_author, 
+      trademark_regis_photo_address)
+    values (#{merchantId,jdbcType=INTEGER},#{loginName,jdbcType=VARCHAR}, #{merchantNo,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{contryName,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, #{certificateType,jdbcType=CHAR}, 
+      #{companyName,jdbcType=VARCHAR}, #{provinceCode,jdbcType=CHAR}, #{provinceName,jdbcType=VARCHAR}, 
+      #{cityCode,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{countyCode,jdbcType=CHAR}, 
+      #{countyName,jdbcType=VARCHAR}, #{businessAddress,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, 
+      #{businessLicenseNo,jdbcType=VARCHAR}, #{businessLicenseEndTime,jdbcType=TIMESTAMP}, 
+      #{organizationCode,jdbcType=VARCHAR}, #{taxRegistrationCertificateNo,jdbcType=VARCHAR}, 
+      #{businessScope,jdbcType=VARCHAR}, #{llegalperson,jdbcType=VARCHAR}, #{legalIdcard,jdbcType=VARCHAR}, 
+      #{legalCertificateEndTime,jdbcType=TIMESTAMP}, #{contactor,jdbcType=VARCHAR}, #{contactorIdcardNo,jdbcType=VARCHAR}, 
+      #{contactorCertificateEndTime,jdbcType=TIMESTAMP}, #{contactorPhone,jdbcType=VARCHAR}, 
+      #{supplierName,jdbcType=VARCHAR}, #{enterpriseName,jdbcType=VARCHAR}, #{electricityUrl,jdbcType=VARCHAR}, 
+      #{individualUser,jdbcType=VARCHAR}, #{contryCode,jdbcType=VARCHAR}, #{merchantPosCode,jdbcType=CHAR}, 
+      #{companyPhone,jdbcType=VARCHAR}, #{legalMobile,jdbcType=VARCHAR}, #{chargeType,jdbcType=TINYINT}, 
+      #{ipcNo,jdbcType=VARCHAR}, #{permitsAccounts,jdbcType=VARCHAR}, #{legalCertificateFront,jdbcType=VARCHAR}, 
+      #{legalCertificateBack,jdbcType=VARCHAR}, #{taxRegistrationCertificate,jdbcType=VARCHAR}, 
+      #{organizationCodeCertificate,jdbcType=VARCHAR}, #{businessLicenseFile,jdbcType=VARCHAR},
+      #{createTime},#{createAuthor},#{updateTime},#{updateAuthor}, 
+      #{trademarkRegisPhotoAddress,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <insert id="saveEntity" parameterType="TpdsMerchant" >
+    insert into tpds_merchant
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="merchantId != null" >
+        merchant_id,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="contryName != null" >
+        contry_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="certificateType != null" >
+        certificate_type,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="provinceName != null" >
+        province_name,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="countyCode != null" >
+        county_code,
+      </if>
+      <if test="countyName != null" >
+        county_name,
+      </if>
+      <if test="businessAddress != null" >
+        business_address,
+      </if>
+      <if test="website != null" >
+        website,
+      </if>
+      <if test="businessLicenseNo != null" >
+        business_license_no,
+      </if>
+      <if test="businessLicenseEndTime != null" >
+        business_license_end_time,
+      </if>
+      <if test="organizationCode != null" >
+        organization_code,
+      </if>
+      <if test="taxRegistrationCertificateNo != null" >
+        tax_registration_certificate_no,
+      </if>
+      <if test="businessScope != null" >
+        business_scope,
+      </if>
+      <if test="llegalperson != null" >
+        llegalperson,
+      </if>
+      <if test="legalIdcard != null" >
+        legal_idcard,
+      </if>
+      <if test="legalCertificateEndTime != null" >
+        legal_certificate_end_time,
+      </if>
+      <if test="contactor != null" >
+        contactor,
+      </if>
+      <if test="contactorIdcardNo != null" >
+        contactor_idcard_no,
+      </if>
+      <if test="contactorCertificateEndTime != null" >
+        contactor_certificate_end_time,
+      </if>
+      <if test="contactorPhone != null" >
+        contactor_phone,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="enterpriseName != null" >
+        enterprise_name,
+      </if>
+      <if test="electricityUrl != null" >
+        electricity_url,
+      </if>
+      <if test="individualUser != null" >
+        individual_user,
+      </if>
+      <if test="contryCode != null" >
+        contry_code,
+      </if>
+      <if test="merchantPosCode != null" >
+        merchant_pos_code,
+      </if>
+      <if test="companyPhone != null" >
+        company_phone,
+      </if>
+      <if test="legalMobile != null" >
+        legal_mobile,
+      </if>
+      <if test="chargeType != null" >
+        charge_type,
+      </if>
+      <if test="ipcNo != null" >
+        ipc_no,
+      </if>
+      <if test="permitsAccounts != null" >
+        permits_accounts,
+      </if>
+      <if test="legalCertificateFront != null" >
+        legal_certificate_front,
+      </if>
+      <if test="legalCertificateBack != null" >
+        legal_certificate_back,
+      </if>
+      <if test="taxRegistrationCertificate != null" >
+        tax_registration_certificate,
+      </if>
+      <if test="organizationCodeCertificate != null" >
+        organization_code_certificate,
+      </if>
+      <if test="businessLicenseFile != null" >
+        business_license_file,
+      </if>
+      <if test="trademarkRegisPhotoAddress != null" >
+        trademark_regis_photo_address,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=INTEGER},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contryName != null" >
+        #{contryName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="certificateType != null" >
+        #{certificateType,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=CHAR},
+      </if>
+      <if test="provinceName != null" >
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="countyCode != null" >
+        #{countyCode,jdbcType=CHAR},
+      </if>
+      <if test="countyName != null" >
+        #{countyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseNo != null" >
+        #{businessLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseEndTime != null" >
+        #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="organizationCode != null" >
+        #{organizationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taxRegistrationCertificateNo != null" >
+        #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessScope != null" >
+        #{businessScope,jdbcType=VARCHAR},
+      </if>
+      <if test="llegalperson != null" >
+        #{llegalperson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdcard != null" >
+        #{legalIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateEndTime != null" >
+        #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactor != null" >
+        #{contactor,jdbcType=VARCHAR},
+      </if>
+      <if test="contactorIdcardNo != null" >
+        #{contactorIdcardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contactorCertificateEndTime != null" >
+        #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactorPhone != null" >
+        #{contactorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseName != null" >
+        #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="electricityUrl != null" >
+        #{electricityUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="individualUser != null" >
+        #{individualUser,jdbcType=VARCHAR},
+      </if>
+      <if test="contryCode != null" >
+        #{contryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantPosCode != null" >
+        #{merchantPosCode,jdbcType=CHAR},
+      </if>
+      <if test="companyPhone != null" >
+        #{companyPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="legalMobile != null" >
+        #{legalMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null" >
+        #{chargeType,jdbcType=TINYINT},
+      </if>
+      <if test="ipcNo != null" >
+        #{ipcNo,jdbcType=VARCHAR},
+      </if>
+      <if test="permitsAccounts != null" >
+        #{permitsAccounts,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateFront != null" >
+        #{legalCertificateFront,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateBack != null" >
+        #{legalCertificateBack,jdbcType=VARCHAR},
+      </if>
+      <if test="taxRegistrationCertificate != null" >
+        #{taxRegistrationCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCodeCertificate != null" >
+        #{organizationCodeCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseFile != null" >
+        #{businessLicenseFile,jdbcType=VARCHAR},
+      </if>
+      <if test="trademarkRegisPhotoAddress != null" >
+        #{trademarkRegisPhotoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+
+
+  <update id="updateEntity" parameterType="TpdsMerchant" >
+   update tpds_merchant
+    <set >
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="contryName != null" >
+        contry_name = #{contryName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="certificateType != null" >
+        certificate_type = #{certificateType,jdbcType=CHAR},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=CHAR},
+      </if>
+      <if test="provinceName != null" >
+        province_name = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="countyCode != null" >
+        county_code = #{countyCode,jdbcType=CHAR},
+      </if>
+      <if test="countyName != null" >
+        county_name = #{countyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        business_address = #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseNo != null" >
+        business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseEndTime != null" >
+        business_license_end_time = #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="organizationCode != null" >
+        organization_code = #{organizationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taxRegistrationCertificateNo != null" >
+        tax_registration_certificate_no = #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessScope != null" >
+        business_scope = #{businessScope,jdbcType=VARCHAR},
+      </if>
+      <if test="llegalperson != null" >
+        llegalperson = #{llegalperson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdcard != null" >
+        legal_idcard = #{legalIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateEndTime != null" >
+        legal_certificate_end_time = #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactor != null" >
+        contactor = #{contactor,jdbcType=VARCHAR},
+      </if>
+      <if test="contactorIdcardNo != null" >
+        contactor_idcard_no = #{contactorIdcardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contactorCertificateEndTime != null" >
+        contactor_certificate_end_time = #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactorPhone != null" >
+        contactor_phone = #{contactorPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierName != null" >
+        supplier_name = #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseName != null" >
+        enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="electricityUrl != null" >
+        electricity_url = #{electricityUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="individualUser != null" >
+        individual_user = #{individualUser,jdbcType=VARCHAR},
+      </if>
+      <if test="contryCode != null" >
+        contry_code = #{contryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantPosCode != null" >
+        merchant_pos_code = #{merchantPosCode,jdbcType=CHAR},
+      </if>
+      <if test="companyPhone != null" >
+        company_phone = #{companyPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="legalMobile != null" >
+        legal_mobile = #{legalMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null" >
+        charge_type = #{chargeType,jdbcType=TINYINT},
+      </if>
+      <if test="ipcNo != null" >
+        ipc_no = #{ipcNo,jdbcType=VARCHAR},
+      </if>
+      <if test="permitsAccounts != null" >
+        permits_accounts = #{permitsAccounts,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateFront != null" >
+        legal_certificate_front = #{legalCertificateFront,jdbcType=VARCHAR},
+      </if>
+      <if test="legalCertificateBack != null" >
+        legal_certificate_back = #{legalCertificateBack,jdbcType=VARCHAR},
+      </if>
+      <if test="taxRegistrationCertificate != null" >
+        tax_registration_certificate = #{taxRegistrationCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCodeCertificate != null" >
+        organization_code_certificate = #{organizationCodeCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseFile != null" >
+        business_license_file = #{businessLicenseFile,jdbcType=VARCHAR},
+      </if>
+      <if test="trademarkRegisPhotoAddress != null" >
+        trademark_regis_photo_address = #{trademarkRegisPhotoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where merchant_id = #{merchantId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="update" parameterType="TpdsMerchant" >
+    update tpds_merchant
+    set login_name = #{loginName,jdbcType=VARCHAR},
+      merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      contry_name = #{contryName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=CHAR},
+      certificate_type = #{certificateType,jdbcType=CHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      province_code = #{provinceCode,jdbcType=CHAR},
+      province_name = #{provinceName,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      city_name = #{cityName,jdbcType=VARCHAR},
+      county_code = #{countyCode,jdbcType=CHAR},
+      county_name = #{countyName,jdbcType=VARCHAR},
+      business_address = #{businessAddress,jdbcType=VARCHAR},
+      website = #{website,jdbcType=VARCHAR},
+      business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+      business_license_end_time = #{businessLicenseEndTime,jdbcType=TIMESTAMP},
+      organization_code = #{organizationCode,jdbcType=VARCHAR},
+      tax_registration_certificate_no = #{taxRegistrationCertificateNo,jdbcType=VARCHAR},
+      business_scope = #{businessScope,jdbcType=VARCHAR},
+      llegalperson = #{llegalperson,jdbcType=VARCHAR},
+      legal_idcard = #{legalIdcard,jdbcType=VARCHAR},
+      legal_certificate_end_time = #{legalCertificateEndTime,jdbcType=TIMESTAMP},
+      contactor = #{contactor,jdbcType=VARCHAR},
+      contactor_idcard_no = #{contactorIdcardNo,jdbcType=VARCHAR},
+      contactor_certificate_end_time = #{contactorCertificateEndTime,jdbcType=TIMESTAMP},
+      contactor_phone = #{contactorPhone,jdbcType=VARCHAR},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      electricity_url = #{electricityUrl,jdbcType=VARCHAR},
+      individual_user = #{individualUser,jdbcType=VARCHAR},
+      contry_code = #{contryCode,jdbcType=VARCHAR},
+      merchant_pos_code = #{merchantPosCode,jdbcType=CHAR},
+      company_phone = #{companyPhone,jdbcType=VARCHAR},
+      legal_mobile = #{legalMobile,jdbcType=VARCHAR},
+      charge_type = #{chargeType,jdbcType=TINYINT},
+      ipc_no = #{ipcNo,jdbcType=VARCHAR},
+      permits_accounts = #{permitsAccounts,jdbcType=VARCHAR},
+      legal_certificate_front = #{legalCertificateFront,jdbcType=VARCHAR},
+      legal_certificate_back = #{legalCertificateBack,jdbcType=VARCHAR},
+      tax_registration_certificate = #{taxRegistrationCertificate,jdbcType=VARCHAR},
+      organization_code_certificate = #{organizationCodeCertificate,jdbcType=VARCHAR},
+      business_license_file = #{businessLicenseFile,jdbcType=VARCHAR},
+      trademark_regis_photo_address = #{trademarkRegisPhotoAddress,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR}
+    where merchant_id = #{merchantId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getEntityById" resultType="TpdsMerchant" parameterType="java.lang.Integer">
+  	select 
+    <include refid="includeEntity" />
+    from tpds_merchant
+    WHERE merchant_id = #{merchantId}
+  </select>
+</mapper>

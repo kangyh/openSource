@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantOperationLogDao">
+    
+	<sql id="merchantOperationLogColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.employee_id AS "employeeId",
+		a.operate_function AS "operateFunction",
+		a.operate_behavior AS "operateBehavior",
+		a.operate_time AS "operateDate",
+		a.current_ip AS "currentIp",
+		a.operate_old_data AS "operateOldData",
+		a.operate_new_data AS "operateNewData",
+		a.header_user_agent AS "headerUserAgent",
+		a.request_url AS "requestUrl"
+	</sql>
+	
+	<sql id="merchantOperationLogJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantOperationLog">
+		SELECT 
+			<include refid="merchantOperationLogColumns"/>
+		FROM merchant_operation_log a
+		<include refid="merchantOperationLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantOperationLog">
+		SELECT 
+			<include refid="merchantOperationLogColumns"/>
+		FROM merchant_operation_log a
+		<include refid="merchantOperationLogJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantOperationLog">
+		SELECT 
+			<include refid="merchantOperationLogColumns"/>
+		FROM merchant_operation_log a
+		<include refid="merchantOperationLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_operation_log(
+			id,
+			merchant_id,
+			employee_id,
+			operate_function,
+			operate_behavior,
+			operate_time,
+			current_ip,
+			operate_old_data,
+			operate_new_data,
+			header_user_agent,
+			request_url
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{employeeId},
+			#{operateFunction},
+			#{operateBehavior},
+			#{operateDate},
+			#{currentIp},
+			#{operateOldData},
+			#{operateNewData},
+			#{headerUserAgent},
+			#{requestUrl}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_operation_log SET 	
+			merchant_id = #{merchantId},
+			employee_id = #{employeeId},
+			operate_function = #{operateFunction},
+			operate_behavior = #{operateBehavior},
+			operate_time = #{operateDate},
+			current_ip = #{currentIp},
+			operate_old_data = #{operateOldData},
+			operate_new_data = #{operateNewData},
+			header_user_agent = #{headerUserAgent},
+			request_url = #{requestUrl}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_operation_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

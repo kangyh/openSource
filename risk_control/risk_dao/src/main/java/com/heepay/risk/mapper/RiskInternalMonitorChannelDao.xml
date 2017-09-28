@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.risk.dao.RiskInternalMonitorChannelDao">
+<sql id="riskInternalMonitorChannelColumns">
+		internal_channel_id AS internalChannelId,
+		channel_partner_code AS channelPartnerCode,
+		channel_type_code AS channelTypeCode,
+		channel_type_name AS channelTypeName,
+		channel_partner_name AS channelPartnerName,
+		begin_time AS beginTime,
+		end_time AS endTime,
+		frequency AS frequency,
+		threshold AS threshold,
+		operator AS operator,
+		create_time AS createTime,
+		change_rate AS changeRate
+	</sql>
+	<insert id="insert"  parameterType="com.heepay.risk.entity.RiskInternalMonitorChannel" >
+		INSERT INTO risk_internal_monitor_channel(
+			channel_partner_code,
+			channel_type_code,
+			begin_time,
+			end_time,
+			frequency,
+			threshold,
+			operator,
+			create_time,
+			channel_type_name,
+			channel_partner_name,
+			change_rate
+		) VALUES (
+			#{channelPartnerCode},
+			#{channelTypeCode},
+			#{beginTime},
+			#{endTime},
+			#{frequency},
+			#{threshold},
+			#{operator},
+			#{createTime},
+			#{channelTypeName},
+			#{channelPartnerName},
+			#{changeRate}
+		)
+	</insert>
+	
+	<update id="update"  parameterType="com.heepay.risk.entity.RiskInternalMonitorChannel" >
+		UPDATE risk_internal_monitor_channel SET
+			channel_partner_code = #{channelPartnerCode},
+			channel_type_code = #{channelTypeCode},
+			begin_time = #{beginTime},
+			end_time = #{endTime},
+			frequency = #{frequency},
+			threshold = #{threshold},
+			operator = #{operator},
+			create_time = #{createTime},
+			channel_type_name=#{channelTypeName},
+			channel_partner_name=#{channelPartnerName},
+			change_rate=#{changeRate}
+		WHERE internal_channel_id = #{internalChannelId}
+	</update>
+	
+	<update id="delete"  parameterType="java.lang.String" >
+		DELETE FROM risk_internal_monitor_channel
+		WHERE internal_channel_id = #{internalChannelId}
+	</update>
+	<select id="selectByPrimary" parameterType="java.lang.Integer" resultType="com.heepay.risk.entity.RiskInternalMonitorChannel">
+     select
+		<include refid="riskInternalMonitorChannelColumns"/>  FROM risk_internal_monitor_channel
+		where internal_channel_id=#{internalChannelId}
+	</select>
+	<select id="selectByCondition" resultType="com.heepay.risk.entity.RiskInternalMonitorChannel">
+		SELECT 
+			<include refid="riskInternalMonitorChannelColumns"/>
+		FROM risk_internal_monitor_channel a 
+		<where>
+			<if test="channelPartnerCode != null and channelPartnerCode != ''">
+				AND channel_partner_code = #{channelPartnerCode}
+			</if>
+			<if test="channelTypeCode != null and channelTypeCode != ''">
+				AND channel_type_code = #{channelTypeCode}
+			</if>
+			<if test="frequency != null and frequency != ''">
+				AND frequency = #{frequency}
+			</if>
+			<if test="threshold != null and threshold != ''">
+				AND threshold = #{threshold}
+			</if>
+		</where>
+	</select>
+</mapper>

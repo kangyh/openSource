@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsCutDayMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsCutDay" >
+    <id column="tpds_cut_day_id" property="id" jdbcType="INTEGER" />
+    <result column="busi_no" property="busiNo" jdbcType="VARCHAR" />
+    <result column="cut_type" property="cutType" jdbcType="VARCHAR" />
+    <result column="cut_time" property="cutTime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByCutType" parameterType="java.lang.String" resultType="com.heepay.tpds.entity.TpdsCutDay">
+  select busi_no,cut_type,cut_time from  tpds_cut_day where cut_type=  
+  </select>
+  <sql id="Base_Column_List" >
+    tpds_cut_day_id, busi_no, cut_type, cut_time, create_time, update_time, update_user, status
+  </sql>
+ 
+  
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsCutDay" >
+    insert into tpds_cut_day (busi_no, cut_type, 
+      cut_time, create_time, update_time, 
+      update_user, status)
+    values (#{busiNo,jdbcType=VARCHAR}, #{cutType,jdbcType=VARCHAR}, 
+      #{cutTime,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsCutDay" >
+    insert into tpds_cut_day
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        tpds_cut_day_id,
+      </if>
+      <if test="busiNo != null" >
+        busi_no,
+      </if>
+      <if test="cutType != null" >
+        cut_type,
+      </if>
+      <if test="cutTime != null" >
+        cut_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{tpds_cut_day_id,jdbcType=INTEGER},
+      </if>
+      <if test="busiNo != null" >
+        #{busiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cutType != null" >
+        #{cutType,jdbcType=VARCHAR},
+      </if>
+      <if test="cutTime != null" >
+        #{cutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>  
+  <update id="update" parameterType="com.heepay.tpds.entity.TpdsCutDay" >
+    update tpds_cut_day
+    set busi_no = #{busiNo,jdbcType=VARCHAR},
+      cut_type = #{cutType,jdbcType=VARCHAR},
+      cut_time = #{cutTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where tpds_cut_day_id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询日切点 -->
+  <select id="selectCutTypeByCutType" parameterType="com.heepay.tpds.entity.TpdsCutDay" resultType="com.heepay.tpds.entity.TpdsCutDay" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_cut_day
+    where cut_type = #{cutType,jdbcType=VARCHAR}
+    and busi_no = #{busiNo,jdbcType=VARCHAR}
+    and status = #{status,jdbcType=VARCHAR}
+  </select>
+  <!--  根据商户编码获取日切点 -->
+  <select id="getCutTimeByBusiNo" parameterType="map" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from tpds_cut_day
+    where busi_no = #{busiNo,jdbcType=VARCHAR}
+    and status = #{status,jdbcType=VARCHAR}
+  </select>
+</mapper>
+
+
+
+
+

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.contract.dao.ContractDao">
+    
+	<sql id="contractColumns">
+		a.id AS "id",
+		a.contract_code AS "contractCode",
+		a.contract_name AS "contractName",
+		a.by_project AS "byProject",
+		a.by_company AS "byCompany",
+		a.file_name AS "fileName",
+		a.file_path AS "filePath",
+		a.create_user AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_user AS "updateBy.id",
+		a.update_time AS "updateDate",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="contractJoins">
+	</sql>
+    
+	<select id="get" resultType="Contract">
+		SELECT 
+			<include refid="contractColumns"/>
+		FROM contract a
+		<include refid="contractJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="selectByContractCode" resultType="Contract">
+		SELECT
+		<include refid="contractColumns"/>
+		FROM contract a
+		<include refid="contractJoins"/>
+		WHERE a.contract_code = #{contractCode}
+	</select>
+
+	<select id="findList" resultType="Contract">
+		SELECT 
+			<include refid="contractColumns"/>
+		FROM contract a
+		<include refid="contractJoins"/>
+		<where>
+			<if test="contractCode != null and contractCode != ''">
+				AND a.contract_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{contractCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contractCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contractCode},'%')</if>
+			</if>
+			<if test="contractName != null and contractName != ''">
+				AND a.contract_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{contractName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{contractName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{contractName},'%')</if>
+			</if>
+			<if test="byProject != null and byProject != ''">
+				AND a.by_project = #{byProject}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Contract">
+		SELECT 
+			<include refid="contractColumns"/>
+		FROM contract a
+		<include refid="contractJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO contract(
+			id,
+			contract_code,
+			contract_name,
+			by_project,
+			by_company,
+			file_name,
+			file_path,
+			create_user,
+			create_time,
+			update_user,
+			update_time,
+			status
+		) VALUES (
+			#{id},
+			#{contractCode},
+			#{contractName},
+			#{byProject},
+			#{byCompany},
+			#{fileName},
+			#{filePath},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE contract SET 	
+			contract_code = #{contractCode},
+			contract_name = #{contractName},
+			by_project = #{byProject},
+			by_company = #{byCompany},
+			file_name = #{fileName},
+			file_path = #{filePath},
+			create_user = #{createBy.id},
+			create_time = #{createDate},
+			update_user = #{updateBy.id},
+			update_time = #{updateDate},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM contract
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcAccountDynamicDao" >
+  
+    <sql id="includeEntity">
+	  a.account_dynamic_id, 
+	  a.subject_type, 
+	  a.account_number, 
+      a.account_type, 
+      a.account_status, 
+      a.currency, 
+      a.account_balance, 
+      a.account_info, 
+      a.account_open_time, 
+      a.account_open_ip_address, 
+      a.account_open_machine_number, 
+      a.last_transaction_time, 
+      a.online_shop_name, 
+      a.order_id, 
+      a.transaction_type, 
+      a.payment_type, 
+      a.borrowing_signs, 
+      a.transaction_time, 
+      a.transaction_amount, 
+      a.transaction_serial, 
+      a.trans_account_balance, 
+      a.trans_currency, 
+      a.trans_in_bank_id, 
+      a.trans_in_bank_name, 
+      a.trans_in_card_number, 
+      a.trans_in_account_number, 
+      a.trans_in_tel_number, 
+      a.pos_identity, 
+      a.merchant_number, 
+      a.trans_out_tel_number, 
+      a.trans_out_bank_id, 
+      a.trans_out_bank_name, 
+      a.trans_out_card_number, 
+      a.trans_out_account_number, 
+      a.transaction_device_type, 
+      a.transaction_ip, 
+      a.transaction_mac, 
+      a.transaction_device_code, 
+      a.bank_transaction_serial, 
+      a.remark, 
+      a.application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcAccountDynamic">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic a
+		<where>
+			<!-- accountNumber-->
+			<if test="accountNumber != null and accountNumber != ''">
+				AND a.account_number = #{accountNumber} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND a.application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY account_dynamic_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY account_dynamic_id DESC
+			</otherwise>
+		</choose>
+	</select>
+  
+  <insert id="save" parameterType="PbcAccountDynamic" >
+   insert into pbc_account_dynamic (account_dynamic_id, subject_type, account_number, 
+      account_type, account_status, currency, 
+      account_balance, account_info, account_open_time, 
+      account_open_ip_address, account_open_machine_number, 
+      last_transaction_time, order_id, transaction_type, 
+      payment_type, borrowing_signs, transaction_time, 
+      trans_currency, transaction_amount, transaction_serial, 
+      trans_account_balance, trans_in_bank_id, trans_in_bank_name, 
+      trans_in_card_number, trans_in_account_number, 
+      pos_identity, merchant_number, trans_out_bank_id, 
+      trans_out_bank_name, trans_out_card_number, trans_out_account_number, 
+      transaction_device_type, transaction_ip, transaction_mac, 
+      transaction_device_code, bank_transaction_serial, 
+      remark, application_code)
+    values (#{accountDynamicId,jdbcType=BIGINT}, #{subjectType,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{accountInfo,jdbcType=VARCHAR}, #{accountOpenTime,jdbcType=VARCHAR}, 
+      #{accountOpenIpAddress,jdbcType=VARCHAR}, #{accountOpenMachineNumber,jdbcType=VARCHAR}, 
+      #{lastTransactionTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=VARCHAR}, #{transactionType,jdbcType=VARCHAR}, 
+      #{paymentType,jdbcType=VARCHAR}, #{borrowingSigns,jdbcType=VARCHAR}, #{transactionTime,jdbcType=TIMESTAMP}, 
+      #{transCurrency,jdbcType=VARCHAR}, #{transactionAmount,jdbcType=DECIMAL}, #{transactionSerial,jdbcType=VARCHAR}, 
+      #{transAccountBalance,jdbcType=DECIMAL}, #{transInBankId,jdbcType=VARCHAR}, #{transInBankName,jdbcType=VARCHAR}, 
+      #{transInCardNumber,jdbcType=VARCHAR}, #{transInAccountNumber,jdbcType=VARCHAR}, 
+      #{posIdentity,jdbcType=VARCHAR}, #{merchantNumber,jdbcType=VARCHAR}, #{transOutBankId,jdbcType=VARCHAR}, 
+      #{transOutBankName,jdbcType=VARCHAR}, #{transOutCardNumber,jdbcType=VARCHAR}, #{transOutAccountNumber,jdbcType=VARCHAR}, 
+      #{transactionDeviceType,jdbcType=VARCHAR}, #{transactionIp,jdbcType=VARCHAR}, #{transactionMac,jdbcType=VARCHAR}, 
+      #{transactionDeviceCode,jdbcType=VARCHAR}, #{bankTransactionSerial,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="saveEntity" parameterType="PbcAccountDynamic" useGeneratedKeys="true" keyProperty="accountDynamicId">
+     insert into pbc_account_dynamic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        account_dynamic_id,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="accountInfo != null" >
+        account_info,
+      </if>
+      <if test="accountOpenTime != null" >
+        account_open_time,
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        account_open_ip_address,
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        account_open_machine_number,
+      </if>
+      <if test="lastTransactionTime != null" >
+        last_transaction_time,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="transactionType != null" >
+        transaction_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="borrowingSigns != null" >
+        borrowing_signs,
+      </if>
+      <if test="transactionTime != null" >
+        transaction_time,
+      </if>
+      <if test="transCurrency != null" >
+        trans_currency,
+      </if>
+      <if test="transactionAmount != null" >
+        transaction_amount,
+      </if>
+      <if test="transactionSerial != null" >
+        transaction_serial,
+      </if>
+      <if test="transAccountBalance != null" >
+        trans_account_balance,
+      </if>
+      <if test="transInBankId != null" >
+        trans_in_bank_id,
+      </if>
+      <if test="transInBankName != null" >
+        trans_in_bank_name,
+      </if>
+      <if test="transInCardNumber != null" >
+        trans_in_card_number,
+      </if>
+      <if test="transInAccountNumber != null" >
+        trans_in_account_number,
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity,
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number,
+      </if>
+      <if test="transOutBankId != null" >
+        trans_out_bank_id,
+      </if>
+      <if test="transOutBankName != null" >
+        trans_out_bank_name,
+      </if>
+      <if test="transOutCardNumber != null" >
+        trans_out_card_number,
+      </if>
+      <if test="transOutAccountNumber != null" >
+        trans_out_account_number,
+      </if>
+      <if test="transactionDeviceType != null" >
+        transaction_device_type,
+      </if>
+      <if test="transactionIp != null" >
+        transaction_ip,
+      </if>
+      <if test="transactionMac != null" >
+        transaction_mac,
+      </if>
+      <if test="transactionDeviceCode != null" >
+        transaction_device_code,
+      </if>
+      <if test="bankTransactionSerial != null" >
+        bank_transaction_serial,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountDynamicId != null" >
+        #{accountDynamicId,jdbcType=BIGINT},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInfo != null" >
+        #{accountInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenTime != null" >
+        #{accountOpenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        #{accountOpenIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTransactionTime != null" >
+        #{lastTransactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionType != null" >
+        #{transactionType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowingSigns != null" >
+        #{borrowingSigns,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionTime != null" >
+        #{transactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transCurrency != null" >
+        #{transCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionAmount != null" >
+        #{transactionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionSerial != null" >
+        #{transactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="transAccountBalance != null" >
+        #{transAccountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="transInBankId != null" >
+        #{transInBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transInBankName != null" >
+        #{transInBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transInCardNumber != null" >
+        #{transInCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transInAccountNumber != null" >
+        #{transInAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankId != null" >
+        #{transOutBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankName != null" >
+        #{transOutBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutCardNumber != null" >
+        #{transOutCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutAccountNumber != null" >
+        #{transOutAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceType != null" >
+        #{transactionDeviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionIp != null" >
+        #{transactionIp,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionMac != null" >
+        #{transactionMac,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceCode != null" >
+        #{transactionDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankTransactionSerial != null" >
+        #{bankTransactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateEntity" parameterType="PbcAccountDynamic" >
+     update pbc_account_dynamic
+    <set >
+      <if test="subjectType != null" >
+        subject_type = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountStatus != null" >
+        account_status = #{accountStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInfo != null" >
+        account_info = #{accountInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenTime != null" >
+        account_open_time = #{accountOpenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenIpAddress != null" >
+        account_open_ip_address = #{accountOpenIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOpenMachineNumber != null" >
+        account_open_machine_number = #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTransactionTime != null" >
+        last_transaction_time = #{lastTransactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionType != null" >
+        transaction_type = #{transactionType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null" >
+        payment_type = #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowingSigns != null" >
+        borrowing_signs = #{borrowingSigns,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionTime != null" >
+        transaction_time = #{transactionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="transCurrency != null" >
+        trans_currency = #{transCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionAmount != null" >
+        transaction_amount = #{transactionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionSerial != null" >
+        transaction_serial = #{transactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="transAccountBalance != null" >
+        trans_account_balance = #{transAccountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="transInBankId != null" >
+        trans_in_bank_id = #{transInBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transInBankName != null" >
+        trans_in_bank_name = #{transInBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transInCardNumber != null" >
+        trans_in_card_number = #{transInCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transInAccountNumber != null" >
+        trans_in_account_number = #{transInAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity = #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankId != null" >
+        trans_out_bank_id = #{transOutBankId,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutBankName != null" >
+        trans_out_bank_name = #{transOutBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutCardNumber != null" >
+        trans_out_card_number = #{transOutCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transOutAccountNumber != null" >
+        trans_out_account_number = #{transOutAccountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceType != null" >
+        transaction_device_type = #{transactionDeviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionIp != null" >
+        transaction_ip = #{transactionIp,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionMac != null" >
+        transaction_mac = #{transactionMac,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDeviceCode != null" >
+        transaction_device_code = #{transactionDeviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankTransactionSerial != null" >
+        bank_transaction_serial = #{bankTransactionSerial,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where account_dynamic_id = #{accountDynamicId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcAccountDynamic" >
+    update pbc_account_dynamic
+    set subject_type = #{subjectType,jdbcType=VARCHAR},
+      account_number = #{accountNumber,jdbcType=VARCHAR},
+      account_type = #{accountType,jdbcType=VARCHAR},
+      account_status = #{accountStatus,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      account_balance = #{accountBalance,jdbcType=DECIMAL},
+      account_info = #{accountInfo,jdbcType=VARCHAR},
+      account_open_time = #{accountOpenTime,jdbcType=VARCHAR},
+      account_open_ip_address = #{accountOpenIpAddress,jdbcType=VARCHAR},
+      account_open_machine_number = #{accountOpenMachineNumber,jdbcType=VARCHAR},
+      last_transaction_time = #{lastTransactionTime,jdbcType=TIMESTAMP},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      transaction_type = #{transactionType,jdbcType=VARCHAR},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      borrowing_signs = #{borrowingSigns,jdbcType=VARCHAR},
+      transaction_time = #{transactionTime,jdbcType=TIMESTAMP},
+      trans_currency = #{transCurrency,jdbcType=VARCHAR},
+      transaction_amount = #{transactionAmount,jdbcType=DECIMAL},
+      transaction_serial = #{transactionSerial,jdbcType=VARCHAR},
+      trans_account_balance = #{transAccountBalance,jdbcType=DECIMAL},
+      trans_in_bank_id = #{transInBankId,jdbcType=VARCHAR},
+      trans_in_bank_name = #{transInBankName,jdbcType=VARCHAR},
+      trans_in_card_number = #{transInCardNumber,jdbcType=VARCHAR},
+      trans_in_account_number = #{transInAccountNumber,jdbcType=VARCHAR},
+      pos_identity = #{posIdentity,jdbcType=VARCHAR},
+      merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+      trans_out_bank_id = #{transOutBankId,jdbcType=VARCHAR},
+      trans_out_bank_name = #{transOutBankName,jdbcType=VARCHAR},
+      trans_out_card_number = #{transOutCardNumber,jdbcType=VARCHAR},
+      trans_out_account_number = #{transOutAccountNumber,jdbcType=VARCHAR},
+      transaction_device_type = #{transactionDeviceType,jdbcType=VARCHAR},
+      transaction_ip = #{transactionIp,jdbcType=VARCHAR},
+      transaction_mac = #{transactionMac,jdbcType=VARCHAR},
+      transaction_device_code = #{transactionDeviceCode,jdbcType=VARCHAR},
+      bank_transaction_serial = #{bankTransactionSerial,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      application_code = #{applicationCode,jdbcType=VARCHAR}
+    where account_dynamic_id = #{accountDynamicId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getEntityById" resultType="PbcAccountDynamic">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic a
+	WHERE account_dynamic_id = #{accountDynamicId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcAccountDynamic">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_account_dynamic a
+	WHERE application_code = #{applicationCode}
+  </select>
+  
+  <select id="findDistinctList" resultType="PbcAccountDynamic">
+  	SELECT DISTINCT
+			a.account_number, 
+			a.account_type, 
+			a.account_status, 
+			a.currency, 
+			a.account_balance, 
+			a.account_info, 
+			a.account_open_time, 
+			a.account_open_ip_address, 
+			a.account_open_machine_number, 
+			a.last_transaction_time,
+			a.application_code
+		FROM pbc_account_dynamic a
+	WHERE application_code = #{applicationCode}
+	GROUP BY a.account_number, 
+			a.account_type, 
+			a.account_status, 
+			a.currency, 
+			a.account_balance, 
+			a.account_info, 
+			a.account_open_time, 
+			a.account_open_ip_address, 
+			a.account_open_machine_number, 
+			a.last_transaction_time,
+			a.application_code
+  </select>
+  
+  <select id="findTransList" resultType="PbcAccountDynamic">
+  	SELECT a.order_id, 
+	      a.transaction_type, 
+	      a.payment_type, 
+	      a.borrowing_signs, 
+	      a.transaction_time, 
+	      a.trans_currency, 
+	      a.transaction_amount, 
+	      a.transaction_serial, 
+	      a.trans_account_balance, 
+	      a.trans_in_bank_id, 
+	      a.trans_in_bank_name, 
+	      a.trans_in_bank_name, 
+	      a.trans_in_account_number, 
+	      a.pos_identity, 
+	      a.merchant_number, 
+	      a.trans_out_bank_id, 
+	      a.trans_out_bank_name, 
+	      a.trans_out_card_number, 
+	      a.trans_out_account_number, 
+	      a.transaction_device_type, 
+	      a.transaction_ip, 
+	      a.transaction_mac, 
+	      a.transaction_device_code, 
+	      a.bank_transaction_serial
+		FROM pbc_account_dynamic a
+	WHERE application_code = #{applicationCode}
+	GROUP BY a.order_id, 
+	      a.transaction_type, 
+	      a.payment_type, 
+	      a.borrowing_signs, 
+	      a.transaction_time, 
+	      a.trans_currency, 
+	      a.transaction_amount, 
+	      a.transaction_serial, 
+	      a.trans_account_balance, 
+	      a.trans_in_bank_id, 
+	      a.trans_in_bank_name, 
+	      a.trans_in_bank_name, 
+	      a.trans_in_account_number, 
+	      a.pos_identity, 
+	      a.merchant_number, 
+	      a.trans_out_bank_id, 
+	      a.trans_out_bank_name, 
+	      a.trans_out_card_number, 
+	      a.trans_out_account_number, 
+	      a.transaction_device_type, 
+	      a.transaction_ip, 
+	      a.transaction_mac, 
+	      a.transaction_device_code, 
+	      a.bank_transaction_serial
+  </select>
+  <insert id="saveMap" parameterType="Map">
+  	insert into pbc_account_dynamic (account_dynamic_id, subject_type, account_number, 
+      account_type, account_status, currency, 
+      account_balance, account_info, account_open_time, 
+      account_open_ip_address, account_open_machine_number, 
+      last_transaction_time, order_id, transaction_type, 
+      payment_type, borrowing_signs, transaction_time, 
+      trans_currency, transaction_amount, transaction_serial, 
+      trans_account_balance, trans_in_bank_id, trans_in_bank_name, 
+      trans_in_card_number, trans_in_account_number, 
+      pos_identity, merchant_number, trans_out_bank_id, 
+      trans_out_bank_name, trans_out_card_number, trans_out_account_number, 
+      transaction_device_type, transaction_ip, transaction_mac, 
+      transaction_device_code, bank_transaction_serial, 
+      remark, application_code)
+    values (#{accountDynamicId,jdbcType=BIGINT}, #{subjectType,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{accountType,jdbcType=VARCHAR}, #{accountStatus,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{accountInfo,jdbcType=VARCHAR}, #{accountOpenTime,jdbcType=VARCHAR}, 
+      #{accountOpenIpAddress,jdbcType=VARCHAR}, #{accountOpenMachineNumber,jdbcType=VARCHAR}, 
+      #{lastTransactionTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=VARCHAR}, #{transactionType,jdbcType=VARCHAR}, 
+      #{paymentType,jdbcType=VARCHAR}, #{borrowingSigns,jdbcType=VARCHAR}, #{transactionTime,jdbcType=TIMESTAMP}, 
+      #{transCurrency,jdbcType=VARCHAR}, #{transactionAmount,jdbcType=DECIMAL}, #{transactionSerial,jdbcType=VARCHAR}, 
+      #{transAccountBalance,jdbcType=DECIMAL}, #{transInBankId,jdbcType=VARCHAR}, #{transInBankName,jdbcType=VARCHAR}, 
+      #{transInCardNumber,jdbcType=VARCHAR}, #{transInAccountNumber,jdbcType=VARCHAR}, 
+      #{posIdentity,jdbcType=VARCHAR}, #{merchantNumber,jdbcType=VARCHAR}, #{transOutBankId,jdbcType=VARCHAR}, 
+      #{transOutBankName,jdbcType=VARCHAR}, #{transOutCardNumber,jdbcType=VARCHAR}, #{transOutAccountNumber,jdbcType=VARCHAR}, 
+      #{transactionDeviceType,jdbcType=VARCHAR}, #{transactionIp,jdbcType=VARCHAR}, #{transactionMac,jdbcType=VARCHAR}, 
+      #{transactionDeviceCode,jdbcType=VARCHAR}, #{bankTransactionSerial,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="getListByMerchantNumber" resultType="PbcAccountDynamic">
+	  	SELECT 
+				<include refid="includeEntity"/>
+			FROM pbc_account_dynamic a
+		WHERE account_number = #{merchantNumber}
+  </select>
+  
+  <select id="getListByfeatureCode" resultType="PbcAccountDynamic">
+	  	SELECT 
+				<include refid="includeEntity"/>
+			FROM pbc_account_dynamic a
+		WHERE application_code = #{applicationCode}
+  </select>
+  
+  <delete id="deleteData">
+  	DELETE FROM  pbc_account_dynamic WHERE account_number=#{accountNumber};
+  </delete>
+  
+  <delete id="deleteDataTwo">
+  	DELETE FROM  pbc_account_dynamic WHERE application_code=#{applicationId};
+  </delete>
+  
+</mapper>

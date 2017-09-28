@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PbcPaymentAccountQueryMapper" >
+<insert id="insert" parameterType="com.heepay.risk.entity.PbcPaymentAccountQuery" useGeneratedKeys="true" keyProperty="paymentAccountId">
+    insert into pbc_payment_account_query
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        payment_account_id,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountOwnerName != null" >
+        account_owner_name,
+      </if>
+      <if test="accountOwnerIdType != null" >
+        account_owner_id_type,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        #{paymentAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerName != null" >
+        #{accountOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerIdType != null" >
+        #{accountOwnerIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

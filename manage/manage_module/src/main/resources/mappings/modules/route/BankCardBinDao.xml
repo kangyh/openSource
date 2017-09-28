@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.BankCardBinDao">
+    
+	<sql id="bankCardBinColumns">
+		a.id AS "id",
+		a.bankcard_code AS "bankcardCode",
+		a.bankcard_name AS "bankcardName",
+		a.bankcard_note AS "bankcardNote",
+		a.bankcard_length AS "bankcardLength",
+		a.bankcard_note_length AS "bankcardNoteLength",
+		a.card_code AS "cardCode",
+		a.card_name AS "cardName",
+		a.card_type AS "cardType",
+		a.card_bin_no AS "cardBinNo",
+		a.status AS "status",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id"
+	</sql>
+	
+	<sql id="bankCardBinJoins">
+	</sql>
+    
+	<select id="get" resultType="BankCardBin">
+		SELECT 
+			<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+		<include refid="bankCardBinJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="selectList" resultType="BankCardBin">
+	    SELECT
+		<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+    </select>
+    
+    
+    <select id="selectBnakCardBin" resultType="BankCardBin">
+		SELECT 
+			<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+		<include refid="bankCardBinJoins"/>
+		WHERE a.bankcard_note_length=#{bankcardNoteLength} and a.bankcard_note=#{bankcardNote} limit 1;
+	</select>
+
+	<!-- 根据银行卡bin发卡行标识查询 -->
+	<select id="selectBankCardNote" resultType="BankCardBin" >
+		SELECT
+		<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+		<include refid="bankCardBinJoins"/>
+		WHERE bankcard_note = #{bankcardNote,jdbcType=INTEGER}
+	</select>
+
+	<select id="findList" resultType="BankCardBin">
+		SELECT 
+			<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+		<include refid="bankCardBinJoins"/>
+		<where>
+
+			<if test="bankcardNote != null and bankcardNote != ''">
+				AND a.bankcard_note LIKE
+				<if test="dbName == 'oracle'">'%'||#{bankcardNote}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{bankcardNote}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{bankcardNote},'%')</if>
+			</if>
+			<if test="cardName != null and cardName !=''">
+				AND a.card_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{cardName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{cardName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{cardName},'%')</if>
+			</if>
+			<if test="cardType != null and cardType != ''">
+				AND a.card_type = #{cardType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BankCardBin">
+		SELECT 
+			<include refid="bankCardBinColumns"/>
+		FROM bank_card_bin a
+		<include refid="bankCardBinJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert"  parameterType="BankCardBin" >
+		INSERT INTO bank_card_bin
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bankcardCode != null" >
+				bankcard_code,
+			</if>
+			<if test="bankcardName != null" >
+				bankcard_name,
+			</if>
+			<if test="bankcardNote != null" >
+				bankcard_note,
+			</if>
+			<if test="bankcardLength != null" >
+				bankcard_length,
+			</if>
+			<if test="bankcardNoteLength != null" >
+				bankcard_note_length,
+			</if>
+			<if test="cardCode != null" >
+				card_code,
+			</if>
+			<if test="cardName != null" >
+				card_name,
+			</if>
+			<if test="cardType != null" >
+				card_type,
+			</if>
+			<if test="cardBinNo != null" >
+				card_bin_no,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bankcardCode != null" >
+				#{bankcardCode,jdbcType=CHAR},
+			</if>
+			<if test="bankcardName != null" >
+				#{bankcardName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankcardNote != null" >
+				#{bankcardNote,jdbcType=INTEGER},
+			</if>
+			<if test="bankcardLength != null" >
+				#{bankcardLength,jdbcType=TINYINT},
+			</if>
+			<if test="bankcardNoteLength != null" >
+				#{bankcardNoteLength,jdbcType=TINYINT},
+			</if>
+			<if test="cardCode != null" >
+				#{cardCode,jdbcType=CHAR},
+			</if>
+			<if test="cardName != null" >
+				#{cardName,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null" >
+				#{cardType,jdbcType=CHAR},
+			</if>
+			<if test="cardBinNo != null" >
+				#{cardBinNo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="BankCardBin">
+		UPDATE bank_card_bin
+		<set >
+			<if test="bankcardCode != null" >
+				bankcard_code = #{bankcardCode,jdbcType=CHAR},
+			</if>
+			<if test="bankcardName != null" >
+				bankcard_name = #{bankcardName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankcardNote != null" >
+				bankcard_note = #{bankcardNote,jdbcType=INTEGER},
+			</if>
+			<if test="bankcardLength != null" >
+				bankcard_length = #{bankcardLength,jdbcType=TINYINT},
+			</if>
+			<if test="bankcardNoteLength != null" >
+				bankcard_note_length = #{bankcardNoteLength,jdbcType=TINYINT},
+			</if>
+			<if test="cardCode != null" >
+				card_code = #{cardCode,jdbcType=CHAR},
+			</if>
+			<if test="cardName != null" >
+				card_name = #{cardName,jdbcType=VARCHAR},
+			</if>
+			<if test="cardType != null" >
+				card_type = #{cardType,jdbcType=CHAR},
+			</if>
+			<if test="cardBinNo != null" >
+				card_bin_no = #{cardBinNo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			update_time =now()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="status">
+		UPDATE bank_card_bin SET
+		status = #{status},
+		update_user = #{updateBy.id,jdbcType=INTEGER},
+		update_time = now()
+		WHERE id = #{id}
+	</update>
+</mapper>

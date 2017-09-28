@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsCustomsettingDao">
+    
+	<sql id="cbmsCustomsettingColumns">
+		a.custom_id AS "customId",
+		a.custom_no AS "customNo",
+		a.record_number AS "recordNumber",
+		a.custom_code AS "customCode",
+		a.company_name AS "companyName",
+		a.company_dxpid AS "companyDxpid",
+		a.input_user_id AS "inputUserId",
+		a.created_time AS "createdTime",
+		a.update_user_id AS "updateUserId",
+		a.update_time AS "updateTime",
+		a.custom_name AS "customName",
+		a.custom_phone AS "customPhone",
+		a.custom_address AS "customAddress",
+		a.china_name AS "chinaName",
+		a.status AS "status"
+	</sql>
+	<sql id="cbmsCustomCodeColumns">
+		b.custom_id AS "customId",
+		b.super_id AS "superId",
+		b.level_type AS "levelType",
+		b.custom_code AS "customCode",
+		b.china_name AS "chinaName",
+		b.custom_alias AS "customAlias",
+		b.custom_name AS "customName",
+		b.custom_phone AS "customPhone",
+		b.custom_address AS "customAddress",
+		b.status AS "status",
+		b.created_time AS "createdTime",
+		b.update_time AS "updateTime"
+	</sql>
+	<sql id="cbmsCustomsettingJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsCustomsetting">
+		SELECT 
+			<include refid="cbmsCustomsettingColumns"/>
+		FROM cbms_customsetting a
+		<include refid="cbmsCustomsettingJoins"/>
+		WHERE a.custom_id = #{id}
+	</select>
+	<!--查询cbms_customsetting表中的所有数据-->
+	<select id="findcustomsettinglist" resultType="CbmsCustomsetting">
+		SELECT
+		<include refid="cbmsCustomsettingColumns"/>
+		FROM cbms_customsetting a
+		order by a.custom_id
+	</select>
+	<select id="findList" resultType="CbmsCustomsetting">
+		SELECT
+			<include refid="cbmsCustomsettingColumns"/>
+		FROM cbms_customsetting a
+		<where>
+			
+			<if test="customNo != null and customNo != ''">
+				AND a.custom_no = #{customNo}
+			</if>
+			<if test="chinaName != null and chinaName != ''">
+				AND a.china_name = #{chinaName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CbmsCustomsetting">
+		SELECT 
+			<include refid="cbmsCustomsettingColumns"/>
+		FROM cbms_customsetting a
+		<include refid="cbmsCustomsettingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_customsetting(
+			custom_id,
+			custom_no,
+			record_number,
+			custom_code,
+			company_name,
+			company_dxpid,
+			input_user_id,
+			created_time,
+			update_user_id,
+			update_time,
+			custom_name,
+			custom_phone,
+			custom_address,
+			china_name,
+			status
+		) VALUES (
+			#{customId},
+			#{customNo},
+			#{recordNumber},
+			#{customCode},
+			#{companyName},
+			#{companyDxpid},
+			#{inputUserId},
+			#{createdTime},
+			#{updateUserId},
+			#{updateTime},
+			#{customName},
+			#{customPhone},
+			#{customAddress},
+			#{chinaName},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_customsetting SET 	
+			custom_id = #{customId},
+			custom_no = #{customNo},
+			record_number = #{recordNumber},
+			custom_code = #{customCode},
+			company_name = #{companyName},
+			company_dxpid = #{companyDxpid},
+			input_user_id = #{inputUserId},
+			created_time = #{createdTime},
+			update_user_id = #{updateUserId},
+			update_time = #{updateTime},
+			custom_name = #{customName},
+			custom_phone = #{customPhone},
+			custom_address = #{customAddress},
+			china_name = #{chinaName},
+			status = #{status}
+		WHERE custom_id = #{customId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_customsetting
+		WHERE custom_id = #{id}
+	</update>
+	
+</mapper>

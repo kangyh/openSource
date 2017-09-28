@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.MerchantPayChannelDao">
+    
+	<sql id="merchantPayChannelColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.channel_code AS "channelCode",
+		a.create_begin_time AS "createBeginTime",
+		a.update_end_time AS "updateEndTime",
+		b.company_name AS "merchantName",
+		d.channel_name AS "channelName",
+		d.channel_partner_name AS "channelPartnerName",
+		d.channel_type_name AS "channelTypeName",
+		d.card_type_name AS "cardTypeName",
+		d.bank_name AS "bankName"
+	</sql>
+	
+	<sql id="merchantPayChannelJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantPayChannel">
+		SELECT 
+			<include refid="merchantPayChannelColumns"/>
+		FROM merchant_pay_channel a
+		<include refid="merchantPayChannelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!--根据商户Id查找已添加通道-->
+	<select id="findList" resultType="MerchantPayChannel">
+		SELECT 
+			<include refid="merchantPayChannelColumns"/>
+		FROM merchant_pay_channel a
+		LEFT JOIN merchant b ON a.merchant_id=b.user_id
+		LEFT JOIN route_pay_channel d ON a.channel_code=d.channel_code
+		<include refid="merchantPayChannelJoins"/>
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="merchantId != null and merchantId !=''">
+				AND merchant_id = #{merchantId,jdbcType=CHAR}
+			</if>
+			<if test="productCode != null and productCode !=''">
+				AND product_code = #{productCode,jdbcType=CHAR}
+			</if>
+		</trim>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findAllList" resultType="MerchantPayChannel">
+		SELECT 
+			<include refid="merchantPayChannelColumns"/>
+		FROM merchant_pay_channel a
+		<include refid="merchantPayChannelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_pay_channel(
+			id,
+			merchant_id,
+			channel_code,
+			product_code,
+			product_name,
+			create_begin_time,
+			update_end_time
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{channelCode},
+			#{productCode},
+			#{productName},
+			#{createDate},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_pay_channel SET 	
+			merchant_id = #{merchantId},
+			product_code = #{productCode},
+			product_name = #{productName},
+			channel_code = #{channelCode},
+			update_end_time = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_pay_channel
+		WHERE id = #{id}
+	</update>
+
+
+	
+</mapper>

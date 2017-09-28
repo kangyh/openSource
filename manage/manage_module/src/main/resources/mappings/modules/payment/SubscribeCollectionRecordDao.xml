@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.SubscribeCollectionRecordDao">
+    
+	<sql id="subscribeCollectionRecordColumns">
+		a.subscribe_id AS "subscribeId",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.merchant_id AS "merchantId",
+		a.notify_url AS "notifyUrl",
+		a.total_amount AS "totalAmount",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.success_total_amount AS "successTotalAmount",
+		a.success_total_num AS "successTotalNum",
+		a.transfer_from AS "transferFrom",
+		a.withhold_rate AS "withholdRate",
+		a.withhold_amount AS "withholdAmount",
+		a.withhold_total_amount AS "withholdTotalAmount",
+		a.withhold_begin_time AS "withholdBeginTime",
+		a.withhold_last_time AS "withholdLastTime",
+		a.withhold_pre_time AS "withholdPreTime",
+		a.withhold_latter_time AS "withholdLatterTime",
+		a.subscribe_status AS "subscribeStatus",
+		a.auth_code AS "authCode"
+	</sql>
+	
+	<sql id="subscribeCollectionRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="SubscribeCollectionRecord">
+		SELECT 
+			<include refid="subscribeCollectionRecordColumns"/>
+		FROM subscribe_collection_record a
+		<include refid="subscribeCollectionRecordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SubscribeCollectionRecord">
+		SELECT 
+			<include refid="subscribeCollectionRecordColumns"/>
+		FROM subscribe_collection_record a
+		<include refid="subscribeCollectionRecordJoins"/>
+		<where>
+			
+			<if test="subscribeId != null and subscribeId != ''">
+				AND a.subscribe_id = #{subscribeId}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="authCode != null and authCode != ''">
+				AND a.auth_code = #{authCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SubscribeCollectionRecord">
+		SELECT 
+			<include refid="subscribeCollectionRecordColumns"/>
+		FROM subscribe_collection_record a
+		<include refid="subscribeCollectionRecordJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO subscribe_collection_record(
+			subscribe_id,
+			merchant_order_no,
+			merchant_id,
+			notify_url,
+			total_amount,
+			create_time,
+			update_time,
+			success_total_amount,
+			success_total_num,
+			transfer_from,
+			withhold_rate,
+			withhold_amount,
+			withhold_total_amount,
+			withhold_begin_time,
+			withhold_last_time,
+			withhold_pre_time,
+			withhold_latter_time,
+			subscribe_status,
+			auth_code
+		) VALUES (
+			#{subscribeId},
+			#{merchantOrderNo},
+			#{merchantId},
+			#{notifyUrl},
+			#{totalAmount},
+			#{createTime},
+			#{updateTime},
+			#{successTotalAmount},
+			#{successTotalNum},
+			#{transferFrom},
+			#{withholdRate},
+			#{withholdAmount},
+			#{withholdTotalAmount},
+			#{withholdBeginTime},
+			#{withholdLastTime},
+			#{withholdPreTime},
+			#{withholdLatterTime},
+			#{subscribeStatus},
+			#{authCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE subscribe_collection_record SET 	
+			subscribe_id = #{subscribeId},
+			merchant_order_no = #{merchantOrderNo},
+			merchant_id = #{merchantId},
+			notify_url = #{notifyUrl},
+			total_amount = #{totalAmount},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			success_total_amount = #{successTotalAmount},
+			success_total_num = #{successTotalNum},
+			transfer_from = #{transferFrom},
+			withhold_rate = #{withholdRate},
+			withhold_amount = #{withholdAmount},
+			withhold_total_amount = #{withholdTotalAmount},
+			withhold_begin_time = #{withholdBeginTime},
+			withhold_last_time = #{withholdLastTime},
+			withhold_pre_time = #{withholdPreTime},
+			withhold_latter_time = #{withholdLatterTime},
+			subscribe_status = #{subscribeStatus},
+			auth_code = #{authCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM subscribe_collection_record
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.check.MerchantProductRateCheckDao">
+
+	<sql id="merchantProductRateColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		b.company_name AS "merchantCompanyName",
+		b.email AS "merchantLoginName",
+		a.business_type AS "businessType",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.settlement_to AS "settlementTo",
+		a.settle_type AS "settleType",
+		a.notify_url AS "notifyUrl",
+		a.back_url AS "backUrl",
+		a.ip_domain AS "ipDomain",
+		a.autograph_type AS "autographType",
+		a.autograph_key AS "autographKey",
+		a.rule_begin_time AS "ruleBeginTime",
+		a.rule_end_time AS "ruleEndTime",
+		a.charge_source AS "chargeSource",
+		a.charge_deduct_type AS "chargeDeductType",
+		a.charge_collection_type AS "chargeCollectionType",
+		a.is_refundable AS "isRefundable",
+		a.status AS "status",
+		a.contract_type AS "contractType",
+		a.rate_audit AS "rateAudit"
+	</sql>
+
+	<sql id="merchantProductRateJoins">
+		left join merchant b
+		on a.merchant_id = b.user_id
+	</sql>
+
+	<select id="get" resultType="MerchantProductRate">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="exist" resultType="MerchantProductRate">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND a.business_type = #{businessType}
+			</if>
+		</where>
+	</select>
+
+	<select id="findList" resultType="MerchantProductRate">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<choose>
+				<when test="merchantId != null and merchantId != '' and merchantId != 1">
+					AND a.merchant_id = #{merchantId}
+				</when>
+				<when test="merchantId == 1">
+					AND a.merchant_id = 2
+				</when>
+				<otherwise>
+					AND a.merchant_id != 1
+				</otherwise>
+			</choose>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="contractType != null and contractType != ''">
+				AND a.contract_type = #{contractType}
+			</if>
+			<if test="merchantCompanyName != null and merchantCompanyName != ''">
+				AND b.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{merchantCompanyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantCompanyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantCompanyName},'%')</if>
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="rateAudit != null and rateAudit != ''">
+				AND a.rate_audit = #{rateAudit}
+			</if>
+			<if test="rateAuditsValue != null and rateAuditsValue != ''">
+				AND a.rate_audit != #{rateAuditsValue}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<!--费率审核-->
+	<select id="getListByPage" resultType="MerchantProductRate">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<choose>
+				<when test="merchantId != null and merchantId != '' and merchantId != 1">
+					AND a.merchant_id = #{merchantId}
+				</when>
+				<when test="merchantId == 1">
+					AND a.merchant_id = 2
+				</when>
+				<otherwise>
+					AND a.merchant_id != 1
+				</otherwise>
+			</choose>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantCompanyName != null and merchantCompanyName != ''">
+				AND b.company_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{merchantCompanyName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{merchantCompanyName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{merchantCompanyName},'%')</if>
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="rateAudit != null and rateAudit != ''">
+				AND a.rate_audit = #{rateAudit}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY a.id DESC , #{page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findPageNotDefaul" resultType="MerchantRateNew">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+			<choose>
+				<when test="merchantId != null and merchantId != '' and merchantId != 1">
+					AND a.merchant_id = #{merchantId}
+				</when>
+				<when test="merchantId == 1">
+					AND a.merchant_id = "2"
+				</when>
+				<otherwise>
+					AND a.merchant_id != "1"
+				</otherwise>
+			</choose>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findPageDefaul" resultType="MerchantRateNew">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND b.email = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findAllList" resultType="MerchantProductRate">
+		SELECT
+		<include refid="merchantProductRateColumns" />
+		FROM merchant_product_rate_check a
+		<include refid="merchantProductRateJoins" />
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		insert into merchant_product_rate_check
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="merchantId != null">
+				merchant_id,
+			</if>
+			<if test="businessType != null">
+				business_type,
+			</if>
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="productName != null">
+				product_name,
+			</if>
+			<if test="ruleBeginTime != null">
+				rule_begin_time,
+			</if>
+			<if test="ruleEndTime != null">
+				rule_end_time,
+			</if>
+			<if test="chargeSource != null">
+				charge_source,
+			</if>
+			<if test="chargeDeductType != null">
+				charge_deduct_type,
+			</if>
+			<if test="chargeCollectionType != null">
+				charge_collection_type,
+			</if>
+			<if test="isRefundable != null">
+				is_refundable,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="settlementTo != null">
+				settlement_to,
+			</if>
+			<if test="settleType != null">
+				settle_type,
+			</if>
+			<if test="notifyUrl != null">
+				notify_url,
+			</if>
+			<if test="backUrl != null">
+				back_url,
+			</if>
+			<if test="ipDomain != null">
+                ip_domain,
+            </if>
+			<if test="autographType != null">
+				autograph_type,
+			</if>
+			<if test="autographKey != null">
+				autograph_key,
+			</if>
+			<if test="rateAudit != null">
+				rate_audit,
+			</if>
+			<if test="contractType != null">
+				contract_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="merchantId != null">
+				#{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="businessType != null">
+				#{businessType,jdbcType=CHAR},
+			</if>
+			<if test="productCode != null">
+				#{productCode,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleBeginTime != null">
+				#{ruleBeginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ruleEndTime != null">
+				#{ruleEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="chargeSource != null">
+				#{chargeSource,jdbcType=CHAR},
+			</if>
+			<if test="chargeDeductType != null">
+				#{chargeDeductType,jdbcType=CHAR},
+			</if>
+			<if test="chargeCollectionType != null">
+				#{chargeCollectionType,jdbcType=CHAR},
+			</if>
+			<if test="isRefundable != null">
+				#{isRefundable,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="settlementTo != null">
+				#{settlementTo,jdbcType=CHAR},
+			</if>
+			<if test="settleType != null">
+				#{settleType,jdbcType=CHAR},
+			</if>
+			<if test="notifyUrl != null">
+				#{notifyUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="backUrl != null">
+				#{backUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="ipDomain != null">
+                #{ipDomain,jdbcType=VARCHAR},
+            </if>
+			<if test="autographType != null">
+				#{autographType,jdbcType=CHAR},
+			</if>
+			<if test="autographKey != null">
+				#{autographKey,jdbcType=VARCHAR},
+			</if>
+			<if test="rateAudit != null">
+				#{rateAudit,jdbcType=VARCHAR},
+			</if>
+			<if test="contractType != null">
+				#{contractType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<update id="update">
+		update merchant_product_rate_check
+		<set>
+			<if test="merchantId != null">
+				merchant_id = #{merchantId,jdbcType=INTEGER},
+			</if>
+			<if test="businessType != null">
+				business_type = #{businessType,jdbcType=CHAR},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode,jdbcType=CHAR},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleBeginTime != null">
+				rule_begin_time = #{ruleBeginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ruleEndTime != null">
+				rule_end_time = #{ruleEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="chargeSource != null">
+				charge_source = #{chargeSource,jdbcType=CHAR},
+			</if>
+			<if test="chargeDeductType != null">
+				charge_deduct_type = #{chargeDeductType,jdbcType=CHAR},
+			</if>
+			<if test="chargeCollectionType != null">
+				charge_collection_type =
+				#{chargeCollectionType,jdbcType=CHAR},
+			</if>
+			<if test="isRefundable != null">
+				is_refundable = #{isRefundable,jdbcType=CHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="settleType != null">
+				settle_type = #{settleType,jdbcType=CHAR},
+			</if>
+			<if test="settlementTo != null">
+				settlement_to = #{settlementTo,jdbcType=CHAR},
+			</if>
+			<if test="notifyUrl != null">
+				notify_url = #{notifyUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="backUrl != null">
+				back_url = #{backUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="ipDomain != null">
+                ip_domain = #{ipDomain,jdbcType=VARCHAR},
+            </if>
+			<if test="autographType != null">
+				autograph_type = #{autographType,jdbcType=CHAR},
+			</if>
+			<if test="autographKey != null">
+				autograph_key = #{autographKey,jdbcType=VARCHAR},
+			</if>
+			<if test="rateAudit != null">
+				rate_audit = #{rateAudit,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="delete">
+		DELETE FROM merchant_product_rate_check
+		WHERE id = #{id}
+	</update>
+
+	<update id="status">
+		UPDATE merchant_product_rate_check SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="resetKey">
+        UPDATE merchant_product_rate_check SET
+        autograph_key = #{autographKey}
+        WHERE merchant_id = #{merchantId}
+        AND product_code = #{productCode}
+    </update>
+
+	<select id="findMerchantProduct" resultType="MerchantProductRate">
+		SELECT
+        <include refid="merchantProductRateColumns" />
+        FROM merchant_product_rate_check a
+        <include refid="merchantProductRateJoins" />
+		WHERE a.merchant_id = #{merchantId}
+	</select>
+
+	<update id="uodateRateAudit">
+		UPDATE merchant_product_rate_check SET
+		rate_audit = #{rateAudit}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

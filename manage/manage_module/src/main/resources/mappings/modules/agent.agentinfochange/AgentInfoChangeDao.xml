@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.agent.dao.agentinfochange.AgentInfoChangeDao">
+    
+	<sql id="agentInfoChangeColumns">
+		a.id AS "id",
+		a.agent_id AS "agentId",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		b.agent_level AS "agentLevel",
+		b.agent_type AS "agentType",
+		b.agent_expiry AS "agentExpiry",
+		a.short_name AS "shortName",
+		a.head_name AS "headName",
+		a.head_phone AS "headPhone",
+		a.head_idcard AS "headIdcard",
+		a.head_idcard_expiry AS "headIdcardExpiry",
+		a.email AS "email",
+		a.legal_name AS "legalName",
+		a.legal_phone AS "legalPhone",
+		a.legal_idcard AS "legalIdcard",
+		a.legal_idcard_expiry AS "legalIdcardExpiry",
+		a.busi_type AS "busiType",
+		a.busi_code AS "busiCode",
+		a.busi_expiry AS "busiExpiry",
+		a.reg_amount AS "regAmount",
+		a.org_inst_code AS "orgInstCode",
+		a.tax_reg_code AS "taxRegCode",
+		a.addr_province_code AS "addrProvinceCode",
+		a.addr_province_name AS "addrProvinceName",
+		a.addr_city_code AS "addrCityCode",
+		a.addr_city_name AS "addrCityName",
+		b.addr_country_code AS "addrCountryCode",
+		b.addr_country_name AS "addrCountryName",
+		a.addr_detail AS "addrDetail",
+		a.agent_area_addr AS "agentAreaAddr",
+		a.deposit_amount AS "depositAmount",
+		a.join_amount AS "joinAmount",
+		a.idcard_face_image AS "idcardFaceImage",
+		a.idcard_back_image AS "idcardBackImage",
+		a.agreement_file AS "agreementFile",
+		a.busi_image AS "busiImage",
+		a.tax_reg_image AS "taxRegImage",
+		a.org_inst_image AS "orgInstImage",
+		a.other_gena_image AS "otherGenaImage",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.agent_user_id AS "agentUserId",
+		a.agent_change_status AS "agentChangeStatus",
+		a.agent_change_type AS "agentChangeType"
+	</sql>
+	
+	<sql id="agentInfoChangeJoins">
+		left join  agent_info b on b.id = a.agent_id
+	</sql>
+    
+	<select id="get" resultType="AgentInfoChange">
+		SELECT 
+			<include refid="agentInfoChangeColumns"/>
+		FROM agent_info_change a
+		<include refid="agentInfoChangeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AgentInfoChange">
+		SELECT 
+			<include refid="agentInfoChangeColumns"/>
+		FROM agent_info_change a
+		<include refid="agentInfoChangeJoins"/>
+		<where>
+			
+			<if test="agentCode != null and agentCode != ''">
+				AND a.agent_code = #{agentCode}
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND a.agent_name = #{agentName}
+			</if>
+			<if test="headName != null and headName != ''">
+				AND a.head_name = #{headName}
+			</if>
+			<if test="headPhone != null and headPhone != ''">
+				AND a.head_phone = #{headPhone}
+			</if>
+			<if test="legalName != null and legalName != ''">
+				AND a.legal_name = #{legalName}
+			</if>
+			<if test="legalPhone != null and legalPhone != ''">
+				AND a.legal_phone = #{legalPhone}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findCheckList" resultType="AgentInfoChange">
+		SELECT
+		<include refid="agentInfoChangeColumns"/>
+		FROM agent_info_change a
+		<include refid="agentInfoChangeJoins"/>
+		<where>
+
+			<if test="agentCode != null and agentCode != ''">
+				AND a.agent_code like
+				<if test="dbName == 'oracle'">'%'||#{agentCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCode},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND a.agent_name like
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+			<if test="headName != null and headName != ''">
+				AND a.head_name like
+				<if test="dbName == 'oracle'">'%'||#{headName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{headName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{headName},'%')</if>
+			</if>
+			<if test="headPhone != null and headPhone != ''">
+				AND a.head_phone like
+				<if test="dbName == 'oracle'">'%'||#{headPhone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{headPhone}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{headPhone},'%')</if>
+			</if>
+			<if test="legalName != null and legalName != ''">
+				AND a.legal_name like
+				<if test="dbName == 'oracle'">'%'||#{legalName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{legalName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{legalName},'%')</if>
+			</if>
+			<if test="legalPhone != null and legalPhone != ''">
+				AND a.legal_phone like
+				<if test="dbName == 'oracle'">'%'||#{legalPhone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{legalPhone}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{legalPhone},'%')</if>
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+			AND a.agent_change_status = 'SYSCHK'
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AgentInfoChange">
+		SELECT 
+			<include refid="agentInfoChangeColumns"/>
+		FROM agent_info_change a
+		<include refid="agentInfoChangeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO agent_info_change(
+			id,
+			agent_id,
+			agent_code,
+			agent_name,
+			short_name,
+			head_name,
+			head_phone,
+			head_idcard,
+			head_idcard_expiry,
+			email,
+			legal_name,
+			legal_phone,
+			legal_idcard,
+			legal_idcard_expiry,
+			busi_type,
+			busi_code,
+			busi_expiry,
+			reg_amount,
+			org_inst_code,
+			tax_reg_code,
+			addr_province_code,
+			addr_province_name,
+			addr_city_code,
+			addr_city_name,
+			addr_detail,
+			agent_area_addr,
+			deposit_amount,
+			join_amount,
+			idcard_face_image,
+			idcard_back_image,
+			agreement_file,
+			busi_image,
+			tax_reg_image,
+			org_inst_image,
+			other_gena_image,
+			create_time,
+			update_time,
+			agent_user_id,
+			agent_change_status,
+			agent_change_type
+		) VALUES (
+			#{id},
+			#{agentId},
+			#{agentCode},
+			#{agentName},
+			#{shortName},
+			#{headName},
+			#{headPhone},
+			#{headIdcard},
+			#{headIdcardExpiry},
+			#{email},
+			#{legalName},
+			#{legalPhone},
+			#{legalIdcard},
+			#{legalIdcardExpiry},
+			#{busiType},
+			#{busiCode},
+			#{busiExpiry},
+			#{regAmount},
+			#{orgInstCode},
+			#{taxRegCode},
+			#{addrProvinceCode},
+			#{addrProvinceName},
+			#{addrCityCode},
+			#{addrCityName},
+			#{addrDetail},
+			#{agentAreaAddr},
+			#{depositAmount},
+			#{joinAmount},
+			#{idcardFaceImage},
+			#{idcardBackImage},
+			#{agreementFile},
+			#{busiImage},
+			#{taxRegImage},
+			#{orgInstImage},
+			#{otherGenaImage},
+			#{createTime},
+			#{updateTime},
+			#{agentUserId},
+			#{agentChangeStatus},
+			#{agentChangeType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE agent_info_change SET 	
+			agent_id = #{agentId},
+			agent_code = #{agentCode},
+			agent_name = #{agentName},
+			short_name = #{shortName},
+			head_name = #{headName},
+			head_phone = #{headPhone},
+			head_idcard = #{headIdcard},
+			head_idcard_expiry = #{headIdcardExpiry},
+			email = #{email},
+			legal_name = #{legalName},
+			legal_phone = #{legalPhone},
+			legal_idcard = #{legalIdcard},
+			legal_idcard_expiry = #{legalIdcardExpiry},
+			busi_type = #{busiType},
+			busi_code = #{busiCode},
+			busi_expiry = #{busiExpiry},
+			reg_amount = #{regAmount},
+			org_inst_code = #{orgInstCode},
+			tax_reg_code = #{taxRegCode},
+			addr_province_code = #{addrProvinceCode},
+			addr_province_name = #{addrProvinceName},
+			addr_city_code = #{addrCityCode},
+			addr_city_name = #{addrCityName},
+			addr_detail = #{addrDetail},
+			agent_area_addr = #{agentAreaAddr},
+			deposit_amount = #{depositAmount},
+			join_amount = #{joinAmount},
+			idcard_face_image = #{idcardFaceImage},
+			idcard_back_image = #{idcardBackImage},
+			agreement_file = #{agreementFile},
+			busi_image = #{busiImage},
+			tax_reg_image = #{taxRegImage},
+			org_inst_image = #{orgInstImage},
+			other_gena_image = #{otherGenaImage},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			agent_user_id = #{agentUserId},
+			agent_change_status = #{agentChangeStatus},
+			agent_change_type = #{agentChangeType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM agent_info_change
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

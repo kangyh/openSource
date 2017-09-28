@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsObjectDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsObjectDetail" >
+    <id column="ret_id" property="retId" jdbcType="BIGINT" />
+    <result column="oder_no" property="oderNo" jdbcType="CHAR" />
+    <result column="return_no" property="returnNo" jdbcType="CHAR" />
+    <result column="return_date" property="returnDate" jdbcType="TIMESTAMP" />
+    <result column="object_id" property="objectId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ret_id, oder_no, return_no, return_date, object_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsObjectDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_object_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_object_detail
+    where ret_id = #{retId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tpds_object_detail
+    where ret_id = #{retId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsObjectDetailExample" >
+    delete from tpds_object_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsObjectDetail" >
+    insert into tpds_object_detail (ret_id, oder_no, return_no, 
+      return_date, object_id)
+    values (#{retId,jdbcType=BIGINT}, #{oderNo,jdbcType=CHAR}, #{returnNo,jdbcType=CHAR}, 
+      #{returnDate,jdbcType=TIMESTAMP}, #{objectId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsObjectDetail" >
+    insert into tpds_object_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="retId != null" >
+        ret_id,
+      </if>
+      <if test="oderNo != null" >
+        oder_no,
+      </if>
+      <if test="returnNo != null" >
+        return_no,
+      </if>
+      <if test="returnDate != null" >
+        return_date,
+      </if>
+      <if test="objectId != null" >
+        object_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="retId != null" >
+        #{retId,jdbcType=BIGINT},
+      </if>
+      <if test="oderNo != null" >
+        #{oderNo,jdbcType=CHAR},
+      </if>
+      <if test="returnNo != null" >
+        #{returnNo,jdbcType=CHAR},
+      </if>
+      <if test="returnDate != null" >
+        #{returnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="objectId != null" >
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsObjectDetailExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_object_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_object_detail
+    <set >
+      <if test="record.retId != null" >
+        ret_id = #{record.retId,jdbcType=BIGINT},
+      </if>
+      <if test="record.oderNo != null" >
+        oder_no = #{record.oderNo,jdbcType=CHAR},
+      </if>
+      <if test="record.returnNo != null" >
+        return_no = #{record.returnNo,jdbcType=CHAR},
+      </if>
+      <if test="record.returnDate != null" >
+        return_date = #{record.returnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.objectId != null" >
+        object_id = #{record.objectId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_object_detail
+    set ret_id = #{record.retId,jdbcType=BIGINT},
+      oder_no = #{record.oderNo,jdbcType=CHAR},
+      return_no = #{record.returnNo,jdbcType=CHAR},
+      return_date = #{record.returnDate,jdbcType=TIMESTAMP},
+      object_id = #{record.objectId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsObjectDetail" >
+    update tpds_object_detail
+    <set >
+      <if test="oderNo != null" >
+        oder_no = #{oderNo,jdbcType=CHAR},
+      </if>
+      <if test="returnNo != null" >
+        return_no = #{returnNo,jdbcType=CHAR},
+      </if>
+      <if test="returnDate != null" >
+        return_date = #{returnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="objectId != null" >
+        object_id = #{objectId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ret_id = #{retId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsObjectDetail" >
+    update tpds_object_detail
+    set oder_no = #{oderNo,jdbcType=CHAR},
+      return_no = #{returnNo,jdbcType=CHAR},
+      return_date = #{returnDate,jdbcType=TIMESTAMP},
+      object_id = #{objectId,jdbcType=VARCHAR}
+    where ret_id = #{retId,jdbcType=BIGINT}
+  </update>
+</mapper>

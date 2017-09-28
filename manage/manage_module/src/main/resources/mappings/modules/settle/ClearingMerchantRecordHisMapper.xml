@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.settle.dao.ClearingMerchantRecordHisDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.manage.modules.settle.entity.ClearingMerchantRecordHis" >
+    <id column="his_is" property="hisIs" jdbcType="BIGINT" />
+    <result column="clearing_id" property="clearingId" jdbcType="BIGINT" />
+    <result column="merchant_id" property="merchantId" jdbcType="INTEGER" />
+    <result column="merchant_type" property="merchantType" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="CHAR" />
+    <result column="trans_type" property="transType" jdbcType="VARCHAR" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="trans_no" property="transNo" jdbcType="VARCHAR" />
+    <result column="trans_no_old" property="transNoOld" jdbcType="VARCHAR" />
+    <result column="request_amount_amount" property="requestAmountAmount" jdbcType="DECIMAL" />
+    <result column="success_time" property="successTime" jdbcType="TIMESTAMP" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_no" property="settleNo" jdbcType="VARCHAR" />
+    <result column="settle_time_plan" property="settleTimePlan" jdbcType="TIMESTAMP" />
+    <result column="settle_amount_plan" property="settleAmountPlan" jdbcType="DECIMAL" />
+    <result column="settle_cyc" property="settleCyc" jdbcType="VARCHAR" />
+    <result column="settle_bath" property="settleBath" jdbcType="VARCHAR" />
+    <result column="fee_time" property="feeTime" jdbcType="TIMESTAMP" />
+    <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="fee_way" property="feeWay" jdbcType="VARCHAR" />
+    <result column="fee_settle_cyc" property="feeSettleCyc" jdbcType="VARCHAR" />
+    <result column="check_bath" property="checkBath" jdbcType="VARCHAR" />
+    <result column="check_num" property="checkNum" jdbcType="INTEGER" />
+    <result column="check_status" property="checkStatus" jdbcType="CHAR" />
+    <result column="check_flg" property="checkFlg" jdbcType="VARCHAR" />
+    <result column="settle_status" property="settleStatus" jdbcType="CHAR" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+    <result column="is_profit" property="isProfit" jdbcType="CHAR" />
+    <result column="date_zip" property="dateZip" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from clearing_merchant_record_his
+    where his_is = #{hisIs,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.manage.modules.settle.entity.ClearingMerchantRecordHis" >
+    insert into clearing_merchant_record_his (his_is, clearing_id, merchant_id, 
+      merchant_type, product_code, trans_type, 
+      currency, trans_no, trans_no_old, 
+      request_amount_amount, success_time, settle_time, 
+      settle_no, settle_time_plan, settle_amount_plan, 
+      settle_cyc, settle_bath, fee_time, 
+      fee, fee_way, fee_settle_cyc, 
+      check_bath, check_num, check_status, 
+      check_flg, settle_status, finish_time, 
+      is_profit, date_zip)
+    values (#{hisIs,jdbcType=BIGINT}, #{clearingId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER}, 
+      #{merchantType,jdbcType=VARCHAR}, #{productCode,jdbcType=CHAR}, #{transType,jdbcType=VARCHAR}, 
+      #{currency,jdbcType=VARCHAR}, #{transNo,jdbcType=VARCHAR}, #{transNoOld,jdbcType=VARCHAR}, 
+      #{requestAmountAmount,jdbcType=DECIMAL}, #{successTime,jdbcType=TIMESTAMP}, #{settleTime,jdbcType=TIMESTAMP}, 
+      #{settleNo,jdbcType=VARCHAR}, #{settleTimePlan,jdbcType=TIMESTAMP}, #{settleAmountPlan,jdbcType=DECIMAL}, 
+      #{settleCyc,jdbcType=VARCHAR}, #{settleBath,jdbcType=VARCHAR}, #{feeTime,jdbcType=TIMESTAMP}, 
+      #{fee,jdbcType=DECIMAL}, #{feeWay,jdbcType=VARCHAR}, #{feeSettleCyc,jdbcType=VARCHAR}, 
+      #{checkBath,jdbcType=VARCHAR}, #{checkNum,jdbcType=INTEGER}, #{checkStatus,jdbcType=CHAR}, 
+      #{checkFlg,jdbcType=VARCHAR}, #{settleStatus,jdbcType=CHAR}, #{finishTime,jdbcType=TIMESTAMP}, 
+      #{isProfit,jdbcType=CHAR}, #{dateZip,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.manage.modules.settle.entity.ClearingMerchantRecordHis" >
+    update clearing_merchant_record_his
+    set clearing_id = #{clearingId,jdbcType=BIGINT},
+      merchant_id = #{merchantId,jdbcType=INTEGER},
+      merchant_type = #{merchantType,jdbcType=VARCHAR},
+      product_code = #{productCode,jdbcType=CHAR},
+      trans_type = #{transType,jdbcType=VARCHAR},
+      currency = #{currency,jdbcType=VARCHAR},
+      trans_no = #{transNo,jdbcType=VARCHAR},
+      trans_no_old = #{transNoOld,jdbcType=VARCHAR},
+      request_amount_amount = #{requestAmountAmount,jdbcType=DECIMAL},
+      success_time = #{successTime,jdbcType=TIMESTAMP},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      settle_no = #{settleNo,jdbcType=VARCHAR},
+      settle_time_plan = #{settleTimePlan,jdbcType=TIMESTAMP},
+      settle_amount_plan = #{settleAmountPlan,jdbcType=DECIMAL},
+      settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+      settle_bath = #{settleBath,jdbcType=VARCHAR},
+      fee_time = #{feeTime,jdbcType=TIMESTAMP},
+      fee = #{fee,jdbcType=DECIMAL},
+      fee_way = #{feeWay,jdbcType=VARCHAR},
+      fee_settle_cyc = #{feeSettleCyc,jdbcType=VARCHAR},
+      check_bath = #{checkBath,jdbcType=VARCHAR},
+      check_num = #{checkNum,jdbcType=INTEGER},
+      check_status = #{checkStatus,jdbcType=CHAR},
+      check_flg = #{checkFlg,jdbcType=VARCHAR},
+      settle_status = #{settleStatus,jdbcType=CHAR},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      is_profit = #{isProfit,jdbcType=CHAR},
+      date_zip = #{dateZip,jdbcType=TIMESTAMP}
+    where his_is = #{hisIs,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select his_is, clearing_id, merchant_id, merchant_type, product_code, trans_type, 
+    currency, trans_no, trans_no_old, request_amount_amount, success_time, settle_time, 
+    settle_no, settle_time_plan, settle_amount_plan, settle_cyc, settle_bath, fee_time, 
+    fee, fee_way, fee_settle_cyc, check_bath, check_num, check_status, check_flg, settle_status, 
+    finish_time, is_profit, date_zip
+    from clearing_merchant_record_his
+    where his_is = #{hisIs,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select his_is, clearing_id, merchant_id, merchant_type, product_code, trans_type, 
+    currency, trans_no, trans_no_old, request_amount_amount, success_time, settle_time, 
+    settle_no, settle_time_plan, settle_amount_plan, settle_cyc, settle_bath, fee_time, 
+    fee, fee_way, fee_settle_cyc, check_bath, check_num, check_status, check_flg, settle_status, 
+    finish_time, is_profit, date_zip
+    from clearing_merchant_record_his
+  </select>
+  
+   <!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="clearingMerchantRecordHisColumns">
+		a.his_id AS "hisId",
+		a.clearing_id AS "clearingId",
+		a.merchant_id AS "merchantId",
+		a.merchant_type AS "merchantType",
+		a.product_code AS "productCode",
+		a.currency AS "currency",
+		a.trans_no AS "transNo",
+		a.trans_no_old AS "transNoOld",
+		a.request_amount AS "requestAmount",
+		a.success_time AS "successTime",
+		a.settle_time AS "settleTime",
+		a.settle_no AS "settleNo",
+		a.settle_time_plan AS "settleTimePlan",
+		a.settle_amount_plan AS "settleAmountPlan",
+		a.settle_cyc AS "settleCyc",
+		a.settle_bath AS "settleBath",
+		a.fee_time AS "feeTime",
+		a.fee AS "fee",
+		a.fee_way AS "feeWay",
+		a.fee_settle_cyc AS "feeSettleCyc",
+		a.check_status AS "checkStatus",
+		a.check_flg AS "checkFlg",
+		a.settle_status AS "settleStatus",
+		a.finish_time AS "finishTime",
+		a.check_bath AS "checkBath",
+		a.check_num AS "checkNum",
+		a.trans_type AS "transType",
+		a.is_profit AS "isProfit",
+		a.date_zip AS "dateZip",
+		a.merchant_name AS "merchantName",
+		a.bankcard_type AS "bankcardType",
+		a.agent_code AS "agentCode",
+		a.agent_name AS "agentName",
+		a.account_no AS "accountNo",
+		a.create_time AS "createTime",
+		a.pay_time AS "payTime",
+		a.product_name AS "productName",
+		a.pay_type AS "payType"
+	</sql>
+	
+	<!-- 分页 -->
+	<select id="findList" resultType="ClearingMerchantRecordHis">
+		SELECT 
+			<include refid="clearingMerchantRecordHisColumns"/>
+		FROM clearing_merchant_record_his a
+		<where>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 用户编码 -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_Id = #{merchantId}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_merchant_record_his where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 交易订单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 导出商户侧清算记录文件专用SQL -->
+	<select id="findListToExcel" resultType="hashmap">
+		SELECT 
+			<include refid="clearingMerchantRecordHisColumns"/>
+		FROM clearing_merchant_record_his a
+		<where>
+			<!--交易类型-->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 对账状态-->
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<!-- 结算状态-->
+			<if test="settleStatus != null and settleStatus != ''">
+				AND a.settle_status = #{settleStatus}
+			</if>
+			<!-- 用户编码 -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_Id = #{merchantId}
+			</if>
+			<!-- 对账标记-->
+			<if test="checkFlg != null and checkFlg != ''">
+				<choose>
+					<when test="checkFlg == 'QSTS'">
+						AND a.check_flg = #{checkFlg}
+					</when>
+					<otherwise>
+						AND a.check_flg in (SELECT check_flg FROM clearing_merchant_record where check_flg is not null and check_flg != 'QSTS')
+					</otherwise>
+				</choose>
+			</if>
+			<!-- 交易订单号-->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		ORDER BY a.his_id desc
+	</select>
+	
+	<!-- 商户侧结算信息详情专用SQL -->
+	<select id="findPageDetail" resultType="ClearingMerchantRecordHis">
+		SELECT 
+			<include refid="clearingMerchantRecordHisColumns"/>
+		FROM clearing_merchant_record_his a
+		<where>
+			<!-- 结算批次号-->
+			<if test="settleBath != null and settleBath != ''">
+				AND a.settle_bath = #{settleBath}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id desc
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

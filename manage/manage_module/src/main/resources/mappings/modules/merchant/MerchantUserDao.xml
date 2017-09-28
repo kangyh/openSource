@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantUserDao">
+    
+	<sql id="userColumns">
+		a.id AS "id",
+		a.login_name AS "loginName",
+		a.login_nickname AS "loginNickname",
+		a.user_type AS "userType",
+		a.login_password AS "loginPassword",
+		a.pay_password AS "payPassword",
+		a.secret_question AS "secretQuestion",
+		a.answer_secret_question AS "answerSecretQuestion",
+		a.login_ips_allowed AS "loginIpsAllowed",
+		a.last_login_date AS "lastLoginDate",
+		a.last_login_ip AS "lastLoginIp",
+		a.phone AS "phone",
+		a.mobile AS "mobile",
+		a.qq AS "qq",
+		a.link_address AS "linkAddress",
+		a.mac_info AS "macInfo",
+		a.disk_info AS "diskInfo",
+		a.cpu_info AS "cpuInfo",
+		a.pass_guard_ctrl_version AS "passGuardCtrlVersion",
+		a.client_type AS "clientType",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.source AS "source",
+		a.allow_sys AS "allowSystem"
+	</sql>
+	
+	<sql id="userJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantUser">
+		select 
+		b.`legal_idcard` as "legalIdcard",
+        b.`legal_representative` as "legalRepresentative",
+        b.`company_name` as "companyName",
+        b.`legal_audit_status` as "legalAuditStatus",
+		b.`rc_audit_status` as "rcAuditStatus",  
+		b.`status` as "merchantStatus",
+		b.`merchant_flag` as "merchantFlag",
+		b.`incharger_id` as "inchargerId",
+		c.`pay_status` as "payStatus",
+		c.`authentication_status` as "authenticationStatus",
+		<include refid="userColumns" />
+		from user a
+		left join merchant b on a.`id`=b.`user_id`
+		left join merchant_bank_card_authentication c on a.`id`=c.`merchant_id`
+		<include refid="userJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantUser">
+		select 
+		b.`company_name` as "companyName",
+		b.`legal_audit_status` as "legalAuditStatus",
+		b.`rc_audit_status` as "rcAuditStatus", 
+		b.`status` as "merchantStatus",
+		c.`pay_status` as "payStatus",
+		c.`authentication_status` as "authenticationStatus",
+		<include refid="userColumns" />
+		from user a
+		left join merchant b on a.`id`=b.`user_id`
+		left join merchant_bank_card_authentication c on a.`id`=c.`merchant_id`
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				AND b.company_name = #{companyName}
+			</if>
+			<if test="loginName != null and loginName != ''">
+				AND a.login_name = #{loginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				<choose>
+					<when test="mobile == '未绑定'">
+						AND a.mobile IS NULL
+					</when>
+					<otherwise>
+						AND a.mobile = #{mobile}
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectCompanyForEmployee" resultType="MerchantUser">
+		select
+        a.`id` as "id",
+        a.`user_type` as "userType",
+        c.`company_name` as "companyName"
+		from merchant_employee b
+		left join `user` a on a.`id`=b.`user_id`
+		left join merchant c on c.`user_id`=b.`merchant_id`
+	</select>
+
+	<select id="findAllList" resultType="MerchantUser">
+		select 
+		<include refid="userColumns"/>
+		from user a
+		<include refid="userJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert" parameterType="com.heepay.manage.modules.merchant.vo.MerchantUser" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user(
+			login_name,
+			login_nickname,
+			user_type,
+			login_password,
+			pay_password,
+			secret_question,
+			answer_secret_question,
+			login_ips_allowed,
+			last_login_date,
+			last_login_ip,
+			phone,
+			mobile,
+			qq,
+			link_address,
+			mac_info,
+			disk_info,
+			cpu_info,
+			pass_guard_ctrl_version,
+			client_type,
+			status,
+			create_time,
+			source,
+			allow_sys
+		) VALUES (
+			#{loginName},
+			#{loginNickname},
+			#{userType},
+			#{loginPassword},
+			#{payPassword},
+			#{secretQuestion},
+			#{answerSecretQuestion},
+			#{loginIpsAllowed},
+			#{lastLoginDate},
+			#{lastLoginIp},
+			#{phone},
+			#{mobile},
+			#{qq},
+			#{linkAddress},
+			#{macInfo},
+			#{diskInfo},
+			#{cpuInfo},
+			#{passGuardCtrlVersion},
+			#{clientType},
+			#{status},
+			#{createTime},
+			#{source},
+			#{allowSystem}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.heepay.manage.modules.merchant.vo.MerchantUser" >
+    update user
+    <set >
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginNickname != null" >
+        login_nickname = #{loginNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=CHAR},
+      </if>
+      <if test="loginPassword != null" >
+        login_password = #{loginPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="payPassword != null" >
+        pay_password = #{payPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="secretQuestion != null" >
+        secret_question = #{secretQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="answerSecretQuestion != null" >
+        answer_secret_question = #{answerSecretQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIpsAllowed != null" >
+        login_ips_allowed = #{loginIpsAllowed,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginDate != null" >
+        last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="linkAddress != null" >
+        link_address = #{linkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="macInfo != null" >
+        mac_info = #{macInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="diskInfo != null" >
+        disk_info = #{diskInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="cpuInfo != null" >
+        cpu_info = #{cpuInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="passGuardCtrlVersion != null" >
+        pass_guard_ctrl_version = #{passGuardCtrlVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="clientType != null" >
+        client_type = #{clientType,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+		  create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="source != null" >
+		  source = #{source,jdbcType=CHAR},
+      </if>
+      <if test="allowSystem != null" >
+		  allow_sys = #{allowSystem,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	
+	<update id="delete">
+		DELETE FROM user
+		WHERE id = #{id}
+	</update>
+
+	<select id="queryEmailExist" parameterType="java.lang.String" resultType="MerchantUser">
+		 SELECT
+		 <include refid="userColumns" />
+		 FROM user a
+		 WHERE
+		 login_name = #{loginName}
+	</select>
+    <update id="status" >
+		UPDATE user SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+	<update id="unbundling" >
+		UPDATE user SET
+		mobile = null
+		WHERE id = #{id}
+	</update>
+	<update id="resetLoginPassword" >
+		UPDATE user SET
+		login_password = #{loginPassword}
+		WHERE login_name = #{loginName}
+	</update>
+	<update id="resetPayPassword" >
+		UPDATE user SET
+		pay_password = #{payPassword}
+		WHERE login_name = #{loginName}
+	</update>
+
+	<select id="queryEmployeeByEmail" resultType="MerchantUser">
+		SELECT
+		<include refid="userColumns"/>
+		from user a
+		WHERE
+		a.login_name = #{loginName}
+	</select>
+	<select id="queryEmployeeByMobile" resultType="MerchantUser">
+		SELECT
+		<include refid="userColumns"/>
+		from user a
+		WHERE
+		a.mobile = #{mobile}
+	</select>
+	<update id="updateEmployee" parameterType="MerchantUser">
+		UPDATE user SET
+		mobile = #{mobile}
+		WHERE id = #{id}
+	</update>
+	<select id="judgmentIdentity" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT user_type
+		FROM user
+		WHERE id = #{currentUserId}
+	</select>
+	
+	<select id="queryPhoneNo" parameterType="java.lang.String" resultType="MerchantUser">
+		SELECT
+		<include refid="userColumns"/>
+		from user a
+		WHERE
+		a.mobile = #{mobile}
+	</select>
+	<update id="updateMerchantPASS" >
+		UPDATE user SET
+		login_password = #{loginPassword}
+		WHERE id = #{id}
+	</update>
+</mapper>

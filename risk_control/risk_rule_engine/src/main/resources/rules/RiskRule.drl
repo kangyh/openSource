@@ -1,0 +1,535 @@
+package com.heepay.engine.entity
+import com.heepay.engine.entity.MerchantRiskFact
+import com.heepay.engine.entity.OrderRiskFact;
+import com.heepay.risk.common.Constants;
+import com.heepay.risk.cache.RuleRedisCache;
+import com.heepay.risk.vo.RiskMerchantProductQuotaVO;
+import com.heepay.enums.InterfaceStatus;
+import com.heepay.risk.vo.RiskProductQuotaVO;
+import org.apache.logging.log4j.Logger;
+import com.heepay.risk.util.OtherRiskUtil;
+import com.heepay.enums.risk.ProductQuotaType;
+import com.heepay.enums.risk.QuotaType;
+import java.math.BigDecimal;
+import com.heepay.enums.TransType;
+import com.heepay.risk.vo.BlackItemModel;
+import com.heepay.risk.vo.RiskIncomeVo;
+import com.heepay.risk_es_engine.ESearchService;
+import com.heepay.enums.risk.MonitorObject
+import com.heepay.common.util.StringUtil;
+
+function boolean isRuleCacheKey(String ruleCacheKey)
+{
+	//System.out.println(ruleCacheKey);
+	OtherRiskUtil.riskRuleEngineLoggerInfo(ruleCacheKey);
+	return RuleRedisCache.isRuleExists(ruleCacheKey);
+}
+function boolean isBlackRuleCacheKey(String ruleCacheKey,String value)
+{
+	//System.out.println(ruleCacheKey);
+	OtherRiskUtil.riskRuleEngineLoggerInfo(ruleCacheKey);
+	return RuleRedisCache.isBlackRuleExists(ruleCacheKey,value);
+}
+
+rule "Rule_BlackList_MerchantName" //商户名称
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 10000
+   when 
+      	merchantRiskFact:MerchantRiskFact(isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(ProductCode,"BLACK","MERCHANT_NAME"),MerchantCompany)==true)
+    then
+   BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","MERCHANT_NAME",merchantRiskFact.getMerchantCompany()); 
+   if(model!=null)
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控商户名称黑名单:"+merchantRiskFact.getMerchantCompany());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   drools.halt();
+   }
+   else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }
+end
+rule "Rule_BlackList_IP_01010201_01010403" //商户交易IP 黑名单
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9980
+   when 
+      	merchantRiskFact:MerchantRiskFact(isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(merchantRiskFact.getProductCode(),"BLACK","IP"),merchantRiskFact.getTradeIp())==true
+      	&&((RuleRedisCache.isExistEnableRule("01010201",MonitorObject.MERCHANT.getValue())==true&&StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue()))
+      	||(RuleRedisCache.isExistEnableRule("01010403",MonitorObject.MERCHANT.getValue())==true&&StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue()))
+      	 ||(RuleRedisCache.isExistEnableRule("01020201",MonitorObject.USER.getValue())==true&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue())&&merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue()))))
+    then
+   BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","IP",merchantRiskFact.getTradeIp()); 
+   if(model!=null)
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控IP黑名单:"+merchantRiskFact.getMerchantCompany());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue()))
+       if(merchantRiskFact.getUserType()!=null&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue()))
+           merchantRiskFact.getRuleIdList().add("01020201");
+       else
+           merchantRiskFact.getRuleIdList().add("01010201");
+    if(merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue()))
+          merchantRiskFact.getRuleIdList().add("01010403");
+   drools.halt();
+   }
+   else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }
+end
+rule "Rule_Foreign_IP_01010402" //商户交易IP 境外阻断
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9970
+   when
+      	merchantRiskFact:MerchantRiskFact( RuleRedisCache.isExistEnableRule( "01010402", MonitorObject.MERCHANT.getValue() )==true&&StringUtil.isBlank(merchantRiskFact.getUserType()) )
+    then
+   if(merchantRiskFact.isForeignIp()&&merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue()))
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控IP 境外Ip:"+merchantRiskFact.getTradeIp()+"-阻断");
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_FOREIGN_IP); //境外IP
+   merchantRiskFact.getRuleIdList().add("01010402");
+   drools.halt();
+   }
+   else
+   {
+     OtherRiskUtil.riskRuleEngineLoggerInfo("风控规则境外Ip:"+merchantRiskFact.getTradeIp()+"-放行");
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }
+end
+rule "Rule_BlackList_BankCard_01020302_01010401_01010501" //银行卡号
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9950
+   when 
+      	merchantRiskFact:MerchantRiskFact(isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(ProductCode,"BLACK","BANKCARD"),BankCardNo)==true
+      	&&((RuleRedisCache.isExistEnableRule("01020302",MonitorObject.USER.getValue())==true&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue())&&merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue()))
+              	||(RuleRedisCache.isExistEnableRule("01010501",MonitorObject.MERCHANT.getValue())==true&&StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getTrans_type().equals(TransType.WITHDRAW.getValue()))
+              	 ||(RuleRedisCache.isExistEnableRule("01010401",MonitorObject.MERCHANT.getValue())==true&&StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue()))))
+    then
+   BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","BANKCARD",merchantRiskFact.getBankCardNo()); 
+   if(model!=null)
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控银行卡号黑名单:"+merchantRiskFact.getBankCardNo());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue()))
+   merchantRiskFact.getRuleIdList().add("01020302");
+   if(merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue()))
+      merchantRiskFact.getRuleIdList().add("01010401");
+    if(merchantRiskFact.getTrans_type().equals(TransType.WITHDRAW.getValue()))
+      merchantRiskFact.getRuleIdList().add("01010501");
+   drools.halt();
+   }
+   else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }
+end
+rule "Rule_BlackList_Mobile_01020301" //黑名单-手机号
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9900
+ when
+      	merchantRiskFact:MerchantRiskFact(
+      	isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(ProductCode,"BLACK","MOBILE"),BankCardOwnerMobile)==true&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue())&&RuleRedisCache.isExistEnableRule("01020301",MonitorObject.USER.getValue())==true)
+    then
+    BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","MOBILE",merchantRiskFact.getBankCardOwnerMobile()); 
+   if(model!=null)
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控手机号黑名单:"+merchantRiskFact.getBankCardOwnerMobile());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   merchantRiskFact.getRuleIdList().add("01020301");
+  drools.halt();
+   }
+    else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   }
+end
+
+rule "Rule_BlackList_MerchantId" //黑名单-商户ID
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9800
+when
+      	merchantRiskFact:MerchantRiskFact(
+      	isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(ProductCode,"BLACK","MERCHANT_ID"),MerchantId)==true)
+    then
+    BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","MERCHANT_ID",merchantRiskFact.getMerchantId()); 
+   if(model!=null)
+   {
+   OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控商户ID黑名单:"+merchantRiskFact.getMerchantId());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   drools.halt();
+   }
+    else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }
+end
+rule "Rule_BlackList_Idcard_01020303" //黑名单-身份证号
+activation-group "RiskBlackListGroup"
+no-loop true
+salience 9750
+when
+      	merchantRiskFact:MerchantRiskFact(
+      	isBlackRuleCacheKey(Constants.getBlackorwhiteListKey(ProductCode,"BLACK","IDCARD"),BankCardOwnerIdCard)==true&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue())&&RuleRedisCache.isExistEnableRule("01020303",MonitorObject.USER.getValue())==true)
+    then
+    BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"BLACK","IDCARD",merchantRiskFact.getBankCardOwnerIdCard()); 
+   if(model!=null)
+   {
+    OtherRiskUtil.riskRuleEngineLoggerInfo("违反风控身份证号黑名单:"+merchantRiskFact.getBankCardOwnerIdCard());
+   merchantRiskFact.setMessage(InterfaceStatus.RISK_BLACK); //黑名单
+   merchantRiskFact.setProductQuotaType(ProductQuotaType.BLACK);
+   merchantRiskFact.getRuleIdList().add("01020303");
+   drools.halt();
+   }
+    else
+   {
+     merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   }
+end
+rule "Rule_Compare_Location_01010301" //手机号，银行卡号，ip归属省份比较
+no-loop true
+salience 9740
+when
+ merchantRiskFact:MerchantRiskFact(RuleRedisCache.isExistEnableRule("01010301",MonitorObject.MERCHANT.getValue())==true);
+ then
+ OtherRiskUtil.riskRuleEngineLoggerInfo("Rule_Compare_Location_01010301 begin");
+ if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue())&&StringUtil.isBlank(merchantRiskFact.getUserType()))
+     {
+  //银行卡号归属地和手机号归属地比较
+ if(merchantRiskFact.getProvinceInBankCard()!=null&&merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInBankCard().indexOf(merchantRiskFact.getProvinceInMobile())==-1)
+ {
+  merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+  if(!merchantRiskFact.getRuleIdList().contains("01010301"))
+  merchantRiskFact.getRuleIdList().add("01010301");
+ }
+ //银行卡号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInBankCard()!=null&&merchantRiskFact.getProvinceInIp()!=null&&merchantRiskFact.getProvinceInBankCard().indexOf(merchantRiskFact.getProvinceInIp())==-1)
+ {
+  merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+  if(!merchantRiskFact.getRuleIdList().contains("01010301"))
+  merchantRiskFact.getRuleIdList().add("01010301");
+ }
+ //手机号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInIp()!=null&&!merchantRiskFact.getProvinceInMobile().equals(merchantRiskFact.getProvinceInIp()))
+ {
+   merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   if(!merchantRiskFact.getRuleIdList().contains("01010301"))
+   merchantRiskFact.getRuleIdList().add("01010301");
+ }
+ }
+end
+rule "Rule_Compare_Location_01020304" //手机号，银行卡号，ip归属省份比较
+no-loop true
+salience 9735
+when
+ merchantRiskFact:MerchantRiskFact(RuleRedisCache.isExistEnableRule("01020304",MonitorObject.USER.getValue())==true);
+ then
+ OtherRiskUtil.riskRuleEngineLoggerInfo("Rule_Compare_Location_01020304 begin");
+ if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue())&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue()))
+     {
+  //银行卡号归属地和手机号归属地比较
+ if(merchantRiskFact.getProvinceInBankCard()!=null&&merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInBankCard().indexOf(merchantRiskFact.getProvinceInMobile())==-1)
+ {
+  merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+  if(!merchantRiskFact.getRuleIdList().contains("01020304"))
+  merchantRiskFact.getRuleIdList().add("01020304");
+ }
+ //银行卡号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInBankCard()!=null&&merchantRiskFact.getProvinceInIp()!=null&&merchantRiskFact.getProvinceInBankCard().indexOf(merchantRiskFact.getProvinceInIp())==-1)
+ {
+  merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+  if(!merchantRiskFact.getRuleIdList().contains("01020304"))
+  merchantRiskFact.getRuleIdList().add("01020304");
+ }
+ //手机号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInIp()!=null&&!merchantRiskFact.getProvinceInMobile().equals(merchantRiskFact.getProvinceInIp()))
+ {
+   merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   if(!merchantRiskFact.getRuleIdList().contains("01020304"))
+   merchantRiskFact.getRuleIdList().add("01020304");
+ }
+ }
+end
+rule "Rule_Compare_Location_01010302" //手机号，银行卡号，ip归属省份比较
+no-loop true
+salience 9730
+when
+ merchantRiskFact:MerchantRiskFact(RuleRedisCache.isExistEnableRule("01010302",MonitorObject.MERCHANT.getValue())==true)
+ then
+ OtherRiskUtil.riskRuleEngineLoggerInfo("Rule_Compare_Location_01010302 begin");
+ if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue())&&StringUtil.isBlank(merchantRiskFact.getUserType()))
+     {
+ //手机号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInIp()!=null&&!merchantRiskFact.getProvinceInMobile().equals(merchantRiskFact.getProvinceInIp()))
+ {
+   merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   merchantRiskFact.getRuleIdList().add("01010302");
+ }
+ }
+end
+rule "Rule_Compare_Location_01020305" //手机号，银行卡号，ip归属省份比较
+no-loop true
+salience 9725
+when
+ merchantRiskFact:MerchantRiskFact(RuleRedisCache.isExistEnableRule("01020305",MonitorObject.USER.getValue())==true)
+ then
+ OtherRiskUtil.riskRuleEngineLoggerInfo("Rule_Compare_Location_01020305 begin");
+ if(merchantRiskFact.getTrans_type().equals(TransType.PAY.getValue())&&!StringUtil.isBlank(merchantRiskFact.getUserType())&&merchantRiskFact.getUserType().equals(MonitorObject.USER.getValue()))
+     {
+ //手机号归属地和ip归属地比较
+ if(merchantRiskFact.getProvinceInMobile()!=null&&merchantRiskFact.getProvinceInIp()!=null&&!merchantRiskFact.getProvinceInMobile().equals(merchantRiskFact.getProvinceInIp()))
+ {
+   merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+   merchantRiskFact.getRuleIdList().add("01020305");
+ }
+ }
+end
+rule "Rule_BatchPay_01010404_01010405" //批付交叉付款规则
+activation-group "RiskRuleBatchPayGroup"
+no-loop true
+salience 9720
+when
+ merchantRiskFact:MerchantRiskFact(  RuleRedisCache.isExistEnableRule( "01010404", MonitorObject.MERCHANT.getValue() )==true  || RuleRedisCache.isExistEnableRule( "01010405", MonitorObject.MERCHANT.getValue() )==true );
+ then
+ 	OtherRiskUtil.riskRuleEngineLoggerInfo("批付参数：" + merchantRiskFact.getTrans_type() + "，" + TransType.BATCHPAY.getValue() );
+ if(  merchantRiskFact.getTrans_type().equals(TransType.BATCHPAY.getValue())  )
+ {
+   BlackItemModel model=RuleRedisCache.getBlackItemCache(merchantRiskFact.getProductCode(),"WHITE","MERCHANT_ID",merchantRiskFact.getMerchantId()); 
+   if(model!=null)
+   {
+	   OtherRiskUtil.riskRuleEngineLoggerInfo("白名单用户，批付交叉付款规则:"+merchantRiskFact.getMerchantId()+"-放行");
+	   merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+   }else
+   {
+    	if( "block".equals( merchantRiskFact.checkBatchPayRule() ) ) {
+    	 	OtherRiskUtil.riskRuleEngineLoggerInfo("违反批付交叉付款规则:"+merchantRiskFact.getMerchantId()+"-阻断");
+	   		merchantRiskFact.setMessage(InterfaceStatus.RISK_BATCHPAY_CROSS);
+		    merchantRiskFact.getRuleIdList().add("01010404");
+		    merchantRiskFact.getRuleIdList().add("01010405");
+		    drools.halt();
+	    }else {
+	   		OtherRiskUtil.riskRuleEngineLoggerInfo("批付交叉付款规则:"+merchantRiskFact.getMerchantId()+"-放行");
+	   		merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); 
+	    }
+   }
+ }
+end
+rule "Rule_Merchant_Quota" //商户限额 
+activation-group "RiskRuleGroup"
+no-loop true
+salience 9700
+    when
+      	merchantRiskFact:MerchantRiskFact(
+      	isRuleCacheKey(Constants.Quota_MerchantKey(MerchantId,AccountType,ProductCode,BankCardType))==true)
+    then
+         //加载内存规则
+         OtherRiskUtil.riskRuleEngineLoggerInfo("捕获商户限额规则{MerchantId:"+merchantRiskFact.getMerchantId()+",AccountType:"+ merchantRiskFact.getAccountType() +",ProductCode:"+merchantRiskFact.getProductCode()+",BankCardType:"+merchantRiskFact.getBankCardType()+"} ");
+    	 RiskMerchantProductQuotaVO riskMerchantProductQuotaVO =
+         RuleRedisCache.getQuotaMerchantRuleCache(
+         Constants.Quota_MerchantKey(
+         	merchantRiskFact.getMerchantId(),
+        	merchantRiskFact.getAccountType(),
+        	merchantRiskFact.getProductCode(),
+        	merchantRiskFact.getBankCardType()));
+        	merchantRiskFact.setQuotaType(QuotaType.MERCHANTPRODUCT);
+        merchantRiskFact.setQuotaId(riskMerchantProductQuotaVO.getMerProId()); //设置规则ID
+        if (riskMerchantProductQuotaVO.getStatus().toUpperCase().equals("DISABL"))   //当商品规则被禁用时，表示直接被禁用
+        {
+        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_DISABLE); //商户产品被禁用
+        	merchantRiskFact.setProductQuotaType(ProductQuotaType.DISABLE);
+        	drools.halt();
+        }
+        else
+        {
+	        
+	        if (merchantRiskFact.getTrans_type().toUpperCase().equals(TransType.BATCHPAY.getValue())) //批量转账需要单独处理
+	        {
+	        	if(riskMerchantProductQuotaVO.getPerItem().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerItemAmount().compareTo(riskMerchantProductQuotaVO.getPerItem())==1) //单笔限额
+		        {
+		        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单笔限额
+		        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERITEM);
+		        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单笔限额");
+		        	drools.halt();
+		        }else
+		        {
+		        	merchantRiskFact.getBatchAmount(); //懒加载 日限额和月限额
+			        if(riskMerchantProductQuotaVO.getPerDay().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getBatPayAmount().add(merchantRiskFact.getPerDayAmount()).compareTo(riskMerchantProductQuotaVO.getPerDay())==1) //单日限额
+			        {
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_BATCH_QUOTA); //超单日限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERDAYBATCH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单日限额");
+			        	drools.halt();
+			        }else if(riskMerchantProductQuotaVO.getPerMonth().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getBatPayAmount().add(merchantRiskFact.getPerMonthAmount()).compareTo(riskMerchantProductQuotaVO.getPerMonth())==1) //单月限额
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_BATCH_QUOTA); //超单月限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERMONTHBATCH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单月限额");
+			        	drools.halt();
+			        }else
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); //正常额度
+			        }
+		        }
+	        }else  //非批量转账
+	        {
+		        if(riskMerchantProductQuotaVO.getPerItem().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerItemAmount().compareTo(riskMerchantProductQuotaVO.getPerItem())==1) //单笔限额
+		        {
+		        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单笔限额
+		        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERITEM);
+		        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单笔限额");
+		        	drools.halt();
+		        }else 
+		        {
+		        	merchantRiskFact.getBatchAmount(); //懒加载 日限额和月限额
+			        if(riskMerchantProductQuotaVO.getPerDay().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerDayAmount().add(merchantRiskFact.getPerItemAmount()).compareTo(riskMerchantProductQuotaVO.getPerDay())==1) //单日限额
+			        {
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单日限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERDAY);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单日限额");
+			        	drools.halt();
+			        }else if(riskMerchantProductQuotaVO.getPerMonth().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerMonthAmount().add(merchantRiskFact.getPerItemAmount()).compareTo(riskMerchantProductQuotaVO.getPerMonth())==1) //单日限额
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单月限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERMONTH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户限额规则ID："+riskMerchantProductQuotaVO.getMerProId()+"单月限额");
+			        	drools.halt();
+			        }else
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); //正常额度
+			        }
+		        }
+	        }
+        }
+               
+end
+
+rule "Rule_Product_Quota" //产品限额
+activation-group "RiskRuleGroup"
+no-loop true
+salience 9600
+	when 
+		merchantRiskFact:MerchantRiskFact(
+      	isRuleCacheKey(Constants.Quota_ProductKey(ProductCode,AccountType,BankCardType))==true) //是否含有产品规则
+	then
+		//加载内存规则
+		OtherRiskUtil.riskRuleEngineLoggerInfo("捕获产品限额规则{ProductCode:"+merchantRiskFact.getProductCode()+",AccountType:"+ merchantRiskFact.getAccountType() +"，BankCardType:"+merchantRiskFact.getBankCardType()+"} ");
+    	 RiskProductQuotaVO riskProductQuotaVO =
+         RuleRedisCache.getQuotaProductRuleCache(
+         Constants.Quota_ProductKey(
+         	merchantRiskFact.getProductCode(),
+        	merchantRiskFact.getAccountType(),
+        	merchantRiskFact.getBankCardType()));
+        	merchantRiskFact.setQuotaType(QuotaType.PRODUCT);
+        merchantRiskFact.setQuotaId(riskProductQuotaVO.getProId()); //设置规则ID
+        if (riskProductQuotaVO.getStatus().toUpperCase().equals("DISABL"))   //检测规则是否被禁用
+        {
+        	merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); //当产品规则被禁用时，表示不在校验，直接通过
+        	
+        }else
+        {
+	        
+	        if (merchantRiskFact.getProductCode().toUpperCase().equals(TransType.BATCHPAY.getValue())) //批量转账需要单独处理
+	        {
+	        	if(riskProductQuotaVO.getPerItem().compareTo(BigDecimal.ZERO)!=0 && merchantRiskFact.getPerItemAmount().compareTo(riskProductQuotaVO.getPerItem())==1) //单笔限额
+		        {
+		        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单笔限额
+		        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERITEM);
+		        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单笔限额");
+		        	drools.halt();
+		        }else 
+		        {
+		        	merchantRiskFact.getBatchAmount(); //懒加载 日限额和月限额
+			        if(riskProductQuotaVO.getPerDay().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getBatPayAmount().add(merchantRiskFact.getPerDayAmount()).compareTo(riskProductQuotaVO.getPerDay())==1) //单日限额
+			        {
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超日限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERDAYBATCH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单日限额");
+			        	drools.halt();
+			        }else if(riskProductQuotaVO.getPerMonth().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getBatPayAmount().add(merchantRiskFact.getPerMonthAmount()).compareTo(riskProductQuotaVO.getPerMonth())==1) //单月限额
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超月限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERMONTHBATCH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单月限额");
+			        	drools.halt();
+			        }else
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); //正常额度
+			        }
+		        }
+	        }else  //非批量转账
+	        {
+		        if(riskProductQuotaVO.getPerItem().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerItemAmount().compareTo(riskProductQuotaVO.getPerItem())==1) //单笔限额
+		        {
+		        	
+		        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超单笔限额
+		        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERITEM);
+		        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单笔限额");
+		        	drools.halt();
+		        }else 
+		        {
+		        	merchantRiskFact.getBatchAmount(); //懒加载 日限额和月限额
+			        if(riskProductQuotaVO.getPerDay().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerDayAmount().add(merchantRiskFact.getPerItemAmount()).compareTo(riskProductQuotaVO.getPerDay())==1) //单日限额
+			        {
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超日限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERDAY);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单日限额");
+			        	drools.halt();
+			        }else if(riskProductQuotaVO.getPerMonth().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerMonthAmount().add(merchantRiskFact.getPerItemAmount()).compareTo(riskProductQuotaVO.getPerMonth())==1) //单月限额
+			        {    
+			        	merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_QUOTA); //超月限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERMONTH);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反产品限额规则ID："+riskProductQuotaVO.getProId()+"单月限额");
+			        	drools.halt();
+			        }else
+			        {       
+			        	merchantRiskFact.setMessage(InterfaceStatus.SUCCESS); //正常额度
+			        }
+		        }
+	        }
+        }
+end
+
+rule "Rule_Merchant_Income_Quota" //商户入金限额 
+activation-group "RiskRuleIncome"
+no-loop true
+salience 9400
+    when
+      	merchantRiskFact:MerchantRiskFact();      	
+    then
+    RiskIncomeVo vo=RuleRedisCache.getRiskIncomeCache(merchantRiskFact.getMerchantId(),merchantRiskFact.getTrans_type(),merchantRiskFact.getProductCode(),"in");
+    if(vo!=null)
+    {  
+       merchantRiskFact.getIncomeDayAmount(0);
+       if(vo.getDayIncomeQuotaAmount().compareTo(BigDecimal.ZERO) !=0 && merchantRiskFact.getPerDayIncomeAmount().add(merchantRiskFact.getPerItemAmount()).compareTo(vo.getDayIncomeQuotaAmount())==1)
+       {
+                        merchantRiskFact.setMessage(InterfaceStatus.RISK_MERCHANT_INCOME_Quota); //超日限额
+			        	merchantRiskFact.setProductQuotaType(ProductQuotaType.PERDAY);
+			        	OtherRiskUtil.riskRuleEngineLoggerInfo("违反商户出入金限额规则ID："+vo.getQuotaId()+"单日限额");
+			        	drools.halt();
+       }
+       else
+       {
+          merchantRiskFact.setMessage(InterfaceStatus.SUCCESS);
+       }
+    }
+end
+rule "Rule_Stop_Loss"     //止损规则
+activation-group "RiskRuleGroup"
+no-loop true
+salience 9500
+	when eval(false)
+
+	then
+		System.out.println( "止损规则" );
+end
+

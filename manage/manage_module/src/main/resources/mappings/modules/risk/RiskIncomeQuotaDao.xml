@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskIncomeQuotaDao">
+    
+	<sql id="riskIncomeQuotaColumns">
+		a.quota_id AS "quotaId",
+		a.merchant_id AS "merchantId",
+		a.day_income_quota_amount AS "dayIncomeQuotaAmount",
+		a.income_direction AS "incomeDirection",
+		a.create_author AS "createAuthor",
+		a.create_time AS "createTime",
+		a.update_author AS "updateAuthor",
+		a.update_time AS "updateTime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="riskIncomeQuotaJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskIncomeQuota">
+		SELECT 
+			<include refid="riskIncomeQuotaColumns"/>
+		FROM risk_income_quota a
+		<include refid="riskIncomeQuotaJoins"/>
+		WHERE a.quota_id = #{quotaId}
+	</select>
+	
+	<select id="findList" resultType="RiskIncomeQuota">
+		SELECT 
+			<include refid="riskIncomeQuotaColumns"/>
+		FROM risk_income_quota a
+		<include refid="riskIncomeQuotaJoins"/>
+		<where>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="incomeDirection != null and incomeDirection != ''">
+				AND a.income_direction = #{incomeDirection}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskIncomeQuota">
+		SELECT 
+			<include refid="riskIncomeQuotaColumns"/>
+		FROM risk_income_quota a
+		<include refid="riskIncomeQuotaJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_income_quota(
+			merchant_id,
+			day_income_quota_amount,
+			income_direction,
+			create_author,
+			status
+		) VALUES (
+			#{merchantId},
+			#{dayIncomeQuotaAmount},
+			#{incomeDirection},
+			#{createAuthor},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_income_quota SET 	
+			merchant_id = #{merchantId},
+			day_income_quota_amount = #{dayIncomeQuotaAmount},
+			income_direction = #{incomeDirection},
+			update_author = #{updateAuthor},
+			status = #{status}
+		WHERE quota_id = #{quotaId}
+	</update>
+
+	<select id="findExistInfo" resultType="int">
+		SELECT
+		count(1)
+		FROM risk_income_quota
+		WHERE merchant_id = #{merchantId}
+		and income_direction = #{incomeDirection}
+		<if test="quotaId != null and quotaId != ''">
+			AND quota_id != #{quotaId}
+		</if>
+	</select>
+	
+</mapper>

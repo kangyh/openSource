@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsMerchantH5Mapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsMerchantH5" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="customer_no" property="customerNo" jdbcType="VARCHAR" />
+    <result column="system_no" property="systemNo" jdbcType="VARCHAR" />
+    <result column="back_url" property="backUrl" jdbcType="VARCHAR" />
+    <result column="op_type" property="opType" jdbcType="VARCHAR" />
+    <result column="business_seq_no" property="businessSeqNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="req_field" property="reqField" jdbcType="VARCHAR" />
+    <result column="res_field" property="resField" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  
+  <sql id="Base_Column_List" >
+    id, merchant_no, login_name, customer_no, system_no, back_url, op_type, business_seq_no, 
+    create_time, update_time, flag, req_field, res_field
+  </sql>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsMerchantH5" >
+    insert into tpds_merchant_h5
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="customerNo != null" >
+        customer_no,
+      </if>
+      <if test="systemNo != null" >
+        system_no,
+      </if>
+      <if test="backUrl != null" >
+        back_url,
+      </if>
+      <if test="opType != null" >
+        op_type,
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="reqField != null" >
+        req_field,
+      </if>
+      <if test="resField != null" >
+        res_field,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNo != null" >
+        #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="backUrl != null" >
+        #{backUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        #{opType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessSeqNo != null" >
+        #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="reqField != null" >
+        #{reqField,jdbcType=VARCHAR},
+      </if>
+      <if test="resField != null" >
+        #{resField,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="update" parameterType="com.heepay.tpds.entity.TpdsMerchantH5" >
+    update tpds_merchant_h5
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        customer_no = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNo != null" >
+        system_no = #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="backUrl != null" >
+        back_url = #{backUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        op_type = #{opType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no = #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="reqField != null" >
+        req_field = #{reqField,jdbcType=VARCHAR},
+      </if>
+      <if test="resField != null" >
+        res_field = #{resField,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <!-- 查询校验密码成功交易 -->
+  <select id="queryBybusinessSeqNo" parameterType="java.util.Map" resultType="java.lang.Integer">
+  
+     select count(*) from tpds_merchant_h5 t where t.business_seq_no = #{businessSeqNo,jdbcType=VARCHAR}  
+              and flag = #{flag,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 交易密码验证，银行回调更新验证结果 -->
+  <update id="updateBybusinessSeqNo" parameterType="com.heepay.tpds.entity.TpdsMerchantH5">
+  
+	update tpds_merchant_h5 t set t.flag = #{flag,jdbcType=VARCHAR}  where t.business_seq_no = #{businessSeqNo,jdbcType=VARCHAR} 
+	
+  </update>
+  
+      <!-- 统计业务流水号是否已存在 -->
+  <select id="CountBybusinessSeqNo" parameterType="java.util.Map" resultType="java.lang.Integer">
+  
+     select count(*) from tpds_merchant_h5 t where t.business_seq_no = #{businessSeqNo,jdbcType=VARCHAR}  
+              
+  </select>
+  
+  <select id="queryMerchantBybusinessSeqNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select 
+      <include refid="Base_Column_List" />
+     from   tpds_merchant_h5 t    
+      where t.business_seq_no = #{businessSeqNo,jdbcType=VARCHAR} 
+       
+  </select>
+  
+  <insert id="insertMerchantH5" parameterType="com.heepay.tpds.entity.TpdsMerchantH5" >
+    insert into tpds_merchant_h5
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="customerNo != null" >
+        customer_no,
+      </if>
+      <if test="systemNo != null" >
+        system_no,
+      </if>
+      <if test="backUrl != null" >
+        back_url,
+      </if>
+      <if test="opType != null" >
+        op_type,
+      </if>
+      <if test="businessSeqNo != null" >
+        business_seq_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="reqField != null" >
+        req_field,
+      </if>
+      <if test="resField != null" >
+        res_field,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="systemNo != null" >
+        #{systemNo,jdbcType=VARCHAR},
+      </if>
+      <if test="backUrl != null" >
+        #{backUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        #{opType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessSeqNo != null" >
+        #{businessSeqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="reqField != null" >
+        #{reqField,jdbcType=VARCHAR},
+      </if>
+      <if test="resField != null" >
+        #{resField,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

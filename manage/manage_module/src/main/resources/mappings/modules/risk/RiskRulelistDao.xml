@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskRulelistDao">
+    
+	<sql id="riskRulelistColumns">
+		a.rulelist_id AS "rulelistId",
+		a.rule_type AS "ruleType",
+		a.monitor_object AS "monitorObject",
+		a.buzi_type AS "buziType",
+		a.rule_id AS "ruleId",
+		a.rule_description AS "ruleDescription",
+		a.risk_control_action AS "riskControlAction",
+		a.risk_control_fact AS "riskControlFact",
+		a.other_item AS "otherItem",
+		a.create_time AS "createTime",
+		a.status AS "status",
+		a.operator AS "operator",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="riskRulelistJoins">
+	</sql>
+    
+	<select id="get" resultType="RiskRulelist">
+		SELECT 
+			<include refid="riskRulelistColumns"/>
+		FROM risk_rulelist a
+		<include refid="riskRulelistJoins"/>
+		WHERE a.rulelist_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="RiskRulelist">
+		SELECT 
+			<include refid="riskRulelistColumns"/>
+		FROM risk_rulelist a
+		<include refid="riskRulelistJoins"/>
+		<where>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 规则id  -->
+			<if test="ruleId != null and ruleId != ''">
+				AND a.rule_id = #{ruleId}
+			</if>
+			<!-- 风控措施  -->
+			<if test="riskControlAction != null and riskControlAction != ''">
+				AND a.risk_control_action = #{riskControlAction}
+			</if>
+			<!-- 规则类型  -->
+			<if test="ruleType != null and ruleType != ''">
+				AND a.rule_type = #{ruleType}
+			</if>
+			<!-- 监控对象  -->
+			<if test="monitorObject != null and monitorObject != ''">
+				AND a.monitor_object = #{monitorObject}
+			</if>
+			<!-- 业务类型  -->
+			<if test="buziType != null and buziType != ''">
+				AND a.buzi_type = #{buziType}
+			</if>
+			<!-- 关联风控项  -->
+			<if test="otherItem != null and otherItem != ''">
+				AND a.other_item = #{otherItem}
+			</if>
+			<!-- 状态  -->
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RiskRulelist">
+		SELECT 
+			<include refid="riskRulelistColumns"/>
+		FROM risk_rulelist a
+		<include refid="riskRulelistJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO risk_rulelist(
+			rulelist_id,
+			rule_type,
+			monitor_object,
+			buzi_type,
+			rule_id,
+			rule_description,
+			risk_control_action,
+			risk_control_fact,
+			other_item,
+			create_time,
+			status,
+			operator
+		) VALUES (
+			#{rulelistId},
+			#{ruleType},
+			#{monitorObject},
+			#{buziType},
+			#{ruleId},
+			#{ruleDescription},
+			#{riskControlAction},
+			#{riskControlFact},
+			#{otherItem},
+			#{createTime},
+			#{status},
+			#{operator}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE risk_rulelist SET 	
+			rulelist_id = #{rulelistId},
+			rule_type = #{ruleType},
+			monitor_object = #{monitorObject},
+			buzi_type = #{buziType},
+			rule_id = #{ruleId},
+			rule_description = #{ruleDescription},
+			risk_control_action = #{riskControlAction},
+			risk_control_fact = #{riskControlFact},
+			other_item = #{otherItem},
+			create_time = #{createTime},
+			status = #{status},
+			operator = #{operator}
+		WHERE rulelist_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM risk_rulelist
+		WHERE rulelist_id = #{id}
+	</update>
+	
+	<select id="getByRuleId" resultType="RiskRulelist">
+		SELECT 
+			<include refid="riskRulelistColumns"/>
+		FROM risk_rulelist a
+		WHERE a.rule_id = #{ruleId}
+	</select>
+</mapper>

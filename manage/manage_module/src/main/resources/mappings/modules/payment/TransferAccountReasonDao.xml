@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.TransferAccountReasonDao">
+    
+	<sql id="transferAccountReasonColumns">
+		a.transfer_reason_id AS "transferReasonId",
+		a.account_id AS "accountId",
+		a.account_name AS "accountName",
+		a.creator AS "creator",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.merchant_company AS "merchantCompany",
+		a.transfer_reason AS "transferReason",
+		a.audit_need AS "auditNeed",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.autiter AS "autiter",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="transferAccountReasonJoins">
+	</sql>
+    
+	<select id="get" resultType="TransferAccountReason">
+		SELECT 
+			<include refid="transferAccountReasonColumns"/>
+		FROM transfer_account_reason a
+		<include refid="transferAccountReasonJoins"/>
+		WHERE a.transfer_reason_id = #{transferReasonId}
+	</select>
+	
+	<select id="findList" resultType="TransferAccountReason">
+		SELECT 
+			<include refid="transferAccountReasonColumns"/>
+		FROM transfer_account_reason a
+		<include refid="transferAccountReasonJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="remark != null and remark != ''">
+				AND a.remark = #{remark}
+			</if>
+		</where>
+		<if test="sortOrder == 'ASC'">
+			ORDER BY a.create_time ASC
+		</if>
+		<if test="sortOrder == 'DESC'">
+			ORDER BY a.create_time DESC
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TransferAccountReason">
+		SELECT 
+			<include refid="transferAccountReasonColumns"/>
+		FROM transfer_account_reason a
+		<include refid="transferAccountReasonJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO transfer_account_reason(
+			transfer_reason_id,
+			account_id,
+			account_name,
+			creator,
+			merchant_id,
+			merchant_name,
+			merchant_company,
+			transfer_reason,
+			audit_need,
+			status,
+			create_time,
+			autiter,
+			remark
+		) VALUES (
+			#{transferReasonId},
+			#{accountId},
+			#{accountName},
+			#{creator},
+			#{merchantId},
+			#{merchantName}
+			#{merchantCompany}
+			#{transferReason},
+			#{auditNeed},
+			#{status}
+			#{createTime},
+			#{autiter}
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE transfer_account_reason SET 	
+			transfer_reason_id = #{transferReasonId},
+			transfer_reason = #{transferReason},
+			creator = #{creator},
+			merchant_id = #{merchantId},
+			create_time = #{createTime},
+			remark = #{remark}
+		WHERE transfer_reason_id = #{transferReasonId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM transfer_account_reason
+		WHERE transfer_reason_id = #{transferReasonId}
+	</update>
+
+	<insert id="batchInsert"  parameterType="com.heepay.manage.modules.payment.entity.TransferAccountReason" >
+		INSERT INTO transfer_account_reason(
+		transfer_reason_id,
+		account_id,
+		account_name,
+		creator,
+		merchant_id,
+		merchant_name,
+		merchant_company,
+		transfer_reason,
+		audit_need,
+		status,
+		create_time,
+		autiter,
+		remark
+		)
+		values
+		<foreach collection ="list" item ="item" index ="index" separator =",">
+			(
+			#{item.transferReasonId,jdbcType=BIGINT},
+			#{item.accountId,jdbcType=BIGINT},
+			#{item.accountName,jdbcType=VARCHAR},
+			#{item.creator,jdbcType=VARCHAR},
+			#{item.merchantId,jdbcType=BIGINT},
+			#{item.merchantName,jdbcType=VARCHAR},
+			#{item.merchantCompany,jdbcType=VARCHAR},
+			#{item.transferReason,jdbcType=VARCHAR},
+			#{item.auditNeed,jdbcType=VARCHAR},
+			#{item.status,jdbcType=CHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.autiter,jdbcType=VARCHAR},
+			#{item.remark,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<update id="updateStatus">
+		UPDATE transfer_account_reason set
+		update_time = #{updateTime},
+		status = #{status}
+		WHERE transfer_reason_id = #{transferReasonId}
+	</update>
+
+</mapper>

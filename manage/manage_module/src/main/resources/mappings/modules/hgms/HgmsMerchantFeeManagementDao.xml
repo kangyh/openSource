@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsMerchantFeeManagementDao">
+	
+	<sql id="hgmsMerchantInfoJoins">
+	</sql>
+	<select id="findMonthlyList" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantFeeManagementObj">
+
+		SELECT d.merchant_company AS sourceMerchantName, SUM(d.fee_total_amount) AS feeAount FROM ( SELECT SUM(s.fee_total_amount) fee_total_amount, s.merchant_company   FROM hgms_batch_collection_record_history s
+		<where>
+			<if test="sourceMerchantName != null and sourceMerchantName != ''">
+				AND s.merchant_company LIKE  CONCAT(CONCAT('%', #{sourceMerchantName}),'%')
+			</if>
+
+			<!--<if test="sourcemerchantid != null and sourcemerchantid != ''">
+				AND s.source_merchant_name = #{sourcemerchantid}
+			</if>-->
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND s.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		GROUP BY s.merchant_company UNION SELECT SUM(a.fee_total_amount) fee_total_amount, a.merchant_company FROM hgms_batch_pay_record_history a
+		<where>
+			<if test="sourceMerchantName != null and sourceMerchantName != ''">
+				AND a.merchant_company LIKE  CONCAT(CONCAT('%', #{sourceMerchantName}),'%')
+			</if>
+			<!--<if test="sourcemerchantid != null and sourcemerchantid != ''">
+				AND s.source_merchant_name = #{sourcemerchantid}
+			</if>-->
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		GROUP BY a.merchant_company) d GROUP BY d.merchant_company
+
+	</select>
+	<select id="findPaySummery" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantFeeManagementObj">
+
+		SELECT SUM(s.fee_total_amount) AS feeAount, s.merchant_company AS sourceMerchantName  FROM hgms_batch_pay_record_history s
+		<where>
+			<if test="sourceMerchantName != null and sourceMerchantName != ''">
+				AND s.merchant_company LIKE  CONCAT(CONCAT('%', #{sourceMerchantName}),'%')
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND s.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		GROUP BY s.merchant_company
+	</select>
+	<select id="findCollectionSummery" resultType="com.heepay.manage.modules.hgms.entity.HgmsMerchantFeeManagementObj">
+
+		SELECT SUM(s.fee_total_amount) AS feeAount, s.merchant_company AS sourceMerchantName   FROM hgms_batch_collection_record_history s
+		<where>
+			<if test="sourceMerchantName != null and sourceMerchantName != ''">
+				AND s.merchant_company LIKE  CONCAT(CONCAT('%', #{sourceMerchantName}),'%')
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null ">
+				AND s.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		GROUP BY s.merchant_company
+	</select>
+	
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+    xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${zookeeper.ens.ip}" namespace="dd-job" overwrite="true" base-sleep-time-milliseconds="3000" max-sleep-time-milliseconds="3000" max-retries="5"/>
+ 	 
+	  <!-- 代扣 T+0 日结算给商户 -->
+	<job:simple id="BillingSettleToMerchantTimedJob" class="com.heepay.billing.job.BillingSettleToMerchantTimedJob" overwrite="true" registry-center-ref="regCenter" cron="${BillingSettleToMerchantTimedJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+	
+	
+	<!--  定时下载数据 -->
+	<job:simple id="BillSettleJob" class="com.heepay.billing.job.BillSettleJob" overwrite="true" registry-center-ref="regCenter" cron="${billSettleJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C"></job:simple>
+	
+	<!-- 定时查询告警记录，发送邮件 -->
+ 	<job:simple id="sendEmailJob" class="com.heepay.billing.job.SendEmailJob" overwrite="true" registry-center-ref="regCenter" cron="${sendEmailJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C"></job:simple>
+
+ 	<!-- 查询差异类型为未知的记录，进行差异单处理 -->
+ 	<job:simple id="DoneSettleDifferRecordJob " class="com.heepay.billing.job.DoneSettleDifferRecordJob" overwrite="true" registry-center-ref="regCenter" cron="${DoneSettleDifferRecordJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C"></job:simple>
+	 
+	 <!-- 商户侧t+1汇总 -->
+	 <job:simple id="BillingSettleMerchantJob" class="com.heepay.billing.job.MerchantSettleJob" overwrite="true" registry-center-ref="regCenter" cron="${BillingSettleMerchantdJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+	 
+	 <!-- 汇总差异账，做撤账和补账操作 -->
+	 <job:simple id="SettleDifferBathJob" class="com.heepay.billing.job.SettleDifferBathJob" overwrite="true" registry-center-ref="regCenter" cron="${SettleDifferBathJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+	 
+	 <!-- 出款类差错数据处理 -->
+	 <job:simple id="ExpendDifferBathJob" class="com.heepay.billing.job.ExpendDifferBathJob" overwrite="true" registry-center-ref="regCenter" cron="${ExpendDifferBathJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C" />
+
+	<!-- 查询差异类型为未知的记录和人工审核未通过的记录，进行挂账处理 -->
+ 	<job:simple id="HangAccountJob " class="com.heepay.billing.job.HangAccountJob" overwrite="true" registry-center-ref="regCenter" cron="${HangAccountJob-cron}"   sharding-total-count="3" sharding-item-parameters="0=A,1=B,2=C"></job:simple>
+ </beans>
+ 
+ 
+ 
+ 
+ 

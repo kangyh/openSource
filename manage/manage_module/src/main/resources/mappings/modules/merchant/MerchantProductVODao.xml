@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantProductRedisDao">
+	<sql id="merchantProductVOColumns">
+	  t1.merchant_id AS "merchantId",
+	  t1.settle_type AS "settleCyc",
+	  t2.product_code AS "productCode",
+	  t2.product_name AS "productName",
+	  t2.notify_url AS "notifyUrl",
+	  t2.back_url AS "backUrl",
+	  t2.autograph_key AS "productKey",
+	  t3.rule_begin_time AS "validityDateBegin",
+	  t3.rule_end_time AS "validityDateEnd",
+	  t3.charge_deduct_type AS "feeWay"
+	</sql>
+	
+	<sql id="merchantProductVOColumns1">
+	  t2.merchant_id AS "merchantId",
+	  t2.product_code AS "productCode",
+	  t2.product_name AS "productName",
+	  t2.notify_url AS "notifyUrl",
+	  t2.back_url AS "backUrl",
+	  t2.autograph_key AS "productKey",
+	  t3.rule_begin_time AS "validityDateBegin",
+	  t3.rule_end_time AS "validityDateEnd",
+	  t3.charge_deduct_type AS "feeWay"
+	</sql>
+	
+    <sql id="merchantProductVOColumns2">
+      t1.merchant_id AS "merchantId",
+      t1.settle_type AS "settleCyc",
+      t1.product_code AS "productCode",
+      t1.product_name AS "productName",
+      t1.notify_url AS "notifyUrl",
+      t1.back_url AS "backUrl",
+      t1.ip_domain AS "ipDomain",
+      t1.autograph_key AS "productKey",
+      t1.rule_begin_time AS "validityDateBegin",
+      t1.rule_end_time AS "validityDateEnd",
+      t1.charge_deduct_type AS "feeWay",
+      t1.status AS "status",
+      t1.rate_audit AS "rateAudit"
+    </sql>	
+	
+	<select id="findList" resultType="com.heepay.manage.modules.merchant.vo.MerchantProductRedis">
+        SELECT 
+          <include refid="merchantProductVOColumns2"/>
+        FROM merchant_product_rate t1
+        <where>
+            <if test="merchantId != null and merchantId != ''">
+                AND t1.merchant_id = #{merchantId}
+            </if>
+            <if test="productCode != null and productCode != ''">
+                AND t1.product_code = #{productCode}
+            </if>
+			<if test="businessType != null and businessType != ''">
+				AND t1.business_type = #{businessType}
+			</if>
+        </where>
+    </select>
+	
+	
+	<!-- <select id="findList" resultType="com.heepay.manage.modules.merchant.vo.MerchantProductRedis">
+		SELECT 
+		  <include refid="merchantProductVOColumns"/>
+		FROM
+		  settle_cycle_manage t1 
+		  INNER JOIN merchant_autograph_info t2 
+		  ON t1.merchant_id = t2.merchant_id 
+		  AND t1.product_code = t2.product_code
+		  INNER JOIN 
+		    (SELECT 
+		      merchant_id,
+		      product_code,
+		      MAX(rule_end_time) rule_end_time,
+		      MAX(rule_begin_time) rule_begin_time,
+		      MAX(charge_deduct_type) charge_deduct_type 
+		    FROM
+		      merchant_product_rate  
+			<where>
+				<if test="merchantId != null and merchantId != ''">
+					AND merchant_id = #{merchantId}
+				</if>
+			</where>
+		    GROUP BY merchant_id,product_code) t3 
+		    ON t2.merchant_id = t3.merchant_id 
+		    AND t2.product_code = t3.product_code 
+		 <where>
+			<if test="merchantId != null and merchantId != ''">
+				AND t2.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND t2.product_code = #{productCode}
+			</if>
+		</where>
+	</select>
+	 -->
+		<select id="findOther" resultType="com.heepay.manage.modules.merchant.vo.MerchantProductRedis">
+		SELECT 
+		  <include refid="merchantProductVOColumns1"/>
+		FROM
+		  merchant_autograph_info t2 
+		  INNER JOIN 
+		    (SELECT 
+		      merchant_id,
+		      product_code,
+		      MAX(rule_end_time) rule_end_time,
+		      MAX(rule_begin_time) rule_begin_time,
+		      MAX(charge_deduct_type) charge_deduct_type 
+		    FROM
+		      merchant_product_rate  
+			<where>
+				<if test="merchantId != null and merchantId != ''">
+					AND merchant_id = #{merchantId}
+				</if>
+			</where>
+		    GROUP BY merchant_id,product_code) t3 
+		    ON t2.merchant_id = t3.merchant_id 
+		    AND t2.product_code = t3.product_code 
+		 <where>
+			<if test="merchantId != null and merchantId != ''">
+				AND t2.merchant_id = #{merchantId}
+			</if>
+			<if test="productCode != null and productCode != ''">
+				AND t2.product_code = #{productCode}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

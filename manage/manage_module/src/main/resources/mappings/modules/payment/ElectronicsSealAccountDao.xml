@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.ElectronicsSealAccountDao">
+    
+	<sql id="electronicsSealAccountColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.seal_account_id AS "sealAccountId",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="electronicsSealAccountJoins">
+	</sql>
+    
+	<select id="get" resultType="ElectronicsSealAccount">
+		SELECT 
+			<include refid="electronicsSealAccountColumns"/>
+		FROM electronics_seal_account a
+		<include refid="electronicsSealAccountJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ElectronicsSealAccount">
+		SELECT 
+			<include refid="electronicsSealAccountColumns"/>
+		FROM electronics_seal_account a
+		<include refid="electronicsSealAccountJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<if test="sealAccountId != null and sealAccountId != ''">
+				AND a.seal_account_id = #{sealAccountId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ElectronicsSealAccount">
+		SELECT 
+			<include refid="electronicsSealAccountColumns"/>
+		FROM electronics_seal_account a
+		<include refid="electronicsSealAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO electronics_seal_account(
+			id,
+			merchant_id,
+			merchant_name,
+			seal_account_id,
+			create_time,
+			update_time,
+			remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantName},
+			#{sealAccountId},
+			#{createTime},
+			#{updateTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE electronics_seal_account SET 	
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			seal_account_id = #{sealAccountId},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM electronics_seal_account
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

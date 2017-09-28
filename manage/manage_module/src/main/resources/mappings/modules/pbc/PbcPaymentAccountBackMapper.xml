@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.pbc.dao.PbcPaymentAccountBackDao" >
+  
+  <sql id="includeEntity">
+	  payment_account_id, 
+	  feature_code, 
+	  account_number, 
+      subject_type, 
+      account_owner_name, 
+      account_owner_id_type, 
+      account_owner_id, 
+      credential_validity, 
+      tel_number, 
+      login_id, 
+      account_name, 
+      wechat_id, 
+      qq, 
+      regular_ip_address, 
+      regular_device_number, 
+      online_shop_name, 
+      merchant_number, 
+      pos_identity, 
+      pos_address, 
+      pos_commonly_used_address, 
+      application_code
+	</sql>
+	
+	<select id="findList" resultType="PbcPaymentAccountBack">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_payment_account_back
+		<where>
+			<!--paymentAccountId -->
+			<if test="paymentAccountId != null and paymentAccountId != ''">
+				AND payment_account_id = #{paymentAccountId} 
+			</if> 
+			<!--featureCode -->
+			<if test="featureCode != null and featureCode != ''">
+				AND feature_code = #{featureCode} 
+			</if> 
+			<!--accountOwnerId -->
+			<if test="accountOwnerId != null and accountOwnerId != ''">
+				AND account_owner_id = #{accountOwnerId} 
+			</if> 
+			<!-- telNumber-->
+			<if test="telNumber != null and telNumber != ''">
+				AND tel_number = #{telNumber} 
+			</if> 
+			<!-- loginId -->
+			<if test="loginId != null and loginId != ''">
+				AND login_id = #{loginId} 
+			</if> 
+			<!-- wechatId -->
+			<if test="wechatId != null and wechatId != ''">
+				AND wechat_id = #{wechatId} 
+			</if> 
+			<!-- qq  -->
+			<if test="qq  != null and qq != ''"> 
+				AND qq = #{qq} 
+			</if> 
+			<!-- regularDeviceNumber  -->
+			<if test="regularDeviceNumber  != null and regularDeviceNumber != ''"> 
+				AND regular_device_number = #{regularDeviceNumber} 
+			</if> 
+			<!-- merchantNumber  -->
+			<if test="merchantNumber  != null and merchantNumber != ''"> 
+				AND merchant_number = #{merchantNumber} 
+			</if> 
+			<!-- posIdentity  -->
+			<if test="posIdentity  != null and posIdentity != ''"> 
+				AND pos_identity = #{posIdentity} 
+			</if> 
+			<!-- applicationCode  -->
+			<if test="applicationCode  != null and applicationCode != ''"> 
+				AND application_code = #{applicationCode} 
+			</if> 
+			</where> 
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY payment_account_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY payment_account_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <insert id="save" parameterType="PbcPaymentAccountBack" >
+    insert into pbc_payment_account_back (payment_account_id, feature_code, account_number, 
+      subject_type, account_owner_name, account_owner_id_type, 
+      account_owner_id, credential_validity, tel_number, 
+      login_id, account_name, wechat_id, 
+      qq, regular_ip_address, regular_device_number, 
+      online_shop_name, merchant_number, pos_identity, 
+      pos_address, pos_commonly_used_address, 
+      application_code)
+    values (#{paymentAccountId,jdbcType=BIGINT}, #{featureCode,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{subjectType,jdbcType=VARCHAR}, #{accountOwnerName,jdbcType=VARCHAR}, #{accountOwnerIdType,jdbcType=VARCHAR}, 
+      #{accountOwnerId,jdbcType=VARCHAR}, #{credentialValidity,jdbcType=VARCHAR}, #{telNumber,jdbcType=VARCHAR}, 
+      #{loginId,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, #{wechatId,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{regularIpAddress,jdbcType=VARCHAR}, #{regularDeviceNumber,jdbcType=VARCHAR}, 
+      #{onlineShopName,jdbcType=VARCHAR}, #{merchantNumber,jdbcType=VARCHAR}, #{posIdentity,jdbcType=VARCHAR}, 
+      #{posAddress,jdbcType=VARCHAR}, #{posCommonlyUsedAddress,jdbcType=VARCHAR}, #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+  
+  <delete id="delete" parameterType="PbcPaymentAccountBack" >
+	  delete from pbc_payment_account_back
+	  where payment_account_id = #{paymentAccountId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="saveEntity" parameterType="PbcPaymentAccountBack" useGeneratedKeys="true" keyProperty="paymentAccountId">
+     insert into pbc_payment_account_back
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        payment_account_id,
+      </if>
+      <if test="featureCode != null" >
+        feature_code,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="subjectType != null" >
+        subject_type,
+      </if>
+      <if test="accountOwnerName != null" >
+        account_owner_name,
+      </if>
+      <if test="accountOwnerIdType != null" >
+        account_owner_id_type,
+      </if>
+      <if test="accountOwnerId != null" >
+        account_owner_id,
+      </if>
+      <if test="credentialValidity != null" >
+        credential_validity,
+      </if>
+      <if test="telNumber != null" >
+        tel_number,
+      </if>
+      <if test="loginId != null" >
+        login_id,
+      </if>
+      <if test="accountName != null" >
+        account_name,
+      </if>
+      <if test="wechatId != null" >
+        wechat_id,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="regularIpAddress != null" >
+        regular_ip_address,
+      </if>
+      <if test="regularDeviceNumber != null" >
+        regular_device_number,
+      </if>
+      <if test="onlineShopName != null" >
+        online_shop_name,
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number,
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity,
+      </if>
+      <if test="posAddress != null" >
+        pos_address,
+      </if>
+      <if test="posCommonlyUsedAddress != null" >
+        pos_commonly_used_address,
+      </if>
+      <if test="applicationCode != null" >
+        application_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentAccountId != null" >
+        #{paymentAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="featureCode != null" >
+        #{featureCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerName != null" >
+        #{accountOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerIdType != null" >
+        #{accountOwnerIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerId != null" >
+        #{accountOwnerId,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialValidity != null" >
+        #{credentialValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="telNumber != null" >
+        #{telNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="loginId != null" >
+        #{loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatId != null" >
+        #{wechatId,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="regularIpAddress != null" >
+        #{regularIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="regularDeviceNumber != null" >
+        #{regularDeviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineShopName != null" >
+        #{onlineShopName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="posAddress != null" >
+        #{posAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="posCommonlyUsedAddress != null" >
+        #{posCommonlyUsedAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="PbcPaymentAccountBack" >
+    update pbc_payment_account_back
+    <set >
+      <if test="featureCode != null" >
+        feature_code = #{featureCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectType != null" >
+        subject_type = #{subjectType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerName != null" >
+        account_owner_name = #{accountOwnerName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerIdType != null" >
+        account_owner_id_type = #{accountOwnerIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountOwnerId != null" >
+        account_owner_id = #{accountOwnerId,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialValidity != null" >
+        credential_validity = #{credentialValidity,jdbcType=VARCHAR},
+      </if>
+      <if test="telNumber != null" >
+        tel_number = #{telNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="loginId != null" >
+        login_id = #{loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountName != null" >
+        account_name = #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatId != null" >
+        wechat_id = #{wechatId,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="regularIpAddress != null" >
+        regular_ip_address = #{regularIpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="regularDeviceNumber != null" >
+        regular_device_number = #{regularDeviceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineShopName != null" >
+        online_shop_name = #{onlineShopName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNumber != null" >
+        merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="posIdentity != null" >
+        pos_identity = #{posIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="posAddress != null" >
+        pos_address = #{posAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="posCommonlyUsedAddress != null" >
+        pos_commonly_used_address = #{posCommonlyUsedAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationCode != null" >
+        application_code = #{applicationCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where payment_account_id = #{paymentAccountId,jdbcType=BIGINT}
+  </update>
+  
+  <update id="update" parameterType="PbcPaymentAccountBack" >
+    update pbc_payment_account_back
+	    set feature_code = #{featureCode,jdbcType=VARCHAR},
+	      account_number = #{accountNumber,jdbcType=VARCHAR},
+	      subject_type = #{subjectType,jdbcType=VARCHAR},
+	      account_owner_name = #{accountOwnerName,jdbcType=VARCHAR},
+	      account_owner_id_type = #{accountOwnerIdType,jdbcType=VARCHAR},
+	      account_owner_id = #{accountOwnerId,jdbcType=VARCHAR},
+	      credential_validity = #{credentialValidity,jdbcType=VARCHAR},
+	      tel_number = #{telNumber,jdbcType=VARCHAR},
+	      login_id = #{loginId,jdbcType=VARCHAR},
+	      account_name = #{accountName,jdbcType=VARCHAR},
+	      wechat_id = #{wechatId,jdbcType=VARCHAR},
+	      qq = #{qq,jdbcType=VARCHAR},
+	      regular_ip_address = #{regularIpAddress,jdbcType=VARCHAR},
+	      regular_device_number = #{regularDeviceNumber,jdbcType=VARCHAR},
+	      online_shop_name = #{onlineShopName,jdbcType=VARCHAR},
+	      merchant_number = #{merchantNumber,jdbcType=VARCHAR},
+	      pos_identity = #{posIdentity,jdbcType=VARCHAR},
+	      pos_address = #{posAddress,jdbcType=VARCHAR},
+	      pos_commonly_used_address = #{posCommonlyUsedAddress,jdbcType=VARCHAR},
+	      application_code = #{applicationCode,jdbcType=VARCHAR}
+	    where payment_account_id = #{paymentAccountId,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getEntityById" resultType="PbcPaymentAccountBack">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_payment_account_back a
+	WHERE payment_account_id = #{paymentAccountId}
+  </select>
+  
+  <select id="getFeeBackId" resultType="PbcPaymentAccountBack">
+  	SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_payment_account_back a
+	WHERE application_code = #{applicationCode}
+  </select>
+  
+  <insert id="insertValue" parameterType="List">
+  	 insert into pbc_payment_account_back (payment_account_id, feature_code, payment_account_number, 
+      subject_type, account_owner_name, account_owner_id_type, 
+      account_owner_id, credential_validity, tel_number, 
+      login_id, account_name, wechat_id, 
+      qq, regular_ip, regular_device_number, 
+      online_shop_name, merchant_number, pos_id, 
+      pos_address, pos_commonly_used_address, application_code)
+     VALUES
+  		<foreach collection="list" item="item" index="index" separator=",">
+	  	(#{item.paymentAccountId}, #{item.featureCode}, #{item.paymentAccountNumber}, 
+	      #{item.subjectType}, #{item.accountOwnerName}, #{item.accountOwnerIdType}, 
+	      #{item.accountOwnerId}, #{item.credentialValidity}, #{item.telNumber}, 
+	      #{item.loginId}, #{item.accountName}, #{item.wechatId}, 
+	      #{item.qq}, #{item.regularIp}, #{item.regularDeviceNumber}, 
+	      #{item.onlineShopName}, #{item.merchantNumber}, #{item.posId}, 
+	      #{item.posAddress}, #{item.posCommonlyUsedAddress}, #{item.applicationCode})
+		</foreach>
+  </insert>
+  
+  <select id="getListByfeatureCode" resultType="PbcPaymentAccountBack">
+  		SELECT 
+			<include refid="includeEntity"/>
+		FROM pbc_payment_account_back a
+		WHERE application_code=#{applicationCode}
+  </select>
+  
+  <insert id="saveMap" parameterType="Map">
+  	insert into pbc_payment_account_back (feature_code, account_number, 
+      subject_type, account_owner_name, account_owner_id_type, 
+      account_owner_id, credential_validity, tel_number, 
+      login_id, account_name, wechat_id, 
+      qq, regular_ip_address, regular_device_number, 
+      online_shop_name, merchant_number, pos_identity, 
+      pos_address, pos_commonly_used_address, application_code)
+    values (#{featureCode,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{subjectType,jdbcType=VARCHAR}, #{accountOwnerName,jdbcType=VARCHAR}, #{accountOwnerIdType,jdbcType=VARCHAR}, 
+      #{accountOwnerId,jdbcType=VARCHAR}, #{credentialValidity,jdbcType=VARCHAR}, #{telNumber,jdbcType=VARCHAR}, 
+      #{loginId,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, #{wechatId,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{regularIpAddress,jdbcType=VARCHAR}, #{regularDeviceNumber,jdbcType=VARCHAR}, 
+      #{onlineShopName,jdbcType=VARCHAR}, #{merchantNumber,jdbcType=VARCHAR}, #{posIdentity,jdbcType=VARCHAR}, 
+      #{posAddress,jdbcType=VARCHAR}, #{posCommonlyUsedAddress,jdbcType=VARCHAR}, #{applicationCode,jdbcType=VARCHAR})
+  </insert>
+</mapper>

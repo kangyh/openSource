@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.PcacRiskHintInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.PcacRiskHintInfo" >
+    <id column="info_id" property="infoId" jdbcType="BIGINT" />
+    <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
+    <result column="reg_name" property="regName" jdbcType="VARCHAR" />
+    <result column="cus_name" property="cusName" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="doc_name" property="docName" jdbcType="VARCHAR" />
+    <result column="leg_doc_type" property="legDocType" jdbcType="VARCHAR" />
+    <result column="leg_doc_code" property="legDocCode" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="risk_type" property="riskType" jdbcType="VARCHAR" />
+    <result column="valid_date" property="validDate" jdbcType="DATE" />
+    <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap> 
+  <sql id="Base_Column_List" >
+    info_id, batch_no, reg_name, cus_name, doc_type, doc_code, doc_name, leg_doc_type, 
+    leg_doc_code, level, risk_type, valid_date, valid_status, create_time
+  </sql> 
+  <select id="selectByBatchNo" parameterType="java.lang.String" resultType="com.heepay.risk.entity.PcacRiskHintInfo">
+ select info_id from pcac_risk_hint_info where batch_no= #{batchNo,jdbcType=VARCHAR}
+ </select> 
+  <insert id="insert" parameterType="com.heepay.risk.entity.PcacRiskHintInfo" >
+    insert into pcac_risk_hint_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="infoId != null" >
+        info_id,
+      </if>
+      <if test="batchNo != null" >
+        batch_no,
+      </if>
+      <if test="regName != null" >
+        reg_name,
+      </if>
+      <if test="cusName != null" >
+        cus_name,
+      </if>
+      <if test="docType != null" >
+        doc_type,
+      </if>
+      <if test="docCode != null" >
+        doc_code,
+      </if>
+      <if test="docName != null" >
+        doc_name,
+      </if>
+      <if test="legDocType != null" >
+        leg_doc_type,
+      </if>
+      <if test="legDocCode != null" >
+        leg_doc_code,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="riskType != null" >
+        risk_type,
+      </if>
+      <if test="validDate != null" >
+        valid_date,
+      </if>
+      <if test="validStatus != null" >
+        valid_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="infoId != null" >
+        #{infoId,jdbcType=BIGINT},
+      </if>
+      <if test="batchNo != null" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+      <if test="regName != null" >
+        #{regName,jdbcType=VARCHAR},
+      </if>
+      <if test="cusName != null" >
+        #{cusName,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null" >
+        #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docName != null" >
+        #{docName,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocType != null" >
+        #{legDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="legDocCode != null" >
+        #{legDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="riskType != null" >
+        #{riskType,jdbcType=VARCHAR},
+      </if>
+      <if test="validDate != null" >
+        #{validDate,jdbcType=DATE},
+      </if>
+      <if test="validStatus != null" >
+        #{validStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

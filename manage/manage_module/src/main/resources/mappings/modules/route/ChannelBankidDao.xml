@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.ChannelBankidDao">
+    
+	<sql id="channelBankidColumns">
+		a.id AS "id",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_key AS "channelKey",
+		a.provider_code AS "providerCode",
+		a.pay_type AS "payType",
+		a.scene_key AS "sceneKey",
+		a.bank_id AS "bankId",
+		a.bank_provider AS "bankProvider",
+		a.sub_merchant_no AS "subMerchantNo"
+	</sql>
+	
+	<sql id="channelBankidJoins">
+	</sql>
+    
+	<select id="get" resultType="ChannelBankid">
+		SELECT 
+			<include refid="channelBankidColumns"/>
+		FROM route_channel_bankid a
+		<include refid="channelBankidJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ChannelBankid">
+		SELECT 
+			<include refid="channelBankidColumns"/>
+		FROM route_channel_bankid a
+		<include refid="channelBankidJoins"/>
+		<where>
+		<if test="channelCode != null and channelCode !=''">
+			AND channel_code = #{channelCode,jdbcType=CHAR}
+		</if>
+	</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ChannelBankid">
+		SELECT 
+			<include refid="channelBankidColumns"/>
+		FROM route_channel_bankid a
+		<include refid="channelBankidJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO route_channel_bankid(
+			id,
+			channel_code,
+			channel_name,
+			channel_key,
+			provider_code,
+			pay_type,
+			scene_key,
+			bank_id,
+			bank_provider,
+			sub_merchant_no
+		) VALUES (
+			#{id},
+			#{channelCode},
+			#{channelName},
+			#{channelKey},
+			#{providerCode},
+			#{payType},
+			#{sceneKey},
+			#{bankId},
+			#{bankProvider},
+			#{subMerchantNo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE route_channel_bankid SET 	
+			channel_code = #{channelCode},
+			channel_name = #{channelName},
+			channel_key = #{channelKey},
+			provider_code = #{providerCode},
+			pay_type = #{payType},
+			scene_key = #{sceneKey},
+			bank_id = #{bankId},
+			bank_provider = #{bankProvider},
+			sub_merchant_no = #{subMerchantNo}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM route_channel_bankid
+		WHERE id = #{id}
+	</update>
+
+	<select id="queryByChannelCode" resultType="ChannelBankid">
+		SELECT
+		<include refid="channelBankidColumns"/>
+		FROM route_channel_bankid a
+		<include refid="channelBankidJoins"/>
+		WHERE a.channel_code = #{channelCode}
+	</select>
+
+</mapper>

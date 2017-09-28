@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.billing.dao.SettleRuleSecondMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.billing.entity.SettleRuleSecond" >
+    <id column="rule_id" property="ruleId" jdbcType="BIGINT" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
+    <result column="split_flg" property="splitFlg" jdbcType="VARCHAR" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="bank_seq" property="bankSeq" jdbcType="VARCHAR" />
+    <result column="success_amount" property="successAmount" jdbcType="VARCHAR" />
+    <result column="fee_free" property="feeFree" jdbcType="VARCHAR" />
+    <result column="fee_service" property="feeService" jdbcType="VARCHAR" />
+    <result column="fee_bank" property="feeBank" jdbcType="VARCHAR" />
+    <result column="trans_status" property="transStatus" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="field1" property="field1" jdbcType="VARCHAR" />
+    <result column="field2" property="field2" jdbcType="VARCHAR" />
+    <result column="field3" property="field3" jdbcType="VARCHAR" />
+    <result column="start_row" property="startRow" jdbcType="TINYINT" />
+    <result column="end_flg" property="endFlg" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_author" property="createAuthor" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_author" property="updateAuthor" jdbcType="VARCHAR" />
+    <result column="settle_way" property="settleWay" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    rule_id, channel_code, channel_type, bill_type, split_flg, payment_id, bank_seq, 
+    success_amount, fee_free, fee_service, fee_bank, trans_status, remark, field1, field2, 
+    field3, start_row, end_flg, create_time, create_author, update_time, update_author, 
+    settle_way, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.billing.entity.SettleRuleSecondExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from settle_rule_second
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_rule_second
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from settle_rule_second
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.billing.entity.SettleRuleSecondExample" >
+    delete from settle_rule_second
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.billing.entity.SettleRuleSecond" >
+    insert into settle_rule_second (rule_id, channel_code, channel_type, 
+      bill_type, split_flg, payment_id, 
+      bank_seq, success_amount, fee_free, 
+      fee_service, fee_bank, trans_status, 
+      remark, field1, field2, 
+      field3, start_row, end_flg, 
+      create_time, create_author, update_time, 
+      update_author, settle_way, status
+      )
+    values (#{ruleId,jdbcType=BIGINT}, #{channelCode,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, 
+      #{billType,jdbcType=VARCHAR}, #{splitFlg,jdbcType=VARCHAR}, #{paymentId,jdbcType=VARCHAR}, 
+      #{bankSeq,jdbcType=VARCHAR}, #{successAmount,jdbcType=VARCHAR}, #{feeFree,jdbcType=VARCHAR}, 
+      #{feeService,jdbcType=VARCHAR}, #{feeBank,jdbcType=VARCHAR}, #{transStatus,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{field1,jdbcType=VARCHAR}, #{field2,jdbcType=VARCHAR}, 
+      #{field3,jdbcType=VARCHAR}, #{startRow,jdbcType=TINYINT}, #{endFlg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createAuthor,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateAuthor,jdbcType=VARCHAR}, #{settleWay,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.billing.entity.SettleRuleSecond" >
+    insert into settle_rule_second
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="billType != null" >
+        bill_type,
+      </if>
+      <if test="splitFlg != null" >
+        split_flg,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq,
+      </if>
+      <if test="successAmount != null" >
+        success_amount,
+      </if>
+      <if test="feeFree != null" >
+        fee_free,
+      </if>
+      <if test="feeService != null" >
+        fee_service,
+      </if>
+      <if test="feeBank != null" >
+        fee_bank,
+      </if>
+      <if test="transStatus != null" >
+        trans_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="field1 != null" >
+        field1,
+      </if>
+      <if test="field2 != null" >
+        field2,
+      </if>
+      <if test="field3 != null" >
+        field3,
+      </if>
+      <if test="startRow != null" >
+        start_row,
+      </if>
+      <if test="endFlg != null" >
+        end_flg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createAuthor != null" >
+        create_author,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateAuthor != null" >
+        update_author,
+      </if>
+      <if test="settleWay != null" >
+        settle_way,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null" >
+        #{billType,jdbcType=VARCHAR},
+      </if>
+      <if test="splitFlg != null" >
+        #{splitFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        #{successAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="feeFree != null" >
+        #{feeFree,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        #{feeService,jdbcType=VARCHAR},
+      </if>
+      <if test="feeBank != null" >
+        #{feeBank,jdbcType=VARCHAR},
+      </if>
+      <if test="transStatus != null" >
+        #{transStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null" >
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="startRow != null" >
+        #{startRow,jdbcType=TINYINT},
+      </if>
+      <if test="endFlg != null" >
+        #{endFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="settleWay != null" >
+        #{settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.billing.entity.SettleRuleSecondExample" resultType="java.lang.Integer" >
+    select count(*) from settle_rule_second
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update settle_rule_second
+    <set >
+      <if test="record.ruleId != null" >
+        rule_id = #{record.ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="record.channelCode != null" >
+        channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelType != null" >
+        channel_type = #{record.channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billType != null" >
+        bill_type = #{record.billType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.splitFlg != null" >
+        split_flg = #{record.splitFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentId != null" >
+        payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankSeq != null" >
+        bank_seq = #{record.bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.successAmount != null" >
+        success_amount = #{record.successAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feeFree != null" >
+        fee_free = #{record.feeFree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feeService != null" >
+        fee_service = #{record.feeService,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feeBank != null" >
+        fee_bank = #{record.feeBank,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transStatus != null" >
+        trans_status = #{record.transStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field1 != null" >
+        field1 = #{record.field1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field2 != null" >
+        field2 = #{record.field2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field3 != null" >
+        field3 = #{record.field3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startRow != null" >
+        start_row = #{record.startRow,jdbcType=TINYINT},
+      </if>
+      <if test="record.endFlg != null" >
+        end_flg = #{record.endFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createAuthor != null" >
+        create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAuthor != null" >
+        update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.settleWay != null" >
+        settle_way = #{record.settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update settle_rule_second
+    set rule_id = #{record.ruleId,jdbcType=BIGINT},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      channel_type = #{record.channelType,jdbcType=VARCHAR},
+      bill_type = #{record.billType,jdbcType=VARCHAR},
+      split_flg = #{record.splitFlg,jdbcType=VARCHAR},
+      payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      bank_seq = #{record.bankSeq,jdbcType=VARCHAR},
+      success_amount = #{record.successAmount,jdbcType=VARCHAR},
+      fee_free = #{record.feeFree,jdbcType=VARCHAR},
+      fee_service = #{record.feeService,jdbcType=VARCHAR},
+      fee_bank = #{record.feeBank,jdbcType=VARCHAR},
+      trans_status = #{record.transStatus,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      field1 = #{record.field1,jdbcType=VARCHAR},
+      field2 = #{record.field2,jdbcType=VARCHAR},
+      field3 = #{record.field3,jdbcType=VARCHAR},
+      start_row = #{record.startRow,jdbcType=TINYINT},
+      end_flg = #{record.endFlg,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_author = #{record.createAuthor,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_author = #{record.updateAuthor,jdbcType=VARCHAR},
+      settle_way = #{record.settleWay,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.billing.entity.SettleRuleSecond" >
+    update settle_rule_second
+    <set >
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null" >
+        bill_type = #{billType,jdbcType=VARCHAR},
+      </if>
+      <if test="splitFlg != null" >
+        split_flg = #{splitFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankSeq != null" >
+        bank_seq = #{bankSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="successAmount != null" >
+        success_amount = #{successAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="feeFree != null" >
+        fee_free = #{feeFree,jdbcType=VARCHAR},
+      </if>
+      <if test="feeService != null" >
+        fee_service = #{feeService,jdbcType=VARCHAR},
+      </if>
+      <if test="feeBank != null" >
+        fee_bank = #{feeBank,jdbcType=VARCHAR},
+      </if>
+      <if test="transStatus != null" >
+        trans_status = #{transStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null" >
+        field1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null" >
+        field2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null" >
+        field3 = #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="startRow != null" >
+        start_row = #{startRow,jdbcType=TINYINT},
+      </if>
+      <if test="endFlg != null" >
+        end_flg = #{endFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAuthor != null" >
+        create_author = #{createAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAuthor != null" >
+        update_author = #{updateAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="settleWay != null" >
+        settle_way = #{settleWay,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.billing.entity.SettleRuleSecond" >
+    update settle_rule_second
+    set channel_code = #{channelCode,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      bill_type = #{billType,jdbcType=VARCHAR},
+      split_flg = #{splitFlg,jdbcType=VARCHAR},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      bank_seq = #{bankSeq,jdbcType=VARCHAR},
+      success_amount = #{successAmount,jdbcType=VARCHAR},
+      fee_free = #{feeFree,jdbcType=VARCHAR},
+      fee_service = #{feeService,jdbcType=VARCHAR},
+      fee_bank = #{feeBank,jdbcType=VARCHAR},
+      trans_status = #{transStatus,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      field1 = #{field1,jdbcType=VARCHAR},
+      field2 = #{field2,jdbcType=VARCHAR},
+      field3 = #{field3,jdbcType=VARCHAR},
+      start_row = #{startRow,jdbcType=TINYINT},
+      end_flg = #{endFlg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_author = #{createAuthor,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_author = #{updateAuthor,jdbcType=VARCHAR},
+      settle_way = #{settleWay,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where rule_id = #{ruleId,jdbcType=BIGINT}
+  </update>
+  
+  <!-- billing begin -->
+  <select id="getSettleRuleSecond" parameterType="map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />
+    from settle_rule_second
+    where channel_code=#{channelCode,jdbcType=VARCHAR} and channel_type=#{channelType, jdbcType=VARCHAR} and 
+  	 	status=#{status, jdbcType=VARCHAR} and bill_type=#{billType, jdbcType=VARCHAR} and 
+  	 	settle_way = #{settleWay,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

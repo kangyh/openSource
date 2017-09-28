@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.trial.dao.TrialBalanceTransDao">
+    
+	<sql id="trialBalanceTransColumns">
+		a.id AS "id",
+		a.trans_no AS "transNo",
+		a.debit_current_amount AS "debitCurrentAmount",
+		a.credit_current_amount AS "creditCurrentAmount",
+		a.account_date AS "accountDate",
+		a.type AS "type",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.status AS "status",
+		a.log_ids AS "logIds"
+	</sql>
+	
+	<sql id="trialBalanceTransJoins">
+	</sql>
+    
+	<select id="get" resultType="TrialBalanceTrans">
+		SELECT 
+			<include refid="trialBalanceTransColumns"/>
+		FROM trial_balance_trans a
+		<include refid="trialBalanceTransJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TrialBalanceTrans">
+		SELECT 
+			<include refid="trialBalanceTransColumns"/>
+		FROM trial_balance_trans a
+		<include refid="trialBalanceTransJoins"/>
+		<where>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>	
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>		
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY create_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TrialBalanceTrans">
+		SELECT 
+			<include refid="trialBalanceTransColumns"/>
+		FROM trial_balance_trans a
+		<include refid="trialBalanceTransJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			     ORDER BY create_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO trial_balance_trans(
+			id,
+			trans_no,
+			debit_current_amount,
+			credit_current_amount,
+			account_date,
+			type,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{transNo},
+			#{debitCurrentAmount},
+			#{creditCurrentAmount},
+			#{accountDate},
+			#{type},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trial_balance_trans SET 	
+			status = 'FINISH'			
+		WHERE id = #{id} 
+	</update>
+	
+	<update id="updateTrialBalanceTrans" >
+		UPDATE trial_balance_trans SET 	
+			status = #{status},
+			update_time = #{updateTime}			
+		WHERE id = #{id} 
+	</update>
+	
+	<update id="delete">
+		DELETE FROM trial_balance_trans
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

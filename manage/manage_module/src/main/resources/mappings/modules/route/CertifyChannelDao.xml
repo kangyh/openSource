@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.CertifyChannelDao">
+    
+	<sql id="certifyChannelColumns">
+		a.id AS "id",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.channel_code AS "channelCode",
+		a.channel_name AS "channelName",
+		a.channel_partner_code AS "channelPartnerCode",
+		a.channel_partner_name AS "channelPartnerName",
+		a.channel_type_code AS "channelTypeCode",
+		a.channel_type_name AS "channelTypeName",
+		a.cost AS "cost",
+		a.settle_type AS "settleType",
+		a.settle_period AS "settlePeriod",
+		a.sort AS "sort",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id"
+	</sql>
+	
+	<sql id="certifyChannelJoins">
+	</sql>
+    
+	<select id="get" resultType="CertifyChannel">
+		SELECT 
+			<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getOrderBySort" resultType="CertifyChannel">
+		SELECT
+		<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		<where>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+		</where>
+		ORDER BY a.sort DESC
+	</select>
+	
+	<select id="findList" resultType="CertifyChannel">
+		SELECT 
+			<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		<where>
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CertifyChannel">
+		SELECT 
+			<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		<where>
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectByPartnerCode" resultType="CertifyChannel">
+		SELECT 
+			<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		where channel_partner_code=#{channelPartnerCode,jdbcType=VARCHAR}
+		and product_code = #{productCode}
+		and channel_type_code = #{channelTypeCode}
+	</select>
+	
+	<select id="selectByChannelCode" resultType="CertifyChannel">
+        SELECT 
+            <include refid="certifyChannelColumns"/>
+        FROM route_certify_channel a
+        <include refid="certifyChannelJoins"/>
+        where channel_code=#{channelCode,jdbcType=VARCHAR}
+    </select>
+
+	<select id="getCertifyByType" resultType="CertifyChannel">
+		SELECT
+		<include refid="certifyChannelColumns"/>
+		FROM route_certify_channel a
+		<include refid="certifyChannelJoins"/>
+		WHERE a.channel_type_code=#{channelTypeCode,jdbcType=VARCHAR}
+		ORDER BY a.sort DESC,a.cost
+		limit 1
+	</select>
+
+	<insert id="insert" parameterType="CertifyChannel">
+		INSERT INTO route_certify_channel
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="productCode != null" >
+				product_code,
+			</if>
+			<if test="productName != null" >
+				product_name,
+			</if>
+			<if test="channelCode != null" >
+				channel_code,
+			</if>
+			<if test="channelName != null" >
+				channel_name,
+			</if>
+			<if test="channelPartnerCode != null" >
+				channel_partner_code,
+			</if>
+			<if test="channelPartnerName != null" >
+				channel_partner_name,
+			</if>
+			<if test="channelTypeCode != null" >
+				channel_type_code,
+			</if>
+			<if test="channelTypeName != null" >
+				channel_type_name,
+			</if>
+			<if test="cost != null" >
+				cost,
+			</if>
+			<if test="settleType != null" >
+				settle_type,
+			</if>
+			<if test="settlePeriod != null" >
+				settle_period,
+			</if>
+			<if test="sort != null" >
+				sort,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="productCode != null" >
+				#{productCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productName != null" >
+				#{productName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelCode != null" >
+				#{channelCode,jdbcType=VARCHAR},
+			</if>
+			<if test="channelName != null" >
+				#{channelName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelPartnerCode != null" >
+				#{channelPartnerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="channelPartnerName != null" >
+				#{channelPartnerName,jdbcType=VARCHAR},
+			</if>
+			<if test="channelTypeCode != null" >
+				#{channelTypeCode,jdbcType=CHAR},
+			</if>
+			<if test="channelTypeName != null" >
+				#{channelTypeName,jdbcType=VARCHAR},
+			</if>
+			<if test="cost != null" >
+				#{cost,jdbcType=DECIMAL},
+			</if>
+			<if test="settleType != null" >
+				#{settleType,jdbcType=CHAR},
+			</if>
+			<if test="settlePeriod != null" >
+				#{settlePeriod,jdbcType=CHAR},
+			</if>
+			<if test="sort != null" >
+				#{sort,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update"  parameterType="CertifyChannel">
+		UPDATE route_certify_channel
+		<set >
+			<if test="cost != null" >
+				cost = #{cost,jdbcType=DECIMAL},
+			</if>
+			<if test="settleType != null" >
+				settle_type = #{settleType,jdbcType=CHAR},
+			</if>
+				settle_period = #{settlePeriod,jdbcType=CHAR},
+			<if test="sort != null" >
+				sort = #{sort,jdbcType=CHAR},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			update_time =now()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="changeSort">
+		UPDATE route_certify_channel SET
+		sort = #{sort} ,
+		update_time =now()
+		WHERE id = #{id}
+	</update>
+
+	<!-- 根据产品code,成本类型获取产品通道支持的成本最大值 -->
+	<select id="getMaxCost" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(MAX(a.cost), 0) rate
+		FROM
+			route_certify_channel a
+		WHERE a.product_code = #{productCode}
+	</select>
+</mapper>

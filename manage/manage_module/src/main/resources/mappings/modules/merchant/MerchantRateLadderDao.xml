@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.merchant.dao.MerchantRateLadderDao">
+    
+	<sql id="merchantRateLadderColumns">
+		a.id AS "id",
+		a.charge_max AS "chargeMax",
+		a.charge_min AS "chargeMin",
+		a.ladder_fee AS "ladderFee",
+		a.ladder_ratio AS "ladderRatio",
+		a.ladder_type AS "ladderType"
+	</sql>
+	
+	<sql id="merchantRateLadderJoins">
+	</sql>
+    
+	<select id="get" resultType="MerchantRateLadder">
+		SELECT 
+			<include refid="merchantRateLadderColumns"/>
+		FROM merchant_rate_ladder a
+		<include refid="merchantRateLadderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MerchantRateLadder">
+		SELECT 
+			<include refid="merchantRateLadderColumns"/>
+		FROM merchant_rate_ladder a
+		<include refid="merchantRateLadderJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MerchantRateLadder">
+		SELECT 
+			<include refid="merchantRateLadderColumns"/>
+		FROM merchant_rate_ladder a
+		<include refid="merchantRateLadderJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO merchant_rate_ladder(
+			id,
+			charge_max,
+			charge_min,
+			ladder_fee,
+			ladder_ratio,
+			ladder_type
+		) VALUES (
+			#{id},
+			#{chargeMax},
+			#{chargeMin},
+			#{ladderFee},
+			#{ladderRatio},
+			#{ladderType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE merchant_rate_ladder SET 	
+			charge_max = #{chargeMax},
+			charge_min = #{chargeMin},
+			ladder_fee = #{ladderFee},
+			ladder_ratio = #{ladderRatio},
+			ladder_type = #{ladderType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM merchant_rate_ladder
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

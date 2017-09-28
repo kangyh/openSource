@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.AuthenticationDao">
+    
+	<sql id="authenticationColumns">
+		a.auth_id AS "authId",
+		a.auth_time AS "authTime",
+		a.type AS "type",
+		a.status AS "status",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.bank_id AS "bankId",
+		a.bank_name AS "bankName",
+		a.open_bank_name AS "openBankName",
+		a.bank_info AS "bankInfo",
+		a.bankcard_no AS "bankcardNo",
+		a.bankcard_type AS "bankcardType",
+		a.bankcard_expired_date AS "bankcardExpiredDate",
+		a.bankcard_cvv2 AS "bankcardCvv2",
+		a.bankcard_owner_mobile AS "bankcardOwnerMobile",
+		a.bankcard_owner_name AS "bankcardOwnerName",
+		a.bankcard_owner_idcard AS "bankcardOwnerIdcard",
+		a.bankcard_owner_type AS "bankcardOwnerType",
+		a.default_tag AS "defaultTag",
+		a.channel_code AS "channelCode",
+		a.channel_auth AS "channelAuth",
+		a.merchant_user_id AS "merchantUserId",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.authorization_code AS "authorizationCode",
+		a.ext1 AS "ext1",
+		a.ext2 AS "ext2",
+		a.short_card_no AS "shortCardNo",
+		a.short_phnoe_no AS "shortPhnoeNo",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.associate_line_number AS "associateLineNumber"
+	</sql>
+	
+	<sql id="authenticationJoins">
+	</sql>
+    
+	<select id="get" resultType="Authentication">
+		SELECT 
+			<include refid="authenticationColumns"/>
+		FROM authentication a
+		<include refid="authenticationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Authentication">
+		SELECT 
+			<include refid="authenticationColumns"/>
+		FROM authentication a
+		<include refid="authenticationJoins"/>
+		<where>
+			<if test="authId != null and authId != ''">
+				AND a.auth_id = #{authId}
+			</if>
+			<if test="authTime != null and authTime != ''">
+				AND a.auth_time = #{authTime}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null">
+				AND a.create_time BETWEEN date_format(#{beginCreateTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endCreateTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		
+		ORDER BY a.create_time DESC
+			
+	</select>
+	
+	<select id="findAllList" resultType="Authentication">
+		SELECT 
+			<include refid="authenticationColumns"/>
+		FROM authentication a
+		<include refid="authenticationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO authentication(
+			auth_id,
+			auth_time,
+			type,
+			status,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			bank_id,
+			bank_name,
+			open_bank_name,
+			bank_info,
+			bankcard_no,
+			bankcard_type,
+			bankcard_expired_date,
+			bankcard_cvv2,
+			bankcard_owner_mobile,
+			bankcard_owner_name,
+			bankcard_owner_idcard,
+			bankcard_owner_type,
+			default_tag,
+			channel_code,
+			channel_auth,
+			merchant_user_id,
+			merchant_order_no,
+			authorization_code,
+			ext1,
+			ext2,
+			short_card_no,
+			short_phnoe_no,
+			create_time,
+			update_time,
+			associate_line_number
+		) VALUES (
+			#{authId},
+			#{authTime},
+			#{type},
+			#{status},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{bankId},
+			#{bankName},
+			#{openBankName},
+			#{bankInfo},
+			#{bankcardNo},
+			#{bankcardType},
+			#{bankcardExpiredDate},
+			#{bankcardCvv2},
+			#{bankcardOwnerMobile},
+			#{bankcardOwnerName},
+			#{bankcardOwnerIdcard},
+			#{bankcardOwnerType},
+			#{defaultTag},
+			#{channelCode},
+			#{channelAuth},
+			#{merchantUserId},
+			#{merchantOrderNo},
+			#{authorizationCode},
+			#{ext1},
+			#{ext2},
+			#{shortCardNo},
+			#{shortPhnoeNo},
+			#{createTime},
+			#{updateTime},
+			#{associateLineNumber}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE authentication SET 	
+			auth_id = #{authId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM authentication
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

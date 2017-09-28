@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.merchant.dao.ManageMonitorDao">
+	
+	
+	<select id="getMonitor" resultType="Monitor">
+		SELECT
+			id as "portId",
+	        value as "value",
+	        service as "service"
+		FROM ngp_monitor
+		WHERE id = #{portId}
+	</select>
+	
+	
+</mapper>

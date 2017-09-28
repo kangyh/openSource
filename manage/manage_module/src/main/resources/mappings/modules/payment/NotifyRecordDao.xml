@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.NotifyRecordDao">
+    
+	<sql id="notifyRecordColumns">
+		a.notify_id AS "notifyId",
+		a.trans_no AS "transNo",
+		a.merchant_id AS "merchantId",
+		a.merchant_login_name AS "merchantLoginName",
+		a.merchant_company AS "merchantCompany",
+		a.merchant_order_no AS "merchantOrderNo",
+		a.notify_url AS "notifyUrl",
+		a.status AS "status",
+		a.notify_request_params AS "notifyRequestParams",
+		a.notify_response AS "notifyResponse",
+		a.notify_number AS "notifyNumber",
+		a.notify_type AS "notifyType",
+		a.notify_time AS "notifyTime",
+		a.success_amount AS "successAmount",
+		a.pay_result AS "payResult",
+		a.payment_id AS "paymentId",
+		a.update_time AS "updateTime",
+		a.pay_amount AS "payAmount",
+		a.create_time AS "createTime",
+		a.product_code AS "productCode",
+		a.bank_serial_no AS "bankSerialNo"
+	</sql>
+	
+	<sql id="notifyRecordJoins">
+	</sql>
+    
+	<select id="get" resultType="NotifyRecord">
+		SELECT 
+			<include refid="notifyRecordColumns"/>
+		FROM notify_record a
+		<include refid="notifyRecordJoins"/>
+		 WHERE notify_id = #{id}
+	</select>
+	<select id="getByPaymentId" resultType="NotifyRecord">
+		SELECT 
+			<include refid="notifyRecordColumns"/>
+		FROM notify_record a
+		<include refid="notifyRecordJoins"/>
+		 WHERE payment_id = #{paymentId}
+	</select>
+	
+	<select id="getByTransNo" resultType="NotifyRecord">
+		SELECT 
+			<include refid="notifyRecordColumns"/>
+		FROM notify_record a
+		<include refid="notifyRecordJoins"/>
+		 WHERE trans_no = #{transNo}
+	</select>
+	
+	<select id="findList" resultType="NotifyRecord">
+		SELECT 
+			<include refid="notifyRecordColumns"/>
+		FROM notify_record a
+		<include refid="notifyRecordJoins"/>
+		<where>
+			
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantLoginName != null and merchantLoginName != ''">
+				AND a.merchant_login_name = #{merchantLoginName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<if test="bankSerialNo != null and bankSerialNo != ''">
+				AND a.bank_serial_no = #{bankSerialNo}
+			</if>
+			<if test="merchantOrderNo != null and merchantOrderNo != ''">
+				AND a.merchant_order_no = #{merchantOrderNo}
+			</if>
+		</where>
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="findAllList" resultType="NotifyRecord">
+		SELECT 
+			<include refid="notifyRecordColumns"/>
+		FROM notify_record a
+		<include refid="notifyRecordJoins"/>
+		<where>
+			
+		</where>		
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO notify_record(
+			notify_id,
+			trans_no,
+			merchant_id,
+			merchant_login_name,
+			merchant_company,
+			merchant_order_no,
+			notify_url,
+			status,
+			notify_request_params,
+			notify_response,
+			notify_number,
+			notify_type,
+			notify_time,
+			success_amount,
+			pay_result,
+			payment_id,
+			update_time,
+			pay_amount,
+			create_time,
+			product_code,
+			bank_serial_no
+		) VALUES (
+			#{notifyId},
+			#{transNo},
+			#{merchantId},
+			#{merchantLoginName},
+			#{merchantCompany},
+			#{merchantOrderNo},
+			#{notifyUrl},
+			#{status},
+			#{notifyRequestParams},
+			#{notifyResponse},
+			#{notifyNumber},
+			#{notifyType},
+			#{notifyTime},
+			#{successAmount},
+			#{payResult},
+			#{paymentId},
+			#{updateTime},
+			#{payAmount},
+			#{createTime},
+			#{productCode},
+			#{bankSerialNo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE notify_record SET 	
+			notify_id = #{notifyId},
+			trans_no = #{transNo},
+			merchant_id = #{merchantId},
+			merchant_login_name = #{merchantLoginName},
+			merchant_company = #{merchantCompany},
+			merchant_order_no = #{merchantOrderNo},
+			notify_url = #{notifyUrl},
+			status = #{status},
+			notify_request_params = #{notifyRequestParams},
+			notify_response = #{notifyResponse},
+			notify_number = #{notifyNumber},
+			notify_type = #{notifyType},
+			notify_time = #{notifyTime},
+			success_amount = #{successAmount},
+			pay_result = #{payResult},
+			payment_id = #{paymentId},
+			update_time = #{updateTime},
+			pay_amount = #{payAmount},
+			create_time = #{createTime},
+			product_code = #{productCode},
+			bank_serial_no = #{bankSerialNo}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM notify_record
+		WHERE notify_id = #{notifyId}
+	</update>
+	
+	
+	
+	<update id="updateStatusById">
+		UPDATE notify_record SET 	
+			status = #{status},
+			notify_number = #{notifyNumber},
+			notify_type = 1,
+			notify_time = now(),
+			notify_response = #{notifyResponse},
+			update_time = now()
+		WHERE notify_id = #{notifyId}
+	</update>
+	
+	<select id="getNotifyId" resultType="NotifyRecord">
+		SELECT 
+			max(a.notify_id) as notifyId
+		FROM notify_record a
+	</select>
+	
+	
+</mapper>

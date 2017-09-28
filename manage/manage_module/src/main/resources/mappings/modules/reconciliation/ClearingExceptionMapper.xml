@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.ClearingExceptionDao">
+
+    <sql id="Base_Column_List">
+        clear_id,
+        channel_code,
+        payment_id,
+        payment_id_old,
+        pay_amount,
+        settle_cyc,
+        cost_way,
+        trans_type,
+        bank_code,
+        bank_name,
+        bank_seq,
+        merchant_id,
+        merchant_name,
+        merchant_type,
+        product_code,
+        currency,
+        trans_no,
+        paymentID,
+        merchant_order_no,
+        trans_no_old,
+        request_amount,
+        fee,
+        pay_time,
+        success_time,
+        fee_way,
+        create_time,
+        bankcard_type,
+        pay_type,
+        status,
+        field1,
+        field2
+      </sql>
+
+    <select id="findList" resultType="ClearingException">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM clearing_exception
+        <where>
+            <!-- 订单创建时间 -->
+            <if test="beginTime != null and endTime != null">
+                AND field1 BETWEEN date_format(#{beginTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <!-- 支付单号 -->
+            <if test="paymentId != null and paymentId != ''">
+                AND payment_id = #{paymentId}
+            </if>
+
+            <!-- 订单结算周期-->
+            <if test="settleCyc != null and settleCyc != ''">
+                AND settle_cyc = #{settleCyc}
+            </if>
+            <!-- 手续费扣除方式 -->
+            <if test="costWay != null and costWay != ''">
+                AND cost_way = #{costWay}
+            </if>
+            <!-- 交易类型 -->
+            <if test="transType != null and transType != ''">
+                AND trans_type = #{transType}
+            </if>
+            <!-- 银行编码-->
+            <if test="bankCode != null and bankCode != ''">
+                AND bank_code = #{bankCode}
+            </if>
+            <!-- 银行名称 -->
+            <if test="bankName != null and bankName != ''">
+                AND bank_name = #{bankName}
+            </if>
+            <!-- 银行流水号 -->
+            <if test="bankSeq != null and bankSeq != ''">
+                AND bank_seq = #{bankSeq}
+            </if>
+            <!-- 商户编码 -->
+            <if test="merchantId != null and merchantId != ''">
+                AND merchant_id = #{merchantId}
+            </if>
+            <!-- 交易订单号 -->
+            <if test="transNo != null and transNo != ''">
+                AND trans_no = #{transNo}
+            </if>
+            <!-- 用户订单号 -->
+            <if test="merchantOrderNo != null and merchantOrderNo != ''">
+                AND merchant_order_no = #{merchantOrderNo}
+            </if>
+            <!-- 用户订单号 -->
+            <if test="merchantOrderNo != null and merchantOrderNo != ''">
+                AND merchant_order_no = #{merchantOrderNo}
+            </if>
+            <!-- paymentID -->
+            <if test="paymentid != null and paymentid != ''">
+                AND paymentID = #{paymentid}
+            </if>
+            <!-- 银行卡类型 -->
+            <if test="bankcardType != null and bankcardType != ''">
+                AND bankcard_type = #{bankcardType}
+            </if>
+            <!-- 支付类型 -->
+            <if test="payType != null and payType != ''">
+                AND pay_type = #{payType}
+            </if>
+            <!-- 状态 -->
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY clear_id desc
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="getEntity" resultType="ClearingException" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from clearing_exception
+        where clear_id = #{clearId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from clearing_exception
+        where clear_id = #{clearId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="saveEntity" parameterType="ClearingException">
+        insert into clearing_exception
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clearId != null">
+                clear_id,
+            </if>
+            <if test="channelCode != null">
+                channel_code,
+            </if>
+            <if test="paymentId != null">
+                payment_id,
+            </if>
+            <if test="paymentIdOld != null">
+                payment_id_old,
+            </if>
+            <if test="payAmount != null">
+                pay_amount,
+            </if>
+            <if test="settleCyc != null">
+                settle_cyc,
+            </if>
+            <if test="costWay != null">
+                cost_way,
+            </if>
+            <if test="transType != null">
+                trans_type,
+            </if>
+            <if test="bankCode != null">
+                bank_code,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankSeq != null">
+                bank_seq,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="merchantName != null">
+                merchant_name,
+            </if>
+            <if test="merchantType != null">
+                merchant_type,
+            </if>
+            <if test="productCode != null">
+                product_code,
+            </if>
+            <if test="currency != null">
+                currency,
+            </if>
+            <if test="transNo != null">
+                trans_no,
+            </if>
+            <if test="paymentid != null">
+                paymentID,
+            </if>
+            <if test="merchantOrderNo != null">
+                merchant_order_no,
+            </if>
+            <if test="transNoOld != null">
+                trans_no_old,
+            </if>
+            <if test="requestAmount != null">
+                request_amount,
+            </if>
+            <if test="fee != null">
+                fee,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="successTime != null">
+                success_time,
+            </if>
+            <if test="feeWay != null">
+                fee_way,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="bankcardType != null">
+                bankcard_type,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="field1 != null">
+                field1,
+            </if>
+            <if test="field2 != null">
+                field2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clearId != null">
+                #{clearId,jdbcType=BIGINT},
+            </if>
+            <if test="channelCode != null">
+                #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentId != null">
+                #{paymentId,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentIdOld != null">
+                #{paymentIdOld,jdbcType=VARCHAR},
+            </if>
+            <if test="payAmount != null">
+                #{payAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="settleCyc != null">
+                #{settleCyc,jdbcType=VARCHAR},
+            </if>
+            <if test="costWay != null">
+                #{costWay,jdbcType=VARCHAR},
+            </if>
+            <if test="transType != null">
+                #{transType,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCode != null">
+                #{bankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null">
+                #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSeq != null">
+                #{bankSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantName != null">
+                #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantType != null">
+                #{merchantType,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="currency != null">
+                #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="transNo != null">
+                #{transNo,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentid != null">
+                #{paymentid,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantOrderNo != null">
+                #{merchantOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="transNoOld != null">
+                #{transNoOld,jdbcType=VARCHAR},
+            </if>
+            <if test="requestAmount != null">
+                #{requestAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="fee != null">
+                #{fee,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=VARCHAR},
+            </if>
+            <if test="successTime != null">
+                #{successTime,jdbcType=VARCHAR},
+            </if>
+            <if test="feeWay != null">
+                #{feeWay,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="bankcardType != null">
+                #{bankcardType,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="field1 != null">
+                #{field1,jdbcType=VARCHAR},
+            </if>
+            <if test="field2 != null">
+                #{field2,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEntity" parameterType="ClearingException">
+        update clearing_exception
+        <set>
+            <if test="channelCode != null">
+                channel_code = #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentId != null">
+                payment_id = #{paymentId,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentIdOld != null">
+                payment_id_old = #{paymentIdOld,jdbcType=VARCHAR},
+            </if>
+            <if test="payAmount != null">
+                pay_amount = #{payAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="settleCyc != null">
+                settle_cyc = #{settleCyc,jdbcType=VARCHAR},
+            </if>
+            <if test="costWay != null">
+                cost_way = #{costWay,jdbcType=VARCHAR},
+            </if>
+            <if test="transType != null">
+                trans_type = #{transType,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCode != null">
+                bank_code = #{bankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName,jdbcType=VARCHAR},
+            </if>
+            <if test="bankSeq != null">
+                bank_seq = #{bankSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantName != null">
+                merchant_name = #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantType != null">
+                merchant_type = #{merchantType,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                product_code = #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="currency != null">
+                currency = #{currency,jdbcType=VARCHAR},
+            </if>
+            <if test="transNo != null">
+                trans_no = #{transNo,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentid != null">
+                paymentID = #{paymentid,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantOrderNo != null">
+                merchant_order_no = #{merchantOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="transNoOld != null">
+                trans_no_old = #{transNoOld,jdbcType=VARCHAR},
+            </if>
+            <if test="requestAmount != null">
+                request_amount = #{requestAmount,jdbcType=VARCHAR},
+            </if>
+            <if test="fee != null">
+                fee = #{fee,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=VARCHAR},
+            </if>
+            <if test="successTime != null">
+                success_time = #{successTime,jdbcType=VARCHAR},
+            </if>
+            <if test="feeWay != null">
+                fee_way = #{feeWay,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="bankcardType != null">
+                bankcard_type = #{bankcardType,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="field1 != null">
+                field1 = #{field1,jdbcType=VARCHAR},
+            </if>
+            <if test="field2 != null">
+                field2 = #{field2,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where clear_id = #{clearId,jdbcType=BIGINT}
+    </update>
+</mapper>

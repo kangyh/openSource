@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.reconciliation.dao.SettleDifferRecordHisDao" >
+
+ 	<sql id="settleDifferRecordHisColumns">
+		his_id, differ_id, merchant_id, payment_id, trans_no, channel_code, channel_name, 
+	    success_amount, request_amount, check_bath_no, settle_bath, channel_type, product_code, 
+	    product_name, channle_no, differ_type, handle_result, handle_message, error_date, 
+	    update_author, operation_date, fee_amount, cost_amount, settle_amount_plan, trans_type, 
+	    trans_status, is_bill, is_profit, merchant_order_no, success_time, pay_time, busi_time, 
+	    remark, is_zip, agent_name, agent_code, fee_way, bankcard_type, merchant_name, bank_seq, 
+	    bank_name, bank_code, channel_provider, pay_type, account_no, date_zip
+	</sql>
+	
+	<select id="findList" resultType="SettleDifferRecordHis">
+		SELECT 
+			<include refid="settleDifferRecordHisColumns"/>
+		FROM settle_differ_record_his a
+		 <where>
+			<!-- 差错日期 -->
+			<if test="beginErrorTime != null and endErrorTime != null">
+				AND a.error_date BETWEEN date_format(#{beginErrorTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endErrorTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			
+			
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			
+			<!-- 通道合作方-->
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<!-- 通道类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 交易类型 -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 差错类型 -->
+			<if test="differType != null and differType != ''">
+				AND a.differ_type = #{differType}
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!-- 汇付宝订单号 -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			<!-- 对账批次号 -->
+			<if test="checkBathNo != null and checkBathNo != ''">
+				AND a.check_bath_no = #{checkBathNo}
+			</if>
+			
+			<!-- 处理结果 -->
+			<if test="handleResult != null and handleResult != ''">
+				AND a.handle_result = #{handleResult}
+			</if>
+			
+			<!-- 处理意见 -->
+			<if test="handleMessage != null and handleMessage != ''">
+				AND a.handle_message LIKE '%${handleMessage}%'
+			</if> 
+			
+			<!-- 处理意见 2-->
+			<if test="handleMessage != null and handleMessage != '' and QXCY !=null and QXCY != '' ">
+				AND (a.handle_message LIKE '%${handleMessage}%' OR a.handle_message LIKE '%${QXCY}%')
+			</if> 
+			
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY his_id DESC , ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findListExcel" resultType="hashmap">
+		SELECT 
+			<include refid="settleDifferRecordHisColumns"/>
+		FROM settle_differ_record_his a
+		<where>
+				<!-- 差错日期 -->
+			<if test="beginErrorTime != null and endErrorTime != null">
+				AND a.error_date BETWEEN date_format(#{beginErrorTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endErrorTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 通道名称 -->
+			<if test="channelName != null and channelName != ''">
+				AND a.channel_name LIKE #{channelName}
+			</if>
+			<!-- 通道类型 -->
+			<if test="channelType != null and channelType != ''">
+				AND a.channel_type = #{channelType}
+			</if>
+			<!-- 交易类型 -->
+			<if test="transType != null and transType != ''">
+				AND a.trans_type = #{transType}
+			</if>
+			<!-- 差错类型 -->
+			<if test="differType != null and differType != ''">
+				AND a.differ_type = #{differType}
+			</if>
+			<!-- 支付单号-->
+			<if test="paymentId != null and paymentId != ''">
+				AND a.payment_id = #{paymentId}
+			</if>
+			<!-- 对账批次号 -->
+			<if test="checkBathNo != null and checkBathNo != ''">
+				AND a.check_bath_no = #{checkBathNo}
+			</if>
+			
+			<!-- 汇付宝订单号 -->
+			<if test="transNo != null and transNo != ''">
+				AND a.trans_no = #{transNo}
+			</if>
+			
+			<!-- 处理结果 -->
+			<if test="handleResult != null and handleResult != ''">
+				AND a.handle_result = #{handleResult}
+			</if>
+			
+			<!-- 处理意见 -->
+			<if test="handleMessage != null and handleMessage != ''">
+				AND a.handle_message LIKE '%${handleMessage}%'
+			</if> 
+			
+			<!-- 处理意见 2-->
+			<if test="handleMessage != null and handleMessage != '' and QXCY !=null and QXCY != '' ">
+				AND a.handle_message LIKE '%${handleMessage}%' OR a.handle_message LIKE '%${QXCY}%'
+			</if> 
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY his_id DESC , ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY his_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getTransTypeByTransNo" resultType="SettleDifferRecordHis">
+		SELECT 
+ 			DISTINCT trans_type
+		FROM settle_differ_record_his
+		WHERE trans_no=#{transNo}
+	</select>
+</mapper>

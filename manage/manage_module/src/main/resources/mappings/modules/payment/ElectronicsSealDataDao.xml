@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.payment.dao.ElectronicsSealDataDao">
+    
+	<sql id="electronicsSealDataColumns">
+		a.id AS "id",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.seal_account_id AS "sealAccountId",
+		a.seal_type AS "sealType",
+		a.seal_data AS "sealData",
+		a.create_time AS "createTime",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="electronicsSealDataJoins">
+	</sql>
+    
+	<select id="get" resultType="ElectronicsSealData">
+		SELECT 
+			<include refid="electronicsSealDataColumns"/>
+		FROM electronics_seal_data a
+		<include refid="electronicsSealDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ElectronicsSealData">
+		SELECT 
+			<include refid="electronicsSealDataColumns"/>
+		FROM electronics_seal_data a
+		<include refid="electronicsSealDataJoins"/>
+		<where>
+			
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="merchantName != null and merchantName != ''">
+				AND a.merchant_name = #{merchantName}
+			</if>
+			<if test="sealAccountId != null and sealAccountId != ''">
+				AND a.seal_account_id = #{sealAccountId}
+			</if>
+			<if test="sealType != null and sealType != ''">
+				AND a.seal_type = #{sealType}
+			</if>
+			<if test="sealData != null and sealData != ''">
+				AND a.seal_data = #{sealData}
+			</if>
+			<if test="beginCreateTime != null and endCreateTime != null and beginCreateTime != '' and endCreateTime != ''">
+				AND a.create_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ElectronicsSealData">
+		SELECT 
+			<include refid="electronicsSealDataColumns"/>
+		FROM electronics_seal_data a
+		<include refid="electronicsSealDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO electronics_seal_data(
+			id,
+			merchant_id,
+			merchant_name,
+			seal_account_id,
+			seal_type,
+			seal_data,
+			create_time,
+			remark
+		) VALUES (
+			#{id},
+			#{merchantId},
+			#{merchantName},
+			#{sealAccountId},
+			#{sealType},
+			#{sealData},
+			#{createTime},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE electronics_seal_data SET 	
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			seal_account_id = #{sealAccountId},
+			seal_type = #{sealType},
+			seal_data = #{sealData},
+			create_time = #{createTime},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM electronics_seal_data
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

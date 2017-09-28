@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.BankInfoDao">
+    
+	<sql id="bankInfoColumns">
+		a.id AS "id",
+		a.bank_no AS "bankNo",
+		a.bank_name AS "bankName",
+		a.bank_code AS "bankCode",
+		a.status AS "status",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="bankInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="BankInfo">
+		SELECT 
+			<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		<include refid="bankInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BankInfo">
+		SELECT 
+			<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		<include refid="bankInfoJoins"/>
+		<where>			
+			<if test="bankNo != null and bankNo !=''">
+				AND a.bank_no LIKE 
+					<if test="dbName == 'oracle'">'%'||#{bankNo}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bankNo}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bankNo},'%')</if>
+			</if>
+			<if test="bankName != null and bankName !=''">
+			    AND a.bank_name LIKE 
+			        <if test="dbName == 'oracle'">'%'||#{bankName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bankName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bankName},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectList" resultType="BankInfo">
+	    SELECT 
+			<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+     <include refid="bankInfoJoins"/>
+     where status = 'ENABLE'
+     order by bank_no
+   </select>
+  <!-- 根据银行代码/银行名称/银行简称查询信息 -->
+   <select id="selectByBankN" resultType="BankInfo" >
+        SELECT 
+	    <include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		<include refid="bankInfoJoins"/>
+	   where bank_no = #{bankNo,jdbcType=INTEGER}
+	   OR bank_name = #{bankName,jdbcType=INTEGER}
+	   <if test="bankCode != null and bankCode!= ''">
+		   OR bank_code = #{bankCode,jdbcType=INTEGER}
+	   </if>
+        
+    </select>	
+    
+	<select id="findAllList" resultType="BankInfo">
+		SELECT 
+			<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		<include refid="bankInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert"  parameterType="BankInfo">
+		INSERT INTO route_bank_info
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bankNo != null" >
+				bank_no,
+			</if>
+			<if test="bankName != null" >
+				bank_name,
+			</if>
+			<if test="bankCode != null" >
+				bank_code,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+			<if test="remark != null" >
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bankNo != null" >
+				#{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="bankName != null" >
+				#{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankCode != null" >
+				#{bankCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="BankInfo" >
+		UPDATE route_bank_info
+		<set >
+			<if test="bankCode != null" >
+				bank_code = #{bankCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null" >
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			update_time = now()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="status" parameterType="BankInfo">
+		UPDATE route_bank_info SET
+		status = #{status},
+		update_user = #{updateBy.id,jdbcType=INTEGER},
+		update_time = now()
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据 银行代码查询银行名称L -->
+   <select id="getBankNameByBankNo" resultType="BankInfo" >
+        SELECT 
+	    <include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+        where bank_no = #{bankNo,jdbcType=INTEGER}
+    </select>
+
+	<!-- 根据 银行名称查询银行代码 -->
+	<select id="getBankByBankName" resultType="BankInfo" >
+		SELECT
+		<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		where bank_name = #{bankName}
+	</select>
+
+	<!-- 根据 银行代码查询银行名称w -->
+	<select id="getBankNameForList" resultType="BankInfo" >
+		SELECT
+		<include refid="bankInfoColumns"/>
+		FROM route_bank_info a
+		where bank_no in
+		<foreach collection="list" item="bankNo" open="(" close=")" separator=",">
+			#{bankNo}
+		</foreach>
+	</select>
+</mapper>

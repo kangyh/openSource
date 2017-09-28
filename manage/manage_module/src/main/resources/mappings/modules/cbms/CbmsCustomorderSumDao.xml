@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsCustomorderSumDao">
+    
+	<sql id="cbmsCustomorderSumColumns">
+		a.order_input_id AS "orderInputId",
+		a.merchant_no AS "merchantNo",
+		a.cbms_company_name AS "cbmsCompanyName",
+		a.import_batch_number AS "importBatchNumber",
+		a.import_time AS "importTime",
+		a.declaration_batch_humber AS "declarationBatchHumber",
+		a.declaration_time AS "declarationTime",
+		a.custom_code AS "customCode",
+		a.declaration_number AS "declarationNumber",
+		a.declaration_money AS "declarationMoney",
+		a.re_load_number AS "reLoadNumber",
+		a.new_number AS "newNumber",
+		a.rec_amount AS "recAmount",
+		a.fee AS "fee",
+		a.status AS "status",
+		a.comments AS "comments",
+		a.declare_type AS "declareType"
+	</sql>
+	
+	<sql id="cbmsCustomorderSumJoins">
+	</sql>
+
+	<select id="get" resultType="CbmsCustomorderSum">
+		SELECT 
+			<include refid="cbmsCustomorderSumColumns"/>
+		FROM cbms_customorder_sum a
+		<include refid="cbmsCustomorderSumJoins"/>
+		WHERE a.merchant_no = #{id}
+	</select>
+	<!-- 添加时间修改 -->
+	<select id="findList" resultType="CbmsCustomorderSum">
+		SELECT 
+			<include refid="cbmsCustomorderSumColumns"/>
+		FROM cbms_customorder_sum a
+		<include refid="cbmsCustomorderSumJoins"/>
+		<where>
+			<if test="declareType != null and declareType != ''">
+				AND a.declare_type = #{declareType}
+			</if>
+			<if test="merchantNo != null and merchantNo != ''">
+				AND a.merchant_no = #{merchantNo}
+			</if>
+			<if test="importBatchNumber != null and importBatchNumber != ''">
+				AND a.import_batch_number = #{importBatchNumber}
+			</if>
+			<if test="declarationBatchHumber != null and declarationBatchHumber != ''">
+				AND a.declaration_batch_humber = #{declarationBatchHumber}
+			</if>
+			<choose>
+				<when test="beginDeclarationTime != null and endDeclarationTime != null ">
+					AND a.declaration_time BETWEEN #{beginDeclarationTime} AND #{endDeclarationTime}
+				</when>
+				<when test="beginDeclarationTime != null and endDeclarationTime == null">
+					AND a.declaration_time &gt; #{beginDeclarationTime}
+				</when>
+				<when test="beginDeclarationTime == null and endDeclarationTime != null">
+					AND a.declaration_time &lt; #{endDeclarationTime}
+				</when>
+			</choose>
+			<if test="customCode != null and customCode != ''">
+				AND a.custom_code = #{customCode}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy},
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY a.declaration_time DESC
+	</select>
+	
+	<select id="findAllList" resultType="CbmsCustomorderSum">
+		SELECT 
+			<include refid="cbmsCustomorderSumColumns"/>
+		FROM cbms_customorder_sum a
+		<include refid="cbmsCustomorderSumJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_customorder_sum(
+			order_input_id,
+			merchant_no,
+			cbms_company_name,
+			import_batch_number,
+			import_time,
+			declaration_batch_humber,
+			declaration_time,
+			custom_code,
+			declaration_number,
+			declaration_money,
+			re_load_number,
+			new_number,
+			rec_amount,
+			fee,
+			status,
+			comments,
+			declare_type,
+			merchant_batch_no,
+			notify_url
+		) VALUES (
+			#{orderInputId},
+			#{merchantNo},
+			#{cbmsCompanyName},
+			#{importBatchNumber},
+			#{importTime},
+			#{declarationBatchHumber},
+			#{declarationTime},
+			#{customCode},
+			#{declarationNumber},
+			#{declarationMoney},
+			#{reLoadNumber},
+			#{newNumber},
+			#{recAmount},
+			#{fee},
+			#{status},
+			#{comments},
+			#{declareType},
+			#{merchantBatchNo},
+			#{notifyUrl}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_customorder_sum SET 	
+			order_input_id = #{orderInputId},
+			merchant_no = #{merchantNo},
+			cbms_company_name = #{cbmsCompanyName},
+			import_batch_number = #{importBatchNumber},
+			import_time = #{importTime},
+			declaration_batch_humber = #{declarationBatchHumber},
+			declaration_time = #{declarationTime},
+			custom_code = #{customCode},
+			declaration_number = #{declarationNumber},
+			declaration_money = #{declarationMoney},
+			re_load_number = #{reLoadNumber},
+			new_number = #{newNumber},
+			rec_amount = #{recAmount},
+			fee = #{fee},
+			status = #{status},
+			comments = #{comments}
+		WHERE merchant_no = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_customorder_sum
+		WHERE merchant_no = #{id}
+	</update>
+    <select id="getCusdeclarationResult"  resultType="com.heepay.manage.modules.cbms.entity.CusdeclarationResult" parameterType="com.heepay.manage.modules.cbms.entity.CustdeclarationQuery">
+        select
+		SUM(1) as declarationNumberCount,
+		SUM(CASE WHEN custom_status='3' THEN 1 ELSE 0 end) AS declarationNumberSuccess,
+		SUM(CASE WHEN custom_status='4' THEN 1 ELSE 0 end) AS declarationNumberFailed,
+		SUM(rmb_pay_amount) AS declarationMoneyCount,
+		SUM(CASE WHEN custom_status='3' THEN rmb_pay_amount ELSE 0 end) AS declarationMoneySuccess,
+		SUM(CASE WHEN custom_status='4' THEN rmb_pay_amount ELSE 0 end) AS declarationMoneyFailed,
+		SUM(charge_amount) AS feeCount
+        from
+		cbms_orderform
+		WHERE  sent_customs_number IS NOT NULL AND sent_customs_number IN(
+		select a.declaration_batch_humber AS declaration_batch_humber from cbms_customorder_sum a
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+
+			<if test="declareType != null">
+				AND a.declare_type = #{declareType}
+			</if>
+            <if test="merchantNo != null">
+                AND a.merchant_no = #{merchantNo}
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+            <if test="importBatchNumber != null">
+                AND a.import_batch_number = #{importBatchNumber}
+            </if>
+            <if test="declarationBatchHumber != null">
+                AND a.declaration_batch_humber = #{declarationBatchHumber}
+            </if>
+            <if test="declarationTimeStart != null">
+                AND a.declaration_time &gt;= date_format(#{declarationTimeStart},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="declarationTimeEnd != null">
+                AND a.declaration_time &lt;= date_format(#{declarationTimeEnd},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="customCode != null">
+                AND a.custom_code = #{customCode}
+            </if>
+        </trim>
+		)
+    </select>
+	<!-- 根据merchantNo获取CbmsCustomorderSum -->
+    <select id="selectList" resultType="CbmsCustomorderSum">
+        SELECT
+        <include refid="cbmsCustomorderSumColumns"/>
+        FROM cbms_customorder_sum a
+        <include refid="cbmsCustomorderSumJoins"/>
+        WHERE a.merchant_no = #{merchantNo}
+    </select>
+</mapper>

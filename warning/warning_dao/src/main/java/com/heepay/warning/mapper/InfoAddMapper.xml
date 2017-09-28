@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.warning.dao.InfoAddMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.warning.entity.InfoAdd" >
+    <id column="add_id" property="addId" jdbcType="INTEGER" />
+    <result column="msg_id" property="msgId" jdbcType="INTEGER" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.heepay.warning.entity.InfoAdd" >
+    insert into info_add
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addId != null" >
+        add_id,
+      </if>
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addId != null" >
+        #{addId,jdbcType=INTEGER},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="getByMsgId" parameterType="java.lang.Integer" resultType="com.heepay.warning.entity.InfoAdd" >
+    select  add_id,msg_id,file_path from info_add where msg_id=#{msgId,jdbcType=INTEGER}
+   
+  </select>
+</mapper>

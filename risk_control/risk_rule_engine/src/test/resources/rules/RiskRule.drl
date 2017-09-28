@@ -1,0 +1,21 @@
+package com.heepay.engine.entity
+ 
+
+rule "Hello World"
+    when
+       
+    then
+        System.out.println( "hello" );
+        //m.setMessage( "Goodbye cruel world" );
+       // m.setStatus( Message.GOODBYE );
+       // update( m );
+end
+
+rule "GoodBye"
+    when
+       
+    then
+        System.out.println( "hello" );
+end
+
+

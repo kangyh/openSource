@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.risk.dao.RiskRulelistMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.risk.entity.RiskRulelist" >
+    <id column="rulelist_id" property="rulelistId" jdbcType="INTEGER" />
+    <result column="rule_type" property="ruleType" jdbcType="VARCHAR" />
+    <result column="monitor_object" property="monitorObject" jdbcType="VARCHAR" />
+    <result column="buzi_type" property="buziType" jdbcType="VARCHAR" />
+    <result column="rule_id" property="ruleId" jdbcType="VARCHAR" />
+    <result column="rule_description" property="ruleDescription" jdbcType="VARCHAR" />
+    <result column="risk_control_action" property="riskControlAction" jdbcType="VARCHAR" />
+    <result column="risk_control_fact" property="riskControlFact" jdbcType="VARCHAR" />
+    <result column="other_item" property="otherItem" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from risk_rulelist
+    where rulelist_id = #{rulelistId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.heepay.risk.entity.RiskRulelist" >
+    insert into risk_rulelist (rulelist_id, rule_type, monitor_object, 
+      buzi_type, rule_id, rule_description, 
+      risk_control_action, risk_control_fact, other_item, 
+      create_time,status,operator)
+    values (#{rulelistId,jdbcType=INTEGER}, #{ruleType,jdbcType=VARCHAR}, #{monitorObject,jdbcType=VARCHAR}, 
+      #{buziType,jdbcType=VARCHAR}, #{ruleId,jdbcType=VARCHAR}, #{ruleDescription,jdbcType=VARCHAR}, 
+      #{riskControlAction,jdbcType=VARCHAR}, #{riskControlFact,jdbcType=VARCHAR}, #{otherItem,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR} )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.risk.entity.RiskRulelist" >
+    update risk_rulelist
+    set rule_type = #{ruleType,jdbcType=VARCHAR},
+      monitor_object = #{monitorObject,jdbcType=VARCHAR},
+      buzi_type = #{buziType,jdbcType=VARCHAR},
+      rule_id = #{ruleId,jdbcType=VARCHAR},
+      rule_description = #{ruleDescription,jdbcType=VARCHAR},
+      risk_control_action = #{riskControlAction,jdbcType=VARCHAR},
+      risk_control_fact = #{riskControlFact,jdbcType=VARCHAR},
+      other_item = #{otherItem,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR}
+    where rulelist_id = #{rulelistId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select rulelist_id, rule_type, monitor_object, buzi_type, rule_id, rule_description, 
+    risk_control_action, risk_control_fact, other_item, create_time,status,operator
+    from risk_rulelist
+    where rulelist_id = #{rulelistId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select rulelist_id, rule_type, monitor_object, buzi_type, rule_id, rule_description, 
+    risk_control_action, risk_control_fact, other_item, create_time,status,operator
+    from risk_rulelist
+  </select>
+    <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.heepay.risk.entity.RiskRulelist" >
+    select rulelist_id, rule_type, monitor_object, buzi_type, rule_id, rule_description, 
+    risk_control_action, risk_control_fact, other_item, create_time,status ,operator
+    from risk_rulelist 
+    <where>
+			<if test="rulelistId != null ">
+				AND rulelist_id = #{rulelistId,jdbcType=INTEGER}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="ruleId != null and ruleId != ''">
+				AND rule_id = #{ruleId}
+			</if>
+			<if test="monitorObject != null and monitorObject != ''">
+				AND monitor_object = #{monitorObject}
+			</if>
+		</where>
+  </select>
+  <!-- 更新 -->
+  <update id="update" parameterType="com.heepay.risk.entity.RiskRulelist" >
+    update risk_rulelist
+    <set >
+      <if test="rulelistId != null" >
+        rulelist_id = #{rulelistId,jdbcType=INTEGER},
+      </if>
+      <if test="ruleType != null" >
+        rule_type = #{ruleType,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorObject != null" >
+        monitor_object = #{monitorObject,jdbcType=VARCHAR},
+      </if>
+      <if test="buziType != null" >
+        buzi_type = #{buziType,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleDescription != null" >
+        rule_description = #{ruleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="riskControlAction != null" >
+        risk_control_action = #{riskControlAction,jdbcType=VARCHAR},
+      </if>
+       <if test="riskControlFact != null" >
+        risk_control_fact = #{riskControlFact,jdbcType=VARCHAR},
+      </if>
+       <if test="otherItem != null" >
+        other_item = #{otherItem,jdbcType=VARCHAR},
+      </if>
+       <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+    </set>
+      where rulelist_id = #{rulelistId,jdbcType=INTEGER}
+  </update>
+</mapper>

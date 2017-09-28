@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.route.dao.LineBankNumberDao">
+    
+	<sql id="lineBankNumberColumns">
+		a.id AS "id",
+		a.bank_name AS "bankName",
+		a.bank_no AS "bankNo",
+		a.province_name AS "provinceName",
+		a.province_code AS "provinceCode",
+		a.city_name AS "cityName",
+		a.city_code AS "cityCode",
+		a.open_bank_name AS "openBankName",
+		a.open_bank_code AS "openBankCode",
+		a.associate_line_number AS "associateLineNumber",
+		a.status AS "status",
+		a.source AS "source",
+		a.create_time AS "createDate",
+		a.create_user AS "createBy.id",
+		a.update_time AS "updateDate",
+		a.update_user AS "updateBy.id"
+	</sql>
+	
+	<sql id="lineBankNumberJoins">
+	</sql>
+	
+	<select id="findListBank" resultType="LineBankNumber">
+		SELECT 
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		WHERE a.city_code = #{area_code} AND a.bank_no = #{bank_no}
+	</select>
+	<select id="findListByAreaname" resultType="LineBankNumber">
+		SELECT 
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		<where>
+			a.city_name LIKE concat('%',#{city_name},'%') AND a.bank_no = #{bank_no} AND a.open_bank_name = #{open_bank_name}
+		</where> 
+	</select>
+    
+	<select id="get" resultType="LineBankNumber">
+		SELECT 
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="LineBankNumber">
+		SELECT 
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		<where>
+			
+			<if test="bankNo != null and bankNo != ''">
+				AND a.bank_no = #{bankNo}
+			</if>
+			<if test="provinceCode != null and provinceCode != ''">
+				AND a.province_code = #{provinceCode}
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				AND a.city_code = #{cityCode}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LineBankNumber">
+		SELECT 
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据联行号查询信息 -->
+   <select id="selectByLineNumber" resultType="LineBankNumber" >
+        SELECT 
+	    <include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+        where associate_line_number = #{associateLineNumber}       
+    </select>	
+	
+	<insert id="insert"  parameterType="LineBankNumber" >
+		INSERT INTO line_bank_number
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bankName != null" >
+				bank_name,
+			</if>
+			<if test="bankNo != null" >
+				bank_no,
+			</if>
+			<if test="provinceName != null" >
+				province_name,
+			</if>
+			<if test="provinceCode != null" >
+				province_code,
+			</if>
+			<if test="cityName != null" >
+				city_name,
+			</if>
+			<if test="cityCode != null" >
+				city_code,
+			</if>
+			<if test="openBankName != null" >
+				open_bank_name,
+			</if>
+			<if test="openBankCode != null" >
+				open_bank_code,
+			</if>
+			<if test="associateLineNumber != null" >
+				associate_line_number,
+			</if>
+			<if test="status != null" >
+				status,
+			</if>
+			<if test="createDate != null" >
+				create_time,
+			</if>
+			<if test="createBy.id != null" >
+				create_user,
+			</if>
+			<if test="updateDate != null" >
+				update_time,
+			</if>
+			<if test="updateBy.id != null" >
+				update_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bankName != null" >
+				#{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null" >
+				#{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="provinceName != null" >
+				#{provinceName,jdbcType=VARCHAR},
+			</if>
+			<if test="provinceCode != null" >
+				#{provinceCode,jdbcType=CHAR},
+			</if>
+			<if test="cityName != null" >
+				#{cityName,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null" >
+				#{cityCode,jdbcType=CHAR},
+			</if>
+			<if test="openBankName != null" >
+				#{openBankName,jdbcType=VARCHAR},
+			</if>
+			<if test="openBankCode != null" >
+				#{openBankCode,jdbcType=CHAR},
+			</if>
+			<if test="associateLineNumber != null" >
+				#{associateLineNumber,jdbcType=CHAR},
+			</if>
+			<if test="status != null" >
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null" >
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy.id != null" >
+				#{createBy.id,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null" >
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy.id != null" >
+				#{updateBy.id,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="LineBankNumber">
+		UPDATE line_bank_number
+		<set >
+			<if test="bankName != null" >
+				bank_name = #{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankNo != null" >
+				bank_no = #{bankNo,jdbcType=CHAR},
+			</if>
+			<if test="provinceName != null" >
+				province_name = #{provinceName,jdbcType=VARCHAR},
+			</if>
+			<if test="provinceCode != null" >
+				province_code = #{provinceCode,jdbcType=CHAR},
+			</if>
+			<if test="cityName != null" >
+				city_name = #{cityName,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null" >
+				city_code = #{cityCode,jdbcType=CHAR},
+			</if>
+			<if test="openBankName != null" >
+				open_bank_name = #{openBankName,jdbcType=VARCHAR},
+			</if>
+			<if test="openBankCode != null" >
+				open_bank_code = #{openBankCode,jdbcType=CHAR},
+			</if>
+			<if test="associateLineNumber != null" >
+				associate_line_number = #{associateLineNumber,jdbcType=CHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="updateBy.id != null" >
+				update_user = #{updateBy.id,jdbcType=INTEGER},
+			</if>
+			update_time =now()
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="status">
+		UPDATE line_bank_number SET
+		status = #{status},
+		update_user = #{updateBy.id,jdbcType=INTEGER},
+		update_time = now()
+		WHERE id = #{id}
+	</update>
+
+	<select id="getNetLineNumber" resultType="LineBankNumber">
+		SELECT
+		<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		<where>
+			a.city_name LIKE concat('%',#{cityName},'%')
+			AND a.bank_no = #{bankNo}
+			AND a.province_name LIKE concat('%',#{provinceName},'%')
+			AND a.source = #{source}
+		</where>
+	</select>
+
+	<select id="findAreacodeList" resultType="com.heepay.manage.modules.route.entity.Areacode">
+		SELECT
+			a.city_code AS "areaCode",
+			a.city_name AS "areaName",
+			a.province_code AS "provinceCode",
+			a.province_name AS "provinceName"
+		FROM line_bank_number a
+		Where a.source = #{source};
+	</select>
+
+
+	<select id="findLineNumberList" resultType="LineBankNumber">
+		SELECT
+			<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		<include refid="lineBankNumberJoins"/>
+		<where>
+			<if test="bankNo != null and bankNo != ''">
+				AND a.bank_no = #{bankNo}
+			</if>
+			<if test="bankName != null and bankName != ''">
+				AND a.open_bank_name LIKE concat('%',#{bankName},'%')
+			</if>
+			<if test="provinceCode != null and provinceCode != ''">
+				AND a.province_code = #{provinceCode}
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				AND a.city_code = #{cityCode}
+			</if>
+		</where>
+	</select>
+
+	<!--根据联行号查询省份-->
+	<select id="selectProvince" resultType="LineBankNumber">
+		SELECT
+		<include refid="lineBankNumberColumns"/>
+		FROM line_bank_number a
+		WHERE a.associate_line_number = #{associateLineNumber}
+	</select>
+
+</mapper>

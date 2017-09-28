@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+	<!-- parent -->
+	<parent>
+	  <groupId>com.heepay.tpds</groupId>
+		<artifactId>tpds_parent</artifactId>
+	  <version>1.0-SNAPSHOT</version>
+	  <relativePath>../tpds_parent</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.heepay</groupId>
+	<artifactId>tpds_common</artifactId>
+	
+	<packaging>jar</packaging>
+
+	<dependencies>
+	   <dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+	   </dependency>
+	   <dependency>
+		  <groupId>com.heepay</groupId>
+		  <artifactId>ngp_common</artifactId>
+		  <version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-jar-plugin</artifactId>
+		  <version>2.7-SNAPSHOT</version>
+		</dependency>
+			<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20140107</version>
+		</dependency>
+	</dependencies>
+
+</project>

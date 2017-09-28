@@ -1,0 +1,173 @@
+package com.heepay.engine.entity
+import com.heepay.engine.entity.RegisterAndLoginFact
+import com.heepay.enums.InterfaceStatus;
+import org.apache.logging.log4j.Logger;
+import com.heepay.risk.util.OtherRiskUtil;
+import com.heepay.enums.risk.ProductQuotaType;
+import com.heepay.enums.risk.QuotaType;
+import java.math.BigDecimal
+import com.heepay.risk.cache.RuleRedisCache
+import com.heepay.risk.common.Constants
+import com.heepay.enums.risk.RegLoginType;
+import com.heepay.enums.risk.MonitorObject;
+
+function boolean isLoginBlack(String cacheKey)//判断企业黑名单
+{
+	OtherRiskUtil.riskRuleEngineLoggerInfo(cacheKey);
+	return RuleRedisCache.isRuleExists(cacheKey);
+}
+function boolean isPcacBlack(String cacheKey) {//判断清算协会黑名单
+	OtherRiskUtil.riskRuleEngineLoggerInfo(cacheKey);
+	return RuleRedisCache.isRuleExists(cacheKey);
+}
+rule "Commercial_Registration_01010101" //
+activation-group "MerchantRegLogin"
+no-loop true
+salience 10000
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01010101", MonitorObject.MERCHANT.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Commercial_Registration_01010101 begin");
+         //loginblackList 公司名称/营业执照编号/法定代表人身份证号
+       if(  RegLoginType.MER_REG.getValue().equals( registerAndLoginFact.getRegLoginType()  ) &&RuleRedisCache.getRegisterAndLoginCache(registerAndLoginFact.getCompanyName(),registerAndLoginFact.getBuziCode(),registerAndLoginFact.getOwnerId())!=null )
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.RISK_BLACK); //工商注册企业黑名单
+   			registerAndLoginFact.setRuleId("01010101");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-企业黑名单:"+registerAndLoginFact.getCompanyName()+","+
+   			registerAndLoginFact.getBuziCode()+","+registerAndLoginFact.getOwnerName()+","+registerAndLoginFact.getOwnerId()+"-阻断");
+            drools.halt();
+        }
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+           OtherRiskUtil.riskRuleEngineLoggerInfo("商户注册登录规则-放行");
+        }               
+end
+
+rule "Commercial_Registration_01010102" //
+activation-group "MerchantRegLogin"
+no-loop true
+salience 9800
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01010102", MonitorObject.MERCHANT.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Commercial_Registration_01010102 begin");
+         //商户名称黑名单
+       if(isPcacBlack(Constants.getPcacMerchantNameRiskLoginBlackKey(registerAndLoginFact.getCompanyName())))
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.RISK_BLACK); //清算协会推送企业黑名单
+   			registerAndLoginFact.setRuleId("01010102");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-协会企业黑名单:"+registerAndLoginFact.getCompanyName()+"-阻断");
+            drools.halt();
+        }
+        //营业执照黑名单
+        else if(isPcacBlack(Constants.getPcacBuziCodeRiskLoginBlackKey(registerAndLoginFact.getBuziCode())))
+        {
+             registerAndLoginFact.setMessage(InterfaceStatus.RISK_BLACK); //清算协会推送企业黑名单
+             registerAndLoginFact.setRuleId("01010102");
+             OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-协会企业黑名单:"+registerAndLoginFact.getCompanyName()+"-阻断");
+             drools.halt();
+        }
+        //身份证号黑名单
+        else if(isPcacBlack(Constants.getPcacOwenerIdRiskLoginBlackKey(registerAndLoginFact.getOwnerId())))
+        {
+              registerAndLoginFact.setMessage(InterfaceStatus.RISK_BLACK); //清算协会推送企业黑名单
+              registerAndLoginFact.setRuleId("01010102");
+              OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-协会企业黑名单:"+registerAndLoginFact.getCompanyName()+"-阻断");
+              drools.halt();
+        }
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+           OtherRiskUtil.riskRuleEngineLoggerInfo("商户注册登录规则-放行");
+        }               
+end
+
+rule "Commercial_Registration_01010103" //
+activation-group "MerchantRegLogin"
+no-loop true
+salience 9700
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01010103", MonitorObject.MERCHANT.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Commercial_Registration_01010103 begin");
+         //
+       if( registerAndLoginFact.isForeignIp()&&  RegLoginType.MER_REG.getValue().equals(registerAndLoginFact.getRegLoginType()))
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.RISK_FOREIGN_IP); //境外IP
+   			registerAndLoginFact.setRuleId("01010103");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-企业注册境外IP:"+registerAndLoginFact.getIp()+"-阻断");
+            drools.halt();
+        } 
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+           OtherRiskUtil.riskRuleEngineLoggerInfo("商户注册登录规则-放行");
+        }               
+end
+
+rule "Commercial_Registration_01010104" //
+activation-group "MerchantRegLogin"
+no-loop true
+salience 9600
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01010104", MonitorObject.MERCHANT.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Commercial_Registration_01010104 begin");
+         //
+       if( registerAndLoginFact.isForeignIp()&&RegLoginType.MER_LOGIN_BACK.getValue().equals(registerAndLoginFact.getRegLoginType()))
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.RISK_FOREIGN_IP); //境外IP
+   			registerAndLoginFact.setRuleId("01010104");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反登录注册规则-企业后台登录境外IP:"+registerAndLoginFact.getIp()+"-阻断");
+            drools.halt();
+        } 
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+           OtherRiskUtil.riskRuleEngineLoggerInfo("商户注册登录规则-放行");
+        }               
+end
+
+rule "Person_RegLogin_01020103" //用户后台登录
+activation-group "PersonRegLogin"
+no-loop true
+salience 9800
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01020103", MonitorObject.USER.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Person_RegLogin_01020103 begin");
+         //预警境外用户后台登录
+       if( registerAndLoginFact.isForeignIp()&&RegLoginType.USER_LOGIN_BACK.getValue().equals(registerAndLoginFact.getRegLoginType()))
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS); //境外IP
+   			registerAndLoginFact.setRuleId("01020103");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反用户登录注册规则-用户后台登录境外IP:"+registerAndLoginFact.getIp()+"-预警");
+        }
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+        }
+end
+
+rule "Person_RegLogin_01020102" //用户钱包注册
+activation-group "PersonRegLogin"
+no-loop true
+salience 9800
+    when
+      	registerAndLoginFact:RegisterAndLoginFact( RuleRedisCache.isExistEnableRule( "01020102", MonitorObject.USER.getValue() )==true )     	
+    then
+         OtherRiskUtil.riskRuleEngineLoggerInfo("Person_RegLogin_01020102 begin");
+         //阻断境外ip 用户注册
+       if( registerAndLoginFact.isForeignIp()&&RegLoginType.USER_REG.getValue().equals(registerAndLoginFact.getRegLoginType()))
+        {
+            registerAndLoginFact.setMessage(InterfaceStatus.RISK_FOREIGN_IP); //境外IP
+   			registerAndLoginFact.setRuleId("01020102");
+   			OtherRiskUtil.riskRuleEngineLoggerInfo("违反用户登录注册规则-用户注册境外IP:"+registerAndLoginFact.getIp()+"-阻断");
+            drools.halt();
+        } 
+        else 
+        {
+           registerAndLoginFact.setMessage(InterfaceStatus.SUCCESS);
+        }
+end

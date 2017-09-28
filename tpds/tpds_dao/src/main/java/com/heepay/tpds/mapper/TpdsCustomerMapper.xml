@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.tpds.dao.TpdsCustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.heepay.tpds.entity.TpdsCustomer" >
+    <id column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="customer_no" property="customerNo" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="CHAR" />
+    <result column="role" property="role" jdbcType="CHAR" />
+    <result column="cert_type" property="certType" jdbcType="VARCHAR" />
+    <result column="bind_flag" property="bindFlag" jdbcType="CHAR" />
+    <result column="use_name" property="useName" jdbcType="VARCHAR" />
+    <result column="cert_no" property="certNo" jdbcType="VARCHAR" />
+    <result column="cert_fimage" property="certFimage" jdbcType="VARCHAR" />
+    <result column="cert_bimage" property="certBimage" jdbcType="CHAR" />
+    <result column="cert_info" property="certInfo" jdbcType="VARCHAR" />
+    <result column="vali_date" property="valiDate" jdbcType="VARCHAR" />
+    <result column="exp_date" property="expDate" jdbcType="VARCHAR" />
+    <result column="job_type" property="jobType" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="post_code" property="postCode" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="national" property="national" jdbcType="VARCHAR" />
+    <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="busiLice_no" property="busiliceNo" jdbcType="VARCHAR" />
+    <result column="busiLice_dir" property="busiliceDir" jdbcType="VARCHAR" />
+    <result column="orgCode_no" property="orgcodeNo" jdbcType="VARCHAR" />
+    <result column="orgCode_dir" property="orgcodeDir" jdbcType="VARCHAR" />
+    <result column="taxregis_no" property="taxregisNo" jdbcType="VARCHAR" />
+    <result column="taxregis_dir" property="taxregisDir" jdbcType="VARCHAR" />
+    <result column="unisoccre_code" property="unisoccreCode" jdbcType="VARCHAR" />
+    <result column="unisoccre_dir" property="unisoccreDir" jdbcType="VARCHAR" />
+    <result column="bind_type" property="bindType" jdbcType="VARCHAR" />
+    <result column="acc_type" property="accType" jdbcType="VARCHAR" />
+    <result column="oldbankaccount_no" property="oldbankaccountNo" jdbcType="VARCHAR" />
+    <result column="bankaccount_no" property="bankaccountNo" jdbcType="CHAR" />
+    <result column="bankaccount_name" property="bankaccountName" jdbcType="VARCHAR" />
+    <result column="bankaccount_telno" property="bankaccountTelno" jdbcType="VARCHAR" />
+    <result column="acc_no" property="accNo" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    customer_id, customer_no, type, role, cert_type, bind_flag, use_name, cert_no, cert_fimage, 
+    cert_bimage, cert_info, vali_date, exp_date, job_type, job, post_code, address, national, 
+    phone_no, busiLice_no, busiLice_dir, orgCode_no, orgCode_dir, taxregis_no, taxregis_dir, 
+    unisoccre_code, unisoccre_dir, bind_type, acc_type, oldbankaccount_no, bankaccount_no, 
+    bankaccount_name, bankaccount_telno, acc_no, note
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.heepay.tpds.entity.TpdsCustomerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tpds_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tpds_customer
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tpds_customer
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heepay.tpds.entity.TpdsCustomerExample" >
+    delete from tpds_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heepay.tpds.entity.TpdsCustomer" >
+    insert into tpds_customer (customer_id, customer_no, type, 
+      role, cert_type, bind_flag, 
+      use_name, cert_no, cert_fimage, 
+      cert_bimage, cert_info, vali_date, 
+      exp_date, job_type, job, 
+      post_code, address, national, 
+      phone_no, busiLice_no, busiLice_dir, 
+      orgCode_no, orgCode_dir, taxregis_no, 
+      taxregis_dir, unisoccre_code, unisoccre_dir, 
+      bind_type, acc_type, oldbankaccount_no, 
+      bankaccount_no, bankaccount_name, bankaccount_telno, 
+      acc_no, note)
+    values (#{customerId,jdbcType=INTEGER}, #{customerNo,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, 
+      #{role,jdbcType=CHAR}, #{certType,jdbcType=VARCHAR}, #{bindFlag,jdbcType=CHAR}, 
+      #{useName,jdbcType=VARCHAR}, #{certNo,jdbcType=VARCHAR}, #{certFimage,jdbcType=VARCHAR}, 
+      #{certBimage,jdbcType=CHAR}, #{certInfo,jdbcType=VARCHAR}, #{valiDate,jdbcType=VARCHAR}, 
+      #{expDate,jdbcType=VARCHAR}, #{jobType,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
+      #{postCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{national,jdbcType=VARCHAR}, 
+      #{phoneNo,jdbcType=VARCHAR}, #{busiliceNo,jdbcType=VARCHAR}, #{busiliceDir,jdbcType=VARCHAR}, 
+      #{orgcodeNo,jdbcType=VARCHAR}, #{orgcodeDir,jdbcType=VARCHAR}, #{taxregisNo,jdbcType=VARCHAR}, 
+      #{taxregisDir,jdbcType=VARCHAR}, #{unisoccreCode,jdbcType=VARCHAR}, #{unisoccreDir,jdbcType=VARCHAR}, 
+      #{bindType,jdbcType=VARCHAR}, #{accType,jdbcType=VARCHAR}, #{oldbankaccountNo,jdbcType=VARCHAR}, 
+      #{bankaccountNo,jdbcType=CHAR}, #{bankaccountName,jdbcType=VARCHAR}, #{bankaccountTelno,jdbcType=VARCHAR}, 
+      #{accNo,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heepay.tpds.entity.TpdsCustomer" >
+    insert into tpds_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="customerNo != null" >
+        customer_no,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="certType != null" >
+        cert_type,
+      </if>
+      <if test="bindFlag != null" >
+        bind_flag,
+      </if>
+      <if test="useName != null" >
+        use_name,
+      </if>
+      <if test="certNo != null" >
+        cert_no,
+      </if>
+      <if test="certFimage != null" >
+        cert_fimage,
+      </if>
+      <if test="certBimage != null" >
+        cert_bimage,
+      </if>
+      <if test="certInfo != null" >
+        cert_info,
+      </if>
+      <if test="valiDate != null" >
+        vali_date,
+      </if>
+      <if test="expDate != null" >
+        exp_date,
+      </if>
+      <if test="jobType != null" >
+        job_type,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="postCode != null" >
+        post_code,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="national != null" >
+        national,
+      </if>
+      <if test="phoneNo != null" >
+        phone_no,
+      </if>
+      <if test="busiliceNo != null" >
+        busiLice_no,
+      </if>
+      <if test="busiliceDir != null" >
+        busiLice_dir,
+      </if>
+      <if test="orgcodeNo != null" >
+        orgCode_no,
+      </if>
+      <if test="orgcodeDir != null" >
+        orgCode_dir,
+      </if>
+      <if test="taxregisNo != null" >
+        taxregis_no,
+      </if>
+      <if test="taxregisDir != null" >
+        taxregis_dir,
+      </if>
+      <if test="unisoccreCode != null" >
+        unisoccre_code,
+      </if>
+      <if test="unisoccreDir != null" >
+        unisoccre_dir,
+      </if>
+      <if test="bindType != null" >
+        bind_type,
+      </if>
+      <if test="accType != null" >
+        acc_type,
+      </if>
+      <if test="oldbankaccountNo != null" >
+        oldbankaccount_no,
+      </if>
+      <if test="bankaccountNo != null" >
+        bankaccount_no,
+      </if>
+      <if test="bankaccountName != null" >
+        bankaccount_name,
+      </if>
+      <if test="bankaccountTelno != null" >
+        bankaccount_telno,
+      </if>
+      <if test="accNo != null" >
+        acc_no,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=CHAR},
+      </if>
+      <if test="certType != null" >
+        #{certType,jdbcType=VARCHAR},
+      </if>
+      <if test="bindFlag != null" >
+        #{bindFlag,jdbcType=CHAR},
+      </if>
+      <if test="useName != null" >
+        #{useName,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certFimage != null" >
+        #{certFimage,jdbcType=VARCHAR},
+      </if>
+      <if test="certBimage != null" >
+        #{certBimage,jdbcType=CHAR},
+      </if>
+      <if test="certInfo != null" >
+        #{certInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="valiDate != null" >
+        #{valiDate,jdbcType=VARCHAR},
+      </if>
+      <if test="expDate != null" >
+        #{expDate,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType != null" >
+        #{jobType,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="national != null" >
+        #{national,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNo != null" >
+        #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busiliceNo != null" >
+        #{busiliceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busiliceDir != null" >
+        #{busiliceDir,jdbcType=VARCHAR},
+      </if>
+      <if test="orgcodeNo != null" >
+        #{orgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgcodeDir != null" >
+        #{orgcodeDir,jdbcType=VARCHAR},
+      </if>
+      <if test="taxregisNo != null" >
+        #{taxregisNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taxregisDir != null" >
+        #{taxregisDir,jdbcType=VARCHAR},
+      </if>
+      <if test="unisoccreCode != null" >
+        #{unisoccreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unisoccreDir != null" >
+        #{unisoccreDir,jdbcType=VARCHAR},
+      </if>
+      <if test="bindType != null" >
+        #{bindType,jdbcType=VARCHAR},
+      </if>
+      <if test="accType != null" >
+        #{accType,jdbcType=VARCHAR},
+      </if>
+      <if test="oldbankaccountNo != null" >
+        #{oldbankaccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccountNo != null" >
+        #{bankaccountNo,jdbcType=CHAR},
+      </if>
+      <if test="bankaccountName != null" >
+        #{bankaccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccountTelno != null" >
+        #{bankaccountTelno,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heepay.tpds.entity.TpdsCustomerExample" resultType="java.lang.Integer" >
+    select count(*) from tpds_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tpds_customer
+    <set >
+      <if test="record.customerId != null" >
+        customer_id = #{record.customerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.customerNo != null" >
+        customer_no = #{record.customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=CHAR},
+      </if>
+      <if test="record.role != null" >
+        role = #{record.role,jdbcType=CHAR},
+      </if>
+      <if test="record.certType != null" >
+        cert_type = #{record.certType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bindFlag != null" >
+        bind_flag = #{record.bindFlag,jdbcType=CHAR},
+      </if>
+      <if test="record.useName != null" >
+        use_name = #{record.useName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certNo != null" >
+        cert_no = #{record.certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certFimage != null" >
+        cert_fimage = #{record.certFimage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certBimage != null" >
+        cert_bimage = #{record.certBimage,jdbcType=CHAR},
+      </if>
+      <if test="record.certInfo != null" >
+        cert_info = #{record.certInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.valiDate != null" >
+        vali_date = #{record.valiDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expDate != null" >
+        exp_date = #{record.expDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jobType != null" >
+        job_type = #{record.jobType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.job != null" >
+        job = #{record.job,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postCode != null" >
+        post_code = #{record.postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.national != null" >
+        national = #{record.national,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNo != null" >
+        phone_no = #{record.phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.busiliceNo != null" >
+        busiLice_no = #{record.busiliceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.busiliceDir != null" >
+        busiLice_dir = #{record.busiliceDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgcodeNo != null" >
+        orgCode_no = #{record.orgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orgcodeDir != null" >
+        orgCode_dir = #{record.orgcodeDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taxregisNo != null" >
+        taxregis_no = #{record.taxregisNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taxregisDir != null" >
+        taxregis_dir = #{record.taxregisDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unisoccreCode != null" >
+        unisoccre_code = #{record.unisoccreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unisoccreDir != null" >
+        unisoccre_dir = #{record.unisoccreDir,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bindType != null" >
+        bind_type = #{record.bindType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accType != null" >
+        acc_type = #{record.accType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oldbankaccountNo != null" >
+        oldbankaccount_no = #{record.oldbankaccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankaccountNo != null" >
+        bankaccount_no = #{record.bankaccountNo,jdbcType=CHAR},
+      </if>
+      <if test="record.bankaccountName != null" >
+        bankaccount_name = #{record.bankaccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankaccountTelno != null" >
+        bankaccount_telno = #{record.bankaccountTelno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accNo != null" >
+        acc_no = #{record.accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.note != null" >
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tpds_customer
+    set customer_id = #{record.customerId,jdbcType=INTEGER},
+      customer_no = #{record.customerNo,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=CHAR},
+      role = #{record.role,jdbcType=CHAR},
+      cert_type = #{record.certType,jdbcType=VARCHAR},
+      bind_flag = #{record.bindFlag,jdbcType=CHAR},
+      use_name = #{record.useName,jdbcType=VARCHAR},
+      cert_no = #{record.certNo,jdbcType=VARCHAR},
+      cert_fimage = #{record.certFimage,jdbcType=VARCHAR},
+      cert_bimage = #{record.certBimage,jdbcType=CHAR},
+      cert_info = #{record.certInfo,jdbcType=VARCHAR},
+      vali_date = #{record.valiDate,jdbcType=VARCHAR},
+      exp_date = #{record.expDate,jdbcType=VARCHAR},
+      job_type = #{record.jobType,jdbcType=VARCHAR},
+      job = #{record.job,jdbcType=VARCHAR},
+      post_code = #{record.postCode,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      national = #{record.national,jdbcType=VARCHAR},
+      phone_no = #{record.phoneNo,jdbcType=VARCHAR},
+      busiLice_no = #{record.busiliceNo,jdbcType=VARCHAR},
+      busiLice_dir = #{record.busiliceDir,jdbcType=VARCHAR},
+      orgCode_no = #{record.orgcodeNo,jdbcType=VARCHAR},
+      orgCode_dir = #{record.orgcodeDir,jdbcType=VARCHAR},
+      taxregis_no = #{record.taxregisNo,jdbcType=VARCHAR},
+      taxregis_dir = #{record.taxregisDir,jdbcType=VARCHAR},
+      unisoccre_code = #{record.unisoccreCode,jdbcType=VARCHAR},
+      unisoccre_dir = #{record.unisoccreDir,jdbcType=VARCHAR},
+      bind_type = #{record.bindType,jdbcType=VARCHAR},
+      acc_type = #{record.accType,jdbcType=VARCHAR},
+      oldbankaccount_no = #{record.oldbankaccountNo,jdbcType=VARCHAR},
+      bankaccount_no = #{record.bankaccountNo,jdbcType=CHAR},
+      bankaccount_name = #{record.bankaccountName,jdbcType=VARCHAR},
+      bankaccount_telno = #{record.bankaccountTelno,jdbcType=VARCHAR},
+      acc_no = #{record.accNo,jdbcType=VARCHAR},
+      note = #{record.note,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heepay.tpds.entity.TpdsCustomer" >
+    update tpds_customer
+    <set >
+      <if test="customerNo != null" >
+        customer_no = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=CHAR},
+      </if>
+      <if test="certType != null" >
+        cert_type = #{certType,jdbcType=VARCHAR},
+      </if>
+      <if test="bindFlag != null" >
+        bind_flag = #{bindFlag,jdbcType=CHAR},
+      </if>
+      <if test="useName != null" >
+        use_name = #{useName,jdbcType=VARCHAR},
+      </if>
+      <if test="certNo != null" >
+        cert_no = #{certNo,jdbcType=VARCHAR},
+      </if>
+      <if test="certFimage != null" >
+        cert_fimage = #{certFimage,jdbcType=VARCHAR},
+      </if>
+      <if test="certBimage != null" >
+        cert_bimage = #{certBimage,jdbcType=CHAR},
+      </if>
+      <if test="certInfo != null" >
+        cert_info = #{certInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="valiDate != null" >
+        vali_date = #{valiDate,jdbcType=VARCHAR},
+      </if>
+      <if test="expDate != null" >
+        exp_date = #{expDate,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType != null" >
+        job_type = #{jobType,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="postCode != null" >
+        post_code = #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="national != null" >
+        national = #{national,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNo != null" >
+        phone_no = #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busiliceNo != null" >
+        busiLice_no = #{busiliceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busiliceDir != null" >
+        busiLice_dir = #{busiliceDir,jdbcType=VARCHAR},
+      </if>
+      <if test="orgcodeNo != null" >
+        orgCode_no = #{orgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgcodeDir != null" >
+        orgCode_dir = #{orgcodeDir,jdbcType=VARCHAR},
+      </if>
+      <if test="taxregisNo != null" >
+        taxregis_no = #{taxregisNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taxregisDir != null" >
+        taxregis_dir = #{taxregisDir,jdbcType=VARCHAR},
+      </if>
+      <if test="unisoccreCode != null" >
+        unisoccre_code = #{unisoccreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="unisoccreDir != null" >
+        unisoccre_dir = #{unisoccreDir,jdbcType=VARCHAR},
+      </if>
+      <if test="bindType != null" >
+        bind_type = #{bindType,jdbcType=VARCHAR},
+      </if>
+      <if test="accType != null" >
+        acc_type = #{accType,jdbcType=VARCHAR},
+      </if>
+      <if test="oldbankaccountNo != null" >
+        oldbankaccount_no = #{oldbankaccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccountNo != null" >
+        bankaccount_no = #{bankaccountNo,jdbcType=CHAR},
+      </if>
+      <if test="bankaccountName != null" >
+        bankaccount_name = #{bankaccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankaccountTelno != null" >
+        bankaccount_telno = #{bankaccountTelno,jdbcType=VARCHAR},
+      </if>
+      <if test="accNo != null" >
+        acc_no = #{accNo,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.tpds.entity.TpdsCustomer" >
+    update tpds_customer
+    set customer_no = #{customerNo,jdbcType=VARCHAR},
+      type = #{type,jdbcType=CHAR},
+      role = #{role,jdbcType=CHAR},
+      cert_type = #{certType,jdbcType=VARCHAR},
+      bind_flag = #{bindFlag,jdbcType=CHAR},
+      use_name = #{useName,jdbcType=VARCHAR},
+      cert_no = #{certNo,jdbcType=VARCHAR},
+      cert_fimage = #{certFimage,jdbcType=VARCHAR},
+      cert_bimage = #{certBimage,jdbcType=CHAR},
+      cert_info = #{certInfo,jdbcType=VARCHAR},
+      vali_date = #{valiDate,jdbcType=VARCHAR},
+      exp_date = #{expDate,jdbcType=VARCHAR},
+      job_type = #{jobType,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      post_code = #{postCode,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      national = #{national,jdbcType=VARCHAR},
+      phone_no = #{phoneNo,jdbcType=VARCHAR},
+      busiLice_no = #{busiliceNo,jdbcType=VARCHAR},
+      busiLice_dir = #{busiliceDir,jdbcType=VARCHAR},
+      orgCode_no = #{orgcodeNo,jdbcType=VARCHAR},
+      orgCode_dir = #{orgcodeDir,jdbcType=VARCHAR},
+      taxregis_no = #{taxregisNo,jdbcType=VARCHAR},
+      taxregis_dir = #{taxregisDir,jdbcType=VARCHAR},
+      unisoccre_code = #{unisoccreCode,jdbcType=VARCHAR},
+      unisoccre_dir = #{unisoccreDir,jdbcType=VARCHAR},
+      bind_type = #{bindType,jdbcType=VARCHAR},
+      acc_type = #{accType,jdbcType=VARCHAR},
+      oldbankaccount_no = #{oldbankaccountNo,jdbcType=VARCHAR},
+      bankaccount_no = #{bankaccountNo,jdbcType=CHAR},
+      bankaccount_name = #{bankaccountName,jdbcType=VARCHAR},
+      bankaccount_telno = #{bankaccountTelno,jdbcType=VARCHAR},
+      acc_no = #{accNo,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </update>
+</mapper>

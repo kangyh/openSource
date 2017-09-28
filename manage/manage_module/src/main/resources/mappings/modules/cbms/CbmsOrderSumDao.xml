@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.cbms.dao.CbmsOrderSumDao">
+    
+	<sql id="cbmsOrderSumColumns">
+		a.order_input_id AS "orderInputId",
+		a.merchant_no AS "merchantNo",
+		a.cbms_company_name AS "cbmsCompanyName",
+		a.file_name AS "fileName",
+		a.file_path AS "filePath",
+		a.file_size AS "fileSize",
+		a.import_batch_number AS "importBatchNumber",
+		a.import_time AS "importTime",
+		a.declaration_number AS "declarationNumber",
+		a.declaration_money AS "declarationMoney",
+		a.re_load_number AS "reLoadNumber",
+		a.new_number AS "newNumber",
+		a.rec_amount AS "recAmount",
+		a.fee AS "fee",
+		a.business_type AS "businessType",
+		a.status AS "status",
+		a.reason_failure AS reasonfailure,
+		a.comments AS "comments",
+		a.declare_type AS "declareType",
+		a.merchant_batch_no AS "merchantBatchNo",
+		a.notify_url AS "notifyUrl"
+	</sql>
+	
+	<sql id="cbmsOrderSumJoins">
+	</sql>
+    
+	<select id="get" resultType="CbmsOrderSum">
+		SELECT 
+			<include refid="cbmsOrderSumColumns"/>
+		FROM cbms_order_sum a
+		<include refid="cbmsOrderSumJoins"/>
+		WHERE a.order_input_id = #{id}
+	</select>
+
+	<select id="ordersumselect" parameterType="java.lang.String" resultType="CbmsOrderSum">
+		SELECT
+		<include refid="cbmsOrderSumColumns"/>
+		FROM cbms_order_sum a
+		<include refid="cbmsOrderSumJoins"/>
+		WHERE a.import_batch_number = #{ImportBatchNumber}
+	</select>
+	<select id="findList" resultType="CbmsOrderSum">
+		SELECT 
+			<include refid="cbmsOrderSumColumns"/>
+		 from cbms_order_sum a where a.import_batch_number in (
+		select  s.import_batch_number  from cbms_orderform s where s.custom_status='1' and (s.order_status='1' or s.order_status='5')  and s.import_batch_number in (
+		select m.import_batch_number as import_batch_number from cbms_order_sum m
+		<where>
+			m.status in ('1','2','5')
+
+			<if test="declareType != null and declareType != ''">
+				AND m.declare_type = #{declareType}
+			</if>
+			<if test="merchantNo != null and merchantNo != ''">
+				AND m.merchant_no = #{merchantNo}
+			</if>
+			<if test="fileName != null and fileName != ''">
+				AND m.file_name LIKE  CONCAT(CONCAT('%', #{fileName}),'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND m.status = #{status}
+			</if>
+			<if test="importBatchNumber != null and importBatchNumber != ''">
+				AND m.import_batch_number = #{importBatchNumber}
+			</if>
+			<if test="beginImportTime != null and endImportTime != null">
+				AND m.import_time BETWEEN #{beginImportTime} AND #{endImportTime}
+			</if>
+		</where>
+		) group by s.import_batch_number)
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''"><!--排序  orderBy -->
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+<!--对ordersum表数据做分页查询  可以做条件查询 -->
+	<select id="findPageimport" resultType="CbmsOrderSum">
+		SELECT
+		<include refid="cbmsOrderSumColumns"/>
+		FROM cbms_order_sum a
+		<include refid="cbmsOrderSumJoins"/>
+		<where>
+
+			<if test="merchantNo != null and merchantNo != ''"><!--merchantNo 商户id-->
+				AND a.merchant_no = #{merchantNo}
+			</if>
+			<if test="fileName != null and fileName != ''"><!--fileName文件名-->
+				AND a.file_name LIKE  CONCAT(CONCAT('%', #{fileName}),'%')
+			</if>
+			<if test="status != null and status != ''"><!-- status 状态-->
+				AND a.status = #{status}
+			</if>
+			<if test="importBatchNumber != null and importBatchNumber != ''"><!--importBatchNumber导入批次号 -->
+				AND a.import_batch_number = #{importBatchNumber}
+			</if>
+			<if test="beginImportTime != null and endImportTime != null"><!--import_time导入时间 beginImportTime起始时间 endImportTime终止时间 -->
+				AND a.import_time BETWEEN #{beginImportTime} AND #{endImportTime}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''"><!--排序  orderBy -->
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findAllList" resultType="CbmsOrderSum">
+		SELECT 
+			<include refid="cbmsOrderSumColumns"/>
+		FROM cbms_order_sum a
+		<include refid="cbmsOrderSumJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cbms_order_sum(
+			order_input_id,
+			merchant_no,
+			cbms_company_name,
+			file_name,
+			file_path,
+			file_size,
+			import_batch_number,
+			import_time,
+			declaration_number,
+			declaration_money,
+			re_load_number,
+			new_number,
+			rec_amount,
+			fee,
+			business_type,
+			status,
+			comments
+		) VALUES (
+			#{orderInputId},
+			#{merchantNo},
+			#{cbmsCompanyName},
+			#{fileName},
+			#{filePath},
+			#{fileSize},
+			#{importBatchNumber},
+			#{importTime},
+			#{declarationNumber},
+			#{declarationMoney},
+			#{reLoadNumber},
+			#{newNumber},
+			#{recAmount},
+			#{fee},
+			#{businessType},
+			#{status},
+			#{comments}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cbms_order_sum SET 	
+			order_input_id = #{orderInputId},
+			merchant_no = #{merchantNo},
+			cbms_company_name = #{cbmsCompanyName},
+			file_name = #{fileName},
+			file_path = #{filePath},
+			file_size = #{fileSize},
+			import_batch_number = #{importBatchNumber},
+			import_time = #{importTime},
+			declaration_number = #{declarationNumber},
+			declaration_money = #{declarationMoney},
+			re_load_number = #{reLoadNumber},
+			new_number = #{newNumber},
+			rec_amount = #{recAmount},
+			fee = #{fee},
+			business_type = #{businessType},
+			status = #{status},
+			comments = #{comments}
+		WHERE order_input_id = #{orderInputId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cbms_order_sum
+		WHERE order_input_id = #{id}
+	</update>
+	
+</mapper>

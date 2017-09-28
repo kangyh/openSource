@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/rabbit 
+http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
+	
+	<context:component-scan base-package="com.heepay.billing.producer" />
+	<context:component-scan base-package="com.heepay.billing.job" />
+	<context:component-scan base-package="com.heepay.billing.client" />
+
+	<context:annotation-config />
+	
+	 
+	<!-- 连接服务配置 --> 
+   	<rabbit:connection-factory id="connectionFactory" addresses="${addresses}" username="${username}" password="${password}"  />
+
+	<!-- Admin object for creation of queues -->
+	<rabbit:admin connection-factory="connectionFactory" />
+	
+	<!-- queue statement-->
+   	<rabbit:queue id="hyBillingSettleChannelRecordDetailMq" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleChannelRecordDetailMq"/>
+   	<rabbit:queue id="CLearMerchantMq" durable="true" auto-delete="false" exclusive="false" name="CLearMerchantMq"/>
+
+   	<!-- exchange queue binging key 绑定 -->
+    <rabbit:direct-exchange name="RabbitMq-exchange" durable="true" auto-delete="false" id="RabbitMq-exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="hyBillingSettleChannelRecordDetailMq" key="hyBillingSettleChannelRecordDetailMq_key"/>
+            <rabbit:binding queue="CLearMerchantMq" key="CLearMerchantMq_key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!-- 声明消息转换器为SimpleMessageConverter -->
+    <bean id="mqMessageConverter"
+        class="org.springframework.amqp.support.converter.SimpleMessageConverter">
+    </bean>
+
+    <!-- queue litener -->
+    <rabbit:template exchange="RabbitMq-exchange" id="hyBillingSettleChannelRecordDetailMqTemplate" routing-key= "hyBillingSettleChannelRecordDetailMq_key" queue="hyBillingSettleChannelRecordDetailMq" connection-factory="connectionFactory" message-converter="mqMessageConverter" />
+    
+</beans>

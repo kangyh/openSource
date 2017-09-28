@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.tpds.dao.TpdsFileLogDao">
+    
+	<sql id="tpdsFileLogColumns">
+		a.log_id AS "logId",
+		a.merchant_no AS "merchantNo",
+		a.check_file_from AS "checkFileFrom",
+		a.check_file_where AS "checkFileWhere",
+		a.file_name AS "fileName",
+		a.file_dir AS "fileDir",
+		a.oper_person AS "operPerson",
+		a.oper_time AS "operTime"
+	</sql>
+	
+	<sql id="tpdsFileLogJoins">
+	</sql>
+    
+	<select id="get" resultType="TpdsFileLog">
+		SELECT 
+			<include refid="tpdsFileLogColumns"/>
+		FROM tpds_file_log a
+		<include refid="tpdsFileLogJoins"/>
+		WHERE a.log_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TpdsFileLog">
+		SELECT 
+			<include refid="tpdsFileLogColumns"/>
+		FROM tpds_file_log a
+		<include refid="tpdsFileLogJoins"/>
+		<where>
+			<if test="merchantNo != null and merchantNo != ''">
+				a.merchant_no = #{merchantNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY log_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TpdsFileLog">
+		SELECT 
+			<include refid="tpdsFileLogColumns"/>
+		FROM tpds_file_log a
+		<include refid="tpdsFileLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tpds_file_log(
+			log_id,
+			merchant_no,
+			check_file_from,
+			check_file_where,
+			file_name,
+			file_dir,
+			oper_person,
+			oper_time
+		) VALUES (
+			#{logId},
+			#{merchantNo},
+			#{checkFileFrom},
+			#{checkFileWhere},
+			#{fileName},
+			#{fileDir},
+			#{operPerson},
+			#{operTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tpds_file_log SET 	
+			log_id = #{logId},
+			merchant_no = #{merchantNo},
+			check_file_from = #{checkFileFrom},
+			check_file_where = #{checkFileWhere},
+			file_name = #{fileName},
+			file_dir = #{fileDir},
+			oper_person = #{operPerson},
+			oper_time = #{operTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateEntity" parameterType="TpdsFileLog" >
+    update tpds_file_log
+    <set >
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileFrom != null" >
+        check_file_from = #{checkFileFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="checkFileWhere != null" >
+        check_file_where = #{checkFileWhere,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileDir != null" >
+        file_dir = #{fileDir,jdbcType=VARCHAR},
+      </if>
+      <if test="operPerson != null" >
+        oper_person = #{operPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="operTime != null" >
+        oper_time = #{operTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+     </update>
+     
+	<update id="delete">
+		DELETE FROM tpds_file_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

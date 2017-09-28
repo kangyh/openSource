@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.sys.dao.HatCitiesDao">
+    
+	<sql id="hatCitiesColumns">
+		a.id AS "id",
+		a.cityid AS "cityid",
+		a.city AS "city",
+		a.father AS "father",
+		a.hot_flag AS "hotFlag"
+	</sql>
+	
+	<sql id="hatCitiesJoins">
+	</sql>
+	
+	  <select id="selectByFather" resultType="HatCities">
+		select
+			<include refid="hatCitiesColumns" />
+		from hat_city a
+		<include refid="hatCitiesJoins"/>
+		where a.father = #{father}
+  	</select>
+    
+	<select id="get" resultType="HatCities">
+		SELECT 
+			<include refid="hatCitiesColumns"/>
+		FROM hat_city a
+		<include refid="hatCitiesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="HatCities">
+		SELECT 
+			<include refid="hatCitiesColumns"/>
+		FROM hat_city a
+		<include refid="hatCitiesJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HatCities">
+		SELECT 
+			<include refid="hatCitiesColumns"/>
+		FROM hat_city a
+		<include refid="hatCitiesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO hat_city(
+			id,
+			cityid,
+			city,
+			father,
+			hot_flag
+		) VALUES (
+			#{id},
+			#{cityid},
+			#{city},
+			#{father},
+			#{hotFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE hat_city SET 	
+			cityid = #{cityid},
+			city = #{city},
+			father = #{father},
+			hot_flag = #{hotFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hat_city
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.monitors.dao.InfoMemberDao" >
+  <sql id="includeEntity" >
+    member_id, 
+    member_name, 
+    group_id, 
+    email, 
+    mobile, 
+    wechat, 
+    create_user, 
+    create_time, 
+    update_user, 
+    update_time, 
+    remark
+  </sql>
+  
+  <select id="findList" resultType="InfoMember">
+		SELECT 
+			<include refid="includeEntity"/>
+		FROM info_member
+		<where>
+			<!-- 创建时间 -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- memberName -->
+			<if test="memberName != null and memberName != ''">
+				AND member_name = #{memberName}
+			</if>
+			<!-- groupId -->
+			<if test="groupId != null and groupId != ''">
+				AND group_id = #{groupId}
+			</if>
+			<!-- mobile -->
+			<if test="mobile != null and mobile != ''">
+				AND mobile = #{mobile}
+			</if>
+			<!-- email -->
+			<if test="email != null and email != ''">
+				AND email = #{email}
+			</if>
+			
+			<!-- wechat -->
+			<if test="wechat != null and wechat != ''">
+				AND wechat = #{wechat}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY member_id DESC,${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY member_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+  <select id="selectEntity" resultType="InfoMember" parameterType="java.lang.Integer" >
+    select 
+    <include refid="includeEntity" />
+    from info_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  
+  
+  <select id="getEntityByGroupId" resultType="InfoMember" parameterType="java.lang.Integer" >
+    select 
+    <include refid="includeEntity" />
+    from info_member
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  <delete id="deleteEntity" parameterType="java.lang.Integer" >
+    delete from info_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="saveEntity" parameterType="InfoMember" >
+    insert into info_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="memberName != null" >
+        member_name,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="wechat != null" >
+        wechat,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="memberName != null" >
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateEntity" parameterType="InfoMember" >
+    update info_member
+    <set >
+      <if test="memberName != null" >
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="update" parameterType="InfoMember" >
+    update info_member
+    set member_name = #{memberName,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=INTEGER},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

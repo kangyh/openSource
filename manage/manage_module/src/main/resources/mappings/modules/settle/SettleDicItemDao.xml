@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.settle.dao.SettleDicItemDao">
+
+    <!-- 数据表中的字段对应翻译为实体类中对应的字段（存在类型表中的数据） -->
+	<sql id="settleDicItemTypeColumns">
+		a.item_id AS "itemId",
+		a.sort AS "sort",
+		a.text AS "text",
+		a.value AS "value",
+		a.type_id AS "typeId",
+		t.text AS "typeText",
+		a.status AS "status",
+		a.create_operator AS "createOperator",
+		a.create_time AS "createTime",
+		a.update_operator AS "updateOperator",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="settleDicItemColumns">
+		a.item_id AS "itemId",
+		a.sort AS "sort",
+		a.text AS "text",
+		a.value AS "value",
+		a.type_id AS "typeId",
+		a.status AS "status"
+	</sql>
+	
+	<!-- 查询类型明细List -->
+	<select id="findList" resultType="SettleDicItem">
+		SELECT 
+			<include refid="settleDicItemTypeColumns"/>
+		FROM settle_dic_item a
+		left join settle_dic_type t on t.type_id = a.type_id
+		<where>
+			<!-- ID-->
+			<if test="itemId != null and itemId != ''">
+				AND a.item_id = #{itemId}
+			</if>
+			<!-- 编码-->
+			<if test="value != null and value != ''">
+				AND a.value = #{value}
+			</if>
+			<!-- 类型-->
+			<if test="typeId != null and typeId != ''">
+				AND a.type_id = #{typeId}
+			</if>
+			<!-- 状态-->
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 插入类型明细表 -->
+	<insert id="insert">
+		INSERT INTO settle_dic_item(
+			sort, 
+			text, 
+			value,
+			status,
+			type_id,
+			create_operator,
+			update_operator,
+			update_time
+		) VALUES (
+			#{sort,jdbcType=INTEGER}, 
+			#{text}, 
+			#{value}, 
+			#{status}, 
+			#{typeId},
+			#{createOperator},
+			#{updateOperator,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<!-- 根据主键查询类型明细信息 -->
+	<select id="get" resultType="SettleDicItem">
+		SELECT
+			<include refid="settleDicItemColumns"/>
+		FROM settle_dic_item a
+		WHERE a.item_id = #{itemId}
+	</select>
+	
+	<!-- 去重查询类型明细表信息 -->
+	<select id="findDistinctItem" resultType="SettleDicItem">
+		SELECT DISTINCT
+			a.text AS "text",
+			a.value AS "value",
+			a.type_id AS "typeId"
+		FROM settle_dic_item a
+	</select>
+	
+	<!-- 修改/更新类型明细表 -->
+	<update id="update">
+		UPDATE settle_dic_item
+		<set>
+			<if test="text != null">value = #{value},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="typeId != null">type_id = #{typeId},</if>
+			<if test="updateOperator != null">update_operator = #{updateOperator},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+		</set>
+		WHERE item_id = #{itemId}
+	</update>
+	
+	<!-- 查询相同类型下是否存在相同编码和名称的类型明细 -->
+	<select id="findBySettleDicItemExist" resultType="int">
+		SELECT
+			count(1)
+		FROM settle_dic_item a
+		WHERE a.type_id = #{typeId}
+		AND a.text = #{text}
+		AND a.value = #{value}
+		<if test='itemId != null and itemId != ""'>
+			AND a.item_id != #{itemId}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.manage.modules.risk.dao.RiskMerchantProductQuotaDao" >
+ 	<!-- 数据表中的字段对应翻译为实体类中对应的字段 -->
+	<sql id="riskMerchantProductQuotaColumns">
+		a.mer_pro_id AS "merProId",
+		a.product_code AS "productCode",
+		a.product_name AS "productName",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.per_item AS "perItem",
+		a.per_day AS "perDay",
+		a.status AS "status",
+		a.per_month AS "perMonth",
+		a.account_type AS "accountType",
+		a.bankcard_type AS "bankcardType",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.merchant_account AS "merchantAccount"
+	</sql>
+	
+	<!-- 
+		查询list
+	 -->
+	<select id="findList" resultType="RiskMerchantProductQuota">
+		SELECT 
+			<include refid="riskMerchantProductQuotaColumns"/>
+		FROM risk_merchant_product_quota a
+		<where>
+			<!-- 主键-->
+			<if test="merProId != null and merProId != ''">
+				AND a.mer_pro_id = #{merProId}
+			</if>
+			<!-- 商户编码 -->
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<!-- 产品编码-->
+			<if test="productCode != null and productCode != ''">
+				AND a.product_code = #{productCode}
+			</if>
+			<!-- 账户类型 -->
+			<if test="accountType != null and accountType != ''">
+				AND a.account_type = #{accountType}
+			</if>
+			<!-- 银行卡类型 -->
+			<if test="bankcardType != null and bankcardType != ''">
+				AND a.bankcard_type = #{bankcardType}
+			</if>
+			<!-- 更新者 -->
+			<if test="updateAuthor != null and updateAuthor != ''">
+				AND a.update_author = #{updateAuthor}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY mer_pro_id desc
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 根据主键查询类型明细信息 -->
+	<select id="get" resultType="RiskMerchantProductQuota">
+		SELECT
+			<include refid="riskMerchantProductQuotaColumns"/>
+		FROM risk_merchant_product_quota a
+		WHERE a.mer_pro_id = #{merProId}
+	</select>
+	<!-- 修改商户限额信息表 -->
+	<update id="update">
+		UPDATE risk_merchant_product_quota
+		<set>
+			<if test="perItem != null">per_item = #{perItem},</if>
+			<if test="perDay != null">per_day = #{perDay},</if>
+			<if test="perMonth != null">per_month = #{perMonth},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="updateAuthor != null">update_author = #{updateAuthor},</if>
+		</set>
+		WHERE mer_pro_id = #{merProId}
+	</update>
+	<!-- 插入商户产品限额信息 -->
+	<insert id="insert">
+    insert into risk_merchant_product_quota (mer_pro_id, product_code, product_name, 
+      merchant_id, merchant_name, per_item, 
+      per_day, status, per_month, 
+      account_type, create_time, create_author, 
+      update_time, update_author, bankcard_type, 
+      merchant_account)
+    values (#{merProId,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+      #{merchantId,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR}, #{perItem,jdbcType=DECIMAL}, 
+      #{perDay,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{perMonth,jdbcType=DECIMAL}, 
+      #{accountType,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createAuthor,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateAuthor,jdbcType=VARCHAR}, #{bankcardType,jdbcType=CHAR}, 
+      #{merchantAccount,jdbcType=VARCHAR})
+  </insert>
+  <!-- 验证是否存在相同商户号，产品编码，账户类型，银行卡类型 -->
+  <select id="findRiskMerchantProductQuotaExist" resultType="int">
+	 SELECT count(1)
+	 FROM risk_merchant_product_quota
+	 WHERE merchant_id = #{merchantId}
+	 and product_code = #{productCode}
+	 and account_type = #{accountType}
+	 <if test='bankcardType != null and bankcardType != ""'>
+	 	and bankcard_type = #{bankcardType}
+	 </if>
+	 <if test='merProId != null and merProId != ""'>
+		AND mer_pro_id != #{merProId}
+	 </if>
+	</select>
+	
+	<!-- 去重查询更新人 -->
+	<select id="findUpdateAuthor" resultType="RiskMerchantProductQuota">
+		SELECT DISTINCT a.update_author AS "updateAuthor"
+		FROM risk_merchant_product_quota a 
+		WHERE a.update_author is not null
+	</select>
+</mapper>

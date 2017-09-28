@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.manage.modules.hgms.dao.HgmsBusinessDao">
+    
+	<sql id="hgmsBusinessColumns">
+		a.business_id AS "businessId",
+		a.business_name AS "businessName",
+		a.inputuser_id AS "inputuserId",
+		a.inputuser_name AS "inputuserName",
+		a.created_time AS "createdTime",
+		a.status AS "status",
+		a.extend2 AS "extend2",
+		a.extend3 AS "extend3"
+	</sql>
+	
+	<sql id="hgmsBusinessJoins">
+	</sql>
+    
+	<select id="get" resultType="HgmsBusiness">
+		SELECT 
+			<include refid="hgmsBusinessColumns"/>
+		FROM hgms_business a
+		<include refid="hgmsBusinessJoins"/>
+		WHERE business_id = #{businessId}
+	</select>
+
+	<select id="selectByName" resultType="HgmsBusiness">
+		SELECT
+			<include refid="hgmsBusinessColumns"/>
+		FROM hgms_business a
+		<include refid="hgmsBusinessJoins"/>
+		WHERE business_name = #{business_name}
+	</select>
+
+	<select id="findList" resultType="HgmsBusiness">
+		SELECT 
+			<include refid="hgmsBusinessColumns"/>
+		FROM hgms_business a
+		<include refid="hgmsBusinessJoins"/>
+		<where>
+			
+			<if test="businessName != null and businessName != ''">
+				AND a.business_name = #{businessName}
+			</if>
+			<if test="inputuserName != null and inputuserName != ''">
+				AND a.inputuser_name = #{inputuserName}
+			</if>
+			<choose>
+				<when test="beginCreateTime != null and endCreateTime != null ">
+					AND a.created_time BETWEEN #{beginCreateTime} AND #{endCreateTime}
+				</when>
+				<when test="beginCreateTime != null and endCreateTime == null">
+					AND a.created_time &gt; #{beginCreateTime}
+				</when>
+				<when test="beginCreateTime == null and endCreateTime != null">
+					AND a.created_time &lt; #{endCreateTime}
+				</when>
+			</choose>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="HgmsBusiness">
+		SELECT 
+			<include refid="hgmsBusinessColumns"/>
+		FROM hgms_business a
+		<include refid="hgmsBusinessJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert">
+		INSERT INTO hgms_business
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="businessId != null">
+				business_id,
+			</if>
+			<if test="businessName != null">
+				business_name,
+			</if>
+			<if test="inputuserId != null">
+				inputuser_id,
+			</if>
+			<if test="inputuserName != null">
+				inputuser_name,
+			</if>
+			<if test="createdTime != null">
+				created_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="extend2 != null">
+				extend2,
+			</if>
+			<if test="extend3 != null">
+				extend3,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="businessId != null">
+				#{businessId,jdbcType=BIGINT},
+			</if>
+			<if test="businessName != null">
+				#{businessName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputuserId != null">
+				#{inputuserId,jdbcType=VARCHAR},
+			</if>
+			<if test="inputuserName != null">
+				#{inputuserName,jdbcType=VARCHAR},
+			</if>
+			<if test="createdTime != null">
+				#{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="extend2 != null">
+				#{extend2,jdbcType=VARCHAR},
+			</if>
+			<if test="extend3 != null">
+				#{extend3,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="update">
+		UPDATE hgms_business
+		<set>
+			<if test="businessName != null">
+				business_name =#{businessName,jdbcType=VARCHAR},
+			</if>
+			<if test="inputuserId != null">
+				inputuser_id = #{inputuserId,jdbcType=VARCHAR},
+			</if>
+			<if test="inputuserName != null">
+				inputuser_name = #{inputuserName,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createdTime != null">
+				created_time = #{createdTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="extend2 != null">
+				extend2 = #{extend2,jdbcType=VARCHAR},
+			</if>
+			<if test="extend3 != null">
+				extend3 = #{extend3,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE business_id = #{businessId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM hgms_business
+		WHERE business_id = #{businessId}
+	</update>
+	
+</mapper>
