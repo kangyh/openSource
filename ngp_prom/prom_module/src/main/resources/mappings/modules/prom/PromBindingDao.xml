@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromBindingDao">
+    
+	<sql id="promBindingColumns">
+		a.prom_id AS "promId",
+		a.binding_id AS "bindingId",
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.promotion_id AS "promotionId",
+		a.effective_time AS "effectiveTime",
+		a.lose_time AS "loseTime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="promBindingJoins">
+	</sql>
+    
+	<select id="get" resultType="PromBinding">
+		SELECT 
+			<include refid="promBindingColumns"/>
+		FROM prom_binding a
+		<include refid="promBindingJoins"/>
+		WHERE a.prom_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PromBinding">
+		SELECT 
+			<include refid="promBindingColumns"/>
+		FROM prom_binding a
+		<include refid="promBindingJoins"/>
+		<where>
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.effective_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="beginOperEndTime1 != null and endOperEndTime1 != null">
+				AND a.lose_time BETWEEN date_format(#{beginOperEndTime1},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime1},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="bindingId != null and bindingId != ''">
+				AND a.binding_id = #{bindingId}
+			</if>
+			<if test="merchantId != null and merchantId != ''">
+				AND a.merchant_id = #{merchantId}
+			</if>
+			<if test="promotionId != null and promotionId != ''">
+				AND a.promotion_id = #{promotionId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				  ORDER BY prom_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromBinding">
+		SELECT 
+			<include refid="promBindingColumns"/>
+		FROM prom_binding a
+		<include refid="promBindingJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_binding(
+			binding_id,
+			merchant_id,
+			merchant_name,
+			promotion_id,
+			effective_time,
+			lose_time,
+			status
+		) VALUES (
+			#{bindingId},
+			#{merchantId},
+			#{merchantName},
+			#{promotionId},
+			#{effectiveTime},
+			#{loseTime},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_binding SET 	
+			prom_id = #{promId},
+			binding_id = #{bindingId},
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			promotion_id = #{promotionId},
+			effective_time = #{effectiveTime},
+			lose_time = #{loseTime},
+			status = #{status}
+		WHERE prom_id = #{id}
+	</update>
+	
+	<update id="updateEntity" parameterType="com.heepay.prom.modules.prom.entity.PromBinding">
+		UPDATE prom_binding SET 
+			 <if test="bindingId != null" >
+			 binding_id = #{bindingId},
+			 </if>
+			merchant_id = #{merchantId},
+			merchant_name = #{merchantName},
+			promotion_id = #{promotionId},
+			effective_time = #{effectiveTime},
+			lose_time = #{loseTime},
+			status = #{status}
+		WHERE prom_id = #{promId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM prom_binding
+		WHERE prom_id = #{id}
+	</update>
+	
+</mapper>

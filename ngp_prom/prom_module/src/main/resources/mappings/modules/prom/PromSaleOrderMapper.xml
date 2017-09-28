@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromSaleOrderDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.prom.modules.prom.entity.PromSaleOrder" >
+    <id column="sale_id" property="saleId" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="warranty_id" property="warrantyId" jdbcType="VARCHAR" />
+    <result column="order_batch" property="orderBatch" jdbcType="VARCHAR" />
+    <result column="spread_id" property="spreadId" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="profit_money" property="profitMoney" jdbcType="DECIMAL" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_batch" property="settleBatch" jdbcType="VARCHAR" />
+    <result column="profit_time" property="profitTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="saleOrderBuildMap" type="com.heepay.prom.modules.prom.entity.PromSaleOrderBuild" >
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="warranty_id" property="warrantyId" jdbcType="VARCHAR" />
+    <result column="order_batch" property="orderBatch" jdbcType="VARCHAR" />
+    <result column="spread_id" property="spreadId" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="huiyuan_profit" property="huiyuanProfit" jdbcType="DECIMAL" />
+    <result column="gear_profit" property="gearProfit" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <select id="selectUnProfitOrder" resultMap="saleOrderBuildMap" parameterType="com.heepay.prom.modules.prom.entity.PromSaleOrderBuild" >
+	select a.order_id ,a.warranty_id ,a.order_bath order_batch,a.spread_id,p.product_id ,a.product_name,b.merchant_id,b.merchant_name,
+	ROUND( (CAST(IFNULL(x.huiyuan_scale,'0') AS DECIMAL)/100*IFNULL(a.spread_money,0)) , 4) huiyuan_profit,
+	ROUND( (CAST(IFNULL(x.gear_scale,'0') AS DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) gear_profit,
+	ROUND( (CAST(IFNULL(x.spreader_scale,'0') AS DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) refereeProfit 
+	from 
+	(select * from prom_order t where t.order_bath = #{orderBatch,jdbcType=VARCHAR}
+	and t.is_profit=#{isProfit,jdbcType=VARCHAR} ) as a,
+	prom_product p, prom_binding b ,prom_teacher_manage m,prom_profit_templet x,prom_manage pm 
+	where a.product_name=p.product_name and a.spread_id=b.promotion_id and a.spread_id = pm.promotion_id 
+	and b.merchant_id=m.merchant_code and x.templet_id=m.templet_id  
+	
+	<!-- select a.order_id ,a.warranty_id ,a.order_bath order_batch
+	,a.spread_id,p.product_id ,a.product_name
+	,b.merchant_id,b.merchant_name,
+	ROUND( (CAST(IFNULL(x.huiyuan_scale,'0') AS
+	DECIMAL)/100*IFNULL(a.spread_money,0)) , 4) huiyuan_profit,
+	ROUND( (CAST(IFNULL(x.gear_scale,'0') AS
+	DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) gear_profit,
+
+	ROUND( (CAST(IFNULL(x.spreader_scale,'0') AS
+	DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) refereeProfit,
+
+	ROUND( (CAST(IFNULL(x.higher_level_scale,'0') AS
+	DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) higherMasterProfit,
+
+  ROUND( (CAST(IFNULL(x.highest_level_scale,'0') AS
+	DECIMAL)/100*IFNULL(a.spread_money,0))  , 4) highestMasterProfit ,
+	(select t.super_merchant_code from prom_teacher_manage t where t.merchant_code=m.merchant_code) higherMerId ,
+  (select t.super_merchant_code from prom_teacher_manage t where t.merchant_code=higherMerId) highestMerId  ,
+	(select t.merchant_name from prom_teacher_manage t where t.merchant_code=higherMerId) higherMerName ,
+  (select t.merchant_name from prom_teacher_manage t where t.merchant_code=highestMerId) highestMerName 
+	from
+	(select * from prom_order t where t.order_bath = 'BA234234242'
+	and t.is_profit='N' ) as a,
+	prom_product p, prom_binding b ,prom_teacher_manage m,prom_profit_templet x,prom_manage pm 
+	where a.product_name=p.product_name and a.spread_id=b.promotion_id and a.spread_id = pm.promotion_id
+	and b.merchant_id=m.merchant_code and x.templet_id=m.templet_id  -->
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from prom_sale_order
+    where sale_id = #{saleId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deletePromSaleByBatch" parameterType="java.lang.String" >
+    delete from prom_sale_order
+    where order_batch = #{orderBatch,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deletePromSaleList" parameterType="com.heepay.prom.modules.prom.entity.PromSaleOrder" >
+    delete from prom_sale_order where sale_id in 
+        <foreach item="item" index="index" collection="saleIds" open="(" separator="," close=")">  
+		    #{item}
+		</foreach> 
+  </delete>
+  
+  <insert id="insert" parameterType="com.heepay.prom.modules.prom.entity.PromSaleOrder" >
+    insert into prom_sale_order ( order_id, warranty_id, 
+      order_batch, spread_id, product_id, 
+      product_name, merchant_id, merchant_name, 
+      profit_money, settle_time, settle_batch, 
+      profit_time, operator, remark
+      )
+    values (  #{orderId,jdbcType=VARCHAR}, #{warrantyId,jdbcType=VARCHAR}, 
+      #{orderBatch,jdbcType=VARCHAR}, #{spreadId,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{merchantId,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR}, 
+      #{profitMoney,jdbcType=DECIMAL}, #{settleTime,jdbcType=TIMESTAMP}, #{settleBatch,jdbcType=VARCHAR}, 
+      #{profitTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert  id="insertSaleOrderList" parameterType="List"  >
+    insert into prom_sale_order ( order_id, warranty_id, 
+      order_batch, spread_id, product_id, 
+      product_name, merchant_id, merchant_name, 
+      profit_money, settle_time, settle_batch, 
+      profit_time, operator, remark
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    (  #{item.orderId,jdbcType=VARCHAR}, #{item.warrantyId,jdbcType=VARCHAR}, 
+      #{item.orderBatch,jdbcType=VARCHAR}, #{item.spreadId,jdbcType=VARCHAR}, #{item.productId,jdbcType=VARCHAR}, 
+      #{item.productName,jdbcType=VARCHAR}, #{item.merchantId,jdbcType=VARCHAR}, #{item.merchantName,jdbcType=VARCHAR}, 
+      #{item.profitMoney,jdbcType=DECIMAL}, #{item.settleTime,jdbcType=TIMESTAMP}, #{item.settleBatch,jdbcType=VARCHAR}, 
+      #{item.profitTime,jdbcType=TIMESTAMP}, #{item.operator,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.heepay.prom.modules.prom.entity.PromSaleOrder" >
+    update prom_sale_order
+     <set >
+      <if test="orderId != null and orderId !='' " >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="warrantyId != null and warrantyId != ''" >
+        warranty_id = #{warrantyId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBatch != null and orderBatch != ''" >
+        order_batch = #{orderBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="spreadId != null and spreadId != ''" >
+       spread_id = #{spreadId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null and productId != '' " >
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null and productName !='' " >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null and merchantId != ''" >
+        merchant_id = #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantName != null and merchantName != ''" >
+        merchant_name = #{merchantName,jdbcType=VARCHAR},
+      </if>
+      <if test="profitMoney != null " >
+        profit_money = #{profitMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="settleTime != null " >
+       settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleBatch != null and settleBatch != ''" >
+       settle_batch = #{settleBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="profitTime != null" >
+        profit_time = #{profitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null and operator != ''" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sale_id = #{saleId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select sale_id, order_id, warranty_id, order_batch, spread_id, product_id, product_name, 
+    merchant_id, merchant_name, profit_money, settle_time, settle_batch, profit_time, 
+    operator, remark
+    from prom_sale_order
+    where sale_id = #{saleId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select sale_id, order_id, warranty_id, order_batch, spread_id, product_id, product_name, 
+    merchant_id, merchant_name, profit_money, settle_time, settle_batch, profit_time, 
+    operator, remark
+    from prom_sale_order
+  </select>
+  <select id="findList" resultMap="BaseResultMap" parameterType="com.heepay.prom.modules.prom.entity.PromSaleOrder" >
+    select sale_id, order_id, warranty_id, order_batch, spread_id, product_id, product_name, 
+    merchant_id, merchant_name, profit_money, settle_time, settle_batch, profit_time, 
+    operator, remark
+    from prom_sale_order
+     <where>
+			<!-- 订单时间 -->
+			<if test="beginDate != null and endDate != null  ">
+				AND profit_time BETWEEN date_format(#{beginDate},'%Y-%m-%d %H:%i:%s') AND date_format(#{endDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 订单号 -->
+			<if test="orderId != null and orderId != ''">
+				AND order_id = #{orderId} 
+			</if>
+			<!-- 保单号 -->
+			<if test="warrantyId != null and warrantyId != ''">
+				AND warranty_id = #{warrantyId} 
+			</if>
+			<!-- 批次号 -->
+			<if test="orderBatch != null and orderBatch != ''">
+				AND order_batch = #{orderBatch} 
+			</if>
+			<!-- 商户编号 -->
+			<if test=" merchantId  !=null and merchantId!= ''">
+				AND merchant_id= #{merchantId}
+			</if>
+			<!-- 推广位 -->
+			<if test=" spreadId !=null and spreadId!= ''">
+				AND spread_id= #{spreadId}
+			</if>
+		</where>
+  </select>
+	
+	<update id="updatePromOrder" parameterType="java.util.List">
+        <!-- update prom_order 
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_profit =case" suffix="end,">
+                 <foreach collection="list" item="item" index="index">
+                         when order_id=#{item.orderId} then #{item.isProfit}
+                 </foreach>
+            </trim>
+            <trim prefix="profit_time =case" suffix="end,">
+                 <foreach collection="list" item="item" index="index">
+                         when order_id=#{item.orderId} then #{item.profitTime}
+                 </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.orderId,jdbcType=BIGINT}
+        </foreach> -->
+        <foreach close="" collection="list" index="index" item="item" open="" separator=";">  
+            update prom_order set is_profit=#{item.isProfit},profit_time=#{item.profitTime}  
+            where order_id=#{item.orderId}  
+        </foreach>
+    </update>
+	
+</mapper>

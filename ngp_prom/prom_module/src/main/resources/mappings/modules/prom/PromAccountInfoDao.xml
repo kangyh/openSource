@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromAccountInfoDao">
+    
+	<sql id="promAccountInfoColumns">
+		a.account_id AS "accountId",
+		a.bank_no AS "bankNo",
+		a.open_name AS "openName",
+		a.open_adress AS "openAdress",
+		a.open_all_name AS "openAllName",
+		a.open_branch_name AS "openBranchName",
+		a.bank_num AS "bankNum",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.merchant_id AS "merchantId"
+	</sql>
+	
+	<select id="get" resultType="PromAccountInfo">
+		SELECT 
+			<include refid="promAccountInfoColumns"/>
+		FROM prom_account_info a
+		WHERE a.merchant_id = #{merchantId}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_account_info(
+            account_id,
+			bank_no,
+			open_name,
+			open_adress,
+			open_all_name,
+			open_branch_name,
+			bank_num,
+			create_author,
+			merchant_id
+		) VALUES (
+		    #{accountId},
+			#{bankNo},
+			#{openName},
+			#{openAdress},
+			#{openAllName},
+			#{openBranchName},
+			#{bankNum},
+			#{createAuthor},
+			#{merchantId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_account_info SET 	
+			bank_no = #{bankNo},
+			open_name = #{openName},
+			open_adress = #{openAdress},
+			open_all_name = #{openAllName},
+			open_branch_name = #{openBranchName},
+			bank_num = #{bankNum},
+			update_author = #{updateAuthor},
+			merchant_id = #{merchantId}
+		WHERE account_id = #{accountId}
+	</update>
+
+    <select id="findExit" parameterType="PromAccountInfo" resultType="int">
+        SELECT
+        count(1)
+        FROM prom_account_info a
+        WHERE a.bank_no = #{bankNo}
+        <if test="merchantId != null and merchantId != ''">
+          AND a.merchant_id != #{merchantId}
+        </if>
+    </select>
+
+</mapper>

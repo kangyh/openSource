@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromMerchantManageDao">
+    
+	<sql id="promMerchantManageColumns">
+		a.merchant_id AS "merchantId",
+		a.merchant_name AS "merchantName",
+		a.merchant_type AS "merchantType",
+		a.mer_source AS "merSource",
+		a.pay_type AS "payType",
+		a.wechat_no AS "wechatNo",
+		a.pay_account_no AS "payAccountNo",
+		a.contact AS "contact",
+		a.tel_phone AS "telPhone",
+		a.email AS "email",
+		a.address AS "address",
+		a.organization_code AS "organizationCode",
+		a.legal AS "legal",
+		a.legal_idcard AS "legalIdcard",
+		a.business_license_no AS "businessLicenseNo",
+		a.referees AS "referees",
+		a.level AS "level",
+		a.status AS "status",
+		a.operator AS "operator",
+		a.create_time AS "createTime",
+		a.update_author AS "updateAuthor",
+		a.update_time AS "updateTime"
+	</sql>
+
+	<select id="get" resultType="PromMerchantManage">
+		SELECT 
+			<include refid="promMerchantManageColumns"/>
+		FROM prom_merchant_manage a
+		WHERE a.merchant_id = #{merchantId}
+	</select>
+	
+	<select id="findList" resultType="PromMerchantManage">
+		SELECT 
+			<include refid="promMerchantManageColumns"/>
+		FROM prom_merchant_manage a
+		<where>
+            <if test="merchantId != null and merchantId != ''">
+                and a.merchant_id = #{merchantId}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromMerchantManage">
+        SELECT
+        DISTINCT a.merchant_id,a.merchant_name
+        FROM prom_merchant_manage a
+        GROUP BY a.merchant_id,a.merchant_name
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_merchant_manage(
+			merchant_name,
+			merchant_type,
+			mer_source,
+			pay_type,
+			wechat_no,
+			pay_account_no,
+			contact,
+			tel_phone,
+			email,
+			address,
+			organization_code,
+			legal,
+			legal_idcard,
+			business_license_no,
+			referees,
+			level,
+			status,
+			operator
+		) VALUES (
+			#{merchantName},
+			#{merchantType},
+			#{merSource},
+			#{payType},
+			#{wechatNo},
+			#{payAccountNo},
+			#{contact},
+			#{telPhone},
+			#{email},
+			#{address},
+			#{organizationCode},
+			#{legal},
+			#{legalIdcard},
+			#{businessLicenseNo},
+			#{referees},
+			#{level},
+			#{status},
+			#{operator}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_merchant_manage SET 	
+			merchant_name = #{merchantName},
+			merchant_type = #{merchantType},
+			mer_source = #{merSource},
+			pay_type = #{payType},
+			wechat_no = #{wechatNo},
+			pay_account_no = #{payAccountNo},
+			contact = #{contact},
+			tel_phone = #{telPhone},
+			email = #{email},
+			address = #{address},
+			organization_code = #{organizationCode},
+			legal = #{legal},
+			legal_idcard = #{legalIdcard},
+			business_license_no = #{businessLicenseNo},
+			referees = #{referees},
+			level = #{level},
+			status = #{status},
+			update_author = #{updateAuthor}
+		WHERE merchant_id = #{merchantId}
+	</update>
+
+    <select id="findExit" resultType="int" parameterType="PromMerchantManage">
+        SELECT
+        count(1)
+        FROM prom_merchant_manage a
+        WHERE a.wechat_no = #{wechatNo}
+        <if test="merchantId != null and merchantId != ''">
+            and a.merchant_id = #{merchantId}
+        </if>
+    </select>
+	
+	<select id="selectByMerchantId" resultType="java.lang.String" parameterType="java.lang.String">
+		select merchant_name 
+			from prom_merchant_manage 
+		where merchant_id = #{merchantId}
+	</select>
+
+	<select id="getWechatNo" resultType="PromMerchantManage" parameterType="PromMerchantManage">
+		SELECT
+		<include refid="promMerchantManageColumns"/>
+		FROM prom_merchant_manage
+		where wechat_no = #{wechatNo}
+	</select>
+</mapper>

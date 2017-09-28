@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromProfitTempletDao">
+    
+	<sql id="promProfitTempletColumns">
+		a.prom_id AS "promId",
+		a.templet_id AS "templetId",
+		a.templet_name AS "templetName",
+		a.huiyuan_scale AS "huiyuanScale",
+		a.gear_scale AS "gearScale",
+		a.spreader_scale AS "spreaderScale",
+		a.higher_level_scale AS "higherLevelScale",
+		a.highest_level_scale AS "highestLevelScale",
+		a.create_time AS "createTime",
+		a.creator AS "creator",
+		a.update_time AS "updateTime",
+		a.update_people AS "updatePeople"
+	</sql>
+
+	<select id="get" resultType="PromProfitTemplet">
+		SELECT 
+			<include refid="promProfitTempletColumns"/>
+		FROM prom_profit_templet a
+		WHERE a.prom_id = #{promId}
+	</select>
+	
+	<select id="findList" resultType="PromProfitTemplet">
+		SELECT 
+			<include refid="promProfitTempletColumns"/>
+		FROM prom_profit_templet a
+		<where>
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="templetId !=null and templetId !='' ">
+				AND a.templet_id = #{templetId}
+			</if>
+			<if test="templetName !=null and templetName !='' ">
+				AND a.templet_name = #{templetName}
+			</if>
+			<if test="huiyuanScale !=null and huiyuanScale !='' ">
+				AND a.huiyuan_scale = #{huiyuanScale}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY prom_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromProfitTemplet">
+		SELECT 
+			DISTINCT a.templet_id,a.templet_name
+		FROM prom_profit_templet a
+		GROUP BY a.templet_id,a.templet_name
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_profit_templet(
+			templet_id,
+			templet_name,
+			huiyuan_scale,
+			gear_scale,
+			spreader_scale,
+			higher_level_scale,
+			highest_level_scale,
+			creator,
+			create_time,
+			update_people,
+			update_time
+		) VALUES (
+			#{templetId},
+			#{templetName},
+			#{huiyuanScale},
+			#{gearScale},
+			#{spreaderScale},
+			#{higherLevelScale},
+			#{highestLevelScale},
+			#{creator},
+			#{createTime},
+			#{updatePeople},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_profit_templet SET 	
+			templet_id = #{templetId},
+			templet_name = #{templetName},
+			huiyuan_scale = #{huiyuanScale},
+			gear_scale = #{gearScale},
+			spreader_scale = #{spreaderScale},
+			higher_level_scale = #{higherLevelScale},
+			highest_level_scale = #{highestLevelScale},
+			update_people = #{updatePeople}
+		WHERE prom_id = #{promId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM prom_profit_templet
+		WHERE prom_id = #{id}
+	</update>
+	
+	<update id="updateEntity" parameterType="com.heepay.prom.modules.prom.entity.PromProfitTemplet">
+		UPDATE prom_profit_templet SET 	
+			<if test="templetId != null">
+				templet_id = #{templetId},
+			</if>
+			<if test="templetName != null">
+			templet_name = #{templetName},
+			</if>
+			<if test="huiyuanScale != null">
+			huiyuan_scale = #{huiyuanScale},
+			</if>
+			<if test="gearScale != null">
+			gear_scale = #{gearScale},
+			</if>
+			<if test="spreaderScale != null">
+			spreader_scale = #{spreaderScale},
+			</if>
+			<if test="higherLevelScale != null">
+			higher_level_scale = #{higherLevelScale},
+			</if>
+			<if test="highestLevelScale != null">
+			highest_level_scale = #{highestLevelScale},
+			</if>
+			<if test="updatePeople != null">
+			update_people = #{updatePeople},
+			</if>
+			<if test="createTime != null">
+			create_time = #{createTime},
+			</if>
+			<if test="creator != null">
+			creator = #{creator},
+			</if>
+			<if test="updateTime != null">
+			update_time = #{updateTime}
+			</if>
+		WHERE prom_id = #{promId}
+	</update>
+</mapper>

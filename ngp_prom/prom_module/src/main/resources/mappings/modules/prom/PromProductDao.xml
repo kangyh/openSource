@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromProductDao">
+    
+	<sql id="promProductColumns">
+		a.prom_id AS "promId",
+		a.product_id AS "productId",
+		a.product_name AS "productName",
+		a.subject_type AS "subjectType",
+		a.gear_name AS "gearName",
+		a.spread_money AS "spreadMoney",
+		a.spread_scale AS "spreadScale",
+		a.import_bath AS "importBath",
+		a.create_time AS "createTime",
+		a.creator AS "creator"
+	</sql>
+	
+	<sql id="promProductJoins">
+	</sql>
+    
+	<select id="get" resultType="PromProduct">
+		SELECT 
+			<include refid="promProductColumns"/>
+		FROM prom_product a
+		<include refid="promProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PromProduct">
+		SELECT 
+			<include refid="promProductColumns"/>
+		FROM prom_product a
+		<include refid="promProductJoins"/>
+		<where>
+			<!-- 开始时间  -->
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="productName != null and productName != ''">
+				AND a.product_name = #{productName}
+			</if>
+			<if test="productId != null and productId != ''">
+				AND a.product_id = #{productId}
+			</if>
+			<if test="importBath != null and importBath != ''">
+				AND a.import_bath = #{importBath}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY prom_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromProduct">
+		SELECT 
+			<include refid="promProductColumns"/>
+		FROM prom_product a
+		<include refid="promProductJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_product(
+			product_id,
+			product_name,
+			subject_type,
+			gear_name,
+			spread_money,
+			spread_scale,
+			import_bath,
+			create_time,
+			creator
+		) VALUES (
+			#{productId},
+			#{productName},
+			#{subjectType},
+			#{gearName},
+			#{spreadMoney},
+			#{spreadScale},
+			#{importBath},
+			#{createTime},
+			#{creator}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_product SET 	
+			product_id = #{productId},
+			product_name = #{productName},
+			subject_type = #{subjectType},
+			gear_name = #{gearName},
+			spread_money = #{spreadMoney},
+			spread_scale = #{spreadScale},
+			import_bath = #{importBath},
+			create_time = #{createTime},
+			creator = #{creator}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM prom_product
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

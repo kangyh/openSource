@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromOrderDao">
+    
+	<sql id="promOrderColumns">
+		a.prom_id AS "promId",
+		a.order_id AS "orderId",
+		a.warranty_id AS "warrantyId",
+		a.spread_id AS "spreadId",
+		a.spread_name AS "spreadName",
+		a.product_name AS "productName",
+		a.spread_way AS "spreadWay",
+		a.commission_status AS "commissionStatus",
+		a.order_money AS "orderMoney",
+		a.create_time AS "createTime",
+		a.cocer_people AS "cocerPeople",
+		a.cover_address AS "coverAddress",
+		a.spread_money AS "spreadMoney",
+		a.effect_time AS "effectTime",
+		a.company_name AS "companyName",
+		a.order_bath AS "orderBath",
+		a.deal_time AS "dealTime",
+		a.deal_people AS "dealPeople",
+		a.is_profit AS "isProfit",
+		a.profit_time AS "profitTime"
+	</sql>
+	
+	<sql id="promOrderJoins">
+	</sql>
+    
+	<select id="get" resultType="PromOrder">
+		SELECT 
+			<include refid="promOrderColumns"/>
+		FROM prom_order a
+		<include refid="promOrderJoins"/>
+		WHERE a.prom_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PromOrder">
+		SELECT 
+			<include refid="promOrderColumns"/>
+		FROM prom_order a
+		<include refid="promOrderJoins"/>
+		<where>
+			<if test="beginOperEndTime != null and endOperEndTime != null">
+				AND a.create_time BETWEEN date_format(#{beginOperEndTime},'%Y-%m-%d %H:%i:%s') AND date_format(#{endOperEndTime},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="orderId !=null and orderId !='' ">
+				AND a.order_id = #{orderId}
+			</if>
+			<if test="warrantyId !=null and warrantyId !='' ">
+				AND a.warranty_id = #{warrantyId}
+			</if>
+			<if test="spreadId !=null and spreadId !='' ">
+				AND a.spread_id = #{spreadId}
+			</if>
+			<if test="productName !=null and productName !='' ">
+				AND a.product_name = #{productName}
+			</if>
+			<if test="orderBath !=null and orderBath !='' ">
+				AND a.order_bath = #{orderBath}
+			</if>
+			<if test="spreadWay !=null and spreadWay !='' ">
+				AND a.spread_way = #{spreadWay}
+			</if>
+			<if test="spreadName !=null and spreadName !='' ">
+				AND a.spread_name = #{spreadName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY prom_id desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromOrder">
+		SELECT 
+			<include refid="promOrderColumns"/>
+		FROM prom_order a
+		<include refid="promOrderJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_order(
+			prom_id,
+			order_id,
+			warranty_id,
+			spread_id,
+			spread_name,
+			product_name,
+			spread_way,
+			commission_status,
+			order_money,
+			create_time,
+			cocer_people,
+			cover_address,
+			spread_money,
+			effect_time,
+			company_name,
+			order_bath,
+			deal_time,
+			deal_people,
+			is_profit,
+			profit_time
+		) VALUES (
+			#{promId},
+			#{orderId},
+			#{warrantyId},
+			#{spreadId},
+			#{spreadName},
+			#{productName},
+			#{spreadWay},
+			#{commissionStatus},
+			#{orderMoney},
+			#{createTime},
+			#{cocerPeople},
+			#{coverAddress},
+			#{spreadMoney},
+			#{effectTime},
+			#{companyName},
+			#{orderBath},
+			#{dealTime},
+			#{dealPeople},
+			#{isProfit},
+			#{profitTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_order SET 	
+			prom_id = #{promId},
+			order_id = #{orderId},
+			warranty_id = #{warrantyId},
+			spread_id = #{spreadId},
+			spread_name = #{spreadName},
+			product_name = #{productName},
+			spread_way = #{spreadWay},
+			commission_status = #{commissionStatus},
+			order_money = #{orderMoney},
+			create_time = #{createTime},
+			cocer_people = #{cocerPeople},
+			cover_address = #{coverAddress},
+			spread_money = #{spreadMoney},
+			effect_time = #{effectTime},
+			company_name = #{companyName},
+			order_bath = #{orderBath},
+			deal_time = #{dealTime},
+			deal_people = #{dealPeople},
+			is_profit = #{isProfit},
+			profit_time = #{profitTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM prom_order
+		WHERE id = #{id}
+	</update>
+	
+	<select id="selectByOrderId" resultType="PromOrder" parameterType="java.lang.String">
+		SELECT 
+			<include refid="promOrderColumns"/>
+		FROM prom_order a
+		<include refid="promOrderJoins"/>
+		WHERE a.order_id = #{orderId}
+	</select>
+	
+	<insert id="insertMapReport" parameterType="Map"  useGeneratedKeys="true" keyProperty="personReportId">
+    insert into prom_order ( prom_id,
+		order_id,
+		warranty_id,
+		spread_id,
+		spread_name,
+		product_name,
+		spread_way,
+		commission_status,
+		order_money ,
+		create_time ,
+		cocer_people ,
+		cover_address ,
+		spread_money ,
+		effect_time ,
+		company_name ,
+		order_bath ,
+		deal_time ,
+		deal_people ,
+		is_profit ,
+		profit_time )
+    values ( #{promId,jdbcType=VARCHAR}, 
+      #{orderId,jdbcType=VARCHAR}, #{warrantyId,jdbcType=VARCHAR}, #{spreadId,jdbcType=VARCHAR}, 
+      #{spreadName,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, #{spreadWay,jdbcType=VARCHAR}, 
+      #{commissionStatus,jdbcType=VARCHAR}, #{orderMoney,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{cocerPeople,jdbcType=VARCHAR}, #{coverAddress,jdbcType=VARCHAR}, #{spreadMoney,jdbcType=DECIMAL}, 
+      #{effectTime,jdbcType=TIMESTAMP}, #{companyName,jdbcType=VARCHAR}, #{orderBath,jdbcType=VARCHAR},
+      #{dealTime,jdbcType=TIMESTAMP}, #{dealPeople,jdbcType=VARCHAR}, #{isProfit,jdbcType=VARCHAR}, #{profitTime,jdbcType=VARCHAR})
+  </insert>
+</mapper>

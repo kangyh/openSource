@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/rabbit 
+http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
+
+
+	<context:annotation-config />
+	<!-- 连接服务配置 --> 
+	<rabbit:connection-factory 
+        id="connectionFactoryProducer" 
+        addresses="${mq.ip}" 
+        username="${mq.username}" 
+        password="${mq.password}"
+        channel-cache-size="${mq.cache.size}" 
+        publisher-confirms="${mq.publisher.confirms}" 
+        publisher-returns="${mq.publisher.returns}" 
+        virtual-host="/" 
+    />
+
+	<!-- Admin object for creation of queues -->
+	<rabbit:admin connection-factory="connectionFactoryProducer" />
+	
+	<!-- queue statement-->
+	<rabbit:queue id="hyBillingClearMerchantQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingClearMerchantQueue"/>
+	<rabbit:queue id="hyBillingClearChannelQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingClearChannelQueue"/>
+	<rabbit:queue id="hyNotifyQueue" durable="true" auto-delete="false" exclusive="false" name="hyNotifyQueue"/>
+    <!--再次结算 通道 -->
+    <rabbit:queue id="hyBillingSettleChannelRecordDetailQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleChannelRecordDetailQueue"/>
+    <!--再次结算 商户 -->
+    <rabbit:queue id="hyBillingSettleMerchantQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingSettleMerchantQueue"/>
+
+    <!--上传对账文件-->
+    <rabbit:queue id="hyBillingNotifyToCheckQueue" durable="true" auto-delete="false" exclusive="false" name="hyBillingNotifyToCheckQueue"/>
+
+    <!--跨境申报消息异步通知-->
+    <rabbit:queue id="hyCbmsNotifyQueue" durable="true" auto-delete="false" exclusive="false" name="hyCbmsNotifyQueue"/>
+
+    <rabbit:direct-exchange name="hyBillingClearMerchantQueue_exchange" durable="true" auto-delete="false" id="hyBillingClearMerchantQueue_exchange">
+        <rabbit:bindings>
+          	<rabbit:binding queue="hyBillingClearMerchantQueue" key="hyBillingClearMerchantQueue_key"/>   
+        </rabbit:bindings>
+    </rabbit:direct-exchange>    
+   	<rabbit:direct-exchange name="hyBillingClearChannelQueue_exchange" durable="true" auto-delete="false" id="hyBillingClearChannelQueue_exchange">
+    <rabbit:bindings>
+        <rabbit:binding queue="hyBillingClearChannelQueue" key="hyBillingClearChannelQueue_key"/>
+    </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <rabbit:direct-exchange name="hyNotifyQueue_exchange" durable="true" auto-delete="false" id="hyNotifyQueue_exchange">
+    <rabbit:bindings>
+        <rabbit:binding queue="hyNotifyQueue" key="hyNotifyQueue_key"/>
+    </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!--再次结算 通道    商户    上传对账文件-->
+    <rabbit:direct-exchange name="ltest_exchange" durable="true" auto-delete="false" id="ltest_exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="hyBillingSettleChannelRecordDetailQueue" key="hyBillingSettleChannelRecordDetailQueue_key"/>
+            <rabbit:binding queue="hyBillingSettleMerchantQueue" key="hyBillingSettleMerchantQueue_key"/>
+
+            <rabbit:binding queue="hyBillingNotifyToCheckQueue" key="hyBillingNotifyToCheckQueue_key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <!--跨境申报消息异步通知-->
+    <rabbit:direct-exchange name="hyCbmsNotifyQueue_exchange" durable="true" auto-delete="false"
+                            id="hyCbmsNotifyQueue_exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="hyCbmsNotifyQueue" key="hyCbmsNotifyQueue_key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <!-- 声明消息转换器为SimpleMessageConverter -->
+    <bean id="mqMessageConverter"
+        class="org.springframework.amqp.support.converter.SimpleMessageConverter">
+    </bean>
+	<bean id="publisherConfirmsReturns" class="com.heepay.mq.rabbit.PublisherConfirmsReturns"></bean>
+
+   <rabbit:template id="hyBillingClearMerchantQueueMq" exchange="hyBillingClearMerchantQueue_exchange"  routing-key="hyBillingClearMerchantQueue_key" queue="hyBillingClearMerchantQueue" connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter"
+                     mandatory="true" confirm-callback="publisherConfirmsReturns" return-callback="publisherConfirmsReturns" />
+   <rabbit:template id="hyBillingClearChannelQueueMq" exchange="hyBillingClearChannelQueue_exchange"  routing-key="hyBillingClearChannelQueue_key" queue="hyBillingClearChannelQueue" connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter"
+                     mandatory="true" confirm-callback="publisherConfirmsReturns" return-callback="publisherConfirmsReturns" />
+   <rabbit:template id="hyNotifyQueueMq" exchange="hyNotifyQueue_exchange"  routing-key="hyNotifyQueue_key" queue="hyNotifyQueue" connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter"
+                     mandatory="true" confirm-callback="publisherConfirmsReturns" return-callback="publisherConfirmsReturns" />
+   <!--再次结算 通道 -->
+   <rabbit:template exchange="ltest_exchange" id="hyBillingSettleChannelRecordDetailMqTemplate" routing-key= "hyBillingSettleChannelRecordDetailQueue_key" queue="hyBillingSettleChannelRecordDetailQueue"
+                     connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter" />
+    <!--再次结算 商户 -->
+   <rabbit:template exchange="ltest_exchange" id="hyBillingSettleMerchantDetailMqTemplate" routing-key= "hyBillingSettleMerchantQueue_key" queue="hyBillingSettleMerchantQueue"
+                     connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter" />
+    <!--上传对账文件-->
+   <rabbit:template exchange="ltest_exchange" id="hyBillingFileNotifySenderMqTemplate" routing-key= "hyBillingNotifyToCheckQueue_key" queue="hyBillingNotifyToCheckQueue"
+                     connection-factory="connectionFactoryProducer" message-converter="mqMessageConverter" />
+
+    <rabbit:template id="hyCbmsNotifyQueueMq" exchange="hyCbmsNotifyQueue_exchange" routing-key="hyCbmsNotifyQueue_key"
+                     queue="hyCbmsNotifyQueue" connection-factory="connectionFactoryProducer"
+                     message-converter="mqMessageConverter"
+                     mandatory="true" confirm-callback="publisherConfirmsReturns"
+                     return-callback="publisherConfirmsReturns"/>
+    <bean id="hyBillingClearMerchantQueueMqTemplate" class="com.heepay.mq.rabbit.HeepayRabbitTemplate" p:rabbitTemplate-ref="hyBillingClearMerchantQueueMq" />
+    <bean id="hyBillingClearChannelQueueMqTemplate" class="com.heepay.mq.rabbit.HeepayRabbitTemplate" p:rabbitTemplate-ref="hyBillingClearChannelQueueMq" />
+    <bean id="hyNotifyQueueMqTemplate" class="com.heepay.mq.rabbit.HeepayRabbitTemplate" p:rabbitTemplate-ref="hyNotifyQueueMq" />
+    <bean id="hyCbmsNotifyQueueMqTemplate" class="com.heepay.mq.rabbit.HeepayRabbitTemplate" p:rabbitTemplate-ref="hyCbmsNotifyQueueMq"/>
+</beans>

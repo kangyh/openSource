@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromTeacherManageDao">
+    
+	<sql id="promTeacherManageColumns">
+		a.te_id AS "teId",
+		a.merchant_code AS "merchantCode",
+		a.merchant_name AS "merchantName",
+		a.super_merchant_code AS "superMerchantCode",
+		a.super_merchant_name AS "superMerchantName",
+		a.templet_id AS "templetId",
+		a.effect_time AS "effectTime",
+		a.failure_time AS "failureTime",
+		a.create_time AS "createTime",
+		a.create_author AS "createAuthor",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor",
+		a.status AS "status"
+	</sql>
+	
+	<select id="get" resultType="PromTeacherManage">
+		SELECT 
+			<include refid="promTeacherManageColumns"/>
+		FROM prom_teacher_manage a
+		WHERE a.te_id = #{teId}
+	</select>
+	
+	<select id="findList" resultType="PromTeacherManage">
+		SELECT 
+			<include refid="promTeacherManageColumns"/>
+		FROM prom_teacher_manage a
+		<where>
+            <if test="merchantCode != null and merchantCode != ''">
+                and a.merchant_code = #{merchantCode}
+            </if>
+            <if test="superMerchantCode != null and superMerchantCode != ''">
+                and a.super_merchant_code = #{superMerchantCode}
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.te_id DESC
+            </otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromTeacherManage">
+		SELECT 
+			<include refid="promTeacherManageColumns"/>
+		FROM prom_teacher_manage a
+		<where>
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_teacher_manage(
+			merchant_code,
+			merchant_name,
+			super_merchant_code,
+			super_merchant_name,
+			templet_id,
+			effect_time,
+			failure_time,
+			create_author,
+			status
+		) VALUES (
+			#{merchantCode},
+			#{merchantName},
+			#{superMerchantCode},
+			#{superMerchantName},
+			#{templetId},
+			#{effectTime},
+			#{failureTime},
+			#{createAuthor},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_teacher_manage SET 	
+			merchant_code = #{merchantCode},
+			merchant_name = #{merchantName},
+			super_merchant_code = #{superMerchantCode},
+			super_merchant_name = #{superMerchantName},
+			templet_id = #{templetId},
+			effect_time = #{effectTime},
+			failure_time = #{failureTime},
+			update_author = #{updateAuthor},
+			status = #{status}
+		WHERE te_id = #{teId}
+	</update>
+
+    <select id="findExit" resultType="int" parameterType="PromTeacherManage">
+        SELECT
+        count(1)
+        FROM prom_teacher_manage a
+        WHERE a.merchant_code = #{merchantCode}
+        AND a.super_merchant_code = #{superMerchantCode}
+        <if test="teId != null and teId != ''">
+            and a.te_id != #{teId}
+        </if>
+    </select>
+
+    <select id="findCountByCode" resultType="int" parameterType="PromTeacherManage">
+        SELECT
+        count(1)
+        FROM prom_teacher_manage a
+        WHERE a.merchant_code = #{merchantCode}
+        AND a.status = 'ENABLE'
+        <if test="teId != null and teId != ''">
+            and a.te_id != #{teId}
+        </if>
+    </select>
+
+    <select id="findEntityByCode" resultType="PromTeacherManage" parameterType="PromTeacherManage">
+        SELECT
+        <include refid="promTeacherManageColumns"/>
+        FROM prom_teacher_manage a
+        WHERE a.merchant_code = #{merchantCode}
+        AND a.status = 'ENABLE'
+        <if test="teId != null and teId != ''">
+            and a.te_id != #{teId}
+        </if>
+    </select>
+
+    <select id="findSuperExit" resultType="int" parameterType="PromTeacherManage">
+        SELECT
+        count(1)
+        FROM prom_teacher_manage a
+        WHERE a.merchant_code = #{merchantCode}
+        AND a.super_merchant_code = #{superMerchantCode}
+        AND a.status = 'ENABLE'
+        <if test="teId != null and teId != ''">
+            and a.te_id != #{teId}
+        </if>
+    </select>
+</mapper>

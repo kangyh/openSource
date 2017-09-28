@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromWechatDao">
+    
+	<sql id="promWechatColumns">
+		a.we_id AS "weId",
+		a.openid AS "openid",
+		a.nickname AS "nickname",
+		a.headimgurl AS "headimgurl",
+		a.unionid AS "unionid",
+		a.app_id AS "appId",
+		a.subscribe AS "subscribe",
+		a.sex AS "sex",
+		a.language AS "language",
+		a.city AS "city",
+		a.province AS "province",
+		a.country AS "country",
+		a.subscribe_time AS "subscribeTime",
+		a.user_id AS "userId",
+		a.create_author AS "createAuthor",
+		a.create_time AS "createTime",
+		a.update_author AS "updateAuthor",
+		a.update_time AS "updateTime"
+	</sql>
+	
+
+	<select id="get" resultType="PromWechat">
+		SELECT 
+			<include refid="promWechatColumns"/>
+		FROM prom_wechat a
+		WHERE a.openid = #{openid}
+	</select>
+	
+	<select id="findList" resultType="PromWechat">
+		SELECT 
+			<include refid="promWechatColumns"/>
+		FROM prom_wechat a
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.we_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromWechat">
+		SELECT 
+			<include refid="promWechatColumns"/>
+		FROM prom_wechat a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_wechat(
+			openid,
+			nickname,
+			headimgurl,
+			unionid,
+			app_id,
+			subscribe,
+			sex,
+			language,
+			city,
+			province,
+			country,
+			subscribe_time,
+			user_id,
+			create_author
+		) VALUES (
+			#{openid},
+			#{nickname},
+			#{headimgurl},
+			#{unionid},
+			#{appId},
+			#{subscribe},
+			#{sex},
+			#{language},
+			#{city},
+			#{province},
+			#{country},
+			#{subscribeTime},
+			#{userId},
+			#{createAuthor}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_wechat SET 	
+			openid = #{openid},
+			nickname = #{nickname},
+			headimgurl = #{headimgurl},
+			unionid = #{unionid},
+			app_id = #{appId},
+			subscribe = #{subscribe},
+			sex = #{sex},
+			language = #{language},
+			city = #{city},
+			province = #{province},
+			country = #{country},
+			subscribe_time = #{subscribeTime},
+			user_id = #{userId},
+			update_author = #{updateAuthor}
+		WHERE we_id = #{weId}
+	</update>
+
+    <select id="findExit" resultType="int" parameterType="PromWechat">
+        SELECT
+        count(1)
+        FROM prom_wechat a
+        WHERE a.openid = #{openid}
+    </select>
+
+</mapper>

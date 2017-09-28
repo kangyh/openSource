@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromManageDao">
+    
+	<sql id="promManageColumns">
+		a.pro_id AS "proId",
+		a.promotion_id AS "promotionId",
+		a.pro_name AS "proName",
+		a.product_name AS "productName",
+		a.pro_type AS "proType",
+		a.create_date AS "createDate",
+		a.create_author AS "createAuthor",
+		a.create_time AS "createTime",
+		a.status AS "status",
+		a.pro_url AS "proUrl",
+		a.update_time AS "updateTime",
+		a.update_author AS "updateAuthor"
+	</sql>
+	
+	<select id="get" resultType="PromManage">
+		SELECT 
+			<include refid="promManageColumns"/>
+		FROM prom_manage a
+		WHERE a.pro_id = #{proId}
+	</select>
+	
+	<select id="findList" resultType="PromManage">
+		SELECT 
+			<include refid="promManageColumns"/>
+		FROM prom_manage a
+		<where>
+            <if test="promotionId != null and promotionId != ''">
+                and a.promotion_id = #{promotionId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and a.product_name LIKE concat('%',#{productName},'%')
+            </if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+                ORDER BY a.pro_id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromManage">
+		SELECT 
+			<include refid="promManageColumns"/>
+		FROM prom_manage a
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO prom_manage(
+			promotion_id,
+			pro_name,
+			product_name,
+			pro_type,
+			create_date,
+			create_author,
+			status,
+			pro_url
+		) VALUES (
+			#{promotionId},
+			#{proName},
+			#{productName},
+			#{proType},
+			#{createDate},
+			#{createAuthor},
+			#{status},
+			#{proUrl}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE prom_manage SET 	
+			promotion_id = #{promotionId},
+			pro_name = #{proName},
+			product_name = #{productName},
+			pro_type = #{proType},
+			status = #{status},
+			pro_url = #{proUrl},
+			update_author = #{updateAuthor}
+		WHERE pro_id = #{proId}
+	</update>
+
+    <select id="findExit" resultType="int" parameterType="PromManage">
+        SELECT
+        count(1)
+        FROM prom_manage a
+        WHERE a.promotion_id = #{promotionId}
+        <if test="proId != null and proId != ''">
+            and a.pro_id != #{proId}
+        </if>
+    </select>
+
+</mapper>

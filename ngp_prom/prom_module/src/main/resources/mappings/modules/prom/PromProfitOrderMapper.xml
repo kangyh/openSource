@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heepay.prom.modules.prom.dao.PromProfitOrderDao" >
+  <resultMap id="BaseResultMap" type="com.heepay.prom.modules.prom.entity.PromProfitOrder" >
+    <id column="profit_id" property="profitId" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="warranty_id" property="warrantyId" jdbcType="VARCHAR" />
+    <result column="order_batch" property="orderBatch" jdbcType="VARCHAR" />
+    <result column="merchant_id" property="merchantId" jdbcType="VARCHAR" />
+    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    <result column="profit_money" property="profitMoney" jdbcType="DECIMAL" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    <result column="settle_batch" property="settleBatch" jdbcType="VARCHAR" />
+    <result column="profit_time" property="profitTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from prom_profit_order
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deletePromProfitByBatch" parameterType="java.lang.String" >
+    delete from prom_profit_order 
+    where order_batch = #{orderBatch,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deletePromProfitList" parameterType="com.heepay.prom.modules.prom.entity.PromProfitOrder" >
+    delete from prom_profit_order where profit_id in 
+        <foreach item="item" index="index" collection="profitIds" open="(" separator="," close=")">  
+		    #{item}
+		</foreach> 
+  </delete>
+  <insert id="insert" parameterType="com.heepay.prom.modules.prom.entity.PromProfitOrder" >
+    insert into prom_profit_order ( order_id, warranty_id, 
+      order_batch, merchant_id, merchant_name, 
+      profit_money, settle_time, settle_batch, 
+      profit_time, operator, remark
+      )
+    values ( #{orderId,jdbcType=VARCHAR}, #{warrantyId,jdbcType=VARCHAR}, 
+      #{orderBatch,jdbcType=VARCHAR}, #{merchantId,jdbcType=VARCHAR}, #{merchantName,jdbcType=VARCHAR}, 
+      #{profitMoney,jdbcType=DECIMAL}, #{settleTime,jdbcType=TIMESTAMP}, #{settleBatch,jdbcType=VARCHAR}, 
+      #{profitTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertProfitOrderList" parameterType="List" >
+    insert into prom_profit_order ( order_id, warranty_id, 
+      order_batch, merchant_id, merchant_name, 
+      profit_money, settle_time, settle_batch, 
+      profit_time, operator, remark
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    ( #{item.orderId,jdbcType=VARCHAR}, #{item.warrantyId,jdbcType=VARCHAR}, 
+      #{item.orderBatch,jdbcType=VARCHAR}, #{item.merchantId,jdbcType=VARCHAR}, #{item.merchantName,jdbcType=VARCHAR}, 
+      #{item.profitMoney,jdbcType=DECIMAL}, #{item.settleTime,jdbcType=TIMESTAMP}, #{item.settleBatch,jdbcType=VARCHAR}, 
+      #{item.profitTime,jdbcType=TIMESTAMP}, #{item.operator,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}
+      )
+      </foreach>
+  </insert>
+  
+  
+  
+  
+  <update id="updateByPrimaryKey" parameterType="com.heepay.prom.modules.prom.entity.PromProfitOrder" >
+    update prom_profit_order 
+       <set >
+      <if test="orderId != null and orderId !='' " >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="warrantyId != null and warrantyId != ''" >
+        warranty_id = #{warrantyId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderBatch != null and orderBatch != ''" >
+        order_batch = #{orderBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null and merchantId != ''" >
+        merchant_id = #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantName != null and merchantName != ''" >
+        merchant_name = #{merchantName,jdbcType=VARCHAR},
+      </if>
+      <if test="profitMoney != null " >
+        profit_money = #{profitMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="settleTime != null " >
+       settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="settleBatch != null and settleBatch != ''" >
+       settle_batch = #{settleBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="profitTime != null" >
+        profit_time = #{profitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null and operator != ''" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select profit_id, order_id, warranty_id, order_batch, merchant_id, merchant_name, profit_money, 
+    settle_time, settle_batch, profit_time, operator, remark
+    from prom_profit_order
+    where profit_id = #{profitId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select profit_id, order_id, warranty_id, order_batch, merchant_id, merchant_name, profit_money, 
+    settle_time, settle_batch, profit_time, operator, remark
+    from prom_profit_order
+  </select>
+  <select id="findList" resultMap="BaseResultMap"  parameterType="com.heepay.prom.modules.prom.entity.PromProfitOrder" >
+  	select profit_id, order_id, warranty_id, order_batch, merchant_id, merchant_name, profit_money, 
+    settle_time, settle_batch, profit_time, operator, remark
+    from prom_profit_order 
+    <where>
+			<!-- 订单时间 -->
+			<if test="beginDate != null and endDate != null">
+				AND profit_time BETWEEN date_format(#{beginDate},'%Y-%m-%d %H:%i:%s') AND date_format(#{endDate},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<!-- 订单号 -->
+			<if test="orderId != null and orderId != ''">
+				AND order_id = #{orderId} 
+			</if>
+			<!-- 保单号 -->
+			<if test="warrantyId != null and warrantyId != ''">
+				AND warranty_id = #{warrantyId} 
+			</if>
+			<!-- 批次号 -->
+			<if test="orderBatch != null and orderBatch != ''">
+				AND order_batch = #{orderBatch} 
+			</if>
+			<!-- 商户编号 -->
+			<if test=" merchantId != null and merchantId!= ''">
+				AND merchant_id= #{merchantId}
+			</if>
+		</where>
+  </select>
+</mapper>
